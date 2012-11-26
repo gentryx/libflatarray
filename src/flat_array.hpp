@@ -35,6 +35,7 @@ public:
 };
 
 }
+
 }
 
 #define DEFINE_FIELD_OFFSET(r, CELL_TYPE, t)                            \
@@ -44,7 +45,7 @@ public:
     class offset<CELL_TYPE, r - 1>                                      \
     {                                                                   \
     public:                                                             \
-        static const int OFFSET = offset<CELL_TYPE, r - 2>::OFFSET +    \
+        static const std::size_t OFFSET = offset<CELL_TYPE, r - 2>::OFFSET +  \
             sizeof(BOOST_PP_SEQ_ELEM(0, t));                            \
     };                                                                  \
     }                                                                   \
@@ -73,6 +74,8 @@ public:
 
 #define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = soa.BOOST_PP_SEQ_ELEM(1, MEMBER)();
+
+template<int X, int Y, int Z> class FixedCoord {};
 
 /**
  * This class provides an object-oriented view to a "Struct of
@@ -104,7 +107,7 @@ class soa_accessor;
         template<int X, int Y, int Z>                                   \
             inline                                                      \
             __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> at() \
+            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> at(FixedCoord<X, Y, Z>) \
             {                                                           \
                 return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X>(data, index); \
             }                                                           \
