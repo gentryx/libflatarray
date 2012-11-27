@@ -200,10 +200,14 @@ __global__ void update_lbm_flat_array(int dimX, int dimY, int dimZ, double *grid
 
     LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodNew((char*)gridNew, &index);
     LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodOld((char*)gridOld, &index);
-    
+
 #pragma unroll 10
     for (; index < end; index += offset) {
-
+        SET_COMP(C)  = 43;
+        SET_COMP(TS) = 43;
+    }
+    return;
+    {
 #define SQR(X) ((X)*(X))
         const double omega = 1.0/1.7;
         const double omega_trm = 1.0 - omega;
@@ -380,7 +384,10 @@ public:
 
     void run(int dim) 
     {
-        int repeats = 10;
+        int repeats = 100;
+	if (dim <= 96) {
+            repeats *= 10;
+        }
 
         long long useconds = exec(dim, repeats);
 
@@ -388,7 +395,7 @@ public:
         double seconds = useconds * 10e-6;
         double glups = 10e-9 * updates / seconds;
 
-        std::cout << name() << " " << glups << " GLUPS\n";
+        std::cout << name() << " " << dim << " " << glups << " GLUPS\n";
     }
 
 protected:
@@ -478,13 +485,17 @@ public:
         long long t_start = time_usec();
 
         for (int t = 0; t < repeats; ++t) {
-            update_lbm_classic<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
+            update_lbm_flat_array<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
+//            update_lbm_classic<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
             std::swap(devGridOld, devGridNew);
         }
 
         cudaDeviceSynchronize();
         long long t_end = time_usec();
         
+        cudaMemcpy(&grid[0], devGridNew, bytesize, cudaMemcpyDeviceToHost);
+        cudaFree(devGridOld);
+        cudaFree(devGridNew);
         *time = t_end - t_start;
     }
 };
