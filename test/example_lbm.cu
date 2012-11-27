@@ -2,11 +2,21 @@
 #include <cuda.h>
 #include <libflatarray/flat_array.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <stdexcept>
 
 long long time_usec()
 {
     boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
     return now.time_of_day().total_microseconds();
+}
+
+void check_cuda_error()
+{
+    cudaError_t error = cudaGetLastError();
+    if (error != cudaSuccess) {
+        std::cerr << "ERROR: " << cudaGetErrorString(error) << "\n";
+        throw std::runtime_error("CUDA error");
+    }
 }
 
 class CellLBM
@@ -65,6 +75,7 @@ LIBFLATARRAY_REGISTER_SOA(CellLBM, ((double)(C))((double)(N))((double)(E))((doub
     gridNew[z   * dimX * dimY +   y * dimX +   x + (DIR) * dimX * dimY * dimZ]
 
 
+template<int UNUSED_X, int UNUSED_Y, int UNUSED_Z>
 __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld, double *gridNew)
 {
     int x = blockIdx.x * blockDim.x + threadIdx.x + 2;
@@ -362,7 +373,7 @@ class benchmark
 public:
     void evaluate() 
     {
-        for (int dim = 32; dim <= 640; dim += 4) {
+        for (int dim = 32; dim <= 160; dim += 4) {
             run(dim);
         }
     }
@@ -371,19 +382,17 @@ public:
     {
         int repeats = 10;
 
-        long long tStart = time_usec();
-        exec(dim, repeats);
-        long long tEnd = time_usec();
+        long long useconds = exec(dim, repeats);
 
         double updates = 1.0 * gridSize(dim) * repeats;
-        double seconds = (tEnd - tStart) * 10e-6;
+        double seconds = useconds * 10e-6;
         double glups = 10e-9 * updates / seconds;
 
         std::cout << name() << " " << glups << " GLUPS\n";
     }
 
 protected:
-    virtual void exec(int dim, int repeats) = 0;
+    virtual long long exec(int dim, int repeats) = 0;
     virtual std::string name() = 0;
     virtual size_t gridSize(int dim) = 0;
 };
@@ -391,13 +400,13 @@ protected:
 class benchmark_lbm_cuda : public benchmark
 {
 protected:
-    void exec(int dim, int repeats)
+    long long exec(int dim, int repeats)
     {
         dim3 dimBlock;
         dim3 dimGrid;
         gen_dims(&dimBlock, &dimGrid, dim);
      
-        exec(dim, dimBlock, dimGrid, repeats);
+        return exec(dim, dimBlock, dimGrid, repeats);
     }   
 
     virtual size_t gridSize(int dim) 
@@ -409,7 +418,7 @@ protected:
         return dimGrid.x * dimBlock.x * dimGrid.y * dimBlock.y * (dim - 4);
     }
 
-    virtual void exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
+    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
 
     void gen_dims(dim3 *dimBlock, dim3 *dimGrid, int dim)
     {
@@ -424,14 +433,16 @@ protected:
 };
 
 // fixme: move this to dedicated file
+template<template<int D> class CARGO>
 class bind
 {
 public:
-    void operator()(int size)
+    template<typename T1, typename T2, typename T3, typename T4>  
+    void operator()(int size, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
 #define CASE(SIZE)                                                      \
         if (size <= SIZE) {                                             \
-            std::cout << "bind(size) -> " << SIZE << "\n";              \
+            CARGO<SIZE>()(size, arg1, arg2, arg3, arg4);                \
             return;                                                     \
         }
         
@@ -441,15 +452,51 @@ public:
         CASE(128);
         CASE(160);
     }
+#undef CASE
+};
+
+template<int DIM>
+class benchmark_lbm_cuda_classic_callback
+{
+public:
+    void operator()(int dim, long long *time, dim3 dimBlock, dim3 dimGrid, int repeats)
+    {
+        int size = dim * dim * dim * 20;
+        int bytesize = size * sizeof(double);
+        std::vector<double> grid(size, 4711);
+
+        double *devGridOld;
+        double *devGridNew;
+        cudaMalloc(&devGridOld, bytesize);
+        cudaMalloc(&devGridNew, bytesize);
+        check_cuda_error();
+
+        cudaMemcpy(devGridOld, &grid[0], bytesize, cudaMemcpyHostToDevice);
+        cudaMemcpy(devGridNew, &grid[0], bytesize, cudaMemcpyHostToDevice);
+
+        cudaDeviceSynchronize();
+        long long t_start = time_usec();
+
+        for (int t = 0; t < repeats; ++t) {
+            update_lbm_classic<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
+            std::swap(devGridOld, devGridNew);
+        }
+
+        cudaDeviceSynchronize();
+        long long t_end = time_usec();
+        
+        *time = t_end - t_start;
+    }
 };
 
 class benchmark_lbm_cuda_classic : public benchmark_lbm_cuda
 {
 protected:
-    virtual void exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) 
+    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) 
     {
-        // update_lbm_classic<><<<dimGrid, dimBlock>>>
-        bind()(dim);
+        long long time;
+        bind<benchmark_lbm_cuda_classic_callback>()(dim, &time, dimBlock, dimGrid, repeats);
+        return time;
     }
 
     virtual std::string name() 
