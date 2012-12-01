@@ -7,6 +7,7 @@
 
 #ifndef _FLAT_ARRAY_HPP_
 
+#include "stdio.h"
 #include <boost/preprocessor/seq.hpp>
 
 // fix compilation for non-cuda builds
@@ -51,12 +52,32 @@ public:
     }                                                                   \
     }                                                                   
 
+        // std::cout << "DIM_X = " << DIM_X << "\n"                        \
+        //           << "DIM_Y = " << DIM_Y << "\n"                        \
+        //           << "DIM_Z = " << DIM_Z << "\n"                        \
+        //           << "field offset = " << detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET << "\n" \
+        //           << "sizeof = " << sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) << "\n" \
+        //           << "index = " << *index << "\n"                       \
+        //           << "INDEX = " << INDEX << "\n\n";                     \
+
+        // return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(data);                  \
+
+
+        // printf("  actual offset is %d\n", ((DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
+        //                                    *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) + \
+        //                                    INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)))); \
+        // printf("  d1 %d\n", (DIM_X * DIM_Y * DIM_Z)); \
+        // printf("  d2 %d\n", detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET); \
+        // printf("  d3 %d\n", *index); \
+        // printf("  d4 %d\n", INDEX); \
+        // printf("  d5 %d\n", sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));      \
+
 #define DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST)           \
     inline                                                              \
     __host__ __device__                                                 \
     CONST BOOST_PP_SEQ_ELEM(0, MEMBER)& BOOST_PP_SEQ_ELEM(1, MEMBER)() CONST \
     {                                                                   \
-        return  *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                       \
+        return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data +                                                      \
             (DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
             *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +             \

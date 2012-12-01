@@ -203,11 +203,6 @@ __global__ void update_lbm_flat_array(int dimX, int dimY, int dimZ, double *grid
 
 #pragma unroll 10
     for (; index < end; index += offset) {
-        SET_COMP(C)  = 43;
-        SET_COMP(TS) = 43;
-    }
-    return;
-    {
 #define SQR(X) ((X)*(X))
         const double omega = 1.0/1.7;
         const double omega_trm = 1.0 - omega;
@@ -388,6 +383,7 @@ public:
 	if (dim <= 96) {
             repeats *= 10;
         }
+        repeats = 1;
 
         long long useconds = exec(dim, repeats);
 
@@ -468,7 +464,7 @@ class benchmark_lbm_cuda_classic_callback
 public:
     void operator()(int dim, long long *time, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
-        int size = dim * dim * dim * 20;
+        int size = (DIM + 2) * (DIM + 2) * (256 + 64) * 20;
         int bytesize = size * sizeof(double);
         std::vector<double> grid(size, 4711);
 
@@ -480,22 +476,25 @@ public:
 
         cudaMemcpy(devGridOld, &grid[0], bytesize, cudaMemcpyHostToDevice);
         cudaMemcpy(devGridNew, &grid[0], bytesize, cudaMemcpyHostToDevice);
+        check_cuda_error();
 
         cudaDeviceSynchronize();
         long long t_start = time_usec();
 
         for (int t = 0; t < repeats; ++t) {
-            update_lbm_flat_array<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
-//            update_lbm_classic<DIM, DIM, DIM><<<dimGrid, dimBlock>>>(dim, dim, dim, devGridOld, devGridNew);
+            update_lbm_flat_array<DIM, DIM, 256><<<dimGrid, dimBlock>>>(dim, dim, 256, devGridOld, devGridNew);
+            // update_lbm_classic<DIM, DIM, 256><<<dimGrid, dimBlock>>>(dim, dim, 256, devGridOld, devGridNew);
             std::swap(devGridOld, devGridNew);
         }
 
         cudaDeviceSynchronize();
         long long t_end = time_usec();
+        check_cuda_error();
         
         cudaMemcpy(&grid[0], devGridNew, bytesize, cudaMemcpyDeviceToHost);
         cudaFree(devGridOld);
         cudaFree(devGridNew);
+        check_cuda_error();
         *time = t_end - t_start;
     }
 };
