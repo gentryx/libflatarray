@@ -418,7 +418,7 @@ protected:
         dim3 dimGrid;
         gen_dims(&dimBlock, &dimGrid, dim);
 
-        return dimGrid.x * dimBlock.x * dimGrid.y * dimBlock.y * (dim - 4);
+        return dimGrid.x * dimBlock.x * dimGrid.y * dimBlock.y * (256 - 4);
     }
 
     virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
