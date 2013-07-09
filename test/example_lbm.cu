@@ -81,7 +81,7 @@ __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld
     int x = blockIdx.x * blockDim.x + threadIdx.x + 2;
     int y = blockIdx.y * blockDim.y + threadIdx.y + 2;
     int z = 2;
-    
+
 #pragma unroll 10
     for (; z < (dimZ - 2); z += 1) {
 
@@ -103,18 +103,18 @@ __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld
         velZ  = GET_COMP(x,y,z-1,T) + GET_COMP(x,y+1,z-1,TS) +
             GET_COMP(x+1,y,z-1,TW);
 
-        const double rho = 
+        const double rho =
             GET_COMP(x,y,z,C) + GET_COMP(x,y+1,z,S) +
             GET_COMP(x+1,y,z,W) + GET_COMP(x,y,z+1,B) +
             GET_COMP(x+1,y+1,z,SW) + GET_COMP(x,y+1,z+1,BS) +
             GET_COMP(x+1,y,z+1,BW) + velX + velY + velZ;
-        velX  = velX 
-            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW) 
+        velX  = velX
+            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW)
             - GET_COMP(x+1,y,z+1,BW);
         velY  = velY
-            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE) 
+            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE)
             - GET_COMP(x,y+1,z-1,TS) - GET_COMP(x,y+1,z+1,BS);
         velZ  = velZ+GET_COMP(x,y-1,z-1,TN) + GET_COMP(x-1,y,z-1,TE) - GET_COMP(x,y,z+1,B) - GET_COMP(x,y-1,z+1,BN) - GET_COMP(x,y+1,z+1,BS) - GET_COMP(x+1,y,z+1,BW) - GET_COMP(x-1,y,z+1,BE);
 
@@ -158,28 +158,28 @@ __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld
 #undef GET_COMP
 #undef SET_COMP
 
-#undef C 
-#undef N 
-#undef E 
-#undef W 
-#undef S 
-#undef T 
-#undef B 
+#undef C
+#undef N
+#undef E
+#undef W
+#undef S
+#undef T
+#undef B
 
-#undef NW 
-#undef SW 
-#undef NE 
-#undef SE 
+#undef NW
+#undef SW
+#undef NE
+#undef SE
 
-#undef TW 
-#undef BW 
-#undef TE 
-#undef BE 
+#undef TW
+#undef BW
+#undef TE
+#undef BE
 
-#undef TN 
-#undef BN 
-#undef TS 
-#undef BS 
+#undef TN
+#undef BN
+#undef TS
+#undef BS
 
 #define GET_COMP(X, Y, Z, DIR)                  \
     hoodOld.at(LibFlatArray::FixedCoord<X, Y, Z>()).DIR()
@@ -224,18 +224,18 @@ __global__ void update_lbm_flat_array(int dimX, int dimY, int dimZ, double *grid
         velZ  = GET_COMP(x,y,z-1,T) + GET_COMP(x,y+1,z-1,TS) +
             GET_COMP(x+1,y,z-1,TW);
 
-        const double rho = 
+        const double rho =
             GET_COMP(x,y,z,C) + GET_COMP(x,y+1,z,S) +
             GET_COMP(x+1,y,z,W) + GET_COMP(x,y,z+1,B) +
             GET_COMP(x+1,y+1,z,SW) + GET_COMP(x,y+1,z+1,BS) +
             GET_COMP(x+1,y,z+1,BW) + velX + velY + velZ;
-        velX  = velX 
-            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW) 
+        velX  = velX
+            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW)
             - GET_COMP(x+1,y,z+1,BW);
         velY  = velY
-            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE) 
+            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE)
             - GET_COMP(x,y+1,z-1,TS) - GET_COMP(x,y+1,z+1,BS);
         velZ  = velZ+GET_COMP(x,y-1,z-1,TN) + GET_COMP(x-1,y,z-1,TE) - GET_COMP(x,y,z+1,B) - GET_COMP(x,y-1,z+1,BN) - GET_COMP(x,y+1,z+1,BS) - GET_COMP(x+1,y,z+1,BW) - GET_COMP(x-1,y,z+1,BE);
 
@@ -290,7 +290,7 @@ __global__ void update_lbm_object_oriented(int dimX, int dimY, int dimZ, CellLBM
     int x = blockIdx.x * blockDim.x + threadIdx.x + 2;
     int y = blockIdx.y * blockDim.y + threadIdx.y + 2;
     int z = 2;
-    
+
 #pragma unroll 10
     for (; z < (dimZ - 2); z += 1) {
 
@@ -312,18 +312,18 @@ __global__ void update_lbm_object_oriented(int dimX, int dimY, int dimZ, CellLBM
         velZ  = GET_COMP(x,y,z-1,T) + GET_COMP(x,y+1,z-1,TS) +
             GET_COMP(x+1,y,z-1,TW);
 
-        const double rho = 
+        const double rho =
             GET_COMP(x,y,z,C) + GET_COMP(x,y+1,z,S) +
             GET_COMP(x+1,y,z,W) + GET_COMP(x,y,z+1,B) +
             GET_COMP(x+1,y+1,z,SW) + GET_COMP(x,y+1,z+1,BS) +
             GET_COMP(x+1,y,z+1,BW) + velX + velY + velZ;
-        velX  = velX 
-            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW) 
+        velX  = velX
+            - GET_COMP(x+1,y,z,W)    - GET_COMP(x+1,y-1,z,NW)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x+1,y,z-1,TW)
             - GET_COMP(x+1,y,z+1,BW);
         velY  = velY
-            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S) 
-            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE) 
+            + GET_COMP(x-1,y-1,z,NE) - GET_COMP(x,y+1,z,S)
+            - GET_COMP(x+1,y+1,z,SW) - GET_COMP(x-1,y+1,z,SE)
             - GET_COMP(x,y+1,z-1,TS) - GET_COMP(x,y+1,z+1,BS);
         velZ  = velZ+GET_COMP(x,y-1,z-1,TN) + GET_COMP(x-1,y,z-1,TE) - GET_COMP(x,y,z+1,B) - GET_COMP(x,y-1,z+1,BN) - GET_COMP(x,y+1,z+1,BS) - GET_COMP(x+1,y,z+1,BW) - GET_COMP(x-1,y,z+1,BE);
 
@@ -370,14 +370,14 @@ __global__ void update_lbm_object_oriented(int dimX, int dimY, int dimZ, CellLBM
 class benchmark
 {
 public:
-    void evaluate() 
+    void evaluate()
     {
         for (int dim = 32; dim <= 160; dim += 4) {
             run(dim);
         }
     }
 
-    void run(int dim) 
+    void run(int dim)
     {
         int repeats = 100;
 	if (dim <= 96) {
@@ -408,11 +408,11 @@ protected:
         dim3 dimBlock;
         dim3 dimGrid;
         gen_dims(&dimBlock, &dimGrid, dim);
-     
-        return exec(dim, dimBlock, dimGrid, repeats);
-    }   
 
-    virtual size_t gridSize(int dim) 
+        return exec(dim, dimBlock, dimGrid, repeats);
+    }
+
+    virtual size_t gridSize(int dim)
     {
         dim3 dimBlock;
         dim3 dimGrid;
@@ -440,7 +440,7 @@ template<template<int D> class CARGO>
 class bind
 {
 public:
-    template<typename T1, typename T2, typename T3, typename T4>  
+    template<typename T1, typename T2, typename T3, typename T4>
     void operator()(int size, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
 #define CASE(SIZE)                                                      \
@@ -448,7 +448,7 @@ public:
             CARGO<SIZE>()(size, arg1, arg2, arg3, arg4);                \
             return;                                                     \
         }
-        
+
         CASE( 32);
         CASE( 64);
         CASE( 96);
@@ -490,7 +490,7 @@ public:
         cudaDeviceSynchronize();
         long long t_end = time_usec();
         check_cuda_error();
-        
+
         cudaMemcpy(&grid[0], devGridNew, bytesize, cudaMemcpyDeviceToHost);
         cudaFree(devGridOld);
         cudaFree(devGridNew);
@@ -502,14 +502,14 @@ public:
 class benchmark_lbm_cuda_classic : public benchmark_lbm_cuda
 {
 protected:
-    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) 
+    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         long long time;
         bind<benchmark_lbm_cuda_classic_callback>()(dim, &time, dimBlock, dimGrid, repeats);
         return time;
     }
 
-    virtual std::string name() 
+    virtual std::string name()
     {
         return "LBM Classic CUDA";
     }
@@ -522,7 +522,7 @@ int main(int argc, char **argv)
         std::cerr << "usage: " << argv[0] << "CUDA_DEVICE\n";
         return 1;
     }
-    
+
     std::stringstream s;
     s << argv[1];
     int cudaDevice;
@@ -530,6 +530,6 @@ int main(int argc, char **argv)
     cudaSetDevice(cudaDevice);
 
     benchmark_lbm_cuda_classic().evaluate();
-    
+
     return 0;
 }

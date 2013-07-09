@@ -13,11 +13,11 @@
 // fix compilation for non-cuda builds
 #ifndef __host__
 #define __host__
-#endif 
+#endif
 
 #ifndef __device__
 #define __device__
-#endif 
+#endif
 
 namespace LibFlatArray {
 
@@ -50,7 +50,7 @@ public:
             sizeof(BOOST_PP_SEQ_ELEM(0, t));                            \
     };                                                                  \
     }                                                                   \
-    }                                                                   
+    }
 
         // std::cout << "DIM_X = " << DIM_X << "\n"                        \
         //           << "DIM_Y = " << DIM_Y << "\n"                        \
@@ -82,7 +82,7 @@ public:
             (DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
             *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +             \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
-    }                                                                   
+    }
 
 #define DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER)    \
     DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const)
@@ -181,4 +181,4 @@ class soa_accessor;
 
 }
 
-#endif 
+#endif
