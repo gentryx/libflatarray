@@ -35,6 +35,29 @@ public:
     static const std::size_t OFFSET = 0;
 };
 
+template<template<int D> class CARGO>
+class bind
+{
+public:
+    template<typename T1, typename T2, typename T3, typename T4>
+    void operator()(int size, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+    {
+#define CASE(SIZE)                                                      \
+        if (size <= SIZE) {                                             \
+            CARGO<SIZE>()(size, arg1, arg2, arg3, arg4);                \
+            return;                                                     \
+        }
+
+        CASE( 32);
+        CASE( 64);
+        CASE( 96);
+        CASE(128);
+        CASE(160);
+        CASE(192);
+    }
+#undef CASE
+};
+
 }
 
 }
@@ -80,7 +103,7 @@ public:
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data +                                                      \
             (DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +             \
+            index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
     }
 
@@ -113,25 +136,36 @@ class soa_accessor;
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
                                                                         \
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
-    class soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX>           \
+    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    class soa_accessor<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>  \
     {                                                                   \
     public:                                                             \
         typedef CELL_TYPE MyCell;                                       \
                                                                         \
+        static const int DIM_X = MY_DIM_X;                              \
+        static const int DIM_Y = MY_DIM_Y;                              \
+        static const int DIM_Z = MY_DIM_Z;                              \
+                                                                        \
         __host__ __device__                                             \
-            soa_accessor(char *_data=0, int *_index=0) :                \
-            data(_data),                                                \
-            index(_index)                                               \
+            soa_accessor(char *data=0, int index=0) :                   \
+            data(data),                                                 \
+            index(index)                                                \
             {}                                                          \
                                                                         \
         template<int X, int Y, int Z>                                   \
             inline                                                      \
             __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> at(FixedCoord<X, Y, Z>) \
+            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> operator[](FixedCoord<X, Y, Z>) const \
             {                                                           \
                 return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X>(data, index); \
             }                                                           \
+                                                                        \
+        inline                                                          \
+            __host__ __device__                                         \
+            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX> operator[](int offset) const \
+        {                                                               \
+            return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX>(data, index + offset); \
+        }                                                               \
                                                                         \
         __host__ __device__                                             \
             inline                                                      \
@@ -162,7 +196,7 @@ class soa_accessor;
                                                                         \
     private:                                                            \
         char *data;                                                     \
-        int *index;                                                     \
+        int index;                                                      \
     };                                                                  \
     }                                                                   \
                                                                         \
@@ -178,6 +212,76 @@ class soa_accessor;
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
     }
+
+template<typename CELL_TYPE>
+class soa_grid
+{
+public:
+    const static int DIM_X = 256;
+    const static int DIM_Y = 256;
+    const static int DIM_Z = 256;
+
+    soa_grid(size_t dimX, size_t dimY, size_t dimZ) :
+        dimX(dimX),
+        dimY(dimY),
+        dimZ(dimZ),
+        byteSize(DIM_X * DIM_Y * DIM_Z * sizeof(CELL_TYPE))
+    {
+        data = new char[byteSize];
+    }
+
+    soa_grid(const soa_grid& other) :
+        dimX(other.dimX),
+        dimY(other.dimY),
+        dimZ(other.dimZ),
+        byteSize(DIM_X * DIM_Y * DIM_Z * sizeof(CELL_TYPE))
+    {
+        data = new char[byteSize];
+        std::copy(other.data, other.data + byteSize, data);
+    }
+
+    template<typename  CALLBACK>
+    void iterate(size_t x, size_t y, size_t z)
+    {
+        size_t indexStart = z * DIM_X * DIM_Y + y * DIM_X + x;
+        iterate<CALLBACK>(indexStart);
+    }
+
+    template<typename  FUNCTOR>
+    void callback(const FUNCTOR& functor) const
+    {
+        functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data));
+    }
+
+    void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
+    {
+        int index = z * DIM_X * DIM_Y + y * DIM_X + x;
+        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, index);
+        accessor << cell;
+    }
+
+    CELL_TYPE get(size_t x, size_t y, size_t z) const
+    {
+        int index = z * DIM_X * DIM_Y + y * DIM_X + x;
+        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, index);
+        CELL_TYPE cell;
+        cell << accessor;
+        return cell;
+    }
+
+    ~soa_grid()
+    {
+        delete data;
+    }
+
+private:
+    size_t dimX;
+    size_t dimY;
+    size_t dimZ;
+    size_t byteSize;
+    char *data;
+
+};
 
 }
 

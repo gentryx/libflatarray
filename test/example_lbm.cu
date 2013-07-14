@@ -435,28 +435,6 @@ protected:
     }
 };
 
-// fixme: move this to dedicated file
-template<template<int D> class CARGO>
-class bind
-{
-public:
-    template<typename T1, typename T2, typename T3, typename T4>
-    void operator()(int size, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-    {
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            CARGO<SIZE>()(size, arg1, arg2, arg3, arg4);                \
-            return;                                                     \
-        }
-
-        CASE( 32);
-        CASE( 64);
-        CASE( 96);
-        CASE(128);
-        CASE(160);
-    }
-#undef CASE
-};
 
 template<int DIM>
 class benchmark_lbm_cuda_classic_callback
@@ -502,10 +480,10 @@ public:
 class benchmark_lbm_cuda_classic : public benchmark_lbm_cuda
 {
 protected:
-    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         long long time;
-        bind<benchmark_lbm_cuda_classic_callback>()(dim, &time, dimBlock, dimGrid, repeats);
+        LibFlatArray::detail::flat_array::bind<benchmark_lbm_cuda_classic_callback>()(dim, &time, dimBlock, dimGrid, repeats);
         return time;
     }
 
