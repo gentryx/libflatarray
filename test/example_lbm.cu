@@ -182,10 +182,10 @@ __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld
 #undef BS
 
 #define GET_COMP(X, Y, Z, DIR)                  \
-    hoodOld[index][LibFlatArray::FixedCoord<X, Y, Z>()].DIR()
+    hoodOld[LibFlatArray::FixedCoord<X, Y, Z>()].DIR()
 
 #define SET_COMP(DIR)                           \
-    hoodNew[index].DIR()
+    hoodNew.DIR()
 
 template<int DIM_X, int DIM_Y, int DIM_Z>
 __global__ void update_lbm_flat_array(int dimX, int dimY, int dimZ, double *gridOld, double *gridNew)
@@ -198,8 +198,8 @@ __global__ void update_lbm_flat_array(int dimX, int dimY, int dimZ, double *grid
     int offset = DIM_X * DIM_Y;
     int end = DIM_X * DIM_Y * (dimZ - 2);
 
-    LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodNew((char*)gridNew);
-    LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodOld((char*)gridOld);
+    LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodNew((char*)gridNew, &index);
+    LibFlatArray::soa_accessor<CellLBM, DIM_X, DIM_Y, DIM_Z, 0> hoodOld((char*)gridOld, &index);
 
 #pragma unroll 10
     for (; index < end; index += offset) {

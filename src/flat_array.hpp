@@ -103,7 +103,7 @@ public:
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data +                                                      \
             (DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
+            *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
     }
 
@@ -147,7 +147,7 @@ class soa_accessor;
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
         __host__ __device__                                             \
-            soa_accessor(char *data=0, int index=0) :                   \
+            soa_accessor(char *data=0, int *index=0) :                  \
             data(data),                                                 \
             index(index)                                                \
             {}                                                          \
@@ -159,13 +159,6 @@ class soa_accessor;
             {                                                           \
                 return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X>(data, index); \
             }                                                           \
-                                                                        \
-        inline                                                          \
-            __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX> operator[](int offset) const \
-        {                                                               \
-            return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX>(data, index + offset); \
-        }                                                               \
                                                                         \
         __host__ __device__                                             \
             inline                                                      \
@@ -196,7 +189,7 @@ class soa_accessor;
                                                                         \
     private:                                                            \
         char *data;                                                     \
-        int index;                                                      \
+        int *index;                                                     \
     };                                                                  \
     }                                                                   \
                                                                         \
@@ -256,14 +249,14 @@ public:
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
         int index = z * DIM_X * DIM_Y + y * DIM_X + x;
-        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, index);
+        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, &index);
         accessor << cell;
     }
 
     CELL_TYPE get(size_t x, size_t y, size_t z) const
     {
         int index = z * DIM_X * DIM_Y + y * DIM_X + x;
-        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, index);
+        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, &index);
         CELL_TYPE cell;
         cell << accessor;
         return cell;
