@@ -35,15 +35,16 @@ public:
     }
 };
 
-class BingoBongo
+class CopyTemperatureNativeStyle
 {
 public:
-    BingoBongo(int startX,
-               int startY,
-               int startZ,
-               int endX,
-               int endY,
-               int endZ) :
+    CopyTemperatureNativeStyle(
+        int startX,
+        int startY,
+        int startZ,
+        int endX,
+        int endY,
+        int endZ) :
         startX(startX),
         startY(startY),
         startZ(startZ),
@@ -53,7 +54,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, const ACCESSOR2& accessor2) const
+    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2) const
     {
         for (int z = startZ; z < endZ; ++z) {
             for (int y = startY; y < endY; ++y) {
@@ -62,10 +63,22 @@ public:
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
-                    accessor2[index].temperature() = accessor1[index].temperature();
+                    index1 = index;
+                    index2 = index;
+                    accessor2.temperature() = accessor1.temperature();
                 }
             }
         }
+    }
+
+    int *indexPointer1()
+    {
+        return &index1;
+    }
+
+    int *indexPointer2()
+    {
+        return &index2;
     }
 
 private:
@@ -74,7 +87,66 @@ private:
     int startZ;
     int endX;
     int endY;
-    int endZ;;
+    int endZ;
+    int index1;
+    int index2;
+};
+
+class CopyTemperatureCactusStyle
+{
+public:
+    CopyTemperatureCactusStyle(
+        int startX,
+        int startY,
+        int startZ,
+        int endX,
+        int endY,
+        int endZ) :
+        startX(startX),
+        startY(startY),
+        startZ(startZ),
+        endX(endX),
+        endY(endY),
+        endZ(endZ),
+        index1(0),
+        index2(0)
+    {}
+
+    template<typename ACCESSOR1, typename ACCESSOR2>
+    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2) const
+    {
+        for (int z = startZ; z < endZ; ++z) {
+            for (int y = startY; y < endY; ++y) {
+                for (int x = startX; x < endX; ++x) {
+                    int index =
+                        ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
+                        ACCESSOR1::DIM_X * y +
+                        x;
+                    (&accessor2.temperature())[index] = (&accessor1.temperature())[index];
+                }
+            }
+        }
+    }
+
+    int *indexPointer1()
+    {
+        return &index1;
+    }
+
+    int *indexPointer2()
+    {
+        return &index2;
+    }
+
+private:
+    int startX;
+    int startY;
+    int startZ;
+    int endX;
+    int endY;
+    int endZ;
+    int index1;
+    int index2;
 };
 
 LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
@@ -89,7 +161,7 @@ public:
     {}
 
     template<typename ACCESSOR2>
-    void operator()(const ACCESSOR2& accessor2) const
+    void operator()(ACCESSOR2 accessor2) const
     {
         return (*functor)(accessor1, accessor2);
     }
@@ -103,7 +175,7 @@ template<typename GRID2, typename UPDATE_FUNCTOR>
 class UpdateFunctorHelper1
 {
 public:
-    UpdateFunctorHelper1(const GRID2 *grid2, UPDATE_FUNCTOR *functor) :
+    UpdateFunctorHelper1(GRID2 *grid2, UPDATE_FUNCTOR *functor) :
         grid2(grid2),
         functor(functor)
     {}
@@ -112,11 +184,11 @@ public:
     void operator()(const ACCESSOR1& accessor1) const
     {
         UpdateFunctorHelper2<ACCESSOR1, UPDATE_FUNCTOR> helper(accessor1, functor);
-        grid2->callback(helper);
+        grid2->callback(helper, functor->indexPointer2());
     }
 
 private:
-    const GRID2 *grid2;
+    GRID2 *grid2;
     UPDATE_FUNCTOR *functor;
 };
 
@@ -124,10 +196,10 @@ class UpdateFunctor
 {
 public:
     template<typename GRID1, typename GRID2, typename UPDATE_FUNCTOR>
-    void operator()(const GRID1& grid1, const GRID2& grid2, UPDATE_FUNCTOR *functor) const
+    void operator()(const GRID1& grid1, GRID2 *grid2, UPDATE_FUNCTOR *functor) const
     {
-        UpdateFunctorHelper1<GRID2, UPDATE_FUNCTOR> helper(&grid2, functor);
-        grid1.callback(helper);
+        UpdateFunctorHelper1<GRID2, UPDATE_FUNCTOR> helper(grid2, functor);
+        grid1.callback(helper, functor->indexPointer1());
     }
 };
 
@@ -149,8 +221,8 @@ int main(int argc, char **argv)
     }
 
 
-    BingoBongo functor(0, 0, 0, dimX, dimY, dimZ);
-    UpdateFunctor()(gridOld, gridNew, &functor);
+    CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
+    UpdateFunctor()(gridOld, &gridNew, &functor);
 
     for (int z = 0; z < dimZ; ++z) {
         for (int y = 0; y < dimY; ++y) {

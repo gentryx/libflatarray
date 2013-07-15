@@ -75,35 +75,15 @@ public:
     }                                                                   \
     }
 
-        // std::cout << "DIM_X = " << DIM_X << "\n"                        \
-        //           << "DIM_Y = " << DIM_Y << "\n"                        \
-        //           << "DIM_Z = " << DIM_Z << "\n"                        \
-        //           << "field offset = " << detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET << "\n" \
-        //           << "sizeof = " << sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) << "\n" \
-        //           << "index = " << *index << "\n"                       \
-        //           << "INDEX = " << INDEX << "\n\n";                     \
-
-        // return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(data);                  \
-
-
-        // printf("  actual offset is %d\n", ((DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-        //                                    *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) + \
-        //                                    INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)))); \
-        // printf("  d1 %d\n", (DIM_X * DIM_Y * DIM_Z)); \
-        // printf("  d2 %d\n", detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET); \
-        // printf("  d3 %d\n", *index); \
-        // printf("  d4 %d\n", INDEX); \
-        // printf("  d5 %d\n", sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));      \
-
 #define DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST)           \
     inline                                                              \
     __host__ __device__                                                 \
     CONST BOOST_PP_SEQ_ELEM(0, MEMBER)& BOOST_PP_SEQ_ELEM(1, MEMBER)() CONST \
     {                                                                   \
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
-            data +                                                      \
-            (DIM_X * DIM_Y * DIM_Z) * detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
+            data + (DIM_X * DIM_Y * DIM_Z) *                            \
+            detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
+            *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +             \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
     }
 
@@ -111,7 +91,7 @@ public:
     DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const)
 
 #define DECLARE_SOA_MEMBER_NORMAL(MEMBER_INDEX, CELL, MEMBER)   \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, )
+    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      )
 
 #define COPY_SOA_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)                  \
     BOOST_PP_SEQ_ELEM(1, MEMBER)() = cell.BOOST_PP_SEQ_ELEM(1, MEMBER);
@@ -233,17 +213,10 @@ public:
         std::copy(other.data, other.data + byteSize, data);
     }
 
-    template<typename  CALLBACK>
-    void iterate(size_t x, size_t y, size_t z)
+    template<typename FUNCTOR>
+    void callback(const FUNCTOR& functor, int *index) const
     {
-        size_t indexStart = z * DIM_X * DIM_Y + y * DIM_X + x;
-        iterate<CALLBACK>(indexStart);
-    }
-
-    template<typename  FUNCTOR>
-    void callback(const FUNCTOR& functor) const
-    {
-        functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data));
+        functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data, index));
     }
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
