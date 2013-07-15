@@ -54,7 +54,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2) const
+    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2)
     {
         for (int z = startZ; z < endZ; ++z) {
             for (int y = startY; y < endY; ++y) {
@@ -168,7 +168,7 @@ public:
 
 private:
     const ACCESSOR1 accessor1;
-    const UPDATE_FUNCTOR *functor;
+    UPDATE_FUNCTOR *functor;
 };
 
 template<typename GRID2, typename UPDATE_FUNCTOR>
@@ -220,8 +220,8 @@ int main(int argc, char **argv)
         }
     }
 
-
-    CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
+    // CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
+    CopyTemperatureNativeStyle functor(0, 0, 0, dimX, dimY, dimZ);
     UpdateFunctor()(gridOld, &gridNew, &functor);
 
     for (int z = 0; z < dimZ; ++z) {
