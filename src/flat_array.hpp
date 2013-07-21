@@ -7,7 +7,7 @@
 
 #ifndef _FLAT_ARRAY_HPP_
 
-#include "stdio.h"
+#include <stdexcept>
 #include <boost/preprocessor/seq.hpp>
 
 // fix compilation for non-cuda builds
@@ -21,9 +21,84 @@
 
 namespace LibFlatArray {
 
+/**
+ * This class provides an object-oriented view to a "Struct of
+ * Arrays"-style grid. It requires the user to register the type CELL
+ * using the macro LIBFLATARRAY_REGISTER_SOA.
+ */
+template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+class soa_accessor;
+
 namespace detail {
 
 namespace flat_array {
+
+/**
+ * This helper class is used to retrieve objects from the SoA storage
+ * via an accessor.
+ */
+template<typename CELL>
+class get_instance_functor
+{
+public:
+    get_instance_functor(CELL *target) :
+        target(target)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(const ACCESSOR& accessor) const
+    {
+        *target << accessor;
+    }
+
+private:
+    CELL *target;
+};
+
+/**
+ * This helper class uses an accessor to push an object's members into
+ * the SoA storage.
+ */
+template<typename CELL>
+class set_instance_functor
+{
+public:
+    set_instance_functor(const CELL *source) :
+        source(source)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR accessor) const
+    {
+        accessor << *source;
+    }
+
+private:
+    const CELL *source;
+};
+
+/**
+ * This helper class uses the dimension specified in the accessor to
+ * compute how many bytes a grid needs to allocate im memory.
+ */
+template<typename CELL>
+class set_byte_size_functor
+{
+public:
+    set_byte_size_functor(size_t *byte_size) :
+        byte_size(byte_size)
+    {}
+
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
+    {
+        *byte_size = sizeof(CELL) * DIM_X * DIM_Y * DIM_Z;
+    }
+
+private:
+    size_t *byte_size;
+};
+
 
 template<typename CELL, int I>
 class offset;
@@ -35,6 +110,7 @@ public:
     static const std::size_t OFFSET = 0;
 };
 
+// fixme: kill this
 template<template<int D> class CARGO>
 class bind
 {
@@ -54,6 +130,8 @@ public:
         CASE(128);
         CASE(160);
         CASE(192);
+        CASE(224);
+        CASE(256);
     }
 #undef CASE
 };
@@ -100,14 +178,6 @@ public:
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = soa.BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
 template<int X, int Y, int Z> class FixedCoord {};
-
-/**
- * This class provides an object-oriented view to a "Struct of
- * Arrays"-style grid. It requires the user to register the type CELL
- * using the macro LIBFLATARRAY_REGISTER_SOA.
- */
-template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-class soa_accessor;
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
@@ -167,6 +237,12 @@ class soa_accessor;
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
+        __host__ __device__                                             \
+            void setIndexPointer(int *newIndex)                         \
+        {                                                               \
+            index = newIndex;                                           \
+        }                                                               \
+                                                                        \
     private:                                                            \
         char *data;                                                     \
         int *index;                                                     \
@@ -190,49 +266,26 @@ template<typename CELL_TYPE>
 class soa_grid
 {
 public:
-    const static int DIM_X = 256;
-    const static int DIM_Y = 256;
-    const static int DIM_Z = 256;
-
-    soa_grid(size_t dimX, size_t dimY, size_t dimZ) :
-        dimX(dimX),
-        dimY(dimY),
-        dimZ(dimZ),
-        byteSize(DIM_X * DIM_Y * DIM_Z * sizeof(CELL_TYPE))
+    soa_grid(size_t dim_x, size_t dim_y, size_t dim_z) :
+        dim_x(dim_x),
+        dim_y(dim_y),
+        dim_z(dim_z),
+        data(0)
     {
-        data = new char[byteSize];
+        // we need callback() to round up our grid size
+        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&byte_size), 0);
+        // FIXME: make external allocators work here (e.g. for CUDA)
+        data = new char[byte_size];
     }
 
     soa_grid(const soa_grid& other) :
-        dimX(other.dimX),
-        dimY(other.dimY),
-        dimZ(other.dimZ),
-        byteSize(DIM_X * DIM_Y * DIM_Z * sizeof(CELL_TYPE))
+        dim_x(other.dim_x),
+        dim_y(other.dim_y),
+        dim_z(other.dim_z),
+        byte_size(other.byte_size)
     {
-        data = new char[byteSize];
-        std::copy(other.data, other.data + byteSize, data);
-    }
-
-    template<typename FUNCTOR>
-    void callback(const FUNCTOR& functor, int *index) const
-    {
-        functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data, index));
-    }
-
-    void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
-    {
-        int index = z * DIM_X * DIM_Y + y * DIM_X + x;
-        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, &index);
-        accessor << cell;
-    }
-
-    CELL_TYPE get(size_t x, size_t y, size_t z) const
-    {
-        int index = z * DIM_X * DIM_Y + y * DIM_X + x;
-        soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0> accessor(data, &index);
-        CELL_TYPE cell;
-        cell << accessor;
-        return cell;
+        data = new char[byte_size];
+        std::copy(other.data, other.data + byte_size, data);
     }
 
     ~soa_grid()
@@ -240,13 +293,66 @@ public:
         delete data;
     }
 
-private:
-    size_t dimX;
-    size_t dimY;
-    size_t dimZ;
-    size_t byteSize;
-    char *data;
+    template<typename FUNCTOR>
+    void callback(FUNCTOR functor, int *index = 0) const
+    {
+        size_t size = std::max(dim_x, dim_y);
+        size = std::max(size, dim_z);
 
+#define CASE(SIZE)                                                      \
+        if (size <= SIZE) {                                             \
+            functor(soa_accessor<CELL_TYPE, SIZE, SIZE, SIZE, 0>(       \
+                        data, index));                                  \
+            return;                                                     \
+        }
+
+        CASE( 32);
+        CASE( 64);
+        CASE( 96);
+        CASE(128);
+        CASE(160);
+        CASE(192);
+        CASE(224);
+        CASE(256);
+        CASE(288);
+        throw std::logic_error("grid size too large");
+
+#undef CASE
+
+    // fixme: kill this
+    // functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data, index));
+    }
+
+    // fixme: add operator<< and operator>>
+    void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
+    {
+        int index = 0;
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell), &index);
+        // soa_accessor<CELL_TYPE, 32, 32, 32, 0> accessor(data, &index);
+        // std::cout << "    gringo1\n";
+        // accessor << cell;
+        // std::cout << "    gringo2\n";
+    }
+
+    CELL_TYPE get(size_t x, size_t y, size_t z) const
+    {
+        // int index = z * 32 * 32 + y * 32 + x;
+        // soa_accessor<CELL_TYPE, 32, 32, 32, 0> accessor(data, &index);
+        CELL_TYPE cell;
+        int index = 0;
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell), &index);
+
+        // cell << accessor;
+        return cell;
+    }
+
+private:
+    size_t dim_x;
+    size_t dim_y;
+    size_t dim_z;
+    size_t byte_size;
+    // We can't use std::vector here since the code needs to work with CUDA, too.
+    char *data;
 };
 
 }

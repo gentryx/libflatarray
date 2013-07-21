@@ -41,6 +41,14 @@ public:
     double BN;
     double TS;
     double BS;
+
+     template<typename ACCESSOR1, typename ACCESSOR2>
+    __device__
+    __host__
+     static void updateLine(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
+    {
+        printf("update\n");
+    }
 };
 
 LIBFLATARRAY_REGISTER_SOA(CellLBM, ((double)(C))((double)(N))((double)(E))((double)(W))((double)(S))((double)(T))((double)(B))((double)(NW))((double)(SW))((double)(NE))((double)(SE))((double)(TW))((double)(BW))((double)(TE))((double)(BE))((double)(TN))((double)(BN))((double)(TS))((double)(BS)))
@@ -489,15 +497,121 @@ protected:
 
     virtual std::string name()
     {
-        return "LBM Classic CUDA";
+        return "lbm_cuda_classic";
+    }
+};
+
+template<typename CELL, typename ACCESSOR1, typename ACCESSOR2>
+__global__
+void update(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
+{
+    CELL::update(accessorOld, accessorNew);
+}
+
+
+template<typename CELL, typename ACCESSOR1>
+class SoAUpdateFunctorHelper2
+{
+public:
+    SoAUpdateFunctorHelper2(ACCESSOR1 accessor1, int *index1, const dim3& dimBlock, const dim3& dimGrid) :
+        accessor1(accessor1),
+        index1(index1),
+        dimBlock(dimBlock),
+        dimGrid(dimGrid)
+    {}
+
+    template<typename ACCESSOR2>
+    void operator()(ACCESSOR2 accessor2) const
+    {
+        // fixme: update this shit!
+        update<CELL><<<dimBlock, dimGrid>>>(accessor1, accessor2);
     }
 
+    int index2;
+
+private:
+    ACCESSOR1 accessor1;
+    int *index1;
+    const dim3& dimBlock;
+    const dim3& dimGrid;
+};
+
+template<typename CELL, typename GRID2>
+class SoAUpdateFunctorHelper1
+{
+public:
+
+    SoAUpdateFunctorHelper1(GRID2 *grid2, const dim3& dimBlock, const dim3& dimGrid) :
+        grid2(grid2),
+        dimBlock(dimBlock),
+        dimGrid(dimGrid)
+    {}
+
+    template<typename ACCESSOR1>
+    void operator()(ACCESSOR1 accessor1)
+    {
+        SoAUpdateFunctorHelper2<CELL, ACCESSOR1> helper(accessor1, &index1, dimBlock, dimGrid);
+        grid2->callback(helper, &helper.index2);
+    }
+
+    int index1;
+
+private:
+    GRID2 *grid2;
+    const dim3& dimBlock;
+    const dim3& dimGrid;
+};
+
+
+template<typename CELL>
+class SoAUpdateFunctorPrototype
+{
+public:
+    template<typename GRID1, typename GRID2>
+    void operator()(GRID1 *gridOld, GRID2 *gridNew, const dim3& dimBlock, const dim3& dimGrid)
+    {
+        SoAUpdateFunctorHelper1<CELL, GRID2> helper(gridNew, dimBlock, dimGrid);
+        gridOld->callback(helper, &helper.index1);
+    }
+};
+
+class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
+{
+    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    {
+        LibFlatArray::soa_grid<CellLBM> gridA(dim, dim, dim);
+        LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, dim);
+        // fixme: init grid?
+
+        cudaDeviceSynchronize();
+        long long t_start = time_usec();
+
+        LibFlatArray::soa_grid<CellLBM> *gridOld = &gridA;
+        LibFlatArray::soa_grid<CellLBM> *gridNew = &gridB;
+
+        // fixme: do the evolution. 1 functor per call?
+        for (int t = 0; t < repeats; ++t) {
+            SoAUpdateFunctorPrototype<CellLBM>()(gridOld, gridNew, dimBlock, dimGrid);
+            std::swap(gridOld, gridNew);
+        }
+
+        cudaDeviceSynchronize();
+        long long t_end = time_usec();
+        check_cuda_error();
+
+        return t_end - t_start;
+    }
+
+    virtual std::string name()
+    {
+        return "lbm_cuda_flat_array";
+    }
 };
 
 int main(int argc, char **argv)
 {
     if (argc != 2) {
-        std::cerr << "usage: " << argv[0] << "CUDA_DEVICE\n";
+        std::cerr << "usage: " << argv[0] << " CUDA_DEVICE\n";
         return 1;
     }
 
@@ -507,7 +621,8 @@ int main(int argc, char **argv)
     s >> cudaDevice;
     cudaSetDevice(cudaDevice);
 
-    benchmark_lbm_cuda_classic().evaluate();
+    // benchmark_lbm_cuda_classic().evaluate();
+    benchmark_lbm_cuda_flat_array().evaluate();
 
     return 0;
 }
