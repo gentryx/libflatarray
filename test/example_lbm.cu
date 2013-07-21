@@ -45,19 +45,32 @@ public:
 #define GET_COMP(X, Y, Z, DIR)                                  \
     accessorOld[LibFlatArray::FixedCoord<X, Y, Z>()].DIR()
 
-#define SET_COMP(DIR)                                                   \
+#define SET_COMP(DIR)                           \
     accessorNew.DIR()
 
+    // fixme: refactor interface so that all wire-up in Cell can be summarized?
     template<typename ACCESSOR1, typename ACCESSOR2>
     __device__
     __host__
-    static void updateLine(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
+    static void updateLine(ACCESSOR1 accessorOld, int *indexOld, ACCESSOR2 accessorNew, int *indexNew, int startZ, int endZ)
     {
-        SET_COMP(C) = GET_COMP(0, 0, 0, C);
+        int x = blockIdx.x * blockDim.x + threadIdx.x + 2;
+        int y = blockIdx.y * blockDim.y + threadIdx.y + 2;
+        int z = startZ;
+        int planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
+        int planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
+
+#pragma unroll 10
+        for (; z < endZ; z += 1) {
+            SET_COMP(C) = GET_COMP(0, 0, 0, C);
+            *indexOld += planeSizeOld;
+            *indexNew += planeSizeNew;
+        }
     }
 
 #undef GET_COMP
 #undef SET_COMP
+#undef SQR
 
 };
 
@@ -174,6 +187,7 @@ __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld
 
 #undef GET_COMP
 #undef SET_COMP
+#undef SQR
 
 #undef C
 #undef N
@@ -519,7 +533,7 @@ void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
     ACCESSOR1 accessorOld(accessor1.getData(), &indexOld);
     ACCESSOR2 accessorNew(accessor2.getData(), &indexNew);
 
-    CELL::updateLine(accessorOld, accessorNew);
+    CELL::updateLine(accessorOld, &indexOld, accessorNew, &indexNew, 2, 256 - 2);
 }
 
 
