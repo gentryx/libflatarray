@@ -177,6 +177,7 @@ public:
 #define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = soa.BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
+// fixme: rename
 template<int X, int Y, int Z> class FixedCoord {};
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
@@ -279,19 +280,19 @@ public:
         data(0)
     {
         // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&byte_size), 0);
+        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         // FIXME: make external allocators work here (e.g. for CUDA)
-        data = new char[byte_size];
+        data = new char[byte_size()];
     }
 
     soa_grid(const soa_grid& other) :
         dim_x(other.dim_x),
         dim_y(other.dim_y),
         dim_z(other.dim_z),
-        byte_size(other.byte_size)
+        my_byte_size(other.my_byte_size)
     {
-        data = new char[byte_size];
-        std::copy(other.data, other.data + byte_size, data);
+        data = new char[byte_size()];
+        std::copy(other.data, other.data + byte_size(), data);
     }
 
     ~soa_grid()
@@ -352,11 +353,28 @@ public:
         return cell;
     }
 
+    size_t byte_size() const
+    {
+        return my_byte_size;
+    }
+
+    // fixme: use configurable allocator instead
+    char *get_data()
+    {
+        return data;
+    }
+
+    // fixme: use configurable allocator instead
+    void set_data(char *new_data)
+    {
+        data = new_data;
+    }
+
 private:
     size_t dim_x;
     size_t dim_y;
     size_t dim_z;
-    size_t byte_size;
+    size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
 };

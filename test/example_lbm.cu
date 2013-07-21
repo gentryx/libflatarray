@@ -42,13 +42,23 @@ public:
     double TS;
     double BS;
 
-     template<typename ACCESSOR1, typename ACCESSOR2>
+#define GET_COMP(X, Y, Z, DIR)                                  \
+    accessorOld[LibFlatArray::FixedCoord<X, Y, Z>()].DIR()
+
+#define SET_COMP(DIR)                                                   \
+    accessorNew.DIR()
+
+    template<typename ACCESSOR1, typename ACCESSOR2>
     __device__
     __host__
-     static void updateLine(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
+    static void updateLine(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
     {
-        printf("update\n");
+        SET_COMP(C) = GET_COMP(0, 0, 0, C);
     }
+
+#undef GET_COMP
+#undef SET_COMP
+
 };
 
 LIBFLATARRAY_REGISTER_SOA(CellLBM, ((double)(C))((double)(N))((double)(E))((double)(W))((double)(S))((double)(T))((double)(B))((double)(NW))((double)(SW))((double)(NE))((double)(SE))((double)(TW))((double)(BW))((double)(TE))((double)(BE))((double)(TN))((double)(BN))((double)(TS))((double)(BS)))
@@ -81,7 +91,6 @@ LIBFLATARRAY_REGISTER_SOA(CellLBM, ((double)(C))((double)(N))((double)(E))((doub
 
 #define SET_COMP(DIR)                                                   \
     gridNew[z   * dimX * dimY +   y * dimX +   x + (DIR) * dimX * dimY * dimZ]
-
 
 template<int UNUSED_X, int UNUSED_Y, int UNUSED_Z>
 __global__ void update_lbm_classic(int dimX, int dimY, int dimZ, double *gridOld, double *gridNew)
@@ -588,6 +597,16 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, dim);
         // fixme: init grid?
 
+        char *dataA = gridA.get_data();
+        char *dataB = gridB.get_data();
+
+        char *buf;
+        cudaMalloc(reinterpret_cast<void**>(&buf), gridA.byte_size());
+        gridA.set_data(buf);
+        cudaMalloc(reinterpret_cast<void**>(&buf), gridB.byte_size());
+        gridB.set_data(buf);
+
+
         cudaDeviceSynchronize();
         long long t_start = time_usec();
 
@@ -603,6 +622,12 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         cudaDeviceSynchronize();
         long long t_end = time_usec();
         check_cuda_error();
+
+        cudaFree(gridA.get_data());
+        cudaFree(gridB.get_data());
+
+        gridA.set_data(dataA);
+        gridB.set_data(dataB);
 
         return t_end - t_start;
     }
@@ -626,8 +651,8 @@ int main(int argc, char **argv)
     s >> cudaDevice;
     cudaSetDevice(cudaDevice);
 
-    benchmark_lbm_cuda_classic().evaluate();
-    // benchmark_lbm_cuda_flat_array().evaluate();
+    // benchmark_lbm_cuda_classic().evaluate();
+    benchmark_lbm_cuda_flat_array().evaluate();
 
     return 0;
 }
