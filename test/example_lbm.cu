@@ -503,9 +503,14 @@ protected:
 
 template<typename CELL, typename ACCESSOR1, typename ACCESSOR2>
 __global__
-void update(ACCESSOR1 accessorOld, ACCESSOR2 accessorNew)
+void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
 {
-    CELL::update(accessorOld, accessorNew);
+    int indexOld;
+    int indexNew;
+    ACCESSOR1 accessorOld(accessor1.getData(), &indexOld);
+    ACCESSOR2 accessorNew(accessor2.getData(), &indexNew);
+
+    CELL::updateLine(accessorOld, accessorNew);
 }
 
 
@@ -621,8 +626,8 @@ int main(int argc, char **argv)
     s >> cudaDevice;
     cudaSetDevice(cudaDevice);
 
-    // benchmark_lbm_cuda_classic().evaluate();
-    benchmark_lbm_cuda_flat_array().evaluate();
+    benchmark_lbm_cuda_classic().evaluate();
+    // benchmark_lbm_cuda_flat_array().evaluate();
 
     return 0;
 }

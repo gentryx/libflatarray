@@ -238,9 +238,15 @@ template<int X, int Y, int Z> class FixedCoord {};
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-            void setIndexPointer(int *newIndex)                         \
+            const char *getData() const                                 \
         {                                                               \
-            index = newIndex;                                           \
+            return data;                                                \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+            char *getData()                                             \
+        {                                                               \
+            return data;                                                \
         }                                                               \
                                                                         \
     private:                                                            \
