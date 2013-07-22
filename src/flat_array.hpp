@@ -303,31 +303,7 @@ public:
     template<typename FUNCTOR>
     void callback(FUNCTOR functor, int *index = 0) const
     {
-        size_t size = std::max(dim_x, dim_y);
-        size = std::max(size, dim_z);
-
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            functor(soa_accessor<CELL_TYPE, SIZE, SIZE, SIZE, 0>(       \
-                        data, index));                                  \
-            return;                                                     \
-        }
-
-        CASE( 32);
-        CASE( 64);
-        CASE( 96);
-        CASE(128);
-        CASE(160);
-        CASE(192);
-        CASE(224);
-        CASE(256);
-        CASE(288);
-        throw std::logic_error("grid size too large");
-
-#undef CASE
-
-    // fixme: kill this
-    // functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, 0>(data, index));
+        bind_parameters0(functor, index);
     }
 
     // fixme: add operator<< and operator>>
@@ -377,6 +353,83 @@ private:
     size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
+
+    template<int DIM_X, int DIM_Y, typename FUNCTOR>
+    void bind_parameters2(FUNCTOR functor, int *index) const
+    {
+        size_t size = dim_z;
+
+#define CASE(SIZE)                                                      \
+        if (size <= SIZE) {                                             \
+            functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, SIZE, 0>(     \
+                        data, index));                                  \
+            return;                                                     \
+        }
+
+        // CASE( 32);
+        // CASE( 64);
+        // CASE( 96);
+        // CASE(128);
+        // CASE(160);
+        // CASE(192);
+        // CASE(224);
+        CASE(256);
+        // CASE(288);
+        throw std::logic_error("grid dimension Z too large");
+
+#undef CASE
+    }
+
+    template<int DIM_X, typename FUNCTOR>
+    void bind_parameters1(FUNCTOR functor, int *index) const
+    {
+        size_t size = dim_y;
+
+#define CASE(SIZE)                                                      \
+        if (size <= SIZE) {                                             \
+            bind_parameters2<DIM_X, SIZE>(functor, index);              \
+            return;                                                     \
+        }
+
+        CASE( 32);
+        CASE( 64);
+        CASE( 96);
+        CASE(128);
+        CASE(160);
+        CASE(192);
+        CASE(224);
+        CASE(256);
+        CASE(288);
+        throw std::logic_error("grid dimension Y too large");
+
+#undef CASE
+    }
+
+    template<typename FUNCTOR>
+    void bind_parameters0(FUNCTOR functor, int *index) const
+    {
+        size_t size = dim_x;
+
+#define CASE(SIZE)                                                      \
+        if (size <= SIZE) {                                             \
+            bind_parameters2<SIZE, SIZE>(functor, index);               \
+            /* bind_parameters1<SIZE>(functor, index); */               \
+            return;                                                     \
+        }
+
+        CASE( 32);
+        CASE( 64);
+        CASE( 96);
+        CASE(128);
+        CASE(160);
+        CASE(192);
+        CASE(224);
+        CASE(256);
+        CASE(288);
+        throw std::logic_error("grid dimension X too large");
+
+#undef CASE
+    }
 };
 
 }
