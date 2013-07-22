@@ -616,7 +616,6 @@ void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
     CELL::updateLine(accessorOld, &indexOld, accessorNew, &indexNew, 2, 256 - 2);
 }
 
-
 template<typename CELL, typename ACCESSOR1>
 class SoAUpdateFunctorHelper2
 {
@@ -632,7 +631,9 @@ public:
     void operator()(ACCESSOR2 accessor2) const
     {
         // fixme: update this shit!
-        update<CELL><<<dimBlock, dimGrid>>>(accessor1, accessor2);
+        // update<CELL><<<dimBlock, dimGrid>>>(accessor1, accessor2);
+        update_lbm_flat_array<ACCESSOR1::DIM_X, ACCESSOR1::DIM_Y, ACCESSOR1::DIM_Z><<<dimBlock, dimGrid>>>(
+            1, 1, 256, (double*)accessor1.get_data(), (double*)accessor2.get_data());
     }
 
     int index2;

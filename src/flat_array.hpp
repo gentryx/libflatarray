@@ -239,13 +239,13 @@ template<int X, int Y, int Z> class FixedCoord {};
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-            const char *getData() const                                 \
+            const char *get_data() const                                \
         {                                                               \
             return data;                                                \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-            char *getData()                                             \
+            char *get_data()                                            \
         {                                                               \
             return data;                                                \
         }                                                               \
