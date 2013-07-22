@@ -688,8 +688,8 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
 {
     virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
-        LibFlatArray::soa_grid<CellLBM> gridA(dim, dim, dim);
-        LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, dim);
+        LibFlatArray::soa_grid<CellLBM> gridA(dim, dim, 256);
+        LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, 256);
         // fixme: init grid?
 
         char *dataA = gridA.get_data();
