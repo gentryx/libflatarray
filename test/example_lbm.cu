@@ -54,15 +54,95 @@ public:
     __host__
     static void updateLine(ACCESSOR1 accessorOld, int *indexOld, ACCESSOR2 accessorNew, int *indexNew, int startZ, int endZ)
     {
-        int x = blockIdx.x * blockDim.x + threadIdx.x + 2;
-        int y = blockIdx.y * blockDim.y + threadIdx.y + 2;
-        int z = startZ;
-        int planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
-        int planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
+        int global_x = blockIdx.x * blockDim.x + threadIdx.x + 2;
+        int global_y = blockIdx.y * blockDim.y + threadIdx.y + 2;
+        int global_z = startZ;
+        *indexOld =
+            global_z * ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y +
+            global_y * ACCESSOR1::DIM_X +
+            global_x;
+        *indexNew =
+            global_z * ACCESSOR2::DIM_X * ACCESSOR2::DIM_Y +
+            global_y * ACCESSOR2::DIM_X +
+            global_x;
+        const int planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
+        const int planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
 
 #pragma unroll 10
-        for (; z < endZ; z += 1) {
+        for (; global_z < endZ; global_z += 1) {
+// #define SQR(X) ((X)*(X))
+//             const double omega = 1.0/1.7;
+//             const double omega_trm = 1.0 - omega;
+//             const double omega_w0 = 3.0 * 1.0 / 3.0 * omega;
+//             const double omega_w1 = 3.0*1.0/18.0*omega;
+//             const double omega_w2 = 3.0*1.0/36.0*omega;
+//             const double one_third = 1.0 / 3.0;
+//             double velX, velY, velZ;
+
+//             velX  =
+//                 GET_COMP(-1,0,0,E) + GET_COMP(x-1,y-1,0,NE) +
+//                 GET_COMP(-1,1,0,SE) + GET_COMP(x-1,y,z-1,TE) +
+//                 GET_COMP(-1,0,1,BE);
+//             velY  = GET_COMP(x,y-1,0,N) + GET_COMP(x+1,y-1,0,NW) +
+//                 GET_COMP(x,y-1,z-1,TN) + GET_COMP(x,y-1,1,BN);
+//             velZ  = GET_COMP(x,y,z-1,T) + GET_COMP(x,y+1,z-1,TS) +
+//                 GET_COMP(x+1,y,z-1,TW);
+
+//             const double rho =
+//                 GET_COMP(x,y,0,C) + GET_COMP(x,y+1,0,S) +
+//                 GET_COMP(x+1,y,0,W) + GET_COMP(x,y,1,B) +
+//                 GET_COMP(x+1,y+1,0,SW) + GET_COMP(x,y+1,1,BS) +
+//                 GET_COMP(x+1,y,1,BW) + velX + velY + velZ;
+//             velX  = velX
+//                 - GET_COMP(x+1,y,0,W)    - GET_COMP(x+1,y-1,0,NW)
+//                 - GET_COMP(x+1,y+1,0,SW) - GET_COMP(x+1,y,z-1,TW)
+//                 - GET_COMP(x+1,y,1,BW);
+//             velY  = velY
+//                 + GET_COMP(x-1,y-1,0,NE) - GET_COMP(x,y+1,0,S)
+//                 - GET_COMP(x+1,y+1,0,SW) - GET_COMP(x-1,y+1,0,SE)
+//                 - GET_COMP(x,y+1,z-1,TS) - GET_COMP(x,y+1,1,BS);
+//             velZ  = velGET_COMP(x,y-1,z-1,TN) + GET_COMP(x-1,y,z-1,TE) - GET_COMP(x,y,1,B) - GET_COMP(x,y-1,1,BN) - GET_COMP(x,y+1,1,BS) - GET_COMP(x+1,y,1,BW) - GET_COMP(x-1,y,1,BE);
+
+//             // density = rho;
+//             // velocityX = velX;
+//             // velocityY = velY;
+//             // velocityZ = velZ;
+
+//             const double dir_indep_trm = one_third*rho - 0.5*( velX*velX + velY*velY + velZ*velZ );
+
+//             SET_COMP(C)=omega_trm * GET_COMP(x,y,0,C) + omega_w0*( dir_indep_trm );
+
+//             SET_COMP(NW)=omega_trm * GET_COMP(x+1,y-1,0,NW) +
+//                 omega_w2*( dir_indep_trm - ( velX-velY ) + 1.5*SQR( velX-velY ) );
+//             SET_COMP(SE)=omega_trm * GET_COMP(x-1,y+1,0,SE) +
+//                 omega_w2*( dir_indep_trm + ( velX-velY ) + 1.5*SQR( velX-velY ) );
+//             SET_COMP(NE)=omega_trm * GET_COMP(x-1,y-1,0,NE) +
+//                 omega_w2*( dir_indep_trm + ( velX+velY ) + 1.5*SQR( velX+velY ) );
+//             SET_COMP(SW)=omega_trm * GET_COMP(x+1,y+1,0,SW) +
+//                 omega_w2*( dir_indep_trm - ( velX+velY ) + 1.5*SQR( velX+velY ) );
+
+//             SET_COMP(TW)=omega_trm * GET_COMP(x+1,y,z-1,TW) + omega_w2*( dir_indep_trm - ( velX-velZ ) + 1.5*SQR( velX-velZ ) );
+//             SET_COMP(BE)=omega_trm * GET_COMP(x-1,y,1,BE) + omega_w2*( dir_indep_trm + ( velX-velZ ) + 1.5*SQR( velX-velZ ) );
+//             SET_COMP(TE)=omega_trm * GET_COMP(x-1,y,z-1,TE) + omega_w2*( dir_indep_trm + ( velX+velZ ) + 1.5*SQR( velX+velZ ) );
+//             SET_COMP(BW)=omega_trm * GET_COMP(x+1,y,1,BW) + omega_w2*( dir_indep_trm - ( velX+velZ ) + 1.5*SQR( velX+velZ ) );
+
+//             SET_COMP(TS)=omega_trm * GET_COMP(x,y+1,z-1,TS) + omega_w2*( dir_indep_trm - ( velY-velZ ) + 1.5*SQR( velY-velZ ) );
+//             SET_COMP(BN)=omega_trm * GET_COMP(x,y-1,1,BN) + omega_w2*( dir_indep_trm + ( velY-velZ ) + 1.5*SQR( velY-velZ ) );
+//             SET_COMP(TN)=omega_trm * GET_COMP(x,y-1,z-1,TN) + omega_w2*( dir_indep_trm + ( velY+velZ ) + 1.5*SQR( velY+velZ ) );
+//             SET_COMP(BS)=omega_trm * GET_COMP(x,y+1,1,BS) + omega_w2*( dir_indep_trm - ( velY+velZ ) + 1.5*SQR( velY+velZ ) );
+
+//             SET_COMP(N)=omega_trm * GET_COMP(x,y-1,0,N) + omega_w1*( dir_indep_trm + velY + 1.5*SQR(velY));
+//             SET_COMP(S)=omega_trm * GET_COMP(x,y+1,0,S) + omega_w1*( dir_indep_trm - velY + 1.5*SQR(velY));
+//             SET_COMP(E)=omega_trm * GET_COMP(x-1,y,0,E) + omega_w1*( dir_indep_trm + velX + 1.5*SQR(velX));
+//             SET_COMP(W)=omega_trm * GET_COMP(x+1,y,0,W) + omega_w1*( dir_indep_trm - velX + 1.5*SQR(velX));
+//             SET_COMP(T)=omega_trm * GET_COMP(x,y,z-1,T) + omega_w1*( dir_indep_trm + velZ + 1.5*SQR(velZ));
+//             SET_COMP(B)=omega_trm * GET_COMP(x,y,1,B) + omega_w1*( dir_indep_trm - velZ + 1.5*SQR(velZ));
+
+
             SET_COMP(C) = GET_COMP(0, 0, 0, C);
+            // if ((x == 2) && (y == 2)) {
+            //     printf("going strong: %d, %d, %d\n", z, planeSizeOld, planeSizeNew);
+            // }
             *indexOld += planeSizeOld;
             *indexNew += planeSizeNew;
         }
