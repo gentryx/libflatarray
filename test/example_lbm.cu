@@ -401,9 +401,9 @@ public:
         double glups = 10e-9 * updates / seconds;
 
         std::cout << std::setiosflags(std::ios::left);
-        std::cout << std::setw(10) << name() << " ; "
+        std::cout << std::setw(24) << name() << " ; "
                   << std::setw( 3) << dim << " ; "
-                  << std::setw(10) << glups << " GLUPS\n";
+                  << std::setw( 9) << glups << " GLUPS\n";
     }
 
 protected:
@@ -620,6 +620,7 @@ int main(int argc, char **argv)
     s >> cudaDevice;
     cudaSetDevice(cudaDevice);
 
+    std::cout << "# test name              ; dim ; performance\n";
     benchmark_lbm_cuda_object_oriented().evaluate();
     benchmark_lbm_cuda_classic().evaluate();
     benchmark_lbm_cuda_flat_array().evaluate();
