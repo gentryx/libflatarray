@@ -618,74 +618,28 @@ void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
     ACCESSOR2 accessorNew(accessor2.get_data(), &indexNew);
 
     CELL::updateLine(
-        accessorOld, &indexOld, 
+        accessorOld, &indexOld,
         accessorNew, &indexNew, 2, 256 - 2);
 }
 
-template<typename CELL, typename ACCESSOR1>
-class SoAUpdateFunctorHelper2
-{
-public:
-    SoAUpdateFunctorHelper2(ACCESSOR1 accessor1, int *index1, const dim3& dimBlock, const dim3& dimGrid) :
-        accessor1(accessor1),
-        index1(index1),
-        dimBlock(dimBlock),
-        dimGrid(dimGrid)
-    {}
-
-    template<typename ACCESSOR2>
-    void operator()(ACCESSOR2 accessor2) const
-    {
-        // fixme: update this shit!
-        update<CELL><<<dimGrid, dimBlock>>>(accessor1, accessor2);
-    }
-
-    int index2;
-
-private:
-    ACCESSOR1 accessor1;
-    int *index1;
-    const dim3& dimBlock;
-    const dim3& dimGrid;
-};
-
-template<typename CELL, typename GRID2>
-class SoAUpdateFunctorHelper1
-{
-public:
-
-    SoAUpdateFunctorHelper1(GRID2 *grid2, const dim3& dimBlock, const dim3& dimGrid) :
-        grid2(grid2),
-        dimBlock(dimBlock),
-        dimGrid(dimGrid)
-    {}
-
-    template<typename ACCESSOR1>
-    void operator()(ACCESSOR1 accessor1)
-    {
-        SoAUpdateFunctorHelper2<CELL, ACCESSOR1> helper(accessor1, &index1, dimBlock, dimGrid);
-        grid2->callback(helper, &helper.index2);
-    }
-
-    int index1;
-
-private:
-    GRID2 *grid2;
-    const dim3& dimBlock;
-    const dim3& dimGrid;
-};
-
-
 template<typename CELL>
-class SoAUpdateFunctorPrototype
+class CudaLineUpdateFunctorPrototype
 {
 public:
-    template<typename GRID1, typename GRID2>
-    void operator()(GRID1 *gridOld, GRID2 *gridNew, const dim3& dimBlock, const dim3& dimGrid)
+    CudaLineUpdateFunctorPrototype(dim3 dim_block, dim3 dim_grid) :
+        dim_block(dim_block),
+        dim_grid(dim_grid)
+    {}
+
+    template<typename ACCESSOR1, typename ACCESSOR2>
+    void operator()(ACCESSOR1 accessor1, ACCESSOR2 accessor2) const
     {
-        SoAUpdateFunctorHelper1<CELL, GRID2> helper(gridNew, dimBlock, dimGrid);
-        gridOld->callback(helper, &helper.index1);
+        update<CELL, ACCESSOR1, ACCESSOR2><<<dim_grid, dim_block>>>(accessor1, accessor2);
     }
+
+private:
+    dim3 dim_block;
+    dim3 dim_grid;
 };
 
 class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
@@ -711,9 +665,10 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         cudaDeviceSynchronize();
         long long t_start = time_usec();
 
-        // fixme: do the evolution. 1 functor per call?
+        CudaLineUpdateFunctorPrototype<CellLBM> updater(dimBlock, dimGrid);
+
         for (int t = 0; t < repeats; ++t) {
-            SoAUpdateFunctorPrototype<CellLBM>()(gridOld, gridNew, dimBlock, dimGrid);
+            gridOld->callback(gridNew, updater);
             std::swap(gridOld, gridNew);
         }
 

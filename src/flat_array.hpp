@@ -136,6 +136,65 @@ public:
 #undef CASE
 };
 
+template<typename ACCESSOR1, typename FUNCTOR>
+class dual_callback_helper2
+{
+public:
+    dual_callback_helper2(ACCESSOR1 accessor1, int *index1, FUNCTOR functor) :
+        accessor1(accessor1),
+        index1(index1),
+        functor(functor)
+    {}
+
+    template<typename ACCESSOR2>
+    void operator()(ACCESSOR2 accessor2) const
+    {
+        functor(accessor1, accessor2);
+    }
+
+    int index2;
+
+private:
+    ACCESSOR1 accessor1;
+    int *index1;
+    FUNCTOR functor;
+};
+
+template<typename GRID2, typename FUNCTOR>
+class dual_callback_helper1
+{
+public:
+
+    dual_callback_helper1(GRID2 *grid2, FUNCTOR functor) :
+        grid2(grid2),
+        functor(functor)
+    {}
+
+    template<typename ACCESSOR1>
+    void operator()(ACCESSOR1 accessor1)
+    {
+        dual_callback_helper2<ACCESSOR1, FUNCTOR> helper(accessor1, &index1, functor);
+        grid2->callback(helper, &helper.index2);
+    }
+
+    int index1;
+
+private:
+    GRID2 *grid2;
+    FUNCTOR functor;
+};
+
+class dual_callback_helper
+{
+public:
+    template<typename GRID1, typename GRID2, typename FUNCTOR>
+    void operator()(GRID1 *gridOld, GRID2 *gridNew, FUNCTOR functor)
+    {
+        dual_callback_helper1<GRID2, FUNCTOR> helper(gridNew, functor);
+        gridOld->callback(helper, &helper.index1);
+    }
+};
+
 }
 
 }
@@ -306,6 +365,12 @@ public:
         bind_parameters0(functor, index);
     }
 
+    template<typename FUNCTOR>
+    void callback(soa_grid<CELL_TYPE> *otherGrid, FUNCTOR functor) const
+    {
+        detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
+    }
+
     // fixme: add operator<< and operator>>
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
@@ -409,9 +474,14 @@ private:
     void bind_parameters0(FUNCTOR functor, int *index) const
     {
         size_t size = dim_x;
+        // fixme: this would be superfluous if we'd call bind_parameters1
+        if (dim_y > size) {
+            size = dim_y;
+        }
 
 #define CASE(SIZE)                                                      \
         if (size <= SIZE) {                                             \
+            /* fixme: */                                                \
             bind_parameters2<SIZE, SIZE>(functor, index);               \
             /* bind_parameters1<SIZE>(functor, index); */               \
             return;                                                     \
