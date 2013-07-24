@@ -110,32 +110,6 @@ public:
     static const std::size_t OFFSET = 0;
 };
 
-// fixme: kill this
-template<template<int D> class CARGO>
-class bind
-{
-public:
-    template<typename T1, typename T2, typename T3, typename T4>
-    void operator()(int size, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
-    {
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            CARGO<SIZE>()(size, arg1, arg2, arg3, arg4);                \
-            return;                                                     \
-        }
-
-        CASE( 32);
-        CASE( 64);
-        CASE( 96);
-        CASE(128);
-        CASE(160);
-        CASE(192);
-        CASE(224);
-        CASE(256);
-    }
-#undef CASE
-};
-
 template<typename ACCESSOR1, typename FUNCTOR>
 class dual_callback_helper2
 {
