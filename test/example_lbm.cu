@@ -548,7 +548,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(ACCESSOR1 accessor1, ACCESSOR2 accessor2) const
+    void operator()(ACCESSOR1 accessor1, int *index1, ACCESSOR2 accessor2, int *index2) const
     {
         update<CELL, ACCESSOR1, ACCESSOR2><<<dim_grid, dim_block>>>(accessor1, accessor2);
     }

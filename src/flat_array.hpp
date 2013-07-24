@@ -41,18 +41,32 @@ template<typename CELL>
 class get_instance_functor
 {
 public:
-    get_instance_functor(CELL *target) :
-        target(target)
+    get_instance_functor(
+        CELL *target,
+        int x,
+        int y,
+        int z) :
+        target(target),
+        x(x),
+        y(y),
+        z(z)
     {}
 
-    template<typename ACCESSOR>
-    void operator()(const ACCESSOR& accessor) const
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
     {
+        *index =
+            z * DIM_X * DIM_Y +
+            y * DIM_X +
+            x;
         *target << accessor;
     }
 
 private:
     CELL *target;
+    int x;
+    int y;
+    int z;
 };
 
 /**
@@ -63,18 +77,32 @@ template<typename CELL>
 class set_instance_functor
 {
 public:
-    set_instance_functor(const CELL *source) :
-        source(source)
+    set_instance_functor(
+        const CELL *source,
+        int x,
+        int y,
+        int z) :
+        source(source),
+        x(x),
+        y(y),
+        z(z)
     {}
 
-    template<typename ACCESSOR>
-    void operator()(ACCESSOR accessor) const
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor, int *index) const
     {
+        *index =
+            z * DIM_X * DIM_Y +
+            y * DIM_X +
+            x;
         accessor << *source;
     }
 
 private:
     const CELL *source;
+    int x;
+    int y;
+    int z;
 };
 
 /**
@@ -90,7 +118,7 @@ public:
     {}
 
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
     {
         *byte_size = sizeof(CELL) * DIM_X * DIM_Y * DIM_Z;
     }
@@ -121,12 +149,10 @@ public:
     {}
 
     template<typename ACCESSOR2>
-    void operator()(ACCESSOR2 accessor2) const
+    void operator()(ACCESSOR2 accessor2, int *index2) const
     {
-        functor(accessor1, accessor2);
+        functor(accessor1, index1, accessor2, index2);
     }
-
-    int index2;
 
 private:
     ACCESSOR1 accessor1;
@@ -145,13 +171,12 @@ public:
     {}
 
     template<typename ACCESSOR1>
-    void operator()(ACCESSOR1 accessor1)
+    void operator()(ACCESSOR1 accessor1, int *index1)
     {
-        dual_callback_helper2<ACCESSOR1, FUNCTOR> helper(accessor1, &index1, functor);
-        grid2->callback(helper, &helper.index2);
+        dual_callback_helper2<ACCESSOR1, FUNCTOR> helper(accessor1, index1, functor);
+        int index2;
+        grid2->callback(helper, &index2);
     }
-
-    int index1;
 
 private:
     GRID2 *grid2;
@@ -165,7 +190,8 @@ public:
     void operator()(GRID1 *gridOld, GRID2 *gridNew, FUNCTOR functor)
     {
         dual_callback_helper1<GRID2, FUNCTOR> helper(gridNew, functor);
-        gridOld->callback(helper, &helper.index1);
+        int index1;
+        gridOld->callback(helper, &index1);
     }
 };
 
@@ -349,22 +375,15 @@ public:
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
         int index = 0;
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell), &index);
-        // soa_accessor<CELL_TYPE, 32, 32, 32, 0> accessor(data, &index);
-        // std::cout << "    gringo1\n";
-        // accessor << cell;
-        // std::cout << "    gringo2\n";
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z), &index);
     }
 
     CELL_TYPE get(size_t x, size_t y, size_t z) const
     {
-        // int index = z * 32 * 32 + y * 32 + x;
-        // soa_accessor<CELL_TYPE, 32, 32, 32, 0> accessor(data, &index);
         CELL_TYPE cell;
         int index = 0;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell), &index);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z), &index);
 
-        // cell << accessor;
         return cell;
     }
 
@@ -401,7 +420,8 @@ private:
 #define CASE(SIZE)                                                      \
         if (size <= SIZE) {                                             \
             functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, SIZE, 0>(     \
-                        data, index));                                  \
+                        data, index),                                   \
+                    index);                                             \
             return;                                                     \
         }
 

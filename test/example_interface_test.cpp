@@ -1,4 +1,4 @@
-#include <iostream>
+ <iostream>
 #include <typeinfo>
 #include <libflatarray/flat_array.hpp>
 
@@ -54,7 +54,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2)
+    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2)
     {
         for (int z = startZ; z < endZ; ++z) {
             for (int y = startY; y < endY; ++y) {
@@ -63,22 +63,12 @@ public:
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
-                    index1 = index;
-                    index2 = index;
+                    *index1 = index;
+                    *index2 = index;
                     accessor2.temperature() = accessor1.temperature();
                 }
             }
         }
-    }
-
-    int *indexPointer1()
-    {
-        return &index1;
-    }
-
-    int *indexPointer2()
-    {
-        return &index2;
     }
 
 private:
@@ -88,8 +78,6 @@ private:
     int endX;
     int endY;
     int endZ;
-    int index1;
-    int index2;
 };
 
 class CopyTemperatureCactusStyle
@@ -107,13 +95,11 @@ public:
         startZ(startZ),
         endX(endX),
         endY(endY),
-        endZ(endZ),
-        index1(0),
-        index2(0)
+        endZ(endZ)
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2) const
+    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2) const
     {
         for (int z = startZ; z < endZ; ++z) {
             for (int y = startY; y < endY; ++y) {
@@ -128,16 +114,6 @@ public:
         }
     }
 
-    int *indexPointer1()
-    {
-        return &index1;
-    }
-
-    int *indexPointer2()
-    {
-        return &index2;
-    }
-
 private:
     int startX;
     int startY;
@@ -145,29 +121,30 @@ private:
     int endX;
     int endY;
     int endZ;
-    int index1;
-    int index2;
 };
 
 LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
 
+// fixme: get rid of this update functor?
 template<typename ACCESSOR1, typename UPDATE_FUNCTOR>
 class UpdateFunctorHelper2
 {
 public:
-    UpdateFunctorHelper2(const ACCESSOR1& accessor1, UPDATE_FUNCTOR *functor) :
+    UpdateFunctorHelper2(const ACCESSOR1& accessor1, int *index1, UPDATE_FUNCTOR *functor) :
         accessor1(accessor1),
+        index1(index1),
         functor(functor)
     {}
 
     template<typename ACCESSOR2>
-    void operator()(ACCESSOR2 accessor2) const
+    void operator()(ACCESSOR2 accessor2, int *index2) const
     {
-        return (*functor)(accessor1, accessor2);
+        return (*functor)(accessor1, index1, accessor2, index2);
     }
 
 private:
     const ACCESSOR1 accessor1;
+    int *index1;
     UPDATE_FUNCTOR *functor;
 };
 
@@ -181,10 +158,11 @@ public:
     {}
 
     template<typename ACCESSOR1>
-    void operator()(const ACCESSOR1& accessor1) const
+    void operator()(const ACCESSOR1& accessor1, int *index1) const
     {
-        UpdateFunctorHelper2<ACCESSOR1, UPDATE_FUNCTOR> helper(accessor1, functor);
-        grid2->callback(helper, functor->indexPointer2());
+        UpdateFunctorHelper2<ACCESSOR1, UPDATE_FUNCTOR> helper(accessor1, index1, functor);
+        int index2;
+        grid2->callback(helper, &index2);
     }
 
 private:
@@ -199,7 +177,8 @@ public:
     void operator()(const GRID1& grid1, GRID2 *grid2, UPDATE_FUNCTOR *functor) const
     {
         UpdateFunctorHelper1<GRID2, UPDATE_FUNCTOR> helper(grid2, functor);
-        grid1.callback(helper, functor->indexPointer1());
+        int index;
+        grid1.callback(helper, &index);
     }
 };
 
@@ -227,7 +206,7 @@ int main(int argc, char **argv)
     for (int z = 0; z < dimZ; ++z) {
         for (int y = 0; y < dimY; ++y) {
             for (int x = 0; x < dimX; ++x) {
-                HeatedGameOfLifeCell cell = gridNew.get(x, y, z);
+                HeatedGameOfLifeCell cell = gridOld.get(x, y, z);
                 std::cout << "(" << x << ", " << y << ", " << z << ") == (" << cell.temperature
                           << ", " << cell.alive << ")\n";
             }
