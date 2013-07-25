@@ -54,7 +54,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2)
+    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2) const
     {
         for (int z = startZ; z < endZ; ++z) {
             for (int y = startY; y < endY; ++y) {
@@ -125,63 +125,6 @@ private:
 
 LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
 
-// fixme: get rid of this update functor?
-template<typename ACCESSOR1, typename UPDATE_FUNCTOR>
-class UpdateFunctorHelper2
-{
-public:
-    UpdateFunctorHelper2(const ACCESSOR1& accessor1, int *index1, UPDATE_FUNCTOR *functor) :
-        accessor1(accessor1),
-        index1(index1),
-        functor(functor)
-    {}
-
-    template<typename ACCESSOR2>
-    void operator()(ACCESSOR2 accessor2, int *index2) const
-    {
-        return (*functor)(accessor1, index1, accessor2, index2);
-    }
-
-private:
-    const ACCESSOR1 accessor1;
-    int *index1;
-    UPDATE_FUNCTOR *functor;
-};
-
-template<typename GRID2, typename UPDATE_FUNCTOR>
-class UpdateFunctorHelper1
-{
-public:
-    UpdateFunctorHelper1(GRID2 *grid2, UPDATE_FUNCTOR *functor) :
-        grid2(grid2),
-        functor(functor)
-    {}
-
-    template<typename ACCESSOR1>
-    void operator()(const ACCESSOR1& accessor1, int *index1) const
-    {
-        UpdateFunctorHelper2<ACCESSOR1, UPDATE_FUNCTOR> helper(accessor1, index1, functor);
-        int index2;
-        grid2->callback(helper, &index2);
-    }
-
-private:
-    GRID2 *grid2;
-    UPDATE_FUNCTOR *functor;
-};
-
-class UpdateFunctor
-{
-public:
-    template<typename GRID1, typename GRID2, typename UPDATE_FUNCTOR>
-    void operator()(const GRID1& grid1, GRID2 *grid2, UPDATE_FUNCTOR *functor) const
-    {
-        UpdateFunctorHelper1<GRID2, UPDATE_FUNCTOR> helper(grid2, functor);
-        int index;
-        grid1.callback(helper, &index);
-    }
-};
-
 int main(int argc, char **argv)
 {
     int dimX = 5;
@@ -201,7 +144,7 @@ int main(int argc, char **argv)
 
     // CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
     CopyTemperatureNativeStyle functor(0, 0, 0, dimX, dimY, dimZ);
-    UpdateFunctor()(gridOld, &gridNew, &functor);
+    gridOld.callback(&gridNew, functor);
 
     for (int z = 0; z < dimZ; ++z) {
         for (int y = 0; y < dimY; ++y) {
