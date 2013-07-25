@@ -332,16 +332,13 @@ template<typename CELL_TYPE>
 class soa_grid
 {
 public:
-    soa_grid(size_t dim_x, size_t dim_y, size_t dim_z) :
+    soa_grid(size_t dim_x = 0, size_t dim_y = 0, size_t dim_z = 0) :
         dim_x(dim_x),
         dim_y(dim_y),
         dim_z(dim_z),
         data(0)
     {
-        // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
-        // FIXME: make external allocators work here (e.g. for CUDA)
-        data = new char[byte_size()];
+        resize();
     }
 
     soa_grid(const soa_grid& other) :
@@ -357,6 +354,14 @@ public:
     ~soa_grid()
     {
         delete data;
+    }
+
+    void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
+    {
+        dim_x = new_dim_x;
+        dim_y = new_dim_y;
+        dim_z = new_dim_z;
+        resize();
     }
 
     template<typename FUNCTOR>
@@ -411,6 +416,20 @@ private:
     size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
+
+    /**
+     * Adapt size of allocated memory to dim_[x-z]
+     */
+    void resize()
+    {
+        // we need callback() to round up our grid size
+        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
+        // FIXME: make external allocators work here (e.g. for CUDA)
+        if (data) {
+            delete data;
+        }
+        data = new char[byte_size()];
+    }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
     void bind_parameters2(FUNCTOR functor, int *index) const

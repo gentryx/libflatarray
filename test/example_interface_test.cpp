@@ -142,8 +142,8 @@ int main(int argc, char **argv)
         }
     }
 
-    // CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
-    CopyTemperatureNativeStyle functor(0, 0, 0, dimX, dimY, dimZ);
+    CopyTemperatureCactusStyle functor(0, 0, 0, dimX, dimY, dimZ);
+    // CopyTemperatureNativeStyle functor(0, 0, 0, dimX, dimY, dimZ);
     gridOld.callback(&gridNew, functor);
 
     for (int z = 0; z < dimZ; ++z) {
