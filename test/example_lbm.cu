@@ -42,8 +42,8 @@ public:
     double TS;
     double BS;
 
-#define GET_COMP(X, Y, Z, DIR)                  \
-    accessorOld[LibFlatArray::FixedCoord<X, Y, Z>()].DIR()
+#define GET_COMP(X, Y, Z, DIR)                          \
+    accessorOld[LibFlatArray::coord<X, Y, Z>()].DIR()
 
 #define SET_COMP(DIR)                           \
     accessorNew.DIR()
@@ -421,7 +421,7 @@ protected:
         dim3 dimGrid;
         gen_dims(&dimBlock, &dimGrid, dim);
 
-        return exec(dim, dimBlock, dimGrid, repeats);
+        return cudaExec(dim, dimBlock, dimGrid, repeats);
     }
 
     virtual size_t gridSize(int dim)
@@ -433,7 +433,7 @@ protected:
         return dimGrid.x * dimBlock.x * dimGrid.y * dimBlock.y * (256 - 4);
     }
 
-    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
+    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
 
     void gen_dims(dim3 *dimBlock, dim3 *dimGrid, int dim)
     {
@@ -450,7 +450,7 @@ protected:
 class benchmark_lbm_cuda_basic : public benchmark_lbm_cuda
 {
 protected:
-    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         int size = dim * dim * (256 + 64) * 20;
         int bytesize = size * sizeof(double);
@@ -560,7 +560,7 @@ private:
 
 class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
 {
-    virtual long long exec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         LibFlatArray::soa_grid<CellLBM> gridA(dim, dim, 256);
         LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, 256);

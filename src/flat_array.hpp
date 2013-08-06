@@ -236,8 +236,7 @@ public:
 #define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = soa.BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
-// fixme: rename
-template<int X, int Y, int Z> class FixedCoord {};
+template<int X, int Y, int Z> class coord {};
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
@@ -265,7 +264,7 @@ template<int X, int Y, int Z> class FixedCoord {};
         template<int X, int Y, int Z>                                   \
             inline                                                      \
             __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> operator[](FixedCoord<X, Y, Z>) const \
+            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> operator[](coord<X, Y, Z>) const \
             {                                                           \
                 return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X>(data, index); \
             }                                                           \
