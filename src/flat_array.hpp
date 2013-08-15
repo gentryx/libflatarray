@@ -19,11 +19,14 @@
 #define __device__
 #endif
 
-#define LIBFLATARRAY_NEW_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
-    DIM_X, DIM_Y, DIM_Z, (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)
+#define LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
+    (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)
 
-#define LIBFLATARRAY_NEW_PARAMS()               \
-    LIBFLATARRAY_NEW_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
+#define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
+    DIM_X, DIM_Y, DIM_Z, LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
+
+#define LIBFLATARRAY_PARAMS                                         \
+    LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
 namespace LibFlatArray {
 
@@ -270,9 +273,9 @@ template<int X, int Y, int Z> class coord {};
         template<int X, int Y, int Z>                                   \
             inline                                                      \
             __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, LIBFLATARRAY_NEW_PARAMS> operator[](coord<X, Y, Z>) const \
+            soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](coord<X, Y, Z>) const \
             {                                                           \
-                return soa_accessor<CELL_TYPE, LIBFLATARRAY_NEW_PARAMS>(data, index); \
+                return soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(data, index); \
             }                                                           \
                                                                         \
         __host__ __device__                                             \
