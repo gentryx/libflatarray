@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Andreas Schäfer
+ * Copyright 2012-2013 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -19,6 +19,15 @@
 #ifndef __device__
 #define __device__
 #endif
+
+#define LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
+    (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)
+
+#define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
+    DIM_X, DIM_Y, DIM_Z, LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
+
+#define LIBFLATARRAY_PARAMS                                         \
+    LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
 namespace LibFlatArray {
 
@@ -265,9 +274,9 @@ template<int X, int Y, int Z> class coord {};
         template<int X, int Y, int Z>                                   \
             inline                                                      \
             __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X> operator[](coord<X, Y, Z>) const \
+            soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](coord<X, Y, Z>) const \
             {                                                           \
-                return soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X>(data, index); \
+                return soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(data, index); \
             }                                                           \
                                                                         \
         __host__ __device__                                             \
