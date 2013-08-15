@@ -6,6 +6,7 @@
  */
 
 #ifndef _FLAT_ARRAY_HPP_
+#define _FLAT_ARRAY_HPP_
 
 #include <stdexcept>
 #include <boost/preprocessor/seq.hpp>
