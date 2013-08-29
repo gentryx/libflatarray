@@ -23,10 +23,10 @@
 #define LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
     (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)
 
-#define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
+#define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)	\
     DIM_X, DIM_Y, DIM_Z, LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
-#define LIBFLATARRAY_PARAMS                                         \
+#define LIBFLATARRAY_PARAMS						\
     LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
 namespace LibFlatArray {
@@ -34,10 +34,19 @@ namespace LibFlatArray {
 /**
  * This class provides an object-oriented view to a "Struct of
  * Arrays"-style grid. It requires the user to register the type CELL
- * using the macro LIBFLATARRAY_REGISTER_SOA.
+ * using the macro LIBFLATARRAY_REGISTER_SOA. It provides an
+ * operator[] which can be used to access neighboring cells.
  */
 template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
 class soa_accessor;
+
+/**
+ * Instances of this class will be returned by
+ * soa_accessor::operator[]. Separation of both is done to reduce
+ * compilation times.
+ */
+template<typename CELL, int GRID_DIM, int INDEX>
+class soa_accessor_final;
 
 namespace detail {
 
@@ -55,11 +64,13 @@ public:
         CELL *target,
         int x,
         int y,
-        int z) :
+        int z,
+	int count) :
         target(target),
         x(x),
         y(y),
-        z(z)
+        z(z),
+	count(count)
     {}
 
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
@@ -69,7 +80,13 @@ public:
             z * DIM_X * DIM_Y +
             y * DIM_X +
             x;
-        *target << accessor;
+	CELL *cursor = target;
+
+	for (int i = 0; i < count; ++i) {
+	    *cursor << accessor;
+	    ++cursor;
+	    ++*index;
+	}
     }
 
 private:
@@ -77,6 +94,7 @@ private:
     int x;
     int y;
     int z;
+    int count;
 };
 
 /**
@@ -91,11 +109,13 @@ public:
         const CELL *source,
         int x,
         int y,
-        int z) :
+        int z,
+        int count) :
         source(source),
         x(x),
         y(y),
-        z(z)
+        z(z),
+        count(count)
     {}
 
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
@@ -105,7 +125,12 @@ public:
             z * DIM_X * DIM_Y +
             y * DIM_X +
             x;
-        accessor << *source;
+        const CELL *cursor = source;
+        for (int i = 0; i < count; ++i) {
+            accessor << *cursor;
+            ++cursor;
+            ++(*index);
+        }
     }
 
 private:
@@ -113,6 +138,7 @@ private:
     int x;
     int y;
     int z;
+    int count;
 };
 
 /**
@@ -385,20 +411,31 @@ public:
         detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
     }
 
-    // fixme: add operator<< and operator>>
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
         int index = 0;
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z), &index);
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), &index);
+    }
+
+    void set(size_t x, size_t y, size_t z, const CELL_TYPE *cells, size_t count)
+    {
+        int index = 0;
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count), &index);
     }
 
     CELL_TYPE get(size_t x, size_t y, size_t z) const
     {
         CELL_TYPE cell;
         int index = 0;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z), &index);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), &index);
 
         return cell;
+    }
+
+    void get(size_t x, size_t y, size_t z, CELL_TYPE *cells, size_t count) const
+    {
+        int index = 0;
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count), &index);
     }
 
     size_t byte_size() const
@@ -453,7 +490,7 @@ private:
             return;                                                     \
         }
 
-        // CASE( 32);
+        CASE( 32);
         // CASE( 64);
         // CASE( 96);
         // CASE(128);

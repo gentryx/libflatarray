@@ -9,8 +9,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(jacobi example_jacobi.cpp)
 target_link_libraries(jacobi ${Boost_LIBRARIES})
 
-add_executable(interface_test example_interface_test.cpp)
-target_link_libraries(interface_test ${Boost_LIBRARIES})
+add_executable(soa_grid_test soa_grid_test.cpp)
+target_link_libraries(soa_grid_test ${Boost_LIBRARIES})
 
 SET(CUDA_NVCC_FLAGS "-arch=compute_20")
 cuda_add_executable(lbm example_lbm.cu)
