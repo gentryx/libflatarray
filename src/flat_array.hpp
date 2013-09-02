@@ -388,7 +388,7 @@ public:
 
     ~soa_grid()
     {
-        delete data;
+        delete [] data;
     }
 
     void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
@@ -471,9 +471,7 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         // FIXME: make external allocators work here (e.g. for CUDA)
-        if (data) {
-            delete data;
-        }
+        delete [] data;
         data = new char[byte_size()];
     }
 
