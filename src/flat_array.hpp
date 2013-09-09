@@ -26,8 +26,22 @@
 #define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)	\
     DIM_X, DIM_Y, DIM_Z, LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
+/**
+ * This macro is convenient when you need to return instances of the
+ * soa_accessor from your own functions.
+ */
 #define LIBFLATARRAY_PARAMS						\
     LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
+
+/**
+ * Use this macro to give LibFlatArray access to your class' private members.
+ */
+#define LIBFLATARRAY_ACCESS(CELL)                                       \
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
+    friend void operator<<(Cell&, const LibFlatArray::soa_accessor<Cell, DIM_X, DIM_Y, DIM_Z, INDEX>); \
+                                                                        \
+    template<typename CELL_TYPE, int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX> \
+    friend class LibFlatArray::soa_accessor;
 
 namespace LibFlatArray {
 

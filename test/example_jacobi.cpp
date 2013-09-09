@@ -11,16 +11,12 @@
 class Cell
 {
 public:
-    // fixme: would be nicer to have this as a macro.
     /**
-     * This operator is required to give the operator<<(CELL_TYPE,
-     * LibFlatArray::soa_accessor) access to our private members.
+     * This friend declaration is required to give the
+     * operator<<(CELL_TYPE, LibFlatArray::soa_accessor) access to our
+     * private members.
      */
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    friend void operator<<(Cell&, const LibFlatArray::soa_accessor<Cell, DIM_X, DIM_Y, DIM_Z, INDEX>);
-
-    template<typename CELL, int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>
-    friend class LibFlatArray::soa_accessor;
+    LIBFLATARRAY_ACCESS(Cell)
 
     Cell(double temp) :
         temp(temp)
