@@ -19,6 +19,9 @@ public:
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
     friend void operator<<(Cell&, const LibFlatArray::soa_accessor<Cell, DIM_X, DIM_Y, DIM_Z, INDEX>);
 
+    template<typename CELL, int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>
+    friend class LibFlatArray::soa_accessor;
+
     Cell(double temp) :
         temp(temp)
     {}
@@ -29,7 +32,7 @@ public:
         temp = 123;
     }
 
-// private:
+private:
     double temp;
 };
 
