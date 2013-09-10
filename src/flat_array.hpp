@@ -37,9 +37,6 @@
  * Use this macro to give LibFlatArray access to your class' private members.
  */
 #define LIBFLATARRAY_ACCESS(CELL)                                       \
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
-    friend void operator<<(Cell&, const LibFlatArray::soa_accessor<Cell, DIM_X, DIM_Y, DIM_Z, INDEX>); \
-                                                                        \
     template<typename CELL_TYPE, int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX> \
     friend class LibFlatArray::soa_accessor;
 
@@ -97,7 +94,7 @@ public:
 	CELL *cursor = target;
 
 	for (int i = 0; i < count; ++i) {
-	    *cursor << accessor;
+            accessor >> *cursor;
 	    ++cursor;
 	    ++*index;
 	}
@@ -284,7 +281,7 @@ public:
     BOOST_PP_SEQ_ELEM(1, MEMBER)() = cell.BOOST_PP_SEQ_ELEM(1, MEMBER);
 
 #define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
-    cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = soa.BOOST_PP_SEQ_ELEM(1, MEMBER)();
+    cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = this->BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
 template<int X, int Y, int Z> class coord {};
 
@@ -336,6 +333,16 @@ template<int X, int Y, int Z> class coord {};
                 (*this) = cell;                                         \
             }                                                           \
                                                                         \
+        __host__ __device__                                             \
+            inline                                                      \
+            void operator>>(CELL_TYPE& cell) const                      \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_OUT,                                    \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
         BOOST_PP_SEQ_FOR_EACH(                                          \
             DECLARE_SOA_MEMBER_NORMAL,                                  \
             CELL_TYPE,                                                  \
@@ -362,6 +369,7 @@ template<int X, int Y, int Z> class coord {};
         char *data;                                                     \
         int *index;                                                     \
     };                                                                  \
+                                                                        \
     }                                                                   \
                                                                         \
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
@@ -371,10 +379,7 @@ template<int X, int Y, int Z> class coord {};
         CELL_TYPE& cell,                                                \
         const LibFlatArray::soa_accessor<CELL_TYPE, DIM_X, DIM_Y, DIM_Z, INDEX> soa) \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
-            COPY_SOA_MEMBER_OUT,                                        \
-            CELL_TYPE,                                                  \
-            CELL_MEMBERS);                                              \
+        soa >> cell;                                                    \
     }
 
 template<typename CELL_TYPE>
