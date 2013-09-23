@@ -426,6 +426,15 @@ public:
         return *this;
     }
 
+    void swap(soa_grid& other)
+    {
+        std::swap(dim_x, other.dim_x);
+        std::swap(dim_x, other.dim_x);
+        std::swap(dim_x, other.dim_x);
+        std::swap(my_byte_size, other.my_byte_size);
+        std::swap(data, other.data);
+    }
+
     void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
     {
         dim_x = new_dim_x;
@@ -506,10 +515,8 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         // FIXME: make external allocators work here (e.g. for CUDA)
-        void *dummy = data;
         delete [] data;
         data = new char[byte_size()];
-        dummy = data;
     }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
@@ -596,6 +603,15 @@ private:
     }
 };
 
+}
+
+namespace std
+{
+    template<typename CELL_TYPE>
+    void swap(LibFlatArray::soa_grid<CELL_TYPE>& a, LibFlatArray::soa_grid<CELL_TYPE>& b)
+    {
+        a.swap(b);
+    }
 }
 
 #endif
