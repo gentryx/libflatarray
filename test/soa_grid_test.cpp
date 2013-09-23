@@ -11,7 +11,35 @@
 #include <libflatarray/flat_array.hpp>
 #include <vector>
 
-using namespace LibFlatArray;
+// Runner and ADD_TEST are some convenience functions to simplify
+// definition of new tests. ADD_TEST will add scaffolding that causes
+// the following block to be executed once the program starts.
+// Advantage: tests have no longer to be manually added to main().
+template<typename TEST>
+class Runner
+{
+public:
+    Runner()
+    {
+        // std::cout << "Runner<" << typeid(TEST).name() << ">()\n";
+        TEST()();
+    }
+};
+
+#define ADD_TEST(TEST_NAME)                     \
+    class TEST_NAME                             \
+    {                                           \
+    public:                                     \
+        void operator()();                      \
+                                                \
+    private:                                    \
+        static Runner<TEST_NAME> runner;        \
+    };                                          \
+                                                \
+    Runner<TEST_NAME> TEST_NAME::runner;        \
+                                                \
+    void TEST_NAME::operator()()                \
+
 
 class HeatedGameOfLifeCell
 {
@@ -153,7 +181,9 @@ private:
 
 LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
 
-void testSingleGetSet()
+namespace LibFlatArray {
+
+ADD_TEST(TestSingleGetSet)
 {
     int dimX = 5;
     int dimY = 3;
@@ -180,7 +210,8 @@ void testSingleGetSet()
     }
 }
 
-void testArrayGetSet()
+
+ADD_TEST(TestArrayGetSet)
 {
     int dimX = 15;
     int dimY = 3;
@@ -215,7 +246,7 @@ void testArrayGetSet()
     }
 }
 
-void testResizeAndByteSize()
+ADD_TEST(TestResizeAndByteSize)
 {
     int dimX = 2;
     int dimY = 2;
@@ -234,7 +265,7 @@ void testResizeAndByteSize()
 
 }
 
-void testSingleCallback()
+ADD_TEST(TestSingleCallback)
 {
     int dimX = 5;
     int dimY = 3;
@@ -298,13 +329,76 @@ void testDualCallback()
     }
 }
 
-int main(int argc, char **argv)
+ADD_TEST(TestDualCallback)
 {
-    testSingleGetSet();
-    testArrayGetSet();
-    testResizeAndByteSize();
-    testSingleCallback();
     testDualCallback<CopyTemperatureCactusStyle>();
     testDualCallback<CopyTemperatureNativeStyle>();
+}
+
+ADD_TEST(TestAssignment)
+{
+    soa_grid<HeatedGameOfLifeCell> gridOld(20, 30, 40);
+    soa_grid<HeatedGameOfLifeCell> gridNew(70, 60, 50);
+
+    BOOST_TEST(gridOld.data != gridNew.data);
+    BOOST_TEST(gridOld.dim_x != gridNew.dim_x);
+    BOOST_TEST(gridOld.dim_y != gridNew.dim_y);
+    BOOST_TEST(gridOld.dim_z != gridNew.dim_z);
+    BOOST_TEST(gridOld.my_byte_size != gridNew.my_byte_size);
+
+    gridOld = gridNew;
+
+    BOOST_TEST(gridOld.data != gridNew.data);
+    BOOST_TEST(gridOld.dim_x == gridNew.dim_x);
+    BOOST_TEST(gridOld.dim_y == gridNew.dim_y);
+    BOOST_TEST(gridOld.dim_z == gridNew.dim_z);
+    BOOST_TEST(gridOld.my_byte_size == gridNew.my_byte_size);
+}
+
+ADD_TEST(TestSwap)
+{
+    int dimX = 5;
+    int dimY = 3;
+    int dimZ = 2;
+
+    soa_grid<HeatedGameOfLifeCell> gridOld(dimX, dimY, dimZ);
+    soa_grid<HeatedGameOfLifeCell> gridNew(dimX, dimY, dimZ);
+
+    for (int z = 0; z < dimZ; ++z) {
+        for (int y = 0; y < dimY; ++y) {
+            for (int x = 0; x < dimX; ++x) {
+                gridOld.set(x, y, z, HeatedGameOfLifeCell(4711));
+                gridNew.set(x, y, z, HeatedGameOfLifeCell(666));
+            }
+        }
+    }
+
+    for (int z = 0; z < dimZ; ++z) {
+        for (int y = 0; y < dimY; ++y) {
+            for (int x = 0; x < dimX; ++x) {
+		double temp = z * 100 + y + x * 0.01;
+		BOOST_TEST(gridOld.get(x, y, z).temperature == 4711);
+		BOOST_TEST(gridNew.get(x, y, z).temperature == 666);
+            }
+        }
+    }
+
+    std::swap(gridOld, gridNew);
+
+    for (int z = 0; z < dimZ; ++z) {
+        for (int y = 0; y < dimY; ++y) {
+            for (int x = 0; x < dimX; ++x) {
+		double temp = z * 100 + y + x * 0.01;
+		BOOST_TEST(gridOld.get(x, y, z).temperature == 666);
+		BOOST_TEST(gridNew.get(x, y, z).temperature == 4711);
+            }
+        }
+    }
+}
+
+}
+
+int main(int argc, char **argv)
+{
     return 0;
 }

@@ -386,6 +386,8 @@ template<typename CELL_TYPE>
 class soa_grid
 {
 public:
+    friend class TestAssignment;
+
     soa_grid(size_t dim_x = 0, size_t dim_y = 0, size_t dim_z = 0) :
         dim_x(dim_x),
         dim_y(dim_y),
@@ -408,6 +410,20 @@ public:
     ~soa_grid()
     {
         delete [] data;
+    }
+
+    soa_grid& operator=(const soa_grid& other)
+    {
+        dim_x = other.dim_x;
+        dim_y = other.dim_y;
+        dim_z = other.dim_z;
+        my_byte_size = other.my_byte_size;
+
+        delete [] data;
+        data = new char[byte_size()];
+        std::copy(other.data, other.data + byte_size(), data);
+
+        return *this;
     }
 
     void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
@@ -490,8 +506,10 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         // FIXME: make external allocators work here (e.g. for CUDA)
+        void *dummy = data;
         delete [] data;
         data = new char[byte_size()];
+        dummy = data;
     }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
