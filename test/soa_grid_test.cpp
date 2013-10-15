@@ -60,6 +60,15 @@ public:
     bool alive;
 };
 
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& os,
+           const HeatedGameOfLifeCell& c)
+{
+    os << "(" << c.temperature << ", " << c.alive << ")";
+    return os;
+}
+
 class InvertTemperature
 {
 public:
@@ -394,6 +403,69 @@ ADD_TEST(TestSwap)
             }
         }
     }
+}
+
+ADD_TEST(TestCopyArrayIn)
+{
+    int dimX = 5;
+    int dimY = 3;
+    int dimZ = 2;
+
+    soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
+    std::vector<char> store0(1024);
+    double *store1 = reinterpret_cast<double*>(&store0[0]);
+    store1[ 0] = 47.11;
+    store1[ 1] = 1.234;
+    store1[ 2] = 666.1;
+    store0[24] = true;
+    store0[25] = false;
+    store0[26] = true;
+
+    grid.load(0, 0, 0, &store0[0], 3);
+    BOOST_TEST(grid.get(0, 0, 0) == HeatedGameOfLifeCell(47.11, true));
+    BOOST_TEST(grid.get(1, 0, 0) == HeatedGameOfLifeCell(1.234, false));
+    BOOST_TEST(grid.get(2, 0, 0) == HeatedGameOfLifeCell(666.1, true));
+
+    store1[ 0] = 2.345;
+    store1[ 1] = 987.6;
+    store0[16] = false;
+    store0[17] = true;
+
+    grid.load(3, 2, 1, &store0[0], 2);
+    BOOST_TEST(grid.get(3, 2, 1) == HeatedGameOfLifeCell(2.345, false));
+    BOOST_TEST(grid.get(4, 2, 1) == HeatedGameOfLifeCell(987.6, true));
+}
+
+ADD_TEST(TestCopyArrayOut)
+{
+    int dimX = 5;
+    int dimY = 3;
+    int dimZ = 2;
+
+    std::vector<char> store0(1024);
+    double *store1 = reinterpret_cast<double*>(&store0[0]);
+    soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
+
+    grid.set(0, 0, 0, HeatedGameOfLifeCell(47.11, true));
+    grid.set(1, 0, 0, HeatedGameOfLifeCell(1.234, false));
+    grid.set(2, 0, 0, HeatedGameOfLifeCell(666.1, true));
+    grid.save(0, 0, 0, &store0[0], 3);
+
+    BOOST_TEST(store1[ 0] == 47.11);
+    BOOST_TEST(store1[ 1] == 1.234);
+    BOOST_TEST(store1[ 2] == 666.1);
+    BOOST_TEST(store0[24] == true);
+    BOOST_TEST(store0[25] == false);
+    BOOST_TEST(store0[26] == true);
+
+    grid.set(3, 2, 1, HeatedGameOfLifeCell(2.345, false));
+    grid.set(4, 2, 1, HeatedGameOfLifeCell(987.6, true));
+    grid.save(3, 2, 1, &store0[0], 2);
+
+    BOOST_TEST(store1[ 0] == 2.345);
+    BOOST_TEST(store1[ 1] == 987.6);
+    BOOST_TEST(store0[16] == false);
+    BOOST_TEST(store0[17] == true);
 }
 
 }

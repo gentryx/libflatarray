@@ -153,6 +153,79 @@ private:
 };
 
 /**
+ * The purpose of this functor is to load a row of cells which are
+ * already prepackaged (in SoA form) in a raw data segment (i.e. all
+ * members are stored in a consecutive array of the given length and
+ * all arrays are concatenated).
+ */
+template<typename CELL>
+class load_functor
+{
+public:
+    load_functor(
+        size_t x,
+        size_t y,
+        size_t z,
+        const char *source,
+        int count) :
+        source(source),
+        count(count),
+        x(x),
+        y(y),
+        z(z)
+    {}
+
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor, int *index) const
+    {
+        *index = x + y * DIM_X + z * DIM_X * DIM_Y;
+        accessor.load(source, count);
+    }
+
+private:
+    const char *source;
+    int count;
+    int x;
+    int y;
+    int z;
+};
+
+/**
+ * Same as save_functor, but the other way around.
+ */
+template<typename CELL>
+class save_functor
+{
+public:
+    save_functor(
+        size_t x,
+        size_t y,
+        size_t z,
+        char *target,
+        int count) :
+        target(target),
+        count(count),
+        x(x),
+        y(y),
+        z(z)
+    {}
+
+    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor, int *index)
+    {
+        *index = x + y * DIM_X + z * DIM_X * DIM_Y;
+        accessor.save(target, count);
+    }
+
+private:
+    char *target;
+    int count;
+    int x;
+    int y;
+    int z;
+};
+
+/**
  * This helper class uses the dimension specified in the accessor to
  * compute how many bytes a grid needs to allocate im memory.
  */
@@ -283,6 +356,21 @@ public:
 #define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = this->BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
+#define COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER)            \
+    std::copy(                                                          \
+        (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                          \
+            source + detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * count), \
+        (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                          \
+            source + detail::flat_array::offset<CELL, MEMBER_INDEX - 1>::OFFSET * count), \
+        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)());
+
+#define COPY_SOA_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER)           \
+    std::copy(                                                          \
+        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)(),                          \
+        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)() + count,                  \
+        (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                                \
+            target + detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * count));
+
 template<int X, int Y, int Z> class coord {};
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
@@ -303,42 +391,62 @@ template<int X, int Y, int Z> class coord {};
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
         __host__ __device__                                             \
-            soa_accessor(char *data=0, int *index=0) :                  \
+        soa_accessor(char *data=0, int *index=0) :                      \
             data(data),                                                 \
             index(index)                                                \
-            {}                                                          \
+        {}                                                              \
                                                                         \
         template<int X, int Y, int Z>                                   \
-            inline                                                      \
-            __host__ __device__                                         \
-            soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](coord<X, Y, Z>) const \
-            {                                                           \
-                return soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(data, index); \
-            }                                                           \
+        inline                                                          \
+        __host__ __device__                                             \
+        soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](coord<X, Y, Z>) const \
+        {                                                               \
+            return soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(data, index); \
+        }                                                               \
                                                                         \
         __host__ __device__                                             \
-            inline                                                      \
-            void operator=(const CELL_TYPE& cell)                       \
-            {                                                           \
-                BOOST_PP_SEQ_FOR_EACH(                                  \
-                    COPY_SOA_MEMBER_IN,                                 \
-                    CELL_TYPE,                                          \
-                    CELL_MEMBERS);                                      \
-            }                                                           \
+        inline                                                          \
+        void operator=(const CELL_TYPE& cell)                           \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_IN,                                     \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
                                                                         \
         __host__ __device__                                             \
-            inline                                                      \
-            void operator<<(const CELL_TYPE& cell)                      \
-            {                                                           \
-                (*this) = cell;                                         \
-            }                                                           \
+        inline                                                          \
+        void operator<<(const CELL_TYPE& cell)                          \
+        {                                                               \
+            (*this) = cell;                                             \
+        }                                                               \
                                                                         \
         __host__ __device__                                             \
-            inline                                                      \
-            void operator>>(CELL_TYPE& cell) const                      \
+        inline                                                          \
+        void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 COPY_SOA_MEMBER_OUT,                                    \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void load(const char *source, size_t count)                     \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_ARRAY_IN,                               \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(char *target, size_t count) const                     \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_ARRAY_OUT,                              \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -482,6 +590,18 @@ public:
         callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count), &index);
     }
 
+    void load(size_t x, size_t y, size_t z, const char *data, size_t count)
+    {
+        int index = 0;
+        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count), &index);
+    }
+
+    void save(size_t x, size_t y, size_t z, char *data, size_t count) const
+    {
+        int index = 0;
+        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count), &index);
+    }
+
     size_t byte_size() const
     {
         return my_byte_size;
@@ -532,6 +652,7 @@ private:
             return;                                                     \
         }
 
+        // CASE(  1);
         CASE( 32);
         // CASE( 64);
         // CASE( 96);
@@ -557,6 +678,7 @@ private:
             return;                                                     \
         }
 
+        // CASE(  1);
         CASE( 32);
         CASE( 64);
         CASE( 96);
