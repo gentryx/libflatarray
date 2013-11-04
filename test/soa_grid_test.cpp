@@ -468,6 +468,17 @@ ADD_TEST(TestCopyArrayOut)
     BOOST_TEST(store0[17] == true);
 }
 
+ADD_TEST(TestNumberOfMembers)
+{
+    BOOST_TEST(number_of_members<HeatedGameOfLifeCell>::VALUE == 2);
+}
+
+ADD_TEST(TestAggregatedMemberSize)
+{
+    BOOST_TEST(sizeof(HeatedGameOfLifeCell) == 16);
+    BOOST_TEST(aggregated_member_size<HeatedGameOfLifeCell>::VALUE == 9);
+}
+
 }
 
 int main(int argc, char **argv)

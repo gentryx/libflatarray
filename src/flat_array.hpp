@@ -371,7 +371,16 @@ public:
         (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                                \
             target + detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * count));
 
-template<int X, int Y, int Z> class coord {};
+template<int X, int Y, int Z>
+class coord
+{};
+
+template<typename CELL_TYPE>
+class number_of_members;
+
+template<typename CELL_TYPE>
+class aggregated_member_size;
+
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
@@ -379,6 +388,24 @@ template<int X, int Y, int Z> class coord {};
         DEFINE_FIELD_OFFSET,                                            \
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
+                                                                        \
+    template<>                                                          \
+    class number_of_members<CELL_TYPE>                                  \
+    {                                                                   \
+    public:                                                             \
+        static const size_t VALUE = BOOST_PP_SEQ_SIZE(CELL_MEMBERS);    \
+    };                                                                  \
+                                                                        \
+    template<>                                                          \
+    class aggregated_member_size<CELL_TYPE>                             \
+    {                                                                   \
+    private:                                                            \
+        static const size_t INDEX = number_of_members<CELL_TYPE>::VALUE; \
+                                                                        \
+    public:                                                             \
+        static const size_t VALUE =                                     \
+            detail::flat_array::offset<CELL_TYPE, INDEX>::OFFSET;       \
+    };                                                                  \
                                                                         \
     template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
     class soa_accessor<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>  \
