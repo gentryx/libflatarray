@@ -43,6 +43,21 @@
 namespace LibFlatArray {
 
 /**
+ * Allow the user to access the number of data members of the SoA type.
+ */
+template<typename CELL_TYPE>
+class number_of_members;
+
+/**
+ * Accumulate the sizes of the individual data members. This may be
+ * lower than sizeof(CELL_TYPE) as structs/objects in C++ may need
+ * padding. We can avoid the padding of individual members in a SoA
+ * memory layout.
+ */
+template<typename CELL_TYPE>
+class aggregated_member_size;
+
+/**
  * This class provides an object-oriented view to a "Struct of
  * Arrays"-style grid. It requires the user to register the type CELL
  * using the macro LIBFLATARRAY_REGISTER_SOA. It provides an
@@ -240,7 +255,7 @@ public:
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
     void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
     {
-        *byte_size = sizeof(CELL) * DIM_X * DIM_Y * DIM_Z;
+        *byte_size = aggregated_member_size<CELL>::VALUE * DIM_X * DIM_Y * DIM_Z;
     }
 
 private:
@@ -374,13 +389,6 @@ public:
 template<int X, int Y, int Z>
 class coord
 {};
-
-template<typename CELL_TYPE>
-class number_of_members;
-
-template<typename CELL_TYPE>
-class aggregated_member_size;
-
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
