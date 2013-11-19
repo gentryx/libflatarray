@@ -22,6 +22,7 @@ public:
         temp(temp)
     {}
 
+    // fixme: write something sensible here
     template<typename NEIGHBORHOOD>
     void update(const NEIGHBORHOOD& hood)
     {
