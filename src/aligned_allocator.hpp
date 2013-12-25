@@ -50,16 +50,17 @@ public:
         // array's start. Ugly, but it works.
         char *chunk = std::allocator<char>().allocate(upsize(n));
         if (chunk == 0) {
-            return (pointer)chunk;
+            return reinterpret_cast<pointer>(chunk);
         }
 
-        std::size_t offset = (std::size_t)chunk % ALIGNMENT;
+        std::size_t offset = reinterpret_cast<std::size_t>(chunk) % ALIGNMENT;
         std::size_t correction = ALIGNMENT - offset;
-        if (correction < sizeof(char*))
+        if (correction < sizeof(char*)) {
             correction += ALIGNMENT;
+        }
         char *ret = chunk + correction;
-        *((char**)ret - 1) = chunk;
-        return (pointer)ret;
+        *(reinterpret_cast<char**>(ret) - 1) = chunk;
+        return reinterpret_cast<pointer>(ret);
     }
 
     void deallocate(pointer p, std::size_t n)
@@ -71,7 +72,7 @@ public:
         char *actual;
         // retrieve the original pointer which sits in front of its
         // aligned brother
-        actual = *((char**)p - 1);
+        actual = *(reinterpret_cast<char**>(p) - 1);
         std::allocator<char>().deallocate(actual, upsize(n));
     }
 
