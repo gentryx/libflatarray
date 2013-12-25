@@ -30,7 +30,7 @@ public:
         return ret;
     }
 
-    pointer deallocate(pointer p, std::size_t)
+    void deallocate(pointer p, std::size_t)
     {
         cudaFree(p);
     }
