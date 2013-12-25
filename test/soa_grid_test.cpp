@@ -232,9 +232,9 @@ ADD_TEST(TestResizeAndByteSize)
     int dimX = 2;
     int dimY = 2;
     int dimZ = 2;
-
+    int cellSize = 9; // 1 double, 1 bool
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
-    BOOST_TEST(grid.byte_size() == (32 * 32 * 32 * sizeof(HeatedGameOfLifeCell)));
+    BOOST_TEST(grid.byte_size() == (32 * 32 * 32 * cellSize));
 
     dimX = 10;
     dimY = 20;
@@ -242,7 +242,7 @@ ADD_TEST(TestResizeAndByteSize)
     grid.resize(dimX, dimY, dimZ);
     grid.set(dimX - 1, dimY - 1, dimZ - 1, HeatedGameOfLifeCell(4711));
     BOOST_TEST(grid.get(dimX - 1, dimY - 1, dimZ - 1) == HeatedGameOfLifeCell(4711));
-    BOOST_TEST(grid.byte_size() == (32 * 32 * 256 * sizeof(HeatedGameOfLifeCell)));
+    BOOST_TEST(grid.byte_size() == (32 * 32 * 256 * cellSize));
 
 }
 
