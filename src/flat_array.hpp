@@ -5,9 +5,10 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef _FLAT_ARRAY_HPP_
-#define _FLAT_ARRAY_HPP_
+#ifndef FLAT_ARRAY_HPP
+#define FLAT_ARRAY_HPP
 
+#include <libflatarray/aligned_allocator.hpp>
 #include <stdexcept>
 #include <boost/preprocessor/seq.hpp>
 
@@ -585,7 +586,7 @@ private:
     int index;
 };
 
-template<typename CELL_TYPE>
+template<typename CELL_TYPE, typename ALLOCATOR = AlignedAllocator<char, 4096> >
 class soa_grid
 {
 public:
