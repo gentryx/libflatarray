@@ -19,7 +19,7 @@
 namespace LibFlatArray {
 
 template<class T, std::size_t ALIGNMENT>
-class AlignedAllocator
+class aligned_allocator
 {
 public:
     typedef ptrdiff_t difference_type;
