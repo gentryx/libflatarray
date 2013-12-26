@@ -13,7 +13,7 @@
 
 using namespace LibFlatArray;
 
-ADD_TEST(test_basic)
+ADD_TEST(basic)
 {
     cuda_allocator<double> allocator;
 
@@ -39,6 +39,14 @@ ADD_TEST(test_basic)
         double expected = i + 0.5;
         BOOST_TEST(hostArray2[i] == expected);
     }
+}
+
+ADD_TEST(null_allocation)
+{
+    cuda_allocator<double> allocator;
+    double *p = allocator.allocate(0);
+    allocator.deallocate(p, 0);
+    BOOST_TEST(p == 0);
 }
 
 int main(int argc, char **argv)
