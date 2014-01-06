@@ -9,6 +9,7 @@
 #define ALIGNED_ALLOCATOR_HPP
 
 #ifdef __APPLE__
+#include <cstddef>
 #include <stdlib.h>
 #else
 #include <malloc.h>
