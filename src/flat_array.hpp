@@ -5,9 +5,10 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef _FLAT_ARRAY_HPP_
-#define _FLAT_ARRAY_HPP_
+#ifndef FLAT_ARRAY_HPP
+#define FLAT_ARRAY_HPP
 
+#include <libflatarray/aligned_allocator.hpp>
 #include <stdexcept>
 #include <boost/preprocessor/seq.hpp>
 
@@ -660,7 +661,7 @@ private:
     int index;
 };
 
-template<typename CELL_TYPE>
+template<typename CELL_TYPE, typename ALLOCATOR = aligned_allocator<char, 4096> >
 class soa_grid
 {
 public:
@@ -681,24 +682,25 @@ public:
         dim_z(other.dim_z),
         my_byte_size(other.my_byte_size)
     {
-        data = new char[byte_size()];
+        data = ALLOCATOR().allocate(byte_size());
         std::copy(other.data, other.data + byte_size(), data);
     }
 
     ~soa_grid()
     {
-        delete [] data;
+        ALLOCATOR().deallocate(data, byte_size());
     }
 
     soa_grid& operator=(const soa_grid& other)
     {
+        ALLOCATOR().deallocate(data, byte_size());
+
         dim_x = other.dim_x;
         dim_y = other.dim_y;
         dim_z = other.dim_z;
         my_byte_size = other.my_byte_size;
 
-        delete [] data;
-        data = new char[byte_size()];
+        data = ALLOCATOR().allocate(byte_size());
         std::copy(other.data, other.data + byte_size(), data);
 
         return *this;
@@ -777,13 +779,11 @@ public:
         return my_byte_size;
     }
 
-    // fixme: use configurable allocator instead
     char *get_data()
     {
         return data;
     }
 
-    // fixme: use configurable allocator instead
     void set_data(char *new_data)
     {
         data = new_data;
@@ -802,11 +802,11 @@ private:
      */
     void resize()
     {
+        ALLOCATOR().deallocate(data, byte_size());
+
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
-        // FIXME: make external allocators work here (e.g. for CUDA)
-        delete [] data;
-        data = new char[byte_size()];
+        data = ALLOCATOR().allocate(byte_size());
     }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
