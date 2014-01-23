@@ -1,0 +1,35 @@
+ABOUT
+=====
+
+LibFlatArray acts as a highly efficient multi-dimensional array of
+arbitrary objects (array of structs, AoS), but really uses a struct of
+arrays (SoA) memory layout. It's great for writing vectorized code and
+its lightning-fast iterators give you access to neighboring elements
+with zero address generation overhead.
+
+Use cases include:
+- computer simulations (e.g. stencil codes such as Lattice Boltzmann Methods)
+- image processing (e.g. Gaussian filters)
+- numerical methods (e.g. multiplication of complex matrices)
+
+The library is written in C++ and uses templates to shift the burden
+of address computation from runtime to compile time. It shares some
+infrastructure with its parent project LibGeoDecomp.
+
+Further information:
+  - homepage:          http://www.libgeodecomp.org/libflatarray.html
+  - mailing list:      http://www.libgeodecomp.org/mailing_lists.html
+  - source repository: https://bitbucket.org/gentryx/libflatarray
+  - contributors:      see file "AUTHORS"
+
+BUILDING
+========
+
+For compiling LibFlatArray you'll need CMake (http://www.cmake.org)
+installed. We recommend an out-of-source build:
+
+  BUILD_DIR=build/`uname -ms | sed s/\ /-/g`
+  mkdir -p $BUILD_DIR
+  cd $BUILD_DIR
+  cmake ../../
+  make
