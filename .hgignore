@@ -1,3 +1,4 @@
 syntax: glob
 *~
 ./build
+./src/config.h

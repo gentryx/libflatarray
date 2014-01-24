@@ -2,11 +2,53 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 
 # 1. GENERIC PACKAGE INFORMATION
 set(PACKAGE_NAME libflatarray)
-set(PACKAGE_VERSION "0.1.0")
+set(PACKAGE_VERSION "0.1.1")
 set(PACKAGE_VENDOR "Chair for Computer Science 3, FAU Erlangen, Germany")
 set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
+
+find_package(Boost REQUIRED date_time filesystem system)
+find_package(CUDA)
+
+# dumps selected build options to a config header
+function(dump_config outfile)
+  set(CONTENT "#ifndef LIBFLATARRAY_CONFIG_H\n\n")
+  set(CONTENT "${CONTENT}${CONFIG_HEADER}\n")
+  set(CONTENT "${CONTENT}#endif\n")
+  file(WRITE "${outfile}.new" "${CONTENT}")
+
+  execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files "${CMAKE_CURRENT_SOURCE_DIR}/${outfile}" "${CMAKE_CURRENT_SOURCE_DIR}/${outfile}.new" RESULT_VARIABLE res)
+  if(res GREATER 0)
+    file(WRITE "${outfile}" "${CONTENT}")
+  endif()
+
+  file(REMOVE "${outfile}.new")
+endfunction(dump_config)
+
+# generic function to add user-configurable options. add_to_header may be used to propagate the option to a header file.
+function(add_config_option name help_message default add_to_header)
+  if(NOT DEFINED ${name})
+    set(${name} "${default}")
+    set(${name} "${default}" CACHE STRING "${help_message}" FORCE)
+  endif()
+
+  set(OPTIONS_LIST "${OPTIONS_LIST}\n\n * ${name}=\"${${name}}\",\n   default=\"${default}\"\n   ${help_message}" PARENT_SCOPE)
+
+  if(add_to_header)
+    if(${name})
+      set(CONFIG_HEADER "${CONFIG_HEADER}#define LIBFLATARRAY_${name} ${${name}}\n" PARENT_SCOPE)
+    endif()
+  endif()
+endfunction(add_config_option)
+
+add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
+
+if(WITH_CUDA AND NOT CUDA_FOUND)
+  message(FATAL_ERROR "WITH_CUDA selected, but could not find the NVIDIA CUDA toolkit.")
+endif()
+
+dump_config("src/config.h")
 
 # 2. CONFIGURE INSTALLER
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME})
@@ -28,8 +70,10 @@ foreach(i ${HEADERS})
 endforeach()
 
 # 3. BUILD DESCRIPTION
-find_package(Boost REQUIRED date_time filesystem system)
-find_package(CUDA)
+
+if(WITH_CUDA)
+  set(CUDA_NVCC_FLAGS "--gpu-architecture=sm_20")
+endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
