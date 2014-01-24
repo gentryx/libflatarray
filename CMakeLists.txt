@@ -11,6 +11,13 @@ project(${PACKAGE_NAME})
 find_package(Boost REQUIRED date_time filesystem system)
 find_package(CUDA)
 
+# pretty print build options
+function(print_options)
+  message("-- The following options have been configured:")
+  message(${OPTIONS_LIST})
+  message("")
+endfunction(print_options)
+
 # dumps selected build options to a config header
 function(dump_config outfile)
   set(CONTENT "#ifndef LIBFLATARRAY_CONFIG_H\n\n")
@@ -49,6 +56,7 @@ if(WITH_CUDA AND NOT CUDA_FOUND)
 endif()
 
 dump_config("src/config.h")
+print_options()
 
 # 2. CONFIGURE INSTALLER
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME})
