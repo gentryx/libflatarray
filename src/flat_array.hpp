@@ -22,6 +22,8 @@ namespace LibFlatArray {
 
 /**
  * Allow the user to access the number of data members of the SoA type.
+ *
+ * Will be instantiated by LIBFLATARRAY_REGISTER_SOA().
  */
 template<typename CELL_TYPE>
 class number_of_members;
@@ -30,6 +32,11 @@ template<int X, int Y, int Z>
 class coord
 {};
 
+/**
+ * Lets user code discover a member's offset in the SoA layout.
+ *
+ * Will be instantiated by LIBFLATARRAY_REGISTER_SOA().
+ */
 class member_ptr_to_offset
 {
 public:

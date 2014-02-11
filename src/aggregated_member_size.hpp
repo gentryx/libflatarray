@@ -15,6 +15,8 @@ namespace LibFlatArray {
  * lower than sizeof(CELL_TYPE) as structs/objects in C++ may need
  * padding. We can avoid the padding of individual members in a SoA
  * memory layout.
+ *
+ * Will be instantiated by LIBFLATARRAY_REGISTER_SOA().
  */
 template<typename CELL_TYPE>
 class aggregated_member_size;
