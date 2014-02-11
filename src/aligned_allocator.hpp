@@ -5,8 +5,8 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef ALIGNED_ALLOCATOR_HPP
-#define ALIGNED_ALLOCATOR_HPP
+#ifndef FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
+#define FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 
 #ifdef __APPLE__
 #include <cstddef>
