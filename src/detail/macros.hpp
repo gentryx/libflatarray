@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_DETAIL_MACROS_HPP
 #define FLAT_ARRAY_DETAIL_MACROS_HPP
 
+#include <boost/preprocessor/seq.hpp>
+
 // fix compilation for non-cuda builds
 #ifndef __host__
 #define __host__
