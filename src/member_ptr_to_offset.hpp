@@ -13,7 +13,9 @@
 namespace LibFlatArray {
 
 /**
- * Lets user code discover a member's offset in the SoA layout.
+ * Lets user code discover a member's offset in the SoA layout from
+ * the member pointer of the original cell type. See test
+ * TestMemberPtrToOffset for an explanation.
  *
  * Will be instantiated by LIBFLATARRAY_REGISTER_SOA().
  */
