@@ -17,6 +17,25 @@
 
 namespace LibFlatArray {
 
+/**
+ * soa_grid is a 1D - 3D container with "Struct of Arrays"-style
+ * memory layout but "Array of Structs"-style user interface. Another
+ * feature is its 0-overhead address calculation for accesses to
+ * members and neighboring elements. The technique has been published
+ * here:
+ *
+ *   http://www.computer.org/csdl/proceedings/sccompanion/2012/4956/00/4956b139-abs.html
+ *
+ * The AoS user interface aids productivty by allowing the user to
+ * write object-oriented kernels. Thanks to the SoA layout, these
+ * kernels can still be efficiently vectorized on both, multi-cores
+ * and GPUs.
+ *
+ * The 0-overhead interface trades compile time for running time (and
+ * development time). Compilation time may jump from seconds to tens
+ * of minutes. See the LBM example for how to split compilation into
+ * smaller, parallelizable chunks.
+ */
 template<typename CELL_TYPE, typename ALLOCATOR = aligned_allocator<char, 4096> >
 class soa_grid
 {

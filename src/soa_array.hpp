@@ -14,6 +14,17 @@
 
 namespace LibFlatArray {
 
+/**
+ * soa_array is a container with "Struct of Arrays"-style memory
+ * layout, but "Array of Structs" (AoS) user interface. This allows
+ * the user to write short, concise code, but facilitates efficient
+ * vectorization, which wouldn't have been possible with an AoS
+ * layout.
+ *
+ * Its capacity is fixed at compile time and it uses PoD-style copy
+ * semantics (i.e. it doesn't use pointers). The last two properties
+ * simplify (and accelerate) handling with MPI and CUDA.
+ */
 template<typename CELL, int MY_SIZE>
 class soa_array
 {
