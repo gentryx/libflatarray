@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Andreas Schäfer
+ * Copyright 2013 - 2014 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -40,6 +40,45 @@ operator<<(std::basic_ostream<_CharT, _Traits>& os,
     os << "(" << c.temperature << ", " << c.alive << ")";
     return os;
 }
+
+class MemberAccessChecker
+{
+public:
+    MemberAccessChecker(int dimX, int dimY, int dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR accessor, int *index)
+    {
+        for (int z = 0; z < dimZ; ++z) {
+            for (int y = 0; y < dimY; ++y) {
+                for (int x = 0; x < dimX; ++x) {
+                    *index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+
+                    double actualA = accessor.template access_member<double, 0>();
+                    bool actualB = accessor.template access_member<bool,   1>();
+
+                    double expectedA = x * 1000.0 + y + z * 0.001;
+                    bool expectedB = (x % 2 == 0);
+
+                    BOOST_TEST(actualA == expectedA);
+                    BOOST_TEST(actualB == expectedB);
+                }
+            }
+        }
+    }
+
+private:
+    int dimX;
+    int dimY;
+    int dimZ;
+};
 
 class InvertTemperature
 {
@@ -190,7 +229,6 @@ ADD_TEST(TestSingleGetSet)
 	}
     }
 }
-
 
 ADD_TEST(TestArrayGetSet)
 {
@@ -449,6 +487,37 @@ ADD_TEST(TestAggregatedMemberSize)
 {
     BOOST_TEST(sizeof(HeatedGameOfLifeCell) == 16);
     BOOST_TEST(aggregated_member_size<HeatedGameOfLifeCell>::VALUE == 9);
+}
+
+ADD_TEST(TestAccessMember)
+{
+    int dimX = 15;
+    int dimY = 13;
+    int dimZ = 19;
+
+    soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
+
+    for (int z = 0; z < dimZ; ++z) {
+        for (int y = 0; y < dimY; ++y) {
+            for (int x = 0; x < dimX; ++x) {
+                grid.set(x, y, z, HeatedGameOfLifeCell(x * 1000.0 + y + z * 0.001, (x % 2 == 0)));
+            }
+        }
+    }
+
+    BOOST_TEST(grid.get(11, 12, 13).temperature == 11012.013);
+    BOOST_TEST(grid.get(10, 12, 13).alive == true);
+    BOOST_TEST(grid.get(11, 12, 13).alive == false);
+    BOOST_TEST(grid.get(12, 12, 13).alive == true);
+
+    int index = 0;
+    grid.callback(MemberAccessChecker(dimX, dimY, dimZ), &index);
+}
+
+ADD_TEST(TestMemberPtrToOffset)
+{
+    BOOST_TEST(0 == member_ptr_to_offset()(&HeatedGameOfLifeCell::temperature));
+    BOOST_TEST(8 == member_ptr_to_offset()(&HeatedGameOfLifeCell::alive));
 }
 
 }

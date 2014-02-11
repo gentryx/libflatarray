@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013 Andreas Schäfer
+ * Copyright 2012-2014 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -273,6 +273,12 @@ class offset<CELL, 0>
 {
 public:
     static const std::size_t OFFSET = 0;
+
+    template<typename MEMBER_TYPE>
+    int operator()(MEMBER_TYPE CELL:: *member_ptr)
+    {
+        throw std::invalid_argument("member was not registered with LibFlatArray");
+    }
 };
 
 template<typename ACCESSOR1, typename FUNCTOR>
@@ -345,6 +351,20 @@ public:
     public:                                                             \
         static const std::size_t OFFSET = offset<CELL_TYPE, r - 2>::OFFSET +  \
             sizeof(BOOST_PP_SEQ_ELEM(0, t));                            \
+                                                                        \
+        template<typename MEMBER_TYPE>                                  \
+        inline                                                          \
+        int operator()(MEMBER_TYPE CELL_TYPE:: *member_ptr)             \
+        {                                                               \
+            return offset<CELL_TYPE, r - 2>()(member_ptr);              \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        int operator()(BOOST_PP_SEQ_ELEM(0, t) CELL_TYPE:: *member_ptr) \
+        {                                                               \
+            return offset<CELL_TYPE, r - 2>::OFFSET;                    \
+        }                                                               \
+                                                                        \
     };                                                                  \
     }                                                                   \
     }
@@ -391,6 +411,18 @@ public:
 template<int X, int Y, int Z>
 class coord
 {};
+
+class member_ptr_to_offset
+{
+public:
+    template<typename MEMBER_TYPE, typename CELL_TYPE>
+    int operator()(MEMBER_TYPE CELL_TYPE:: *member_ptr)
+    {
+        return detail::flat_array::offset<
+            CELL_TYPE,
+            number_of_members<CELL_TYPE>::VALUE>()(member_ptr);
+    }
+};
 
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
@@ -486,6 +518,18 @@ class coord
                 COPY_SOA_MEMBER_ARRAY_OUT,                              \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        template<typename MEMBER_TYPE, int OFFSET>                      \
+        inline                                                          \
+        __host__ __device__                                             \
+        MEMBER_TYPE& access_member()                                    \
+        {                                                               \
+            return *(MEMBER_TYPE*)(                                     \
+                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
+                *index * sizeof(MEMBER_TYPE) +                          \
+                INDEX  * sizeof(MEMBER_TYPE));                          \
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
