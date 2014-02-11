@@ -13,8 +13,15 @@ namespace LibFlatArray {
 /**
  * This class provides an object-oriented view to a "Struct of
  * Arrays"-style grid. It requires the user to register the type CELL
- * using the macro LIBFLATARRAY_REGISTER_SOA. It provides an
- * operator[] which can be used to access neighboring cells.
+ * using the macro LIBFLATARRAY_REGISTER_SOA.
+ *
+ * All registed members will be avalable by functions of the same
+ * name, so if "Cell" had two members "float a" and "char b", then
+ * these would be accessible via soa_accessor<Cell, ...>::a() and
+ * soa_accessor<Cell, ...>::b().
+ *
+ * soa_accessor<> also provides an operator[] which can be used to
+ * access neighboring cells.
  */
 template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
 class soa_accessor;
