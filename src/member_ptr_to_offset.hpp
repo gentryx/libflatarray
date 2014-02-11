@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_MEMBER_PTR_TO_OFFSET_HPP
 #define FLAT_ARRAY_MEMBER_PTR_TO_OFFSET_HPP
 
+#include <libflatarray/number_of_members.hpp>
+
 namespace LibFlatArray {
 
 /**
