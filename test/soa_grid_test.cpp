@@ -41,10 +41,10 @@ operator<<(std::basic_ostream<_CharT, _Traits>& os,
     return os;
 }
 
-class MemberAccessChecker
+class MemberAccessChecker1
 {
 public:
-    MemberAccessChecker(int dimX, int dimY, int dimZ) :
+    MemberAccessChecker1(int dimX, int dimY, int dimZ) :
 	dimX(dimX),
 	dimY(dimY),
 	dimZ(dimZ)
@@ -62,7 +62,46 @@ public:
                         x;
 
                     double actualA = accessor.template access_member<double, 0>();
-                    bool actualB = accessor.template access_member<bool,   1>();
+                    bool actualB = accessor.template access_member<bool, 1>();
+
+                    double expectedA = x * 1000.0 + y + z * 0.001;
+                    bool expectedB = (x % 2 == 0);
+
+                    BOOST_TEST(actualA == expectedA);
+                    BOOST_TEST(actualB == expectedB);
+                }
+            }
+        }
+    }
+
+private:
+    int dimX;
+    int dimY;
+    int dimZ;
+};
+
+class MemberAccessChecker2
+{
+public:
+    MemberAccessChecker2(int dimX, int dimY, int dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR accessor, int *index)
+    {
+        for (int z = 0; z < dimZ; ++z) {
+            for (int y = 0; y < dimY; ++y) {
+                for (int x = 0; x < dimX; ++x) {
+                    *index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+
+                    double actualA = *reinterpret_cast<double*>(accessor.access_member(8, 0));
+                    bool actualB = *reinterpret_cast<bool*>(accessor.access_member(1, 8));
 
                     double expectedA = x * 1000.0 + y + z * 0.001;
                     bool expectedB = (x % 2 == 0);
@@ -511,7 +550,8 @@ ADD_TEST(TestAccessMember)
     BOOST_TEST(grid.get(12, 12, 13).alive == true);
 
     int index = 0;
-    grid.callback(MemberAccessChecker(dimX, dimY, dimZ), &index);
+    grid.callback(MemberAccessChecker1(dimX, dimY, dimZ), &index);
+    grid.callback(MemberAccessChecker2(dimX, dimY, dimZ), &index);
 }
 
 ADD_TEST(TestMemberPtrToOffset)

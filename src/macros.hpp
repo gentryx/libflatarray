@@ -149,6 +149,17 @@
                 INDEX  * sizeof(MEMBER_TYPE));                          \
         }                                                               \
                                                                         \
+        inline                                                          \
+        __host__ __device__                                             \
+        char *access_member(const int size_of_member, const int offset) \
+        {                                                               \
+            return                                                      \
+                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                offset +                                                \
+                *index * size_of_member +                               \
+                INDEX  * size_of_member;                                \
+        }                                                               \
+                                                                        \
         BOOST_PP_SEQ_FOR_EACH(                                          \
             DECLARE_SOA_MEMBER_NORMAL,                                  \
             CELL_TYPE,                                                  \
