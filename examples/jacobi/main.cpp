@@ -12,11 +12,11 @@ class Cell
 {
 public:
     /**
-     * This friend declaration is required to give the
-     * operator<<(CELL_TYPE, LibFlatArray::soa_accessor) access to our
-     * private members.
+     * This friend declaration is required to give utility classes,
+     * e.g. operator<<(CELL_TYPE, LibFlatArray::soa_accessor), access
+     * to our private members.
      */
-    LIBFLATARRAY_ACCESS(Cell)
+    LIBFLATARRAY_ACCESS
 
     Cell(double temp) :
         temp(temp)

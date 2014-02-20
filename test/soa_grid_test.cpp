@@ -37,7 +37,7 @@ LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(a
 class CellWithMultipleMembersOfSameType
 {
 public:
-    LIBFLATARRAY_ACCESS(CellWithMultipleMembersOfSameType)
+    LIBFLATARRAY_ACCESS
 
     double memberA;
     double memberB;
@@ -575,8 +575,8 @@ ADD_TEST(TestAccessMember)
 
 ADD_TEST(TestMemberPtrToOffset)
 {
-    BOOST_TEST(0 == member_ptr_to_offset()(&HeatedGameOfLifeCell::temperature));
-    BOOST_TEST(8 == member_ptr_to_offset()(&HeatedGameOfLifeCell::alive));
+    BOOST_TEST( 0 == member_ptr_to_offset()(&HeatedGameOfLifeCell::temperature));
+    BOOST_TEST( 8 == member_ptr_to_offset()(&HeatedGameOfLifeCell::alive));
 
     BOOST_TEST( 0 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberA));
     BOOST_TEST( 8 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberB));

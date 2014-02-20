@@ -21,7 +21,7 @@
  * Use this macro to give LibFlatArray access to your class' private
  * members.
  */
-#define LIBFLATARRAY_ACCESS(CELL_TYPE)                                  \
+#define LIBFLATARRAY_ACCESS                                             \
     template<typename CELL_TYPE,                                        \
              int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
     friend class LibFlatArray::soa_accessor;                            \
@@ -29,6 +29,7 @@
     template<typename CELL_TYPE,                                        \
              int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
     friend class LibFlatArray::const_soa_accessor;                      \
+                                                                        \
     template<typename CELL_TYPE, int R>                                 \
     friend class LibFlatArray::detail::flat_array::offset;
 
