@@ -25,7 +25,7 @@
 #define LIBFLATARRAY_PARAMS_FULL(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)	\
     DIM_X, DIM_Y, DIM_Z, LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX)
 
-#define DEFINE_FIELD_OFFSET(r, CELL_TYPE, t)                            \
+#define DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)                       \
     namespace detail {                                                  \
     namespace flat_array {                                              \
     template<>                                                          \
@@ -33,7 +33,7 @@
     {                                                                   \
     public:                                                             \
         static const std::size_t OFFSET = offset<CELL_TYPE, r - 2>::OFFSET +  \
-            sizeof(BOOST_PP_SEQ_ELEM(0, t));                            \
+            sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER));                       \
                                                                         \
         template<typename MEMBER_TYPE>                                  \
         inline                                                          \
@@ -43,9 +43,14 @@
         }                                                               \
                                                                         \
         inline                                                          \
-        int operator()(BOOST_PP_SEQ_ELEM(0, t) CELL_TYPE:: *member_ptr) \
+        int operator()(BOOST_PP_SEQ_ELEM(0, MEMBER) CELL_TYPE:: *member_ptr) \
         {                                                               \
-            return offset<CELL_TYPE, r - 2>::OFFSET;                    \
+            if (member_ptr ==                                           \
+                &CELL_TYPE::BOOST_PP_SEQ_ELEM(1, MEMBER)) {             \
+                return offset<CELL_TYPE, r - 2>::OFFSET;                \
+            } else {                                                    \
+                return offset<CELL_TYPE, r - 2>()(member_ptr);          \
+            }                                                           \
         }                                                               \
                                                                         \
     };                                                                  \

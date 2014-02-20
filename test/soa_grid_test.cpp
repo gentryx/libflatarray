@@ -32,6 +32,27 @@ public:
     bool alive;
 };
 
+LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
+
+class CellWithMultipleMembersOfSameType
+{
+public:
+    LIBFLATARRAY_ACCESS(CellWithMultipleMembersOfSameType)
+
+    double memberA;
+    double memberB;
+
+    static double CellWithMultipleMembersOfSameType:: *getMemberCPointer()
+    {
+        return &CellWithMultipleMembersOfSameType::memberC;
+    }
+
+private:
+    double memberC;
+};
+
+LIBFLATARRAY_REGISTER_SOA(CellWithMultipleMembersOfSameType, ((double)(memberA))((double)(memberB))((double)(memberC)))
+
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& os,
@@ -237,8 +258,6 @@ private:
     int endY;
     int endZ;
 };
-
-LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
 
 namespace LibFlatArray {
 
@@ -558,6 +577,10 @@ ADD_TEST(TestMemberPtrToOffset)
 {
     BOOST_TEST(0 == member_ptr_to_offset()(&HeatedGameOfLifeCell::temperature));
     BOOST_TEST(8 == member_ptr_to_offset()(&HeatedGameOfLifeCell::alive));
+
+    BOOST_TEST( 0 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberA));
+    BOOST_TEST( 8 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberB));
+    BOOST_TEST(16 == member_ptr_to_offset()(CellWithMultipleMembersOfSameType::getMemberCPointer()));
 }
 
 }
