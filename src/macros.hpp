@@ -78,7 +78,7 @@
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
         __host__ __device__                                             \
-        soa_accessor(char *data=0, int *index=0) :                      \
+        soa_accessor(char *data, int *index) :                          \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
@@ -202,7 +202,7 @@
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
         __host__ __device__                                             \
-        const_soa_accessor(const char *data=0, int *index=0) :          \
+        const_soa_accessor(const char *data, int *index) :              \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
