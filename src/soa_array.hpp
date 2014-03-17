@@ -48,6 +48,7 @@ public:
 
     inline
     __host__ __device__
+    // fixme: this needs to work with "int" and "size_t" instead of "int&", too!
     soa_accessor<CELL, SIZE, 1, 1, 0> operator[](int& index)
     {
         return soa_accessor<CELL, SIZE, 1, 1, 0>(data, &index);

@@ -18,6 +18,7 @@ public:
      */
     LIBFLATARRAY_ACCESS
 
+    inline
     Cell(double temp) :
         temp(temp)
     {}
