@@ -96,5 +96,7 @@ endif()
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+add_custom_target(test echo "Tests passed.")
+
 add_subdirectory(test)
 add_subdirectory(examples)
