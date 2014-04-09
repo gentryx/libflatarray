@@ -1,0 +1,32 @@
+#!/usr/bin/ruby
+
+intervals = [
+  [32, 64, 96, 128, 160, 192, 224, 256, 288],
+  [32, 64, 96, 128, 160, 192, 224, 256, 288],
+  [32, 256]
+]
+
+counter = -1
+
+intervals[0].size.times do |x1|
+  counter += 1
+  File.open("flatarray_implementation_#{counter}.cu", "w") do |f|
+    f.puts <<EOF
+#include <iostream>
+#include "cudalineupdatefunctorprototype.h"
+
+EOF
+    intervals[1].size.times do |y1|
+      intervals[2].size.times do |z1|
+
+        # intervals[0].size.times do |x2|
+        #   intervals[1].size.times do |y2|
+        intervals[2].size.times do |z2|
+          f.puts "IMPLEMENTATION(CellLBM, #{intervals[0][x1]}, #{intervals[1][x1]}, #{intervals[2][z1]}, #{intervals[0][y1]}, #{intervals[1][y1]}, #{intervals[2][z2]})"
+        #     end
+        #   end
+        end
+      end
+    end
+  end
+end
