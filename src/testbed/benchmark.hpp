@@ -15,6 +15,9 @@ namespace LibFlatArray {
 class benchmark
 {
 public:
+    virtual ~benchmark()
+    {}
+
     virtual std::string order() = 0;
     virtual std::string family() = 0;
     virtual std::string species() = 0;
