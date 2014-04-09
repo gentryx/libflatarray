@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_TESTBED_GPU_BENCHMARK_HPP
 #define FLAT_ARRAY_TESTBED_GPU_BENCHMARK_HPP
 
+#include <cuda.h>
 #include <libflatarray/testbed/benchmark.hpp>
 
 namespace LibFlatArray {
@@ -22,7 +23,8 @@ public:
 
     std::string device()
     {
-        int cudaDevice = cudaGetDevice();
+        int cudaDevice;
+        cudaGetDevice(&cudaDevice);
         cudaDeviceProp properties;
         cudaGetDeviceProperties(&properties, cudaDevice);
         std::string cudaDeviceID = properties.name;
