@@ -82,6 +82,11 @@ foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME}/detail)
 endforeach()
 
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/testbed/*.hpp")
+foreach(i ${HEADERS})
+  install(FILES ${i} DESTINATION include/${PACKAGE_NAME}/testbed)
+endforeach()
+
 # 3. BUILD DESCRIPTION
 
 if(WITH_CUDA)
