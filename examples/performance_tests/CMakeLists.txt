@@ -1,1 +1,1 @@
-add_executable(main main.cpp)
+add_executable(performance_tests main.cpp)
