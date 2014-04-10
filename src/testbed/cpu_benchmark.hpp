@@ -33,7 +33,13 @@ public:
             std::vector<std::string> fields = tokenize(tokens[0], " \t");
 
             if ((fields[0] == "model") && (fields[1] == "name")) {
-                return join(tokenize(tokens[1], " \t"), " ");
+                tokens = tokenize(tokens[1], " \t");
+                std::string buf = join(tokens, " ");
+                if (buf[buf.size() - 1] == 0) {
+                    buf.resize(buf.size() - 1);
+                }
+
+                return join(tokens, " ");
             }
         }
 
