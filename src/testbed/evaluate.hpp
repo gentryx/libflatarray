@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_TESTBED_EVALUATE_HPP
 #define FLAT_ARRAY_TESTBED_EVALUATE_HPP
 
+#include <libflatarray/testbed/benchmark.hpp>
+
 namespace LibFlatArray {
 
 class evaluate
@@ -22,8 +24,14 @@ public:
         std::cout << "#rev              ; date                 ; host            ; device                                          ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
     }
 
-    template<class BENCHMARK>
-    void operator()(BENCHMARK benchmark, int dim[3], bool output = true)
+    template<class BENCHMARK, typename COORD_TYPE>
+    void operator()(BENCHMARK benchmark, COORD_TYPE dim, bool output = true)
+    {
+        int dimensions[] = {dim[0], dim[1], dim[2]};
+        (*this)(benchmark, dimensions, output);
+    }
+
+    void operator()(benchmark& benchmark, int dim[3], bool output = true)
     {
         boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
         std::stringstream buf;
