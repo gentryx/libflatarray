@@ -89,6 +89,10 @@ endforeach()
 
 # 3. BUILD DESCRIPTION
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
 if(WITH_CUDA)
   set(CUDA_NVCC_FLAGS "--gpu-architecture=sm_20")
 endif()
