@@ -21,7 +21,7 @@ public:
     virtual std::string order() = 0;
     virtual std::string family() = 0;
     virtual std::string species() = 0;
-    virtual double performance(int dim[3]) = 0;
+    virtual double performance(std::vector<int> dim) = 0;
     virtual std::string unit() = 0;
     virtual std::string device() = 0;
 

@@ -4,20 +4,40 @@
 
 using namespace LibFlatArray;
 
-class Jacobi5x5x5Vanilla : public cpu_benchmark
+class JacobiD3Q6 : public cpu_benchmark
 {
 public:
     std::string family()
     {
-        return "Jacobi5x5x5";
+        return "JacobiD3Q6";
     }
 
+    std::string unit()
+    {
+        return "GLUPS";
+    }
+
+    double glups(std::vector<int> dim, int steps, double time) const
+    {
+        double updates = steps;
+        for (std::size_t i = 0; i < dim.size(); ++i) {
+            updates *= dim[i] - 2;
+        }
+
+        double gigaLatticeUpdatesPerSecond = updates / time * 1e-9;
+        return gigaLatticeUpdatesPerSecond;
+    }
+};
+
+class JacobiD3Q6Iron : public JacobiD3Q6
+{
+public:
     std::string species()
     {
-        return "vanilla";
+        return "iron";
     }
 
-    double performance(int dim[3])
+    double performance(std::vector<int> dim)
     {
         int dimX = dim[0];
         int dimY = dim[1];
@@ -32,7 +52,7 @@ public:
 
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimY; ++x) {
+                for (int x = 0; x < dimX; ++x) {
                     gridOld[z * offsetZ + y * dimY + x] = x + y + z;
                     gridNew[z * offsetZ + y * dimY + x] = x + y + z;
                 }
@@ -55,15 +75,17 @@ public:
             gridNew[1 * offsetZ + 1 * dimY + 1]) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
+
+        return glups(dim, maxT, tEnd - tStart);
     }
 
 private:
     void updateLine(double *gridOld, double *gridNew,
                     const int xStart, const int y,       const int z,
-                    const int xEnd,   const int offsetY, const int offsetZ)
+                    const int xEnd,   const int offsetY, const int offsetZ) const
     {
         for (int x = xStart; x < xEnd; ++x) {
-            gridNew[x + y * offsetY + z * offsetZ] =
+            gridNew[x + y * offsetY + z * offsetZ] = 1 +
                 (gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] +
                  gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] +
                  gridOld[x + y * offsetY + z * offsetZ - 1          ] +
@@ -74,6 +96,33 @@ private:
         }
     }
 };
+
+// class JacobiD3Q6Cell
+// {
+// public:
+//     double temp;
+// };
+
+// LIBFLATARRAY_REGISTER_SOA(JacobiD3Q6Cell, (((double)(temp))))
+
+// class JacobiD3Q6Vanilla : public JacobiD3Q6
+// {
+// public:
+//     std::string species()
+//     {
+//         return "vanilla";
+//     }
+
+//     double performance(std::vector<int> dim)
+//     {
+//         int dimX = dim[0];
+//         int dimY = dim[1];
+//         int dimZ = dim[2];
+//         int maxT = 20;
+
+//         soa_grid<
+//     }
+// };
 
 int main(int argc, char **argv)
 {
@@ -100,6 +149,11 @@ int main(int argc, char **argv)
 
     evaluate eval(revision);
     eval.print_header();
+
+    for (int d = 32; d <= 544; d += 4) {
+        std::vector<int> dim(3, d);
+         eval(JacobiD3Q6Iron(), dim);
+    }
 
     return 0;
 }

@@ -21,17 +21,11 @@ public:
 
     void print_header()
     {
-        std::cout << "#rev              ; date                 ; host            ; device                                          ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
+        std::cout << "#rev              ; date                 ; host            ; device                                         ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
     }
 
-    template<class BENCHMARK, typename COORD_TYPE>
-    void operator()(BENCHMARK benchmark, COORD_TYPE dim, bool output = true)
-    {
-        int dimensions[] = {dim[0], dim[1], dim[2]};
-        (*this)(benchmark, dimensions, output);
-    }
-
-    void operator()(benchmark& benchmark, int dim[3], bool output = true)
+    template<class BENCHMARK>
+    void operator()(BENCHMARK benchmark, std::vector<int> dim, bool output = true)
     {
         boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
         std::stringstream buf;
@@ -49,6 +43,13 @@ public:
 
         double performance = benchmark.performance(dim);
 
+        std::ostringstream pretty_dim;
+        pretty_dim << "(" << dim[0];
+        for (std::size_t i = 1; i < dim.size(); ++i) {
+            pretty_dim << ", " << dim[i];
+        }
+        pretty_dim << ")";
+
         if (output) {
             std::cout << std::setiosflags(std::ios::left);
             std::cout << std::setw(18) << revision << "; "
@@ -58,7 +59,7 @@ public:
                       << std::setw( 8) << benchmark.order() <<  "; "
                       << std::setw(32) << benchmark.family() <<  "; "
                       << std::setw( 8) << benchmark.species() <<  "; "
-                      << std::setw(24) << dim <<  "; "
+                      << std::setw(24) << pretty_dim.str() <<  "; "
                       << std::setw(12) << performance <<  "; "
                       << std::setw( 8) << benchmark.unit() << std::endl;
         }
