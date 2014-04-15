@@ -11,6 +11,12 @@ project(${PACKAGE_NAME})
 find_package(Boost REQUIRED date_time filesystem system)
 find_package(CUDA)
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
+if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
+  set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
+endif()
+
 # pretty print build options
 function(print_options)
   message("-- The following options have been configured:")
@@ -49,6 +55,7 @@ function(add_config_option name help_message default add_to_header)
   endif()
 endfunction(add_config_option)
 
+add_config_option(ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
@@ -57,6 +64,9 @@ endif()
 
 dump_config("src/config.h")
 print_options()
+
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${ADDITIONAL_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADDITIONAL_COMPILE_FLAGS}")
 
 # 2. CONFIGURE INSTALLER
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME})
@@ -88,7 +98,6 @@ foreach(i ${HEADERS})
 endforeach()
 
 # 3. BUILD DESCRIPTION
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
