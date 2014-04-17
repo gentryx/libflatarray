@@ -39,7 +39,7 @@ public:
                     buf.resize(buf.size() - 1);
                 }
 
-                return join(tokens, " ");
+                return buf;
             }
         }
 

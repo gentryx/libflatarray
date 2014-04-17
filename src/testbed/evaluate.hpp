@@ -21,7 +21,7 @@ public:
 
     void print_header()
     {
-        std::cout << "#rev              ; date                 ; host            ; device                                         ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
+        std::cout << "#rev              ; date                 ; host            ; device                                          ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
     }
 
     template<class BENCHMARK>
