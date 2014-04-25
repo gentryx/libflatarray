@@ -1,0 +1,165 @@
+#!/usr/bin/ruby
+require 'pp'
+require 'set'
+
+def parse_logfile(filename)
+  data = []
+
+  lines = File.readlines(filename)
+  header = lines.shift[1..-1]
+  header = header.split(";").map do |token|
+    token.strip
+  end
+
+  lines.each do |line|
+    tokens = line.split(";")
+    entry = {}
+
+    tokens.size.times do |i|
+      entry[header[i]] = tokens[i].strip
+    end
+
+    data.push entry
+  end
+
+  return [data, header]
+end
+
+def gather_range(entries, column)
+  ret = Set.new
+
+  entries.each do |entry|
+    ret.add entry[column]
+  end
+
+  return ret
+end
+
+def plot_jacobi(data, header)
+  entries = data.find_all do |entry|
+    entry["family"] == "JacobiD3Q7"
+  end
+
+  dimensions = gather_range(entries, "dimensions")
+  species    = gather_range(entries, "species")
+
+  outfile = "test.png"
+  x_label = "Grid Size"
+  y_label = "GLUPS"
+  plot_specs = []
+  datafile = "temp.dat"
+
+  File.open(datafile, "w") do |file|
+    dimensions.each do |dim|
+      dim =~ /\((\d+),/
+      file.print "#{$1}"
+
+      species.each do |species|
+        entries.each do |entry|
+          if (entry["dimensions"] == dim) && (entry["species"] == species)
+            file.print " #{entry["perf"]}"
+          end
+        end
+      end
+
+      file.puts
+    end
+  end
+
+  index = 2
+  species.each do |s|
+    plot_specs << [index, s]
+    index += 1
+  end
+
+  plots = plot_specs.map do |column, title|
+    "'#{datafile}' using 1:#{column} title '#{title}' with linespoints"
+  end
+
+  command = <<EOF
+set terminal png transparent size 800,400
+set key right top
+set output \"#{outfile}\"
+set yrange [0:1]
+set xlabel '#{x_label}'
+set ylabel '#{y_label}'
+plot #{plots.join(", ")}
+EOF
+
+  system "gnuplot <<EOF
+#{command}
+EOF"
+
+end
+
+def plot_n-body(data, header)
+  entries = data.find_all do |entry|
+    entry["family"] == "NBody"
+  end
+
+  dimensions = gather_range(entries, "dimensions")
+  species    = gather_range(entries, "species")
+
+  outfile = "test2.png"
+  x_label = "Particles"
+  y_label = "GFLOPS"
+  plot_specs = []
+  datafile = "temp.dat"
+
+  File.open(datafile, "w") do |file|
+    dimensions.each do |dim|
+      dim =~ /\((\d+),/
+      file.print "#{$1}"
+
+      species.each do |species|
+        entries.each do |entry|
+          if (entry["dimensions"] == dim) && (entry["species"] == species)
+            file.print " #{entry["perf"]}"
+          end
+        end
+      end
+
+      file.puts
+    end
+  end
+
+  index = 2
+  species.each do |s|
+    plot_specs << [index, s]
+    index += 1
+  end
+
+  plots = plot_specs.map do |column, title|
+    "'#{datafile}' using 1:#{column} title '#{title}' with linespoints"
+  end
+
+  command = <<EOF
+set terminal png transparent size 800,400
+set key right top
+set output \"#{outfile}\"
+set yrange [0:1]
+set xlabel '#{x_label}'
+set ylabel '#{y_label}'
+plot #{plots.join(", ")}
+EOF
+
+  system "gnuplot <<EOF
+#{command}
+EOF"
+
+end
+
+if ARGV.size != 1
+  STDERR.puts <<EOF
+Usage: #{$0} LOGFILE
+
+This script uses gnuplot to visualize the results of LibFlatArray's
+performance tests.
+EOF
+
+  exit 1
+end
+
+data, header = parse_logfile(ARGV[0])
+plot_jacobi(data, header)
+plot_n-body(data, header)
