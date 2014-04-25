@@ -608,10 +608,7 @@ int main(int argc, char **argv)
 
     std::vector<std::vector<int> > sizes;
     for (int d = 32; d <= 544; d += 4) {
-        std::vector<int> dim(3);
-        dim[0] = d;
-        dim[1] = d;
-        dim[2] = 3;
+        std::vector<int> dim(3, d);
 
         sizes.push_back(dim);
     }
