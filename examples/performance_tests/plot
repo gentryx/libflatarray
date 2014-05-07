@@ -92,7 +92,7 @@ EOF"
 
 end
 
-def plot_n-body(data, header)
+def plot_n_body(data, header)
   entries = data.find_all do |entry|
     entry["family"] == "NBody"
   end
@@ -137,7 +137,7 @@ def plot_n-body(data, header)
 set terminal png transparent size 800,400
 set key right top
 set output \"#{outfile}\"
-set yrange [0:1]
+set yrange [0:30]
 set xlabel '#{x_label}'
 set ylabel '#{y_label}'
 plot #{plots.join(", ")}
@@ -162,4 +162,4 @@ end
 
 data, header = parse_logfile(ARGV[0])
 plot_jacobi(data, header)
-plot_n-body(data, header)
+plot_n_body(data, header)
