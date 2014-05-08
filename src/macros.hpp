@@ -77,11 +77,19 @@
         static const int DIM_Y = MY_DIM_Y;                              \
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
+        inline                                                          \
         __host__ __device__                                             \
         soa_accessor(char *data, int *index) :                          \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator+=(const int offset)                               \
+        {                                                               \
+            *index += offset;                                           \
+        }                                                               \
                                                                         \
         template<int X, int Y, int Z>                                   \
         inline                                                          \
