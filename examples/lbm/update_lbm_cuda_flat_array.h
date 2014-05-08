@@ -1,12 +1,12 @@
-#ifndef LIBFLATARRAY_EXAMPLES_LBM_UPDATE_LBM_CUDA_FLAT_ARRAY_H
-#define LIBFLATARRAY_EXAMPLES_LBM_UPDATE_LBM_CUDA_FLAT_ARRAY_H
-
 /**
  * Copyright 2013 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
+#ifndef LIBFLATARRAY_EXAMPLES_LBM_UPDATE_LBM_CUDA_FLAT_ARRAY_H
+#define LIBFLATARRAY_EXAMPLES_LBM_UPDATE_LBM_CUDA_FLAT_ARRAY_H
 
 #include "util.h"
 #include "cudalineupdatefunctorprototype.h"
