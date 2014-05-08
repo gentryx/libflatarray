@@ -1041,7 +1041,7 @@ public:
             int j;
             soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[j];
 
-            for (int i = 0; i < (numParticles - REAL::Arity + 1); i += REAL::Arity) {
+            for (i = 0; i < (numParticles - REAL::Arity + 1); i += REAL::Arity) {
                 REAL posX = &accessorA.posX();
                 REAL posY = &accessorA.posY();
                 REAL posZ = &accessorA.posZ();
@@ -1056,7 +1056,7 @@ public:
                 REAL accelerationY = 0.0;
                 REAL accelerationZ = 0.0;
 
-                for (j = 0; j < numParticles; ++j) {
+                for (j = 0; j < numParticles; accessorA2 += 1) {
                     REAL deltaX = posX - REAL(accessorA2.posX());
                     REAL deltaY = posY - REAL(accessorA2.posY());
                     REAL deltaZ = posZ - REAL(accessorA2.posZ());
