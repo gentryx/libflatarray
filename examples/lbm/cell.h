@@ -136,6 +136,25 @@ public:
 #undef SQR
 };
 
-LIBFLATARRAY_REGISTER_SOA(CellLBM, ((double)(C))((double)(N))((double)(E))((double)(W))((double)(S))((double)(T))((double)(B))((double)(NW))((double)(SW))((double)(NE))((double)(SE))((double)(TW))((double)(BW))((double)(TE))((double)(BE))((double)(TN))((double)(BN))((double)(TS))((double)(BS)))
+LIBFLATARRAY_REGISTER_SOA(CellLBM,
+                          ((double)(C))
+                          ((double)(N))
+                          ((double)(E))
+                          ((double)(W))
+                          ((double)(S))
+                          ((double)(T))
+                          ((double)(B))
+                          ((double)(NW))
+                          ((double)(SW))
+                          ((double)(NE))
+                          ((double)(SE))
+                          ((double)(TW))
+                          ((double)(BW))
+                          ((double)(TE))
+                          ((double)(BE))
+                          ((double)(TN))
+                          ((double)(BN))
+                          ((double)(TS))
+                          ((double)(BS)))
 
 #endif
