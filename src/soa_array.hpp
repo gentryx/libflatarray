@@ -9,7 +9,8 @@
 #define FLAT_ARRAY_SOA_ARRAY_HPP
 
 #include <libflatarray/aggregated_member_size.hpp>
-
+#include <libflatarray/detail/macros.hpp>
+#include <libflatarray/soa_accessor.hpp>
 #include <stdexcept>
 
 namespace LibFlatArray {
@@ -85,6 +86,13 @@ public:
 
         (*this)[elements] = cell;
         ++elements;
+    }
+
+    inline
+    __host__ __device__
+    void push_back(const CELL& cell)
+    {
+        *this << cell;
     }
 
     inline

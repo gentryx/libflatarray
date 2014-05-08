@@ -52,8 +52,11 @@ namespace LibFlatArray {
 ADD_TEST(TestBasic)
 {
     soa_array<Particle, 20> array;
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 10; ++i) {
         array << Particle(i, 20, 30, 40, 50, 60 + i, i * i, -100 + i);
+    }
+    for (int i = 10; i < 13; ++i) {
+        array.push_back(Particle(i, 20, 30, 40, 50, 60 + i, i * i, -100 + i));
     }
 
     BOOST_TEST(array.size() == 13);
