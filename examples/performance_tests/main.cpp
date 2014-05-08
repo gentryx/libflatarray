@@ -1,4 +1,13 @@
+/**
+ * Copyright 2014 Andreas Schäfer
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #include <iostream>
+#include <libflatarray/flat_array.hpp>
+#include <libflatarray/short_vec.hpp>
 #include <libflatarray/testbed/cpu_benchmark.hpp>
 #include <libflatarray/testbed/evaluate.hpp>
 #include <immintrin.h>
@@ -288,13 +297,13 @@ class Particle
 {
 public:
     inline Particle(
-        const float posX,
-        const float posY,
-        const float posZ,
-        const float velX,
-        const float velY,
-        const float velZ,
-        const float charge) :
+        const float posX = 0,
+        const float posY = 0,
+        const float posZ = 0,
+        const float velX = 0,
+        const float velY = 0,
+        const float velZ = 0,
+        const float charge = 0) :
         posX(posX),
         posY(posY),
         posZ(posZ),
@@ -313,6 +322,15 @@ public:
     float charge;
 };
 
+LIBFLATARRAY_REGISTER_SOA(Particle,
+                          ((float)(posX))
+                          ((float)(posY))
+                          ((float)(posZ))
+                          ((float)(velX))
+                          ((float)(velY))
+                          ((float)(velZ))
+                          ((float)(charge)))
+
 class NBody : public cpu_benchmark
 {
 public:
@@ -328,7 +346,7 @@ public:
 
     double gflops(double numParticles, double repeats, double tStart, double tEnd)
     {
-        double flops = repeats * numParticles * (9 + numParticles * (3 + 6 + 4 + 3 + 3));
+        double flops = repeats * numParticles * (9 + numParticles * (3 + 6 + 5 + 3 + 3));
         double gflops = flops / (tEnd - tStart) * 1e-9;
         return gflops;
     }
@@ -385,10 +403,10 @@ public:
                     float deltaY = posY - particlesA[j].posY;
                     float deltaZ = posZ - particlesA[j].posZ;
                     float distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
-                    float factor = charge * particlesA[j].charge * DELTA_T / sqrt(distance2);
-                    float forceX = deltaX / factor;
-                    float forceY = deltaY / factor;
-                    float forceZ = deltaZ / factor;
+                    float factor = charge * particlesA[j].charge * DELTA_T / distance2 / sqrt(distance2);
+                    float forceX = deltaX * factor;
+                    float forceY = deltaY * factor;
+                    float forceZ = deltaZ * factor;
 
                     accelerationX += forceX;
                     accelerationY += forceY;
@@ -513,8 +531,8 @@ public:
 
                     __m256 factor = _mm256_mul_ps(chargeV, _mm256_loadu_ps(&chargeA[j]));
                     factor = _mm256_mul_ps(factor, _mm256_set1_ps(DELTA_T));
+                    factor = _mm256_mul_ps(factor, _mm256_rcp_ps(distance2));
                     factor = _mm256_mul_ps(factor, _mm256_rsqrt_ps(distance2));
-                    factor = _mm256_rcp_ps(factor);
 
                     __m256 forceX = _mm256_mul_ps(deltaX, factor);
                     __m256 forceY = _mm256_mul_ps(deltaY, factor);
@@ -538,10 +556,10 @@ public:
                     float deltaY = posY - posYA[j];
                     float deltaZ = posZ - posZA[j];
                     float distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
-                    float factor = charge * chargeA[j] * DELTA_T / sqrt(distance2);
-                    float forceX = deltaX / factor;
-                    float forceY = deltaY / factor;
-                    float forceZ = deltaZ / factor;
+                    float factor = charge * chargeA[j] * DELTA_T / distance2 / sqrt(distance2);
+                    float forceX = deltaX * factor;
+                    float forceY = deltaY * factor;
+                    float forceZ = deltaZ * factor;
 
                     accelerationX += forceX;
                     accelerationY += forceY;
@@ -573,6 +591,506 @@ public:
         double tEnd = time();
 
         if (posXA[0] == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
+
+class NBodyCurry : public NBody
+{
+public:
+    std::string species()
+    {
+        return "curry";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int numParticles = dim[0];
+        int repeats = dim[1];
+
+        std::vector<float> posXA;
+        std::vector<float> posYA;
+        std::vector<float> posZA;
+        std::vector<float> posXB;
+        std::vector<float> posYB;
+        std::vector<float> posZB;
+
+        std::vector<float> velXA;
+        std::vector<float> velYA;
+        std::vector<float> velZA;
+        std::vector<float> velXB;
+        std::vector<float> velYB;
+        std::vector<float> velZB;
+
+        std::vector<float> chargeA;
+        std::vector<float> chargeB;
+
+        for (int i = 0; i < numParticles; ++i) {
+            Particle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
+
+            posXA.push_back(p.posX);
+            posXB.push_back(p.posX);
+            posYA.push_back(p.posY);
+            posYB.push_back(p.posY);
+            posZA.push_back(p.posZ);
+            posZB.push_back(p.posZ);
+
+            velXA.push_back(p.velX);
+            velXB.push_back(p.velX);
+            velYA.push_back(p.velY);
+            velYB.push_back(p.velY);
+            velZA.push_back(p.velZ);
+            velZB.push_back(p.velZ);
+
+            chargeA.push_back(p.charge);
+            chargeB.push_back(p.charge);
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            for (int i = 0; i < (numParticles - 7); i += 8) {
+                int j;
+
+                __m256 posXV = _mm256_loadu_ps(&posXA[i]);
+                __m256 posYV = _mm256_loadu_ps(&posYA[i]);
+                __m256 posZV = _mm256_loadu_ps(&posZA[i]);
+
+                __m256 velXV = _mm256_loadu_ps(&velXA[i]);
+                __m256 velYV = _mm256_loadu_ps(&velYA[i]);
+                __m256 velZV = _mm256_loadu_ps(&velZA[i]);
+
+                __m256 chargeV = _mm256_loadu_ps(&chargeA[i]);
+
+                __m256 accelerationXV = _mm256_set1_ps(0);
+                __m256 accelerationYV = _mm256_set1_ps(0);
+                __m256 accelerationZV = _mm256_set1_ps(0);
+
+                __m256 deltaT = _mm256_set1_ps(DELTA_T);
+
+                for (j = 0; j < numParticles; ++j) {
+                    __m256 deltaX = _mm256_sub_ps(posXV, _mm256_broadcast_ss(&posXA[j]));
+                    __m256 deltaY = _mm256_sub_ps(posYV, _mm256_broadcast_ss(&posYA[j]));
+                    __m256 deltaZ = _mm256_sub_ps(posZV, _mm256_broadcast_ss(&posZA[j]));
+                    __m256 distance2 =
+                        _mm256_add_ps(_mm256_mul_ps(deltaX, deltaX),
+                                      _mm256_mul_ps(deltaY, deltaY));
+                    distance2 =
+                        _mm256_add_ps(_mm256_mul_ps(deltaZ, deltaZ),
+                                      distance2);
+                    distance2 =
+                        _mm256_add_ps(_mm256_set1_ps(SOFTENING),
+                                      distance2);
+
+                    __m256 factor = _mm256_mul_ps(chargeV, _mm256_broadcast_ss(&chargeA[j]));
+                    factor = _mm256_mul_ps(factor, deltaT);
+                    factor = _mm256_mul_ps(factor, _mm256_rcp_ps(distance2));
+                    factor = _mm256_mul_ps(factor, _mm256_rsqrt_ps(distance2));
+
+                    __m256 forceX = _mm256_mul_ps(deltaX, factor);
+                    __m256 forceY = _mm256_mul_ps(deltaY, factor);
+                    __m256 forceZ = _mm256_mul_ps(deltaZ, factor);
+
+                    accelerationXV = _mm256_add_ps(accelerationXV, forceX);
+                    accelerationYV = _mm256_add_ps(accelerationYV, forceY);
+                    accelerationZV = _mm256_add_ps(accelerationZV, forceZ);
+                }
+
+                posXV = _mm256_add_ps(posXV, _mm256_mul_ps(velXV, deltaT));
+                posYV = _mm256_add_ps(posYV, _mm256_mul_ps(velYV, deltaT));
+                posZV = _mm256_add_ps(posZV, _mm256_mul_ps(velZV, deltaT));
+
+                _mm256_storeu_ps(&posXB[i], posXV);
+                _mm256_storeu_ps(&posYB[i], posYV);
+                _mm256_storeu_ps(&posZB[i], posZV);
+
+                velXV = _mm256_add_ps(velXV, accelerationXV);
+                velYV = _mm256_add_ps(velYV, accelerationYV);
+                velZV = _mm256_add_ps(velZV, accelerationZV);
+
+                _mm256_storeu_ps(&velXB[i], velXV);
+                _mm256_storeu_ps(&velYB[i], velYV);
+                _mm256_storeu_ps(&velZB[i], velZV);
+
+                _mm256_storeu_ps(&chargeB[i], chargeV);
+            }
+
+            std::swap(posXA, posXB);
+            std::swap(posYA, posYB);
+            std::swap(posZA, posZB);
+
+            std::swap(velXA, velXB);
+            std::swap(velYA, velYB);
+            std::swap(velZA, velZB);
+
+            std::swap(chargeA, chargeB);
+        }
+
+        double tEnd = time();
+
+        if (posXA[0] == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
+
+class NBodyIron : public NBody
+{
+public:
+    std::string species()
+    {
+        return "iron";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        using namespace LibFlatArray;
+
+        int numParticles = dim[0];
+        int repeats = dim[1];
+
+        soa_array<Particle, 8192> particlesA;
+        soa_array<Particle, 8192> particlesB;
+
+        for (int i = 0; i < numParticles; ++i) {
+            Particle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
+
+            particlesA.push_back(p);
+            particlesB.push_back(p);
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            int i;
+            soa_accessor<Particle, 8192, 1, 1, 0> accessorA = particlesA[i];
+            soa_accessor<Particle, 8192, 1, 1, 0> accessorB = particlesB[i];
+
+            for (int i = 0; i < numParticles; ++i) {
+                float posX = accessorA.posX();
+                float posY = accessorA.posY();
+                float posZ = accessorA.posZ();
+
+                float velX = accessorA.velX();
+                float velY = accessorA.velY();
+                float velZ = accessorA.velZ();
+
+                float charge = accessorA.charge();
+
+                float accelerationX = 0;
+                float accelerationY = 0;
+                float accelerationZ = 0;
+
+                int j;
+                soa_accessor<Particle, 8192, 1, 1, 0> accessorA2 = particlesA[j];
+
+                for (j = 0; j < numParticles; ++j) {
+                    float deltaX = posX - accessorA2.posX();
+                    float deltaY = posY - accessorA2.posY();
+                    float deltaZ = posZ - accessorA2.posZ();
+                    float distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
+                    float factor = charge * accessorA2.charge() * DELTA_T / distance2 / sqrt(distance2);
+                    float forceX = deltaX * factor;
+                    float forceY = deltaY * factor;
+                    float forceZ = deltaZ * factor;
+
+                    accelerationX += forceX;
+                    accelerationY += forceY;
+                    accelerationZ += forceZ;
+                }
+
+                accessorB.posX() = posX + velX * DELTA_T;
+                accessorB.posY() = posY + velY * DELTA_T;
+                accessorB.posZ() = posZ + velZ * DELTA_T;
+
+                accessorB.velX() = velX + accelerationX;
+                accessorB.velY() = velY + accelerationY;
+                accessorB.velZ() = velZ + accelerationZ;
+
+                accessorB.charge() = charge;
+            }
+
+            std::swap(particlesA, particlesB);
+        }
+
+        double tEnd = time();
+
+        // fixme: get rid of this var
+        int fixme = 0;
+        if (particlesA[fixme].posX() == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
+
+class NBodyBronze : public NBody
+{
+public:
+    std::string species()
+    {
+        return "bronze";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        if (dim[0] <= 128) {
+            return performance<128>(dim);
+        }
+        if (dim[0] <= 256) {
+            return performance<256>(dim);
+        }
+        if (dim[0] <= 512) {
+            return performance<512>(dim);
+        }
+        if (dim[0] <= 1024) {
+            return performance<1024>(dim);
+        }
+        if (dim[0] <= 2048) {
+            return performance<2048>(dim);
+        }
+        if (dim[0] <= 4096) {
+            return performance<4096>(dim);
+        }
+        if (dim[0] <= 8192) {
+            return performance<8192>(dim);
+        }
+    }
+
+    template<int DIM>
+    double performance(std::vector<int> dim)
+    {
+        using namespace LibFlatArray;
+
+        int numParticles = dim[0];
+        int repeats = dim[1];
+
+        soa_array<Particle, DIM> particlesA;
+        soa_array<Particle, DIM> particlesB;
+
+        for (int i = 0; i < numParticles; ++i) {
+            Particle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
+
+            particlesA.push_back(p);
+            particlesB.push_back(p);
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            int i;
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[i];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[i];
+            int j;
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[j];
+
+            for (int i = 0; i < (numParticles - 7); i += 8) {
+                __m256 posX = _mm256_loadu_ps(&accessorA.posX());
+                __m256 posY = _mm256_loadu_ps(&accessorA.posY());
+                __m256 posZ = _mm256_loadu_ps(&accessorA.posZ());
+
+                __m256 velX = _mm256_loadu_ps(&accessorA.velX());
+                __m256 velY = _mm256_loadu_ps(&accessorA.velY());
+                __m256 velZ = _mm256_loadu_ps(&accessorA.velZ());
+
+                __m256 charge = _mm256_loadu_ps(&accessorA.charge());
+
+                __m256 accelerationX = _mm256_set1_ps(0.0);
+                __m256 accelerationY = _mm256_set1_ps(0.0);
+                __m256 accelerationZ = _mm256_set1_ps(0.0);
+
+                __m256 deltaT = _mm256_set1_ps(DELTA_T);
+
+
+                for (j = 0; j < numParticles; ++j) {
+                    __m256 deltaX = _mm256_sub_ps(posX, _mm256_broadcast_ss(&accessorA2.posX()));
+                    __m256 deltaY = _mm256_sub_ps(posY, _mm256_broadcast_ss(&accessorA2.posY()));
+                    __m256 deltaZ = _mm256_sub_ps(posZ, _mm256_broadcast_ss(&accessorA2.posZ()));
+                    __m256 distance2 =
+                        _mm256_add_ps(_mm256_mul_ps(deltaX, deltaX),
+                                      _mm256_mul_ps(deltaY, deltaY));
+                    distance2 =
+                        _mm256_add_ps(_mm256_mul_ps(deltaZ, deltaZ),
+                                      distance2);
+                    distance2 =
+                        _mm256_add_ps(_mm256_set1_ps(SOFTENING),
+                                      distance2);
+
+                    __m256 factor = _mm256_mul_ps(charge, _mm256_broadcast_ss(&accessorA2.charge()));
+                    factor = _mm256_mul_ps(factor, _mm256_set1_ps(DELTA_T));
+                    factor = _mm256_mul_ps(factor, _mm256_rsqrt_ps(distance2));
+
+                    __m256 forceX = _mm256_mul_ps(deltaX, factor);
+                    __m256 forceY = _mm256_mul_ps(deltaY, factor);
+                    __m256 forceZ = _mm256_mul_ps(deltaZ, factor);
+
+                    accelerationX = _mm256_add_ps(accelerationX, forceX);
+                    accelerationY = _mm256_add_ps(accelerationY, forceY);
+                    accelerationZ = _mm256_add_ps(accelerationZ, forceZ);
+                }
+
+                posX = _mm256_add_ps(posX, _mm256_mul_ps(velX, deltaT));
+                posY = _mm256_add_ps(posY, _mm256_mul_ps(velY, deltaT));
+                posZ = _mm256_add_ps(posZ, _mm256_mul_ps(velZ, deltaT));
+
+                _mm256_storeu_ps(&accessorB.posX(), posX);
+                _mm256_storeu_ps(&accessorB.posY(), posY);
+                _mm256_storeu_ps(&accessorB.posZ(), posZ);
+
+                velX = _mm256_add_ps(velX, accelerationX);
+                velY = _mm256_add_ps(velY, accelerationY);
+                velZ = _mm256_add_ps(velZ, accelerationZ);
+
+                _mm256_storeu_ps(&accessorB.velX(), velX);
+                _mm256_storeu_ps(&accessorB.velY(), velY);
+                _mm256_storeu_ps(&accessorB.velZ(), velZ);
+
+                _mm256_storeu_ps(&accessorB.charge(), charge);
+            }
+
+            std::swap(particlesA, particlesB);
+        }
+
+        double tEnd = time();
+
+        // fixme: get rid of this var
+        int fixme = 0;
+        if (particlesA[fixme].posX() == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
+
+class NBodySilver : public NBody
+{
+public:
+    std::string species()
+    {
+        return "silver";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        if (dim[0] <= 128) {
+            return performance<128,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 256) {
+            return performance<256,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 512) {
+            return performance<512,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 1024) {
+            return performance<1024, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 2048) {
+            return performance<2048, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 4096) {
+            return performance<4096, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 8192) {
+            return performance<8192, short_vec<float, 8> >(dim);
+        }
+    }
+
+    template<int DIM, typename REAL>
+    double performance(std::vector<int> dim)
+    {
+        using namespace LibFlatArray;
+
+        int numParticles = dim[0];
+        int repeats = dim[1];
+
+        soa_array<Particle, DIM> particlesA;
+        soa_array<Particle, DIM> particlesB;
+
+        for (int i = 0; i < numParticles; ++i) {
+            Particle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
+
+            particlesA.push_back(p);
+            particlesB.push_back(p);
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            int i;
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[i];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[i];
+            int j;
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[j];
+
+            for (int i = 0; i < (numParticles - REAL::Arity + 1); i += REAL::Arity) {
+                REAL posX = &accessorA.posX();
+                REAL posY = &accessorA.posY();
+                REAL posZ = &accessorA.posZ();
+
+                REAL velX = &accessorA.velX();
+                REAL velY = &accessorA.velY();
+                REAL velZ = &accessorA.velZ();
+
+                REAL charge = &accessorA.charge();
+
+                REAL accelerationX = 0.0;
+                REAL accelerationY = 0.0;
+                REAL accelerationZ = 0.0;
+
+                for (j = 0; j < numParticles; ++j) {
+                    REAL deltaX = posX - REAL(accessorA2.posX());
+                    REAL deltaY = posY - REAL(accessorA2.posY());
+                    REAL deltaZ = posZ - REAL(accessorA2.posZ());
+                    REAL distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
+
+                    REAL factor = charge * accessorA2.charge() * DELTA_T / distance2 / sqrt(distance2);
+                    REAL forceX = deltaX * factor;
+                    REAL forceY = deltaY * factor;
+                    REAL forceZ = deltaZ * factor;
+
+                    accelerationX += forceX;
+                    accelerationY += forceY;
+                    accelerationZ += forceZ;
+                }
+
+                &accessorB.posX() << posX + velX * DELTA_T;
+                &accessorB.posY() << posY + velY * DELTA_T;
+                &accessorB.posZ() << posZ + velZ * DELTA_T;
+
+                &accessorB.velX() << velX + accelerationX;
+                &accessorB.velY() << velY + accelerationY;
+                &accessorB.velZ() << velZ + accelerationZ;
+
+                &accessorB.charge() << charge;
+            }
+
+            std::swap(particlesA, particlesB);
+        }
+
+        double tEnd = time();
+
+        // fixme: get rid of this var
+        int fixme = 0;
+        if (particlesA[fixme].posX() == 0.12345) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 
@@ -626,7 +1144,7 @@ int main(int argc, char **argv)
     for (int n = 128; n <= 8192; n *= 2) {
         std::vector<int> dim(3);
         dim[0] = n;
-        dim[1] = 1024 * 1024 * 1024 / n / n;
+        dim[1] = std::size_t(4) * 1024 * 1024 * 1024 / n / n;
         dim[2] = 0;
 
         sizes.push_back(dim);
@@ -638,6 +1156,22 @@ int main(int argc, char **argv)
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodyPepper(),  *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodyCurry(),  *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodyIron(),  *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodyBronze(),  *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodySilver(),  *i);
     }
 
     return 0;
