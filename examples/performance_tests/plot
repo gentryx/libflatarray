@@ -137,7 +137,7 @@ def plot_n_body(data, header)
 set terminal png transparent size 800,400
 set key right top
 set output \"#{outfile}\"
-set yrange [0:30]
+set yrange [0:60]
 set xlabel '#{x_label}'
 set ylabel '#{y_label}'
 plot #{plots.join(", ")}
