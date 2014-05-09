@@ -45,7 +45,17 @@ public:
     float mass;
 };
 
-LIBFLATARRAY_REGISTER_SOA(Particle, ((float)(posX))((float)(posY))((float)(posZ))((float)(velX))((float)(velY))((float)(velZ))((float)(charge))((float)(mass)))
+LIBFLATARRAY_REGISTER_SOA(
+    Particle,
+    ((float)(posX))
+    ((float)(posY))
+    ((float)(posZ))
+    ((float)(velX))
+    ((float)(velY))
+    ((float)(velZ))
+    ((float)(charge))
+    ((float)(mass)))
+
 
 namespace LibFlatArray {
 
