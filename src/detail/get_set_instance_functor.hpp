@@ -83,7 +83,7 @@ public:
     {}
 
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor, int *index) const
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
     {
         *index =
             z * DIM_X * DIM_Y +

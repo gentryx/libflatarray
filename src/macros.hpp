@@ -79,7 +79,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor(char *data, int *index) :                          \
+        soa_accessor(char *data, const int index = 0) :                 \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
@@ -88,7 +88,14 @@
         __host__ __device__                                             \
         void operator+=(const int offset)                               \
         {                                                               \
-            *index += offset;                                           \
+            index += offset;                                            \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator++()                                               \
+        {                                                               \
+            ++index;                                                    \
         }                                                               \
                                                                         \
         template<int X, int Y, int Z>                                   \
@@ -156,7 +163,7 @@
             return *(MEMBER_TYPE*)(                                     \
                 data + (DIM_X * DIM_Y * DIM_Z) *                        \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
-                *index * sizeof(MEMBER_TYPE) +                          \
+                index * sizeof(MEMBER_TYPE) +                           \
                 INDEX  * sizeof(MEMBER_TYPE));                          \
         }                                                               \
                                                                         \
@@ -167,7 +174,7 @@
             return                                                      \
                 data + (DIM_X * DIM_Y * DIM_Z) *                        \
                 offset +                                                \
-                *index * size_of_member +                               \
+                index * size_of_member +                                \
                 INDEX  * size_of_member;                                \
         }                                                               \
                                                                         \
@@ -193,9 +200,9 @@
             return data;                                                \
         }                                                               \
                                                                         \
+        int index;                                                      \
     private:                                                            \
         char *data;                                                     \
-        int *index;                                                     \
     };                                                                  \
                                                                         \
     template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
@@ -210,7 +217,7 @@
         static const int DIM_Z = MY_DIM_Z;                              \
                                                                         \
         __host__ __device__                                             \
-        const_soa_accessor(const char *data, int *index) :              \
+        const_soa_accessor(const char *data, int index) :               \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
@@ -258,7 +265,7 @@
                                                                         \
     private:                                                            \
         const char *data;                                               \
-        int *index;                                                     \
+        int index;                                                      \
     };                                                                  \
                                                                         \
     }                                                                   \

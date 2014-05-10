@@ -7,14 +7,12 @@ template<typename CELL, typename ACCESSOR1, typename ACCESSOR2>
 __global__
 void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
 {
-    int indexOld;
-    int indexNew;
-    ACCESSOR1 accessorOld(accessor1.get_data(), &indexOld);
-    ACCESSOR2 accessorNew(accessor2.get_data(), &indexNew);
+    ACCESSOR1 accessorOld(accessor1.get_data());
+    ACCESSOR2 accessorNew(accessor2.get_data());
 
     CELL::updateLine(
-        accessorOld, &indexOld,
-        accessorNew, &indexNew, 2, 256 - 2);
+        accessorOld, &accessorOld.index,
+        accessorNew, &accessorNew.index, 2, 256 - 2);
 }
 
 template<typename CELL>

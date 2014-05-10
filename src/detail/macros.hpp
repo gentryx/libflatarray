@@ -66,7 +66,7 @@
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data + (DIM_X * DIM_Y * DIM_Z) *                            \
             detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            *index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +             \
+            index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
     }
 

@@ -99,7 +99,7 @@ public:
     }
 
     template<typename FUNCTOR>
-    void callback(FUNCTOR functor, int *index = 0) const
+    void callback(FUNCTOR functor, int index = 0) const
     {
         bind_parameters0(functor, index);
     }
@@ -112,41 +112,35 @@ public:
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
-        int index = 0;
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), &index);
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), 0);
     }
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE *cells, size_t count)
     {
-        int index = 0;
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count), &index);
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count), 0);
     }
 
     CELL_TYPE get(size_t x, size_t y, size_t z) const
     {
         CELL_TYPE cell;
-        int index = 0;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), &index);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), 0);
 
         return cell;
     }
 
     void get(size_t x, size_t y, size_t z, CELL_TYPE *cells, size_t count) const
     {
-        int index = 0;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count), &index);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count), 0);
     }
 
     void load(size_t x, size_t y, size_t z, const char *data, size_t count)
     {
-        int index = 0;
-        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count), &index);
+        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count), 0);
     }
 
     void save(size_t x, size_t y, size_t z, char *data, size_t count) const
     {
-        int index = 0;
-        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count), &index);
+        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count), 0);
     }
 
     size_t byte_size() const
@@ -185,15 +179,17 @@ private:
     }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
-    void bind_parameters2(FUNCTOR functor, int *index) const
+    void bind_parameters2(FUNCTOR functor, int index) const
     {
         size_t size = dim_z;
 
 #define CASE(SIZE)                                                      \
         if (size <= SIZE) {                                             \
-            functor(soa_accessor<CELL_TYPE, DIM_X, DIM_Y, SIZE, 0>(     \
-                        data, index),                                   \
-                    index);                                             \
+            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, SIZE, 0>  accessor(   \
+                data, index);                                           \
+            functor(accessor,                                           \
+                    /* fixme */                                         \
+                    &accessor.index);                                   \
             return;                                                     \
         }
 
@@ -213,7 +209,7 @@ private:
     }
 
     template<int DIM_X, typename FUNCTOR>
-    void bind_parameters1(FUNCTOR functor, int *index) const
+    void bind_parameters1(FUNCTOR functor, int index) const
     {
         size_t size = dim_y;
 
@@ -239,7 +235,7 @@ private:
     }
 
     template<typename FUNCTOR>
-    void bind_parameters0(FUNCTOR functor, int *index) const
+    void bind_parameters0(FUNCTOR functor, int index) const
     {
         size_t size = dim_x;
         // fixme: this would be superfluous if we'd call bind_parameters1

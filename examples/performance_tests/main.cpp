@@ -773,11 +773,10 @@ public:
         double tStart = time();
 
         for (int t = 0; t < repeats; ++t) {
-            int i;
-            soa_accessor<Particle, 8192, 1, 1, 0> accessorA = particlesA[i];
-            soa_accessor<Particle, 8192, 1, 1, 0> accessorB = particlesB[i];
+            soa_accessor<Particle, 8192, 1, 1, 0> accessorA = particlesA[0];
+            soa_accessor<Particle, 8192, 1, 1, 0> accessorB = particlesB[0];
 
-            for (int i = 0; i < numParticles; ++i) {
+            for (; accessorA.index < numParticles; ++accessorA, ++accessorB ) {
                 float posX = accessorA.posX();
                 float posY = accessorA.posY();
                 float posZ = accessorA.posZ();
@@ -792,10 +791,9 @@ public:
                 float accelerationY = 0;
                 float accelerationZ = 0;
 
-                int j;
-                soa_accessor<Particle, 8192, 1, 1, 0> accessorA2 = particlesA[j];
+                soa_accessor<Particle, 8192, 1, 1, 0> accessorA2 = particlesA[0];
 
-                for (j = 0; j < numParticles; ++j) {
+                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
                     float deltaX = posX - accessorA2.posX();
                     float deltaY = posY - accessorA2.posY();
                     float deltaZ = posZ - accessorA2.posZ();
@@ -826,9 +824,7 @@ public:
 
         double tEnd = time();
 
-        // fixme: get rid of this var
-        int fixme = 0;
-        if (particlesA[fixme].posX() == 0.12345) {
+        if (particlesA[0].posX() == 0.12345) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 
@@ -893,13 +889,11 @@ public:
         double tStart = time();
 
         for (int t = 0; t < repeats; ++t) {
-            int i;
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[i];
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[i];
-            int j;
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[j];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[0];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (int i = 0; i < (numParticles - 7); i += 8) {
+            for (; accessorA.index < (numParticles - 7); accessorA += 8, accessorB += 8) {
                 __m256 posX = _mm256_loadu_ps(&accessorA.posX());
                 __m256 posY = _mm256_loadu_ps(&accessorA.posY());
                 __m256 posZ = _mm256_loadu_ps(&accessorA.posZ());
@@ -916,8 +910,7 @@ public:
 
                 __m256 deltaT = _mm256_set1_ps(DELTA_T);
 
-
-                for (j = 0; j < numParticles; ++j) {
+                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
                     __m256 deltaX = _mm256_sub_ps(posX, _mm256_broadcast_ss(&accessorA2.posX()));
                     __m256 deltaY = _mm256_sub_ps(posY, _mm256_broadcast_ss(&accessorA2.posY()));
                     __m256 deltaZ = _mm256_sub_ps(posZ, _mm256_broadcast_ss(&accessorA2.posZ()));
@@ -933,6 +926,7 @@ public:
 
                     __m256 factor = _mm256_mul_ps(charge, _mm256_broadcast_ss(&accessorA2.charge()));
                     factor = _mm256_mul_ps(factor, _mm256_set1_ps(DELTA_T));
+                    factor = _mm256_mul_ps(factor, _mm256_rcp_ps(distance2));
                     factor = _mm256_mul_ps(factor, _mm256_rsqrt_ps(distance2));
 
                     __m256 forceX = _mm256_mul_ps(deltaX, factor);
@@ -968,9 +962,7 @@ public:
 
         double tEnd = time();
 
-        // fixme: get rid of this var
-        int fixme = 0;
-        if (particlesA[fixme].posX() == 0.12345) {
+        if (particlesA[0].posX() == 0.12345) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 
@@ -1035,13 +1027,11 @@ public:
         double tStart = time();
 
         for (int t = 0; t < repeats; ++t) {
-            int i;
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[i];
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[i];
-            int j;
-            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[j];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA = particlesA[0];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
+            soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (i = 0; i < (numParticles - REAL::Arity + 1); i += REAL::Arity) {
+            for (; accessorA.index < (numParticles - REAL::Arity + 1); accessorA += REAL::Arity, accessorB += REAL::Arity) {
                 REAL posX = &accessorA.posX();
                 REAL posY = &accessorA.posY();
                 REAL posZ = &accessorA.posZ();
@@ -1056,7 +1046,7 @@ public:
                 REAL accelerationY = 0.0;
                 REAL accelerationZ = 0.0;
 
-                for (j = 0; j < numParticles; accessorA2 += 1) {
+                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
                     REAL deltaX = posX - REAL(accessorA2.posX());
                     REAL deltaY = posY - REAL(accessorA2.posY());
                     REAL deltaZ = posZ - REAL(accessorA2.posZ());
@@ -1088,9 +1078,7 @@ public:
 
         double tEnd = time();
 
-        // fixme: get rid of this var
-        int fixme = 0;
-        if (particlesA[fixme].posX() == 0.12345) {
+        if (particlesA[0].posX() == 0.12345) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 

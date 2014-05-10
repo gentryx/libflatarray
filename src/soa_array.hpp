@@ -40,38 +40,35 @@ public:
         elements(elements),
         index(0)
     {
-        int i = 0;
-        soa_accessor<CELL, SIZE, 0, 0, 0> accessor(data, &i);
-        for (; i < elements; ++i) {
+        for (soa_accessor<CELL, SIZE, 0, 0, 0> accessor(data, 0); accessor.index < elements; accessor += 1/*fixme*/) {
             accessor << value;
         }
     }
 
     inline
     __host__ __device__
-    // fixme: this needs to work with "int" and "size_t" instead of "int&", too!
-    soa_accessor<CELL, SIZE, 1, 1, 0> operator[](int& index)
+    soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index)
     {
-        return soa_accessor<CELL, SIZE, 1, 1, 0>(data, &index);
+        return soa_accessor<CELL, SIZE, 1, 1, 0>(data, index);
     }
 
     inline
     __host__ __device__
-    const const_soa_accessor<CELL, SIZE, 1, 1, 0> operator[](int& index) const
+    const const_soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index) const
     {
-        return const_soa_accessor<CELL, SIZE, 1, 1, 0>(data, &index);
+        return const_soa_accessor<CELL, SIZE, 1, 1, 0>(data, index);
     }
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> at(int& index)
+    soa_accessor<CELL, SIZE, 1, 1, 0> at(const int index)
     {
         return (*this)[index];
     }
 
     inline
     __host__ __device__
-    const_soa_accessor<CELL, SIZE, 1, 1, 0> at(int& index) const
+    const_soa_accessor<CELL, SIZE, 1, 1, 0> at(const int index) const
     {
         return (*this)[index];
     }

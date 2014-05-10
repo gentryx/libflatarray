@@ -72,7 +72,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index)
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
@@ -111,7 +111,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index)
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
@@ -150,7 +150,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index)
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
@@ -359,7 +359,7 @@ ADD_TEST(TestSingleCallback)
     }
 
     int index = 0;
-    grid.callback(InvertTemperature(dimX, dimY, dimZ), &index);
+    grid.callback(InvertTemperature(dimX, dimY, dimZ), index);
 
     for (int z = 0; z < dimZ; ++z) {
         for (int y = 0; y < dimY; ++y) {
@@ -568,9 +568,8 @@ ADD_TEST(TestAccessMember)
     BOOST_TEST(grid.get(11, 12, 13).alive == false);
     BOOST_TEST(grid.get(12, 12, 13).alive == true);
 
-    int index = 0;
-    grid.callback(MemberAccessChecker1(dimX, dimY, dimZ), &index);
-    grid.callback(MemberAccessChecker2(dimX, dimY, dimZ), &index);
+    grid.callback(MemberAccessChecker1(dimX, dimY, dimZ));
+    grid.callback(MemberAccessChecker2(dimX, dimY, dimZ));
 }
 
 ADD_TEST(TestMemberPtrToOffset)
