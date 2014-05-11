@@ -203,6 +203,10 @@ private:
         // CASE(224);
         CASE(256);
         // CASE(288);
+        // CASE(384);
+        // CASE(416);
+        // CASE(512);
+        CASE(544);
         throw std::out_of_range("grid dimension Z too large");
 
 #undef CASE
@@ -222,13 +226,15 @@ private:
         // CASE(  1);
         CASE( 32);
         CASE( 64);
-        CASE( 96);
+        // CASE( 96);
         CASE(128);
-        CASE(160);
+        // CASE(160);
         CASE(192);
-        CASE(224);
+        // CASE(224);
         CASE(256);
-        CASE(288);
+        // CASE(288);
+        CASE(512);
+        CASE(544);
         throw std::out_of_range("grid dimension Y too large");
 
 #undef CASE
@@ -253,13 +259,17 @@ private:
 
         CASE( 32);
         CASE( 64);
-        CASE( 96);
+        // CASE( 96);
         CASE(128);
-        CASE(160);
+        // CASE(160);
         CASE(192);
-        CASE(224);
+        // CASE(224);
         CASE(256);
-        CASE(288);
+        // CASE(288);
+        // CASE(384);
+        // CASE(416);
+        CASE(512);
+        CASE(544);
         throw std::out_of_range("grid dimension X too large");
 
 #undef CASE
