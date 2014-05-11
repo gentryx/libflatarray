@@ -293,6 +293,353 @@ private:
     }
 };
 
+class JacobiCell
+{
+public:
+    JacobiCell(double temp = 0) :
+        temp(temp)
+    {}
+
+    double temp;
+};
+
+LIBFLATARRAY_REGISTER_SOA(JacobiCell,
+                          ((double)(temp)))
+
+class JacobiD3Q7Bronze : public JacobiD3Q7
+{
+public:
+    class UpdateFunctor
+    {
+    public:
+        UpdateFunctor(int dimX, int dimY, int dimZ) :
+            dimX(dimX),
+            dimY(dimY),
+            dimZ(dimZ)
+        {}
+
+        template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
+                 int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
+        void operator()(const soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1> accessor1,
+                        int *index1,
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2> accessor2,
+                        int *index2) const
+        {
+            for (int z = 1; z < (dimZ - 1); ++z) {
+                for (int y = 1; y < (dimY - 1); ++y) {
+                    int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
+                    int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+
+                    for (*index1 = indexStart, *index2 = indexStart;
+                         *index1 < indexEnd;
+                         *index1 += 1, *index2 += 1) {
+
+                        accessor2.temp() =
+                            accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
+                            accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
+                            accessor1[coord<-1,  0,  0>()].temp() * WEIGHT_W +
+                            accessor1[coord< 0,  0,  0>()].temp() * WEIGHT_C +
+                            accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
+                            accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
+                            accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
+
+                    }
+                }
+            }
+        }
+
+    private:
+        int dimX;
+        int dimY;
+        int dimZ;
+    };
+
+    std::string species()
+    {
+        return "bronze";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int dimX = dim[0];
+        int dimY = dim[1];
+        int dimZ = dim[2];
+        int maxT = 200000000 / dimX / dimY / dimZ;
+        maxT = std::max(16, maxT);
+
+        int offsetZ = dimX * dimY;
+        int gridVolume = dimX * dimY * dimZ;
+        soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
+        soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
+
+        for (int z = 0; z < dimZ; ++z) {
+            for (int y = 0; y < dimY; ++y) {
+                for (int x = 0; x < dimX; ++x) {
+                    gridOld.set(x, y, z, x + y + z);
+                    gridNew.set(x, y, z, x + y + z);
+                }
+            }
+        }
+
+        double tStart = time();
+
+        UpdateFunctor functor(dimX, dimY, dimZ);
+        for (int t = 0; t < maxT; ++t) {
+            gridOld.callback(&gridNew, functor);
+            std::swap(gridOld, gridNew);
+        }
+
+        double tEnd = time();
+
+        if (gridOld.get(1, 1, 1).temp ==
+            gridNew.get(1, 1, 1).temp) {
+            std::cout << gridOld.get(1, 1, 1).temp << "\n";
+            std::cout << gridNew.get(1, 1, 1).temp << "\n";
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return glups(dim, maxT, tEnd - tStart);
+    }
+
+private:
+    void updateLine(double *gridOld, double *gridNew,
+                    const int xStart, const int y,       const int z,
+                    const int xEnd,   const int offsetY, const int offsetZ) const
+    {
+        for (int x = xStart; x < xEnd; ++x) {
+            gridNew[x + y * offsetY + z * offsetZ] =
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] * WEIGHT_S +
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] * WEIGHT_T +
+                gridOld[x + y * offsetY + z * offsetZ - 1          ] * WEIGHT_W +
+                gridOld[x + y * offsetY + z * offsetZ + 0          ] * WEIGHT_C +
+                gridOld[x + y * offsetY + z * offsetZ + 1          ] * WEIGHT_E +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetY] * WEIGHT_B +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetZ] * WEIGHT_N;
+        }
+    }
+};
+
+class JacobiD3Q7Silver : public JacobiD3Q7
+{
+public:
+    class UpdateFunctor
+    {
+    public:
+        UpdateFunctor(int dimX, int dimY, int dimZ) :
+            dimX(dimX),
+            dimY(dimY),
+            dimZ(dimZ)
+        {}
+
+        template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
+                 int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
+        void operator()(const soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1> accessor1,
+                        int *index1,
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2> accessor2,
+                        int *index2) const
+        {
+            __m128d factorS = _mm_set1_pd(WEIGHT_S);
+            __m128d factorT = _mm_set1_pd(WEIGHT_T);
+            __m128d factorW = _mm_set1_pd(WEIGHT_W);
+            __m128d factorC = _mm_set1_pd(WEIGHT_C);
+            __m128d factorE = _mm_set1_pd(WEIGHT_E);
+            __m128d factorB = _mm_set1_pd(WEIGHT_B);
+            __m128d factorN = _mm_set1_pd(WEIGHT_N);
+
+            for (int z = 1; z < (dimZ - 1); ++z) {
+                for (int y = 1; y < (dimY - 1); ++y) {
+                    int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
+                    int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+
+                    *index1 = indexStart;
+                    *index2 = indexStart;
+
+                    accessor2.temp() =
+                        accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
+                        accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
+                        accessor1[coord<-1,  0,  0>()].temp() * WEIGHT_W +
+                        accessor1[coord< 0,  0,  0>()].temp() * WEIGHT_C +
+                        accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
+                        accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
+                        accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
+
+                    *index1 += 1;
+                    *index2 += 1;
+
+                    for (;
+                         *index1 < (indexEnd - 7);
+                         *index1 += 8, *index2 += 8) {
+
+                        // load south row:
+                        __m128d bufA = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 0);
+                        __m128d bufB = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 2);
+                        __m128d bufC = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 4);
+                        __m128d bufD = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 6);
+                        __m128d bufE;
+
+                        bufA = _mm_mul_pd(bufA, factorS);
+                        bufB = _mm_mul_pd(bufB, factorS);
+                        bufC = _mm_mul_pd(bufC, factorS);
+                        bufD = _mm_mul_pd(bufD, factorS);
+
+                        // load top row:
+                        __m128d sumA = _mm_load_pd(&accessor1[coord<0, -1, 0>()].temp() + 0);
+                        __m128d sumB = _mm_load_pd(&accessor1[coord<0, -1, 0>()].temp() + 2);
+                        __m128d sumC = _mm_load_pd(&accessor1[coord<0, -1, 0>()].temp() + 4);
+                        __m128d sumD = _mm_load_pd(&accessor1[coord<0, -1, 0>()].temp() + 6);
+
+                        sumA = _mm_mul_pd(sumA, factorT);
+                        sumB = _mm_mul_pd(sumB, factorT);
+                        sumC = _mm_mul_pd(sumC, factorT);
+                        sumD = _mm_mul_pd(sumD, factorT);
+
+                        sumA = _mm_add_pd(sumA, bufA);
+                        sumB = _mm_add_pd(sumB, bufB);
+                        sumC = _mm_add_pd(sumC, bufC);
+                        sumD = _mm_add_pd(sumD, bufD);
+
+                        // load left/right row:
+                        bufA = _mm_loadu_pd(&accessor1[coord<0, 0, 0>()].temp() - 1);
+                        bufB = _mm_loadu_pd(&accessor1[coord<0, 0, 0>()].temp() + 1);
+                        bufC = _mm_loadu_pd(&accessor1[coord<0, 0, 0>()].temp() + 3);
+                        bufD = _mm_loadu_pd(&accessor1[coord<0, 0, 0>()].temp() + 5);
+                        bufE = _mm_loadu_pd(&accessor1[coord<0, 0, 0>()].temp() + 7);
+
+                        sumA = _mm_add_pd(sumA, _mm_mul_pd(bufA, factorW));
+                        sumB = _mm_add_pd(sumB, _mm_mul_pd(bufB, factorW));
+                        sumC = _mm_add_pd(sumC, _mm_mul_pd(bufC, factorW));
+                        sumD = _mm_add_pd(sumD, _mm_mul_pd(bufD, factorW));
+
+                        sumA = _mm_add_pd(sumA, _mm_mul_pd(bufB, factorE));
+                        sumB = _mm_add_pd(sumB, _mm_mul_pd(bufC, factorE));
+                        sumC = _mm_add_pd(sumC, _mm_mul_pd(bufD, factorE));
+                        sumD = _mm_add_pd(sumD, _mm_mul_pd(bufE, factorE));
+
+                        // load bottom row:
+                        bufA = _mm_load_pd(&accessor1[coord<0, 1, 0>()].temp() + 0);
+                        bufB = _mm_load_pd(&accessor1[coord<0, 1, 0>()].temp() + 2);
+                        bufC = _mm_load_pd(&accessor1[coord<0, 1, 0>()].temp() + 4);
+                        bufD = _mm_load_pd(&accessor1[coord<0, 1, 0>()].temp() + 6);
+
+                        bufA = _mm_mul_pd(bufA, factorB);
+                        bufB = _mm_mul_pd(bufB, factorB);
+                        bufC = _mm_mul_pd(bufC, factorB);
+                        bufD = _mm_mul_pd(bufD, factorB);
+
+                        sumA = _mm_add_pd(sumA, bufA);
+                        sumB = _mm_add_pd(sumB, bufB);
+                        sumC = _mm_add_pd(sumC, bufC);
+                        sumD = _mm_add_pd(sumD, bufD);
+
+                        // load north row:
+                        bufA = _mm_load_pd(&accessor1[coord<0, 0, 1>()].temp() + 0);
+                        bufB = _mm_load_pd(&accessor1[coord<0, 0, 1>()].temp() + 2);
+                        bufC = _mm_load_pd(&accessor1[coord<0, 0, 1>()].temp() + 4);
+                        bufD = _mm_load_pd(&accessor1[coord<0, 0, 1>()].temp() + 6);
+
+                        bufA = _mm_mul_pd(bufA, factorN);
+                        bufB = _mm_mul_pd(bufB, factorN);
+                        bufC = _mm_mul_pd(bufC, factorN);
+                        bufD = _mm_mul_pd(bufD, factorN);
+
+                        sumA = _mm_add_pd(sumA, bufA);
+                        sumB = _mm_add_pd(sumB, bufB);
+                        sumC = _mm_add_pd(sumC, bufC);
+                        sumD = _mm_add_pd(sumD, bufD);
+
+                        _mm_stream_pd(&accessor2[coord<0, 0, 0>()].temp() + 0, sumA);
+                        _mm_stream_pd(&accessor2[coord<0, 0, 0>()].temp() + 2, sumB);
+                        _mm_stream_pd(&accessor2[coord<0, 0, 0>()].temp() + 4, sumC);
+                        _mm_stream_pd(&accessor2[coord<0, 0, 0>()].temp() + 6, sumD);
+                    }
+
+
+                    for (;
+                         *index1 < (indexEnd - 1);
+                         *index1 += 1, *index2 += 1) {
+                        accessor2.temp() =
+                            accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
+                            accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
+                            accessor1[coord<-1,  0,  0>()].temp() * WEIGHT_W +
+                            accessor1[coord< 0,  0,  0>()].temp() * WEIGHT_C +
+                            accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
+                            accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
+                            accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
+
+                    }
+                }
+            }
+        }
+
+    private:
+        int dimX;
+        int dimY;
+        int dimZ;
+    };
+
+    std::string species()
+    {
+        return "silver";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int dimX = dim[0];
+        int dimY = dim[1];
+        int dimZ = dim[2];
+        int maxT = 200000000 / dimX / dimY / dimZ;
+        maxT = std::max(16, maxT);
+
+        int offsetZ = dimX * dimY;
+        int gridVolume = dimX * dimY * dimZ;
+        soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
+        soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
+
+        for (int z = 0; z < dimZ; ++z) {
+            for (int y = 0; y < dimY; ++y) {
+                for (int x = 0; x < dimX; ++x) {
+                    gridOld.set(x, y, z, x + y + z);
+                    gridNew.set(x, y, z, x + y + z);
+                }
+            }
+        }
+
+        double tStart = time();
+
+        UpdateFunctor functor(dimX, dimY, dimZ);
+        for (int t = 0; t < maxT; ++t) {
+            gridOld.callback(&gridNew, functor);
+            std::swap(gridOld, gridNew);
+        }
+
+        double tEnd = time();
+
+        if (gridOld.get(20, 20, 20).temp ==
+            gridNew.get(10, 10, 10).temp) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return glups(dim, maxT, tEnd - tStart);
+    }
+
+private:
+    void updateLine(double *gridOld, double *gridNew,
+                    const int xStart, const int y,       const int z,
+                    const int xEnd,   const int offsetY, const int offsetZ) const
+    {
+        for (int x = xStart; x < xEnd; ++x) {
+            gridNew[x + y * offsetY + z * offsetZ] =
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] * WEIGHT_S +
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] * WEIGHT_T +
+                gridOld[x + y * offsetY + z * offsetZ - 1          ] * WEIGHT_W +
+                gridOld[x + y * offsetY + z * offsetZ + 0          ] * WEIGHT_C +
+                gridOld[x + y * offsetY + z * offsetZ + 1          ] * WEIGHT_E +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetY] * WEIGHT_B +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetZ] * WEIGHT_N;
+        }
+    }
+};
+
 class Particle
 {
 public:
@@ -1137,6 +1484,14 @@ int main(int argc, char **argv)
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(JacobiD3Q7Pepper(), *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(JacobiD3Q7Bronze(), *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(JacobiD3Q7Silver(), *i);
     }
 
     sizes.clear();
