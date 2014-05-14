@@ -432,10 +432,10 @@ public:
 
         template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
                  int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
-        void operator()(const soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1> accessor1,
-                        int *index1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2> accessor2,
-                        int *index2) const
+        void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
+                        int *fixmeUnused1,
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
+                        int *fixmeUnused2) const
         {
             __m128d factorS = _mm_set1_pd(WEIGHT_S);
             __m128d factorT = _mm_set1_pd(WEIGHT_T);
@@ -450,8 +450,8 @@ public:
                     int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
                     int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
 
-                    *index1 = indexStart;
-                    *index2 = indexStart;
+                    accessor1.index = indexStart;
+                    accessor2.index = indexStart;
 
                     accessor2.temp() =
                         accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
@@ -462,12 +462,12 @@ public:
                         accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
                         accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
 
-                    *index1 += 1;
-                    *index2 += 1;
+                    accessor1.index += 1;
+                    accessor2.index += 1;
 
                     for (;
-                         *index1 < (indexEnd - 7);
-                         *index1 += 8, *index2 += 8) {
+                         accessor1.index < (indexEnd - 7);
+                         accessor1.index += 8, accessor2.index += 8) {
 
                         // load south row:
                         __m128d bufA = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 0);
@@ -554,8 +554,8 @@ public:
 
 
                     for (;
-                         *index1 < (indexEnd - 1);
-                         *index1 += 1, *index2 += 1) {
+                         accessor1.index < (indexEnd - 1);
+                         accessor1.index += 1, accessor2.index += 1) {
                         accessor2.temp() =
                             accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
                             accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
