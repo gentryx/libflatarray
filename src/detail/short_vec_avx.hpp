@@ -11,6 +11,7 @@
 #ifdef __AVX__
 
 #include <immintrin.h>
+#include <libflatarray/detail/sqrt_reference.hpp>
 
 #ifndef __CUDA_ARCH__
 
@@ -26,7 +27,7 @@ template<>
 class short_vec<float, 8>
 {
 public:
-    static const int Arity = 8;
+    static const int ARITY = 8;
 
     inline
     short_vec(const float& data) :
@@ -39,12 +40,12 @@ public:
     {}
 
     inline
-    short_vec(const sqrt_reference<float, 8> other);
-
-    inline
     short_vec(const __m256& val1) :
         val1(val1)
     {}
+
+    inline
+    short_vec(const sqrt_reference<float, 8> other);
 
     inline
     void operator-=(const short_vec<float, 8>& other)
@@ -122,19 +123,19 @@ void operator<<(float *data, const short_vec<float, 8>& vec)
     vec.store(data);
 }
 
-template<typename CARGO, int ARITY>
-class sqrt_reference
+template<>
+class sqrt_reference<float, 8>
 {
 public:
     template<typename OTHER_CARGO, int OTHER_ARITY>
     friend class short_vec;
 
-    sqrt_reference(const short_vec<CARGO, ARITY>& vec) :
+    sqrt_reference(const short_vec<float, 8>& vec) :
         vec(vec)
     {}
 
 private:
-    short_vec<CARGO, ARITY> vec;
+    short_vec<float, 8> vec;
 };
 
 inline

@@ -320,9 +320,9 @@ public:
 
         template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
                  int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
-        void operator()(const soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1> accessor1,
+        void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
                         int *index1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2> accessor2,
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
                         int *index2) const
         {
             for (int z = 1; z < (dimZ - 1); ++z) {
@@ -330,9 +330,9 @@ public:
                     int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
                     int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
 
-                    for (*index1 = indexStart, *index2 = indexStart;
-                         *index1 < indexEnd;
-                         *index1 += 1, *index2 += 1) {
+                    for (accessor1.index = indexStart, accessor2.index = indexStart;
+                         accessor1.index < indexEnd;
+                         accessor1 += 1, accessor2 += 1) {
 
                         accessor2.temp() =
                             accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
@@ -342,7 +342,6 @@ public:
                             accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
                             accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
                             accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
-
                     }
                 }
             }
@@ -1378,7 +1377,7 @@ public:
             soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index < (numParticles - REAL::Arity + 1); accessorA += REAL::Arity, accessorB += REAL::Arity) {
+            for (; accessorA.index < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
                 REAL posX = &accessorA.posX();
                 REAL posY = &accessorA.posY();
                 REAL posZ = &accessorA.posZ();
