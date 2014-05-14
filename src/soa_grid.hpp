@@ -207,6 +207,7 @@ private:
         // CASE(416);
         // CASE(512);
         CASE(544);
+        CASE(1026);
         throw std::out_of_range("grid dimension Z too large");
 
 #undef CASE
@@ -235,6 +236,7 @@ private:
         // CASE(288);
         CASE(512);
         CASE(544);
+        CASE(1026);
         throw std::out_of_range("grid dimension Y too large");
 
 #undef CASE
@@ -270,6 +272,7 @@ private:
         // CASE(416);
         CASE(512);
         CASE(544);
+        CASE(1026);
         throw std::out_of_range("grid dimension X too large");
 
 #undef CASE
