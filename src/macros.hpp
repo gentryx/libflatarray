@@ -200,9 +200,10 @@
             return data;                                                \
         }                                                               \
                                                                         \
-        int index;                                                      \
     private:                                                            \
         char *data;                                                     \
+    public:                                                             \
+        int index;                                                      \
     };                                                                  \
                                                                         \
     template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
