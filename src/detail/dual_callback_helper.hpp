@@ -25,7 +25,7 @@ public:
     {}
 
     template<typename ACCESSOR2>
-    void operator()(ACCESSOR2& accessor2, int *index2) const
+    void operator()(ACCESSOR2& accessor2, int *index2)
     {
         functor(accessor1, index1, accessor2, index2);
     }
