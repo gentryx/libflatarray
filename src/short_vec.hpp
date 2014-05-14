@@ -9,5 +9,6 @@
 #define FLAT_ARRAY_SHORT_VEC_HPP
 
 #include <libflatarray/detail/short_vec_avx.hpp>
+#include <libflatarray/detail/short_vec_sse.hpp>
 
 #endif
