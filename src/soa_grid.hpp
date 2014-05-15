@@ -206,7 +206,7 @@ private:
         // CASE(384);
         // CASE(416);
         // CASE(512);
-        CASE(544);
+        // CASE(544);
         CASE(1026);
         throw std::out_of_range("grid dimension Z too large");
 
@@ -226,7 +226,7 @@ private:
 
         // CASE(  1);
         CASE( 32);
-        CASE( 64);
+        // CASE( 64);
         // CASE( 96);
         CASE(128);
         // CASE(160);
@@ -260,7 +260,7 @@ private:
         }
 
         CASE( 32);
-        CASE( 64);
+        // CASE( 64);
         // CASE( 96);
         CASE(128);
         // CASE(160);
