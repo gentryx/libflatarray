@@ -50,9 +50,6 @@ public:
     {}
 
     inline
-    short_vec(const sqrt_reference<double, 8> other);
-
-    inline
     void operator-=(const short_vec<double, 8>& other)
     {
         val1 = _mm_sub_pd(val1, other.val1);
