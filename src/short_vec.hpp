@@ -8,7 +8,9 @@
 #ifndef FLAT_ARRAY_SHORT_VEC_HPP
 #define FLAT_ARRAY_SHORT_VEC_HPP
 
-#include <libflatarray/detail/short_vec_avx.hpp>
-#include <libflatarray/detail/short_vec_sse.hpp>
+#include <libflatarray/detail/short_vec_avx_float_8.hpp>
+#include <libflatarray/detail/short_vec_sse_double_8.hpp>
+#include <libflatarray/detail/short_vec_sse_float_8.hpp>
+#include <libflatarray/detail/short_vec_sse_float_16.hpp>
 
 #endif
