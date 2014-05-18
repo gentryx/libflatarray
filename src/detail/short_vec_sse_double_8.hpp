@@ -53,9 +53,9 @@ public:
     void operator-=(const short_vec<double, 8>& other)
     {
         val1 = _mm_sub_pd(val1, other.val1);
-        val2 = _mm_sub_pd(val1, other.val2);
-        val3 = _mm_sub_pd(val1, other.val3);
-        val4 = _mm_sub_pd(val1, other.val4);
+        val2 = _mm_sub_pd(val2, other.val2);
+        val3 = _mm_sub_pd(val3, other.val3);
+        val4 = _mm_sub_pd(val4, other.val4);
     }
 
     inline
@@ -110,9 +110,9 @@ public:
     void operator/=(const short_vec<double, 8>& other)
     {
         val1 = _mm_div_pd(val1, other.val1);
-        val1 = _mm_div_pd(val2, other.val2);
-        val1 = _mm_div_pd(val3, other.val3);
-        val1 = _mm_div_pd(val4, other.val4);
+        val2 = _mm_div_pd(val2, other.val2);
+        val3 = _mm_div_pd(val3, other.val3);
+        val4 = _mm_div_pd(val4, other.val4);
     }
 
     inline
@@ -155,6 +155,11 @@ inline
 void operator<<(double *data, const short_vec<double, 8>& vec)
 {
     vec.store(data);
+}
+
+short_vec<double, 8> sqrt(const short_vec<double, 8>& vec)
+{
+    return vec.sqrt();
 }
 
 }
