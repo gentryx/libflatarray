@@ -57,7 +57,7 @@
     }                                                                   \
     }
 
-#define DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST)           \
+#define DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST, INDEX_VAR) \
     inline                                                              \
     __host__ __device__                                                 \
     CONST BOOST_PP_SEQ_ELEM(0, MEMBER)&                                 \
@@ -66,15 +66,21 @@
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data + (DIM_X * DIM_Y * DIM_Z) *                            \
             detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            index * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +              \
+            INDEX_VAR * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +          \
             INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
     }
 
-#define DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER)    \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const)
+#define DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER)            \
+    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, index)
 
-#define DECLARE_SOA_MEMBER_NORMAL(MEMBER_INDEX, CELL, MEMBER)   \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      )
+#define DECLARE_SOA_MEMBER_NORMAL(MEMBER_INDEX, CELL, MEMBER)           \
+    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , index)
+
+#define DECLARE_SOA_MEMBER_LIGHT_CONST(MEMBER_INDEX, CELL, MEMBER)      \
+    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, *index)
+
+#define DECLARE_SOA_MEMBER_LIGHT_NORMAL(MEMBER_INDEX, CELL, MEMBER)     \
+    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , *index)
 
 #define COPY_SOA_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)                  \
     BOOST_PP_SEQ_ELEM(1, MEMBER)() = cell.BOOST_PP_SEQ_ELEM(1, MEMBER);

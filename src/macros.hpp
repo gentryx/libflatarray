@@ -269,6 +269,144 @@
         int index;                                                      \
     };                                                                  \
                                                                         \
+    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    class soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
+    {                                                                   \
+    public:                                                             \
+        typedef CELL_TYPE MyCell;                                       \
+                                                                        \
+        static const int DIM_X = MY_DIM_X;                              \
+        static const int DIM_Y = MY_DIM_Y;                              \
+        static const int DIM_Z = MY_DIM_Z;                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        soa_accessor_light(char *data, int& index) :                    \
+            data(data),                                                 \
+            index(&index)                                               \
+        {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator+=(const int offset)                               \
+        {                                                               \
+            *index += offset;                                           \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator++()                                               \
+        {                                                               \
+            ++*index;                                                   \
+        }                                                               \
+                                                                        \
+        template<int X, int Y, int Z>                                   \
+        inline                                                          \
+        __host__ __device__                                             \
+        soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
+            coord<X, Y, Z>) const                                       \
+        {                                                               \
+            return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
+                data, *index);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void operator=(const CELL_TYPE& cell)                           \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_IN,                                     \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void operator<<(const CELL_TYPE& cell)                          \
+        {                                                               \
+            (*this) = cell;                                             \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void operator>>(CELL_TYPE& cell) const                          \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_OUT,                                    \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void load(const char *source, size_t count)                     \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_ARRAY_IN,                               \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(char *target, size_t count) const                     \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        template<typename MEMBER_TYPE, int OFFSET>                      \
+        inline                                                          \
+        __host__ __device__                                             \
+        MEMBER_TYPE& access_member()                                    \
+        {                                                               \
+            return *(MEMBER_TYPE*)(                                     \
+                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
+                *index * sizeof(MEMBER_TYPE) +                          \
+                INDEX  * sizeof(MEMBER_TYPE));                          \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        char *access_member(const int size_of_member, const int offset) \
+        {                                                               \
+            return                                                      \
+                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                offset +                                                \
+                *index * size_of_member +                               \
+                INDEX  * size_of_member;                                \
+        }                                                               \
+                                                                        \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            DECLARE_SOA_MEMBER_LIGHT_NORMAL,                            \
+            CELL_TYPE,                                                  \
+            CELL_MEMBERS);                                              \
+                                                                        \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            DECLARE_SOA_MEMBER_LIGHT_CONST,                             \
+            CELL_TYPE,                                                  \
+            CELL_MEMBERS);                                              \
+                                                                        \
+        __host__ __device__                                             \
+        const char *get_data() const                                    \
+        {                                                               \
+            return data;                                                \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        char *get_data()                                                \
+        {                                                               \
+            return data;                                                \
+        }                                                               \
+                                                                        \
+    private:                                                            \
+        char *data;                                                     \
+        int *index;                                                     \
+    };                                                                  \
+                                                                        \
     }                                                                   \
                                                                         \
     template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
