@@ -31,4 +31,19 @@ public:
     void TEST_NAME::operator()()                \
 
 
+// really lazy (read: bad, inexact) test for equality. we can't use
+// stict equality (operator==()), as vector units may yield
+// non-IEEE-compliannt results.
+#define TEST_REAL(A, B)                                 \
+    {                                                   \
+        double a = (A);                                 \
+        double b = (B);                                 \
+        double delta = a - b;                           \
+        delta = delta < 0? -delta : delta;              \
+        if (delta > 0.0001) {                           \
+            throw std::logic_error(                     \
+                "difference exceeds tolerance");        \
+        }                                               \
+    }
+
 #endif
