@@ -39,11 +39,11 @@ public:
     inline
     short_vec(const float *data) :
         val1(_mm_loadu_ps(data +  0)),
-        val2(_mm_loadu_ps(data +  4)),
+        val2(_mm_loadu_ps(data +  4))
     {}
 
     inline
-    short_vec(const __m128& val1, const __m128& val2, const __m128& val3, const __m128& val4) :
+    short_vec(const __m128& val1, const __m128& val2) :
         val1(val1),
         val2(val2)
     {}
@@ -161,7 +161,7 @@ private:
 inline
 short_vec<float, 8>::short_vec(const sqrt_reference<float, 8> other) :
     val1(_mm_sqrt_ps(other.vec.val1)),
-    val2(_mm_sqrt_ps(other.vec.val2)),
+    val2(_mm_sqrt_ps(other.vec.val2))
 {}
 
 inline
