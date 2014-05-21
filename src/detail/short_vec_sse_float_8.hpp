@@ -10,7 +10,7 @@
 
 #ifdef __SSE__
 
-#include <immintrin.h>
+#include <tmmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
 
 #ifndef __AVX__
