@@ -10,7 +10,7 @@
 
 #ifdef __SSE__
 
-#include <tmmintrin.h>
+#include <pmmintrin.h>
 
 #ifndef __CUDA_ARCH__
 

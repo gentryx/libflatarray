@@ -10,7 +10,7 @@
 
 #ifdef __SSE__
 
-#include <tmmintrin.h>
+#include <pmmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
 
 #ifndef __CUDA_ARCH__
