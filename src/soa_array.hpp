@@ -36,7 +36,7 @@ public:
 
     inline
     __host__ __device__
-    soa_array(int elements = 0, const CELL& value = CELL()) :
+    explicit soa_array(int elements = 0, const CELL& value = CELL()) :
         elements(elements),
         index(0)
     {

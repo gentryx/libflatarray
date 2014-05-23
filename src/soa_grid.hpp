@@ -42,7 +42,7 @@ class soa_grid
 public:
     friend class TestAssignment;
 
-    soa_grid(size_t dim_x = 0, size_t dim_y = 0, size_t dim_z = 0) :
+    explicit soa_grid(size_t dim_x = 0, size_t dim_y = 0, size_t dim_z = 0) :
         dim_x(dim_x),
         dim_y(dim_y),
         dim_z(dim_z),

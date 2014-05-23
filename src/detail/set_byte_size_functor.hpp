@@ -22,7 +22,7 @@ template<typename CELL>
 class set_byte_size_functor
 {
 public:
-    set_byte_size_functor(size_t *byte_size) :
+    explicit set_byte_size_functor(size_t *byte_size) :
         byte_size(byte_size)
     {}
 
