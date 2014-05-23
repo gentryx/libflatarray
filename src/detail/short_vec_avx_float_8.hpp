@@ -29,6 +29,9 @@ class short_vec<float, 8>
 public:
     static const int ARITY = 8;
 
+    // disabling this warning as implicit type conversion is exactly our goal here:
+#pragma warning (disable:2304)
+
     inline
     short_vec(const float& data) :
         val1(_mm256_broadcast_ss(&data))
@@ -43,6 +46,8 @@ public:
     short_vec(const __m256& val1) :
         val1(val1)
     {}
+
+#pragma warning (enable:2304)
 
     inline
     short_vec(const sqrt_reference<float, 8> other);

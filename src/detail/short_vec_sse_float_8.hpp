@@ -30,6 +30,9 @@ class short_vec<float, 8>
 public:
     static const int ARITY = 8;
 
+    // disabling this warning as implicit type conversion is exactly our goal here:
+#pragma warning (disable:2304)
+
     inline
     short_vec(const float& data) :
         val1(_mm_set1_ps(data)),
@@ -41,6 +44,8 @@ public:
         val1(_mm_loadu_ps(data +  0)),
         val2(_mm_loadu_ps(data +  4))
     {}
+
+#pragma warning (enable:2304)
 
     inline
     short_vec(const __m128& val1, const __m128& val2) :
