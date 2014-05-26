@@ -23,14 +23,17 @@ class short_vec;
 template<typename CARGO, int ARITY>
 class sqrt_reference;
 
+#ifdef __ICC
+// disabling this warning as implicit type conversion is exactly our goal here:
+#pragma warning push
+#pragma warning (disable: 2304)
+#endif
+
 template<>
 class short_vec<float, 16>
 {
 public:
     static const int ARITY = 16;
-
-    // disabling this warning as implicit type conversion is exactly our goal here:
-#pragma warning (disable:2304)
 
     inline
     short_vec(const float& data) :
@@ -47,8 +50,6 @@ public:
         val3(_mm_loadu_ps(data +  8)),
         val4(_mm_loadu_ps(data + 12))
     {}
-
-#pragma warning (enable:2304)
 
     inline
     short_vec(const __m128& val1, const __m128& val2, const __m128& val3, const __m128& val4) :
@@ -189,6 +190,10 @@ public:
 private:
     short_vec<float, 16> vec;
 };
+
+#ifdef __ICC
+#pragma warning pop
+#endif
 
 inline
 short_vec<float, 16>::short_vec(const sqrt_reference<float, 16> other) :
