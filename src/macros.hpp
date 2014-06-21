@@ -30,6 +30,10 @@
              int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
     friend class LibFlatArray::const_soa_accessor;                      \
                                                                         \
+    template<typename CELL_TYPE,                                        \
+             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    friend class LibFlatArray::soa_accessor_light;                      \
+                                                                        \
     template<typename CELL_TYPE, int R>                                 \
     friend class LibFlatArray::detail::flat_array::offset;
 
