@@ -99,13 +99,13 @@ public:
     }
 
     template<typename FUNCTOR>
-    void callback(FUNCTOR functor, int index = 0) const
+    void callback(const FUNCTOR& functor, int index = 0) const
     {
         bind_parameters0(functor, index);
     }
 
     template<typename FUNCTOR>
-    void callback(soa_grid<CELL_TYPE> *otherGrid, FUNCTOR functor) const
+    void callback(soa_grid<CELL_TYPE> *otherGrid, const FUNCTOR& functor) const
     {
         detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
     }
@@ -179,7 +179,7 @@ private:
     }
 
     template<int DIM_X, int DIM_Y, typename FUNCTOR>
-    void bind_parameters2(FUNCTOR functor, int index) const
+    void bind_parameters2(const FUNCTOR& functor, int index) const
     {
         size_t size = dim_z;
 
@@ -214,7 +214,7 @@ private:
     }
 
     template<int DIM_X, typename FUNCTOR>
-    void bind_parameters1(FUNCTOR functor, int index) const
+    void bind_parameters1(const FUNCTOR& functor, int index) const
     {
         size_t size = dim_y;
 
@@ -243,7 +243,7 @@ private:
     }
 
     template<typename FUNCTOR>
-    void bind_parameters0(FUNCTOR functor, int index) const
+    void bind_parameters0(const FUNCTOR& functor, int index) const
     {
         size_t size = dim_x;
         // fixme: this would be superfluous if we'd call bind_parameters1

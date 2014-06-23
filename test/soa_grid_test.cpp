@@ -72,7 +72,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index) const
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
@@ -111,7 +111,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index) const
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
@@ -150,7 +150,7 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index)
+    void operator()(ACCESSOR& accessor, int *index) const
     {
         for (int z = 0; z < dimZ; ++z) {
             for (int y = 0; y < dimY; ++y) {
