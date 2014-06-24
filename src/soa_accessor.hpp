@@ -32,6 +32,9 @@ class const_soa_accessor;
 template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
 class soa_accessor_light;
 
+template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+class const_soa_accessor_light;
+
 }
 
 #endif

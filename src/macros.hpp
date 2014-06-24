@@ -37,6 +37,10 @@
              int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
     friend class LibFlatArray::soa_accessor_light;                      \
                                                                         \
+    template<typename CELL_TYPE,                                        \
+             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    friend class LibFlatArray::const_soa_accessor_light;                \
+                                                                        \
     template<typename CELL_TYPE, int R>                                 \
     friend class LibFlatArray::detail::flat_array::offset;
 
@@ -108,10 +112,20 @@
         template<int X, int Y, int Z>                                   \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](        \
+        soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
+            coord<X, Y, Z>)                                             \
+        {                                                               \
+            return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
+                data, index);                                           \
+        }                                                               \
+                                                                        \
+        template<int X, int Y, int Z>                                   \
+        inline                                                          \
+        __host__ __device__                                             \
+        const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[]( \
             coord<X, Y, Z>) const                                       \
         {                                                               \
-            return soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(        \
+            return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
                 data, index);                                           \
         }                                                               \
                                                                         \
@@ -229,6 +243,20 @@
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator+=(const int offset)                               \
+        {                                                               \
+            index += offset;                                            \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator++()                                               \
+        {                                                               \
+            ++index;                                                    \
+        }                                                               \
                                                                         \
         template<int X, int Y, int Z>                                   \
         inline                                                          \
@@ -411,6 +439,83 @@
                                                                         \
     private:                                                            \
         char *data;                                                     \
+        int *index;                                                     \
+    };                                                                  \
+                                                                        \
+    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    class const_soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
+    {                                                                   \
+    public:                                                             \
+        typedef CELL_TYPE MyCell;                                       \
+                                                                        \
+        static const int DIM_X = MY_DIM_X;                              \
+        static const int DIM_Y = MY_DIM_Y;                              \
+        static const int DIM_Z = MY_DIM_Z;                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        const_soa_accessor_light(const char *data, int& index) :        \
+            data(data),                                                 \
+            index(&index)                                               \
+        {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator+=(const int offset)                               \
+        {                                                               \
+            *index += offset;                                           \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        void operator++()                                               \
+        {                                                               \
+            ++*index;                                                   \
+        }                                                               \
+                                                                        \
+        template<int X, int Y, int Z>                                   \
+        inline                                                          \
+        __host__ __device__                                             \
+        const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
+            coord<X, Y, Z>) const                                       \
+        {                                                               \
+            return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
+                data, *index);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void operator>>(CELL_TYPE& cell) const                          \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_OUT,                                    \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(char *target, size_t count) const                     \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            DECLARE_SOA_MEMBER_LIGHT_CONST,                             \
+            CELL_TYPE,                                                  \
+            CELL_MEMBERS);                                              \
+                                                                        \
+        __host__ __device__                                             \
+        const char *get_data() const                                    \
+        {                                                               \
+            return data;                                                \
+        }                                                               \
+                                                                        \
+    private:                                                            \
+        const char *data;                                               \
         int *index;                                                     \
     };                                                                  \
                                                                         \
