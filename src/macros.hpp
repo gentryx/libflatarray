@@ -8,7 +8,10 @@
 #ifndef FLAT_ARRAY_MACROS_HPP
 #define FLAT_ARRAY_MACROS_HPP
 
+#include <libflatarray/coord.hpp>
+#include <libflatarray/number_of_members.hpp>
 #include <libflatarray/detail/macros.hpp>
+#include <libflatarray/detail/offset.hpp>
 
 /**
  * This macro is convenient when you need to return instances of the

@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_SOA_GRID_HPP
 #define FLAT_ARRAY_SOA_GRID_HPP
 
+#include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_set_instance_functor.hpp>
 #include <libflatarray/detail/load_save_functor.hpp>

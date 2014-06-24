@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_DETAIL_SET_BYTE_SIZE_FUNCTOR_HPP
 #define FLAT_ARRAY_DETAIL_SET_BYTE_SIZE_FUNCTOR_HPP
 
+#include <libflatarray/aggregated_member_size.hpp>
+
 namespace LibFlatArray {
 
 namespace detail {
