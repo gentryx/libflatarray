@@ -51,8 +51,14 @@ public:
 class CellCustomSizes
 {
 public:
-    class API : public api_traits::has_default_3d_sizes
-    {};
+    class API
+    {
+    public:
+        LIBFLATARRAY_CUSTOM_SIZES(
+            (10)(20)(30),
+            (11)(44)(88)(99),
+            (47)(53))
+    };
 
     double memberA;
     double memberB;
@@ -188,37 +194,75 @@ ADD_TEST(TestSelectSizesDefault3D)
 
 ADD_TEST(TestSelectSizesCustom)
 {
-    /*
     char data[1024 * 1024];
     std::vector<int> actual;
     std::vector<int> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellCustomSizes> selector;
 
+    selector()(data, functor, 10, 10, 30);
+    expected += 10, 11, 47, 0;
+
+    std::cout << "expected.size = " << expected.size() << "\n";
+    std::cout << "actual.size = " << actual.size() << "\n";
+
+    std::cout << "expected: " << expected[0] << ", " << expected[1] << ", " << expected[2] << "\n";
+    std::cout << "actual: " << actual[0] << ", " << actual[1] << ", " << actual[2] << "\n";
+
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    // scale x-axis
+    selector()(data, functor, 11, 20, 30);
+    expected += 20, 44, 47, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 20, 20, 30);
+    expected += 20, 44, 47, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 21, 20, 30);
+    expected += 30, 44, 47, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 30, 20, 30);
+    expected += 30, 44, 47, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    // scale y-axis
     selector()(data, functor, 10, 20, 30);
-    expected += 32, 32, 32, 0;
+    expected += 10, 44, 47, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector()(data, functor, 30, 30, 30);
-    expected += 32, 32, 32, 0;
+    selector()(data, functor, 10, 80, 30);
+    expected += 10, 88, 47, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector()(data, functor, 32, 32, 32);
-    expected += 32, 32, 32, 0;
+    selector()(data, functor, 10, 90, 30);
+    expected += 10, 99, 47, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector()(data, functor, 40, 32, 32);
-    expected += 128, 128, 32, 0;
+    // scale z-axis
+    selector()(data, functor, 10, 10, 50);
+    expected += 10, 11, 53, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
-    */
 }
 
 int main(int argc, char **argv)

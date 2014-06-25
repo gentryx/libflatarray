@@ -544,7 +544,7 @@
         const std::size_t dim_y = 1,                                    \
         const std::size_t dim_z = 1)                                    \
     {                                                                   \
-        /*fixme*/                                                       \
+        bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);          \
     }                                                                   \
                                                                         \
     template<typename CELL, typename FUNCTOR>                           \
@@ -555,7 +555,97 @@
         const std::size_t dim_y = 1,                                    \
         const std::size_t dim_z = 1)                                    \
     {                                                                   \
-        /*fixme*/                                                       \
+        bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);          \
     }                                                                   \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void bind_size_x(                                                   \
+        const std::size_t dim_x,                                        \
+        const std::size_t dim_y,                                        \
+        const std::size_t dim_z,                                        \
+        char *data,                                                     \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_X,                                                 \
+            unused,                                                     \
+            X_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension X too large");          \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void bind_size_x(                                                   \
+        const std::size_t dim_x,                                        \
+        const std::size_t dim_y,                                        \
+        const std::size_t dim_z,                                        \
+        const char *data,                                               \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_X,                                                 \
+            unused,                                                     \
+            X_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension X too large");          \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, int DIM_X, typename FUNCTOR>                \
+    void bind_size_y(                                                   \
+        const std::size_t dim_y,                                        \
+        const std::size_t dim_z,                                        \
+        char *data,                                                     \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_Y,                                                 \
+            unused,                                                     \
+            Y_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension Y too large");          \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, int DIM_X, typename FUNCTOR>                \
+    void bind_size_y(                                                   \
+        const std::size_t dim_y,                                        \
+        const std::size_t dim_z,                                        \
+        const char *data,                                               \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_Y,                                                 \
+            unused,                                                     \
+            Y_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension Y too large");          \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>     \
+    void bind_size_z(                                                   \
+        const std::size_t dim_z,                                        \
+        char *data,                                                     \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_Z,                                                 \
+            unused,                                                     \
+            Z_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension Z too large");          \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>     \
+    void bind_size_z(                                                   \
+        const std::size_t dim_z,                                        \
+        const char *data,                                               \
+        FUNCTOR& functor) const                                         \
+    {                                                                   \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_Z,                                                 \
+            unused,                                                     \
+            Z_SIZES);                                                   \
+                                                                        \
+        throw std::out_of_range("grid dimension Z too large");          \
+    }
 
 #endif

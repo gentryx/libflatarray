@@ -109,4 +109,27 @@
             detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET *\
             count));
 
+#define CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)                         \
+    if (dim_x <= SIZE) {                                             \
+        bind_size_y<CELL, SIZE>(                                     \
+            dim_y, dim_z, data, functor);                            \
+        return;                                                      \
+    }
+
+#define CASE_DIM_Y(SIZE_INDEX, UNUSED, SIZE)                         \
+    if (dim_y <= SIZE) {                                             \
+        bind_size_z<CELL, DIM_X, SIZE>(                              \
+            dim_z, data, functor);                                   \
+        return;                                                      \
+    }
+
+#define CASE_DIM_Z(SIZE_INDEX, UNUSED, SIZE)                            \
+    if (dim_z <= SIZE) {                                                \
+        soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(            \
+            data, 0);                                                   \
+        functor(accessor,                                               \
+                &accessor.index);                                       \
+        return;                                                         \
+    }
+
 #endif
