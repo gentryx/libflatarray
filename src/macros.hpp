@@ -301,6 +301,7 @@
                                                                         \
     private:                                                            \
         const char *data;                                               \
+    public:                                                             \
         int index;                                                      \
     };                                                                  \
                                                                         \

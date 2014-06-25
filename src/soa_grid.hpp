@@ -9,6 +9,7 @@
 #define FLAT_ARRAY_SOA_GRID_HPP
 
 #include <libflatarray/aligned_allocator.hpp>
+#include <libflatarray/api_traits.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_set_instance_functor.hpp>
 #include <libflatarray/detail/load_save_functor.hpp>
@@ -100,9 +101,21 @@ public:
     }
 
     template<typename FUNCTOR>
+    void callback(FUNCTOR functor, int index = 0)
+    {
+        api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
+    }
+
+    template<typename FUNCTOR>
     void callback(FUNCTOR functor, int index = 0) const
     {
-        bind_parameters0(functor, index);
+        api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
+    }
+
+    template<typename FUNCTOR>
+    void callback(soa_grid<CELL_TYPE> *otherGrid, const FUNCTOR& functor)
+    {
+        detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
     }
 
     template<typename FUNCTOR>
@@ -177,106 +190,6 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         data = ALLOCATOR().allocate(byte_size());
-    }
-
-    template<int DIM_X, int DIM_Y, typename FUNCTOR>
-    void bind_parameters2(FUNCTOR& functor, int index) const
-    {
-        size_t size = dim_z;
-
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            soa_accessor<CELL_TYPE, DIM_X, DIM_Y, SIZE, 0>  accessor(   \
-                data, index);                                           \
-            functor(accessor,                                           \
-                    /* fixme */                                         \
-                    &accessor.index);                                   \
-            return;                                                     \
-        }
-
-        // CASE(  1);
-        CASE( 32);
-        // CASE( 64);
-        // CASE( 96);
-        // CASE(128);
-        // CASE(160);
-        // CASE(192);
-        // CASE(224);
-        CASE(256);
-        // CASE(288);
-        // CASE(384);
-        // CASE(416);
-        // CASE(512);
-        // CASE(544);
-        CASE(1026);
-        throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-    }
-
-    template<int DIM_X, typename FUNCTOR>
-    void bind_parameters1(FUNCTOR& functor, int index) const
-    {
-        size_t size = dim_y;
-
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            bind_parameters2<DIM_X, SIZE>(functor, index);              \
-            return;                                                     \
-        }
-
-        // CASE(  1);
-        CASE( 32);
-        // CASE( 64);
-        // CASE( 96);
-        CASE(128);
-        // CASE(160);
-        CASE(192);
-        // CASE(224);
-        CASE(256);
-        // CASE(288);
-        CASE(512);
-        CASE(544);
-        CASE(1026);
-        throw std::out_of_range("grid dimension Y too large");
-
-#undef CASE
-    }
-
-    template<typename FUNCTOR>
-    void bind_parameters0(FUNCTOR& functor, int index) const
-    {
-        size_t size = dim_x;
-        // fixme: this would be superfluous if we'd call bind_parameters1
-        if (dim_y > size) {
-            size = dim_y;
-        }
-
-#define CASE(SIZE)                                                      \
-        if (size <= SIZE) {                                             \
-            /* fixme: */                                                \
-            bind_parameters2<SIZE, SIZE>(functor, index);               \
-            /* bind_parameters1<SIZE>(functor, index); */               \
-            return;                                                     \
-        }
-
-        CASE( 32);
-        // CASE( 64);
-        // CASE( 96);
-        CASE(128);
-        // CASE(160);
-        CASE(192);
-        // CASE(224);
-        CASE(256);
-        // CASE(288);
-        // CASE(384);
-        // CASE(416);
-        CASE(512);
-        CASE(544);
-        CASE(1056);
-        throw std::out_of_range("grid dimension X too large");
-
-#undef CASE
     }
 };
 

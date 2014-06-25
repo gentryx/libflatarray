@@ -15,6 +15,9 @@
 
 #include "test.h"
 
+using namespace boost::assign;
+using namespace LibFlatArray;
+
 class Cell
 {
 public:
@@ -25,14 +28,15 @@ public:
 
 LIBFLATARRAY_REGISTER_SOA(Cell, ((double)(memberA))((double)(memberB))((double)(memberC)))
 
-namespace LibFlatArray {
-
-using namespace boost::assign;
-
 class CellDefaultSizes
 {
 public:
+    double memberA;
+    double memberB;
+    double memberC;
 };
+
+LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes, ((double)(memberA))((double)(memberB))((double)(memberC)))
 
 // class CellDefault2DSizes
 // {
@@ -61,6 +65,12 @@ public:
         *report += DIM_X, DIM_Y, DIM_Z, INDEX;
     }
 
+    template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+    void operator()(const_soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *unused)
+    {
+            throw std::logic_error("this should not have been called");
+    }
+
 private:
     std::vector<int> *report;
 };
@@ -73,25 +83,25 @@ ADD_TEST(TestSelectSizes)
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellDefaultSizes> selector;
 
-    selector().select_size<Cell>(data, functor, 10, 20, 30);
+    selector()(data, functor, 10, 20, 30);
     expected += 32, 32, 32, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector().select_size<Cell>(data, functor, 30, 30, 30);
+    selector()(data, functor, 30, 30, 30);
     expected += 32, 32, 32, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector().select_size<Cell>(data, functor, 32, 32, 32);
+    selector()(data, functor, 32, 32, 32);
     expected += 32, 32, 32, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
-    selector().select_size<Cell>(data, functor, 40, 32, 32);
+    selector()(data, functor, 40, 32, 32);
     expected += 128, 128, 32, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
@@ -100,8 +110,6 @@ ADD_TEST(TestSelectSizes)
     // for (int i = 0; i < actual.size(); ++i) {
     //     std::cout << "actual[" << i << "] = " << actual[i] << "\n";
     // }
-}
-
 }
 
 int main(int argc, char **argv)
