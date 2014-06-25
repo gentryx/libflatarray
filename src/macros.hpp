@@ -533,4 +533,29 @@
         soa >> cell;                                                    \
     }
 
+#define LIBFLATARRAY_CUSTOM_SIZES(X_SIZES, Y_SIZES, Z_SIZES)            \
+    typedef void has_sizes;                                             \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        char *data,                                                     \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        /*fixme*/                                                       \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        const char *data,                                               \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        /*fixme*/                                                       \
+    }                                                                   \
+
 #endif
