@@ -65,10 +65,26 @@ public:
     double memberC;
 };
 
-LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,   ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes, ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes, ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,    ((double)(memberA))((double)(memberB))((double)(memberC)))
+class CellCustomSizesUniform
+{
+public:
+    class API
+    {
+    public:
+        LIBFLATARRAY_CUSTOM_SIZES_UNIFORM(
+            (10)(20)(30)(40)(50)(60)(70)(80)(90))
+    };
+
+    double memberA;
+    double memberB;
+    double memberC;
+};
+
+LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,       ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes,     ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes,     ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
 
 class TestFunctor
 {
@@ -202,13 +218,6 @@ ADD_TEST(TestSelectSizesCustom)
 
     selector()(data, functor, 10, 10, 30);
     expected += 10, 11, 47, 0;
-
-    std::cout << "expected.size = " << expected.size() << "\n";
-    std::cout << "actual.size = " << actual.size() << "\n";
-
-    std::cout << "expected: " << expected[0] << ", " << expected[1] << ", " << expected[2] << "\n";
-    std::cout << "actual: " << actual[0] << ", " << actual[1] << ", " << actual[2] << "\n";
-
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
@@ -260,6 +269,66 @@ ADD_TEST(TestSelectSizesCustom)
     // scale z-axis
     selector()(data, functor, 10, 10, 50);
     expected += 10, 11, 53, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+}
+
+ADD_TEST(TestSelectSizesCustomUniform)
+{
+    char data[1024 * 1024];
+    std::vector<int> actual;
+    std::vector<int> expected;
+    TestFunctor functor(&actual);
+    typedef api_traits::select_sizes<CellCustomSizesUniform> selector;
+
+    selector()(data, functor, 10, 10, 30);
+    expected += 30, 30, 30, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    // scale x-axis
+    selector()(data, functor, 40, 20, 30);
+    expected += 40, 40, 40, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 55, 20, 30);
+    expected += 60, 60, 60, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 90, 20, 30);
+    expected += 90, 90, 90, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    // scale y-axis
+    selector()(data, functor, 10, 20, 30);
+    expected += 30, 30, 30, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 10, 80, 30);
+    expected += 80, 80, 80, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 10, 90, 30);
+    expected += 90, 90, 90, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    // scale z-axis
+    selector()(data, functor, 10, 10, 50);
+    expected += 50, 50, 50, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();

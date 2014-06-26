@@ -132,4 +132,13 @@
         return;                                                         \
     }
 
+#define CASE_DIM_MAX(SIZE_INDEX, UNUSED, SIZE)                          \
+    if (max <= SIZE) {                                                  \
+        soa_accessor<CELL, SIZE, SIZE, SIZE, 0>  accessor(              \
+            data, 0);                                                   \
+        functor(accessor,                                               \
+                &accessor.index);                                       \
+        return;                                                         \
+    }
+
 #endif
