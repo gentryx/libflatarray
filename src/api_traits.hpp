@@ -30,6 +30,22 @@ public:
     class true_type
     {};
 
+    /**
+     * select_sizes:
+     *
+     * use the following trait to specify for which grid sizes the
+     * soa_functors need to be instantiated. chosing more sizes
+     * increases compile time, but also improves running time and
+     * reduces memory consumption. conversely, with less sizes to be
+     * instantiated compilation is quicker (and can be done with a
+     * lower memory footprint), but the code might not be as fast, and
+     * might allocate excessive amounts of memory.
+     */
+
+    /**
+     * Means that the code will be used with rectangular 2D grids
+     * only, the z-dimension will be tied at 1.
+     */
     class has_default_2d_sizes
     {
     public:
@@ -160,6 +176,15 @@ public:
 
     };
 
+    /**
+     * Means that the code will be used with rectangular 3D grids.
+     * This wastes memory if your z-dimension is always 1 (i.e. a 2D
+     * code). Compilation also takes significantly longer. Can improve
+     * running time by 20% to 30%:
+     *
+     * http://dl.acm.org/citation.cfm?id=2476888
+     * http://hpc.pnl.gov/conf/wolfhpc/2012/talks/schafer.pdf
+     */
     class has_default_3d_sizes
     {
     public:
@@ -292,6 +317,11 @@ public:
 
     };
 
+    /**
+     * This lets the user choose relevant grid sizes himself. Please
+     * also see LIBFLATARRAY_CUSTOM_SIZES() and
+     * LIBFLATARRAY_CUSTOM_SIZES_UNIFORM().
+     */
     class has_custom_sizes
     {
         typedef void has_sizes;
@@ -375,14 +405,47 @@ public:
         }
     };
 
+    /**
+     * select_asymmetric_dual_callback:
+     *
+     * If you need to use a functor together with two grids (as you
+     * would in most computer simulations), you can use this trait to
+     * control whether both grids are always the same size (i.e. you
+     * need no asymmetric callback), or if their sizes may differ
+     * (makes sense if you need to do some sorts of reductions or run
+     * a multi-grid code).
+     *
+     * WARNING: if soa_accessor is instantiated for n sizes, then
+     * has_asymmetric_dual_callback will increase this to n * n.
+     */
+
     class has_asymmetric_dual_callback
-    {};
+    {
+    public:
+        typedef void has_asymmetric_dual_callback_specified;
+        typedef true_type asymmetric_dual_callback_required;
+    };
 
     class has_no_asymmetric_dual_callback
-    {};
+    {
+    public:
+        typedef void has_asymmetric_dual_callback_specified;
+        typedef false_type asymmetric_dual_callback_required;
+    };
 
+    template<typename CELL, typename HAS_ASYMMETRIC_DUAL_CALLBACK_SPECIFIED = void>
     class select_asymmetric_dual_callback
-    {};
+    {
+    public:
+        typedef false_type value;
+    };
+
+    template<typename CELL>
+    class select_asymmetric_dual_callback<CELL, typename CELL::API::has_asymmetric_dual_callback_specified>
+    {
+    public:
+        typedef typename CELL::API::asymmetric_dual_callback_required value;
+    };
 };
 
 }

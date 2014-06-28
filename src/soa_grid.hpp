@@ -113,15 +113,17 @@ public:
     }
 
     template<typename FUNCTOR>
-    void callback(soa_grid<CELL_TYPE> *otherGrid, const FUNCTOR& functor)
+    void callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor)
     {
-        detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
+        typedef typename api_traits::select_asymmetric_dual_callback<CELL_TYPE>::value value;
+        dual_callback(other_grid, functor, value());
     }
 
     template<typename FUNCTOR>
-    void callback(soa_grid<CELL_TYPE> *otherGrid, const FUNCTOR& functor) const
+    void callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor) const
     {
-        detail::flat_array::dual_callback_helper()(this, otherGrid, functor);
+        typedef typename api_traits::select_asymmetric_dual_callback<CELL_TYPE>::value value;
+        dual_callback(other_grid, functor, value());
     }
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
@@ -190,6 +192,56 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
         data = ALLOCATOR().allocate(byte_size());
+    }
+
+    template<typename FUNCTOR>
+    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type)
+    {
+        detail::flat_array::dual_callback_helper()(this, other_grid, functor);
+    }
+
+    template<typename FUNCTOR>
+    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type) const
+    {
+        detail::flat_array::dual_callback_helper()(this, other_grid, functor);
+    }
+
+    // fixme: test the behavior of both (symmetric, asymmetric) callbacks
+    template<typename FUNCTOR>
+    void dual_callback(soa_grid<CELL_TYPE> *other_grid, FUNCTOR& functor, api_traits::false_type) const
+    {
+        assert_same_grid_sizes(other_grid);
+        detail::flat_array::dual_callback_helper_symmetric<soa_grid<CELL_TYPE>, FUNCTOR> helper(
+            other_grid, functor);
+
+        api_traits::select_sizes<CELL_TYPE>()(
+            data,
+            helper,
+            dim_x,
+            dim_y,
+            dim_z);
+    }
+
+    template<typename FUNCTOR>
+    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::false_type) const
+    {
+        assert_same_grid_sizes(other_grid);
+        detail::flat_array::const_dual_callback_helper_symmetric<soa_grid<CELL_TYPE>, FUNCTOR> helper(
+            other_grid, functor);
+
+        api_traits::select_sizes<CELL_TYPE>()(
+            data,
+            helper,
+            dim_x,
+            dim_y,
+            dim_z);
+    }
+
+    void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const
+    {
+        if ((dim_x != other_grid->dim_x) || (dim_y != other_grid->dim_y) || (dim_z != other_grid->dim_z)) {
+            throw std::invalid_argument("grid dimensions of both grids must match");
+        }
     }
 };
 

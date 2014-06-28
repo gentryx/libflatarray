@@ -68,6 +68,52 @@ public:
     }
 };
 
+template<typename GRID_TYPE, typename FUNCTOR>
+class dual_callback_helper_symmetric
+{
+public:
+    dual_callback_helper_symmetric(GRID_TYPE *other_grid, FUNCTOR& functor) :
+        other_grid(other_grid),
+        functor(functor)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor1, int *index1) const
+    {
+        int index2 = *index1;
+        ACCESSOR accessor2(other_grid->get_data(), index2);
+
+        functor(accessor1, index1, accessor2, &index2);
+    }
+
+private:
+    GRID_TYPE *other_grid;
+    FUNCTOR& functor;
+};
+
+template<typename GRID_TYPE, typename FUNCTOR>
+class const_dual_callback_helper_symmetric
+{
+public:
+    const_dual_callback_helper_symmetric(GRID_TYPE *other_grid, const FUNCTOR& functor) :
+        other_grid(other_grid),
+        functor(functor)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor1, int *index1) const
+    {
+        int index2 = *index1;
+        ACCESSOR accessor2(other_grid->get_data(), index2);
+
+        functor(accessor1, index1, accessor2, &index2);
+    }
+
+private:
+    GRID_TYPE *other_grid;
+    const FUNCTOR& functor;
+};
+
 }
 
 }
