@@ -56,7 +56,6 @@ LIBFLATARRAY_REGISTER_SOA(
     ((float)(charge))
     ((float)(mass)))
 
-
 namespace LibFlatArray {
 
 ADD_TEST(TestBasicAccessAndConversion)
@@ -96,6 +95,7 @@ ADD_TEST(TestBasicAccessAndConversion)
     BOOST_TEST(foo.mass == -95);
 
     foo = array[10];
+
     BOOST_TEST(foo.posX == 10);
     BOOST_TEST(foo.posY == 20);
     BOOST_TEST(foo.posZ == 30);
