@@ -97,6 +97,15 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
+        operator CELL_TYPE() const                                      \
+        {                                                               \
+            CELL_TYPE ret;                                              \
+            *this >> ret;                                               \
+            return ret;                                                 \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
         void operator+=(const int offset)                               \
         {                                                               \
             index += offset;                                            \
@@ -246,6 +255,15 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
+        operator CELL_TYPE() const                                      \
+        {                                                               \
+            CELL_TYPE ret;                                              \
+            *this >> ret;                                               \
+            return ret;                                                 \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
         void operator+=(const int offset)                               \
         {                                                               \
             index += offset;                                            \
@@ -321,6 +339,15 @@
             data(data),                                                 \
             index(&index)                                               \
         {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        operator CELL_TYPE() const                                      \
+        {                                                               \
+            CELL_TYPE ret;                                              \
+            *this >> ret;                                               \
+            return ret;                                                 \
+        }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
@@ -459,6 +486,15 @@
             data(data),                                                 \
             index(&index)                                               \
         {}                                                              \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        operator CELL_TYPE() const                                      \
+        {                                                               \
+            CELL_TYPE ret;                                              \
+            *this >> ret;                                               \
+            return ret;                                                 \
+        }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \

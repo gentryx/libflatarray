@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Andreas Schäfer
+ * Copyright 2013, 2014 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -59,7 +59,7 @@ LIBFLATARRAY_REGISTER_SOA(
 
 namespace LibFlatArray {
 
-ADD_TEST(TestBasic)
+ADD_TEST(TestBasicAccessAndConversion)
 {
     soa_array<Particle, 20> array;
     for (int i = 0; i < 10; ++i) {
@@ -83,6 +83,27 @@ ADD_TEST(TestBasic)
         BOOST_TEST(array[i].charge() == (i * i));
         BOOST_TEST(array[i].mass() == (-100 + i));
     }
+
+    Particle foo(array[5]);
+
+    BOOST_TEST(foo.posX == 5);
+    BOOST_TEST(foo.posY == 20);
+    BOOST_TEST(foo.posZ == 30);
+    BOOST_TEST(foo.velX == 40);
+    BOOST_TEST(foo.velY == 50);
+    BOOST_TEST(foo.velZ == 65);
+    BOOST_TEST(foo.charge == 25);
+    BOOST_TEST(foo.mass == -95);
+
+    foo = array[10];
+    BOOST_TEST(foo.posX == 10);
+    BOOST_TEST(foo.posY == 20);
+    BOOST_TEST(foo.posZ == 30);
+    BOOST_TEST(foo.velX == 40);
+    BOOST_TEST(foo.velY == 50);
+    BOOST_TEST(foo.velZ == 70);
+    BOOST_TEST(foo.charge == 100);
+    BOOST_TEST(foo.mass == -90);
 }
 
 }
