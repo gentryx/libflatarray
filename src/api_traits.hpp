@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_API_TRAITS_HPP
 #define FLAT_ARRAY_API_TRAITS_HPP
 
+#include <libflatarray/macros.hpp>
 #include <libflatarray/soa_accessor.hpp>
 #include <stdexcept>
 
@@ -49,131 +50,10 @@ public:
     class has_default_2d_sizes
     {
     public:
-        typedef void has_sizes;
-
-        template<typename CELL, typename FUNCTOR>
-        void select_size(
-            char *data,
-            FUNCTOR& functor,
-            const std::size_t dim_x = 1,
-            const std::size_t dim_y = 1,
-            const std::size_t dim_z = 1)
-        {
-            bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);
-        }
-
-        template<typename CELL, typename FUNCTOR>
-        void select_size(
-            const char *data,
-            FUNCTOR& functor,
-            const std::size_t dim_x = 1,
-            const std::size_t dim_y = 1,
-            const std::size_t dim_z = 1)
-        {
-            bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);
-        }
-
-    private:
-        template<typename CELL, typename FUNCTOR>
-        void bind_size_x(
-            const std::size_t dim_x,
-            const std::size_t dim_y,
-            const std::size_t dim_z,
-            char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                   \
-            if (dim_x <= SIZE) {                                     \
-                bind_size_z<CELL, SIZE, SIZE>(                       \
-                    dim_z, data, functor);                           \
-                return;                                              \
-            }
-
-            CASE(  32);
-            CASE( 128);
-            CASE( 192);
-            CASE( 256);
-            CASE( 512);
-            CASE( 544);
-            CASE(1056);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-            // fixme: add/use bind_size_y()
-        }
-
-        template<typename CELL, typename FUNCTOR>
-        void bind_size_x(
-            const std::size_t dim_x,
-            const std::size_t dim_y,
-            const std::size_t dim_z,
-            const char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                   \
-            if (dim_x <= SIZE) {                                     \
-                bind_size_z<CELL, SIZE, SIZE>(                       \
-                    dim_z, data, functor);                           \
-                return;                                              \
-            }
-
-            CASE(  32);
-            CASE( 128);
-            CASE( 192);
-            CASE( 256);
-            CASE( 512);
-            CASE( 544);
-            CASE(1056);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-            // fixme: add/use bind_size_y()
-        }
-
-        template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>
-        void bind_size_z(
-            const std::size_t dim_z,
-            char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                      \
-            if (dim_z <= SIZE) {                                        \
-                soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(    \
-                    data, 0);                                           \
-                functor(accessor,                                       \
-                        &accessor.index);                               \
-                return;                                                 \
-            }
-
-            CASE(1);
-
-            throw std::out_of_range("grid dimension Z too large");
-#undef CASE
-        }
-
-        template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>
-        void bind_size_z(
-            const std::size_t dim_z,
-            const char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                      \
-            if (dim_z <= SIZE) {                                        \
-                const_soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor( \
-                    data, 0);                                           \
-                functor(accessor,                                       \
-                        &accessor.index);                               \
-                return;                                                 \
-            }
-
-            CASE(  32);
-            CASE( 256);
-            CASE(1026);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-        }
-
+        LIBFLATARRAY_CUSTOM_SIZES(
+            (32)(64)(128)(192)(256)(512)(544)(1056),
+            (32)(64)(128)(192)(256)(512)(544)(1056),
+            (1))
     };
 
     /**
@@ -188,133 +68,10 @@ public:
     class has_default_3d_sizes
     {
     public:
-        typedef void has_sizes;
-
-        template<typename CELL, typename FUNCTOR>
-        void select_size(
-            char *data,
-            FUNCTOR& functor,
-            const std::size_t dim_x = 1,
-            const std::size_t dim_y = 1,
-            const std::size_t dim_z = 1)
-        {
-            bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);
-        }
-
-        template<typename CELL, typename FUNCTOR>
-        void select_size(
-            const char *data,
-            FUNCTOR& functor,
-            const std::size_t dim_x = 1,
-            const std::size_t dim_y = 1,
-            const std::size_t dim_z = 1)
-        {
-            bind_size_x<CELL>(dim_x, dim_y, dim_z, data, functor);
-        }
-
-    private:
-        template<typename CELL, typename FUNCTOR>
-        void bind_size_x(
-            const std::size_t dim_x,
-            const std::size_t dim_y,
-            const std::size_t dim_z,
-            char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                   \
-            if (dim_x <= SIZE) {                                     \
-                bind_size_z<CELL, SIZE, SIZE>(                       \
-                    dim_z, data, functor);                           \
-                return;                                              \
-            }
-
-            CASE(  32);
-            CASE( 128);
-            CASE( 192);
-            CASE( 256);
-            CASE( 512);
-            CASE( 544);
-            CASE(1056);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-            // fixme: add/use bind_size_y()
-        }
-
-        template<typename CELL, typename FUNCTOR>
-        void bind_size_x(
-            const std::size_t dim_x,
-            const std::size_t dim_y,
-            const std::size_t dim_z,
-            const char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                   \
-            if (dim_x <= SIZE) {                                     \
-                bind_size_z<CELL, SIZE, SIZE>(                       \
-                    dim_z, data, functor);                           \
-                return;                                              \
-            }
-
-            CASE(  32);
-            CASE( 128);
-            CASE( 192);
-            CASE( 256);
-            CASE( 512);
-            CASE( 544);
-            CASE(1056);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-            // fixme: add/use bind_size_y()
-        }
-
-        template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>
-        void bind_size_z(
-            const std::size_t dim_z,
-            char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                      \
-            if (dim_z <= SIZE) {                                        \
-                soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(    \
-                    data, 0);                                           \
-                functor(accessor,                                       \
-                        &accessor.index);                               \
-                return;                                                 \
-            }
-
-            CASE(  32);
-            CASE( 256);
-            CASE(1026);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-        }
-
-        template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>
-        void bind_size_z(
-            const std::size_t dim_z,
-            const char *data,
-            FUNCTOR& functor)
-        {
-#define CASE(SIZE)                                                      \
-            if (dim_z <= SIZE) {                                        \
-                const_soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor( \
-                    data, 0);                                           \
-                functor(accessor,                                       \
-                        &accessor.index);                               \
-                return;                                                 \
-            }
-
-            CASE(  32);
-            CASE( 256);
-            CASE(1026);
-            throw std::out_of_range("grid dimension Z too large");
-
-#undef CASE
-        }
-
+        LIBFLATARRAY_CUSTOM_SIZES(
+            (32)(64)(128)(192)(256)(512)(544)(1056),
+            (32)(64)(128)(192)(256)(512)(544)(1056),
+            (32)(64)(128)(192)(256)(512)(544)(1056))
     };
 
     /**

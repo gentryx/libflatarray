@@ -136,7 +136,13 @@ ADD_TEST(TestSelectSizesDefault)
     expected.clear();
 
     selector()(data, functor, 40, 32, 32);
-    expected += 128, 128, 32, 0;
+    expected += 64, 32, 32, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 100, 32);
+    expected += 64, 128, 32, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
@@ -169,6 +175,25 @@ ADD_TEST(TestSelectSizesDefault2D)
     expected.clear();
 
     selector()(data, functor, 40, 32, 1);
+    expected += 64, 32, 1, 0;
+    std::cout << actual[0] << ", " << actual[1] << ", " << actual[2] << "\n";
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 65, 32, 1);
+    expected += 128, 32, 1, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 32, 33, 1);
+    expected += 32, 64, 1, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 66, 66, 1);
     expected += 128, 128, 1, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
@@ -202,7 +227,19 @@ ADD_TEST(TestSelectSizesDefault3D)
     expected.clear();
 
     selector()(data, functor, 40, 32, 32);
-    expected += 128, 128, 32, 0;
+    expected += 64, 32, 32, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 250, 32);
+    expected += 64, 256, 32, 0;
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 250, 70);
+    expected += 64, 256, 128, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();

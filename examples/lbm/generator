@@ -3,7 +3,7 @@
 intervals = [
   [32, 64,  128, 192, 256, 512, 544, 1056],
   [32, 64,  128, 192, 256, 512, 544, 1056],
-  [32, 256, 1026]
+  [32, 64,  128, 192, 256, 512, 544, 1056]
 ]
 
 counter = -1
@@ -20,15 +20,16 @@ EOF
     xA = intervals[0][x1]
     xB = xA
 
-    yA = intervals[1][x1]
-    yB = yA
+    intervals[1].size.times do |y1|
+      yA = intervals[1][y1]
+      yB = yA
 
-    intervals[2].size.times do |z1|
-      zA = intervals[2][z1]
-      zB = zA
+      intervals[2].size.times do |z1|
+        zA = intervals[2][z1]
+        zB = zA
 
-      f.puts "IMPLEMENTATION(CellLBM, #{xA}, #{yA}, #{zA}, #{xB}, #{yB}, #{zB})"
+        f.puts "IMPLEMENTATION(CellLBM, #{xA}, #{yA}, #{zA}, #{xB}, #{yB}, #{zB})"
+      end
     end
-
   end
 end
