@@ -338,7 +338,7 @@ ADD_TEST(TestResizeAndByteSize)
     grid.resize(dimX, dimY, dimZ);
     grid.set(dimX - 1, dimY - 1, dimZ - 1, HeatedGameOfLifeCell(4711));
     BOOST_TEST(grid.get(dimX - 1, dimY - 1, dimZ - 1) == HeatedGameOfLifeCell(4711));
-    BOOST_TEST(grid.byte_size() == (32 * 32 * 64 * cellSize));
+    BOOST_TEST(grid.byte_size() == (64 * 64 * 64 * cellSize));
 
 }
 

@@ -684,7 +684,52 @@
         throw std::out_of_range("grid dimension Z too large");          \
     }
 
-#define LIBFLATARRAY_CUSTOM_SIZES_UNIFORM(SIZES)                        \
+#define LIBFLATARRAY_CUSTOM_SIZES_2D_UNIFORM(SIZES)                     \
+    typedef void has_sizes;                                             \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        char *data,                                                     \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        if (dim_z != 1) {                                               \
+            throw std::out_of_range("expected 2D grid, but z != 1");    \
+        }                                                               \
+        std::size_t max = std::max(dim_x, dim_z);                       \
+                                                                        \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_MAX_2D,                                            \
+            unused,                                                     \
+            SIZES);                                                     \
+                                                                        \
+        throw std::out_of_range("max grid dimension too large");        \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        const char *data,                                               \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        if (dim_z != 1) {                                               \
+            throw std::out_of_range("expected 2D grid, but z != 1");    \
+        }                                                               \
+        std::size_t max = std::max(dim_x, dim_z);                       \
+                                                                        \
+        BOOST_PP_SEQ_FOR_EACH(                                          \
+            CASE_DIM_MAX_2D,                                            \
+            unused,                                                     \
+            SIZES);                                                     \
+                                                                        \
+        throw std::out_of_range("max grid dimension too large");        \
+    }
+
+#define LIBFLATARRAY_CUSTOM_SIZES_3D_UNIFORM(SIZES)                     \
     typedef void has_sizes;                                             \
                                                                         \
     template<typename CELL, typename FUNCTOR>                           \
@@ -698,7 +743,7 @@
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX,                                               \
+            CASE_DIM_MAX_3D,                                            \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \
@@ -716,7 +761,7 @@
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX,                                               \
+            CASE_DIM_MAX_3D,                                            \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \

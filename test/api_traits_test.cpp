@@ -71,7 +71,7 @@ public:
     class API
     {
     public:
-        LIBFLATARRAY_CUSTOM_SIZES_UNIFORM(
+        LIBFLATARRAY_CUSTOM_SIZES_3D_UNIFORM(
             (10)(20)(30)(40)(50)(60)(70)(80)(90))
     };
 
@@ -136,13 +136,13 @@ ADD_TEST(TestSelectSizesDefault)
     expected.clear();
 
     selector()(data, functor, 40, 32, 32);
-    expected += 64, 32, 32, 0;
+    expected += 64, 64, 64, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
 
     selector()(data, functor, 40, 100, 32);
-    expected += 64, 128, 32, 0;
+    expected += 128, 128, 128, 0;
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();

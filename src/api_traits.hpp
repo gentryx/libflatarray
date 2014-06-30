@@ -57,6 +57,17 @@ public:
     };
 
     /**
+     * Same as above, but don't compile for all different combinations
+     * of the two spatial dimensions.
+     */
+    class has_default_2d_sizes_uniform
+    {
+    public:
+        LIBFLATARRAY_CUSTOM_SIZES_2D_UNIFORM(
+            (32)(64)(128)(192)(256)(512)(544)(1056))
+    };
+
+    /**
      * Means that the code will be used with rectangular 3D grids.
      * This wastes memory if your z-dimension is always 1 (i.e. a 2D
      * code). Compilation also takes significantly longer. Can improve
@@ -71,6 +82,17 @@ public:
         LIBFLATARRAY_CUSTOM_SIZES(
             (32)(64)(128)(192)(256)(512)(544)(1056),
             (32)(64)(128)(192)(256)(512)(544)(1056),
+            (32)(64)(128)(192)(256)(512)(544)(1056))
+    };
+
+    /**
+     * Same as above, but don't compile for all different combinations
+     * of the three spatial dimensions.
+     */
+    class has_default_3d_sizes_uniform
+    {
+    public:
+        LIBFLATARRAY_CUSTOM_SIZES_3D_UNIFORM(
             (32)(64)(128)(192)(256)(512)(544)(1056))
     };
 
@@ -96,7 +118,7 @@ public:
             const std::size_t dim_y = 1,
             const std::size_t dim_z = 1)
         {
-            has_default_3d_sizes api;
+            has_default_3d_sizes_uniform api;
             api.template select_size<CELL>(
                 data,
                 functor,
@@ -113,7 +135,7 @@ public:
             const std::size_t dim_y = 1,
             const std::size_t dim_z = 1)
         {
-            has_default_3d_sizes api;
+            has_default_3d_sizes_uniform api;
             api.template select_size<CELL>(
                 data,
                 functor,
