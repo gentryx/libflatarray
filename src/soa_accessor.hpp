@@ -23,16 +23,16 @@ namespace LibFlatArray {
  * soa_accessor<> also provides an operator[] which can be used to
  * access neighboring cells.
  */
-template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 class soa_accessor;
 
-template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 class const_soa_accessor;
 
-template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 class soa_accessor_light;
 
-template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
+template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 class const_soa_accessor_light;
 
 }

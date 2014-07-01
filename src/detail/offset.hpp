@@ -16,14 +16,14 @@ namespace detail {
 
 namespace flat_array {
 
-template<typename CELL, int I>
+template<typename CELL, long I>
 class offset;
 
 template<typename CELL>
 class offset<CELL, 0>
 {
 public:
-    static const std::size_t OFFSET = 0;
+    static const long OFFSET = 0;
 
     template<typename MEMBER_TYPE>
     int operator()(MEMBER_TYPE CELL:: *member_ptr)

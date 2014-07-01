@@ -17,7 +17,7 @@ namespace LibFlatArray {
  * Since the coordinates are fixed at compile time, all dependent
  * address calculations can be done at compile time.
  */
-template<int X, int Y, int Z>
+template<long X, long Y, long Z>
 class coord
 {};
 

@@ -19,7 +19,7 @@ public:
     LIBFLATARRAY_ACCESS
 
     inline
-    Cell(double temp) :
+    Cell(const double temp = 0) :
         temp(temp)
     {}
 

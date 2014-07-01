@@ -66,8 +66,8 @@
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data + (DIM_X * DIM_Y * DIM_Z) *                            \
             detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET + \
-            INDEX_VAR * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) +          \
-            INDEX  * sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)));             \
+            INDEX_VAR * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))) +    \
+            INDEX  * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))));       \
     }
 
 #define DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER)            \

@@ -312,23 +312,23 @@ public:
     class UpdateFunctor
     {
     public:
-        UpdateFunctor(int dimX, int dimY, int dimZ) :
+        UpdateFunctor(long dimX, long dimY, long dimZ) :
             dimX(dimX),
             dimY(dimY),
             dimZ(dimZ)
         {}
 
-        template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
-                 int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
+        template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
+                 long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
         void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        int *index1,
+                        long *index1,
                         soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
-                        int *index2) const
+                        long *index2) const
         {
-            for (int z = 1; z < (dimZ - 1); ++z) {
-                for (int y = 1; y < (dimY - 1); ++y) {
-                    int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
-                    int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+            for (long z = 1; z < (dimZ - 1); ++z) {
+                for (long y = 1; y < (dimY - 1); ++y) {
+                    long indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
+                    long indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
 
                     for (accessor1.index = indexStart, accessor2.index = indexStart;
                          accessor1.index < indexEnd;
@@ -348,9 +348,9 @@ public:
         }
 
     private:
-        int dimX;
-        int dimY;
-        int dimZ;
+        long dimX;
+        long dimY;
+        long dimZ;
     };
 
     std::string species()
@@ -360,20 +360,20 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        int dimX = dim[0];
-        int dimY = dim[1];
-        int dimZ = dim[2];
+        long dimX = dim[0];
+        long dimY = dim[1];
+        long dimZ = dim[2];
         int maxT = 200000000 / dimX / dimY / dimZ;
         maxT = std::max(16, maxT);
 
-        int offsetZ = dimX * dimY;
-        int gridVolume = dimX * dimY * dimZ;
+        long offsetZ = dimX * dimY;
+        long gridVolume = dimX * dimY * dimZ;
         soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
         soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
 
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
                     gridOld.set(x, y, z, x + y + z);
                     gridNew.set(x, y, z, x + y + z);
                 }
@@ -402,10 +402,10 @@ public:
 
 private:
     void updateLine(double *gridOld, double *gridNew,
-                    const int xStart, const int y,       const int z,
-                    const int xEnd,   const int offsetY, const int offsetZ) const
+                    const long xStart, const long y,       const long z,
+                    const long xEnd,   const long offsetY, const long offsetZ) const
     {
-        for (int x = xStart; x < xEnd; ++x) {
+        for (long x = xStart; x < xEnd; ++x) {
             gridNew[x + y * offsetY + z * offsetZ] =
                 gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] * WEIGHT_S +
                 gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] * WEIGHT_T +
@@ -424,18 +424,18 @@ public:
     class UpdateFunctor
     {
     public:
-        UpdateFunctor(int dimX, int dimY, int dimZ) :
+        UpdateFunctor(long dimX, long dimY, long dimZ) :
             dimX(dimX),
             dimY(dimY),
             dimZ(dimZ)
         {}
 
-        template<int DIM_X1, int DIM_Y1, int DIM_Z1, int INDEX1,
-                 int DIM_X2, int DIM_Y2, int DIM_Z2, int INDEX2>
+        template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
+                 long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
         void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        int *fixmeUnused1,
+                        long *fixmeUnused1,
                         soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
-                        int *fixmeUnused2) const
+                        long *fixmeUnused2) const
         {
             __m128d factorS = _mm_set1_pd(WEIGHT_S);
             __m128d factorT = _mm_set1_pd(WEIGHT_T);
@@ -445,10 +445,10 @@ public:
             __m128d factorB = _mm_set1_pd(WEIGHT_B);
             __m128d factorN = _mm_set1_pd(WEIGHT_N);
 
-            for (int z = 1; z < (dimZ - 1); ++z) {
-                for (int y = 1; y < (dimY - 1); ++y) {
-                    int indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
-                    int indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+            for (long z = 1; z < (dimZ - 1); ++z) {
+                for (long y = 1; y < (dimY - 1); ++y) {
+                    long indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
+                    long indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
 
                     accessor1.index = indexStart;
                     accessor2.index = indexStart;
@@ -571,9 +571,9 @@ public:
         }
 
     private:
-        int dimX;
-        int dimY;
-        int dimZ;
+        long dimX;
+        long dimY;
+        long dimZ;
     };
 
     std::string species()
@@ -583,20 +583,20 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        int dimX = dim[0];
-        int dimY = dim[1];
-        int dimZ = dim[2];
+        long dimX = dim[0];
+        long dimY = dim[1];
+        long dimZ = dim[2];
         int maxT = 200000000 / dimX / dimY / dimZ;
         maxT = std::max(16, maxT);
 
-        int offsetZ = dimX * dimY;
-        int gridVolume = dimX * dimY * dimZ;
+        long offsetZ = dimX * dimY;
+        long gridVolume = dimX * dimY * dimZ;
         soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
         soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
 
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
                     gridOld.set(x, y, z, x + y + z);
                     gridNew.set(x, y, z, x + y + z);
                 }
@@ -623,10 +623,10 @@ public:
 
 private:
     void updateLine(double *gridOld, double *gridNew,
-                    const int xStart, const int y,       const int z,
-                    const int xEnd,   const int offsetY, const int offsetZ) const
+                    const long xStart, const long y,       const long z,
+                    const long xEnd,   const long offsetY, const long offsetZ) const
     {
-        for (int x = xStart; x < xEnd; ++x) {
+        for (long x = xStart; x < xEnd; ++x) {
             gridNew[x + y * offsetY + z * offsetZ] =
                 gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] * WEIGHT_S +
                 gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] * WEIGHT_T +
@@ -1209,6 +1209,8 @@ public:
         if (dim[0] <= 8192) {
             return performance<8192>(dim);
         }
+
+        throw std::out_of_range("could not run test NBodyBronze as grid dimension X was too large");
     }
 
     template<int DIM>
@@ -1347,6 +1349,8 @@ public:
         if (dim[0] <= 8192) {
             return performance<8192, short_vec<float, 8> >(dim);
         }
+
+        throw std::out_of_range("could not run test NBodySilver as grid dimension X was too large");
     }
 
     template<int DIM, typename REAL>

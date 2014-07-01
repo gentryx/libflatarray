@@ -36,11 +36,11 @@ public:
     template<typename ACCESSOR1, typename ACCESSOR2>
     __device__
     __host__
-    static void updateLine(ACCESSOR1 accessorOld, int *indexOld, ACCESSOR2 accessorNew, int *indexNew, int startZ, int endZ)
+    static void updateLine(ACCESSOR1 accessorOld, long *indexOld, ACCESSOR2 accessorNew, long *indexNew, long startZ, long endZ)
     {
-        int global_x = blockIdx.x * blockDim.x + threadIdx.x + 2;
-        int global_y = blockIdx.y * blockDim.y + threadIdx.y + 2;
-        int global_z = startZ;
+        long global_x = blockIdx.x * blockDim.x + threadIdx.x + 2;
+        long global_y = blockIdx.y * blockDim.y + threadIdx.y + 2;
+        long global_z = startZ;
         *indexOld =
             global_z * ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y +
             global_y * ACCESSOR1::DIM_X +
@@ -49,15 +49,15 @@ public:
             global_z * ACCESSOR2::DIM_X * ACCESSOR2::DIM_Y +
             global_y * ACCESSOR2::DIM_X +
             global_x;
-        const int planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
-        const int planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
+        const long planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
+        const long planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
 
 #pragma unroll 10
         for (; global_z < endZ; ++global_z) {
 #define SQR(X) ((X)*(X))
-            const int x = 0;
-            const int y = 0;
-            const int z = 0;
+            const long x = 0;
+            const long y = 0;
+            const long z = 0;
 
             const double omega = 1.0/1.7;
             const double omega_trm = 1.0 - omega;

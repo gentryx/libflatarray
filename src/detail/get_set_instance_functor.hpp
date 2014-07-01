@@ -26,10 +26,10 @@ class get_instance_functor
 public:
     get_instance_functor(
         CELL *target,
-        int x,
-        int y,
-        int z,
-	int count) :
+        long x,
+        long y,
+        long z,
+	long count) :
         target(target),
         x(x),
         y(y),
@@ -37,8 +37,8 @@ public:
 	count(count)
     {}
 
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
     {
         *index =
             z * DIM_X * DIM_Y +
@@ -46,7 +46,7 @@ public:
             x;
 	CELL *cursor = target;
 
-	for (int i = 0; i < count; ++i) {
+	for (long i = 0; i < count; ++i) {
             accessor >> *cursor;
 	    ++cursor;
 	    ++*index;
@@ -55,10 +55,10 @@ public:
 
 private:
     CELL *target;
-    int x;
-    int y;
-    int z;
-    int count;
+    long x;
+    long y;
+    long z;
+    long count;
 };
 
 /**
@@ -71,10 +71,10 @@ class set_instance_functor
 public:
     set_instance_functor(
         const CELL *source,
-        int x,
-        int y,
-        int z,
-        int count) :
+        long x,
+        long y,
+        long z,
+        long count) :
         source(source),
         x(x),
         y(y),
@@ -82,15 +82,15 @@ public:
         count(count)
     {}
 
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
     {
         *index =
             z * DIM_X * DIM_Y +
             y * DIM_X +
             x;
         const CELL *cursor = source;
-        for (int i = 0; i < count; ++i) {
+        for (long i = 0; i < count; ++i) {
             accessor << *cursor;
             ++cursor;
             ++(*index);
@@ -99,10 +99,10 @@ public:
 
 private:
     const CELL *source;
-    int x;
-    int y;
-    int z;
-    int count;
+    long x;
+    long y;
+    long z;
+    long count;
 };
 
 }

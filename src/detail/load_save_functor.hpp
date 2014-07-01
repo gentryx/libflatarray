@@ -29,7 +29,7 @@ public:
         size_t y,
         size_t z,
         const char *source,
-        int count) :
+        long count) :
         source(source),
         count(count),
         x(x),
@@ -37,8 +37,8 @@ public:
         z(z)
     {}
 
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
     {
         *index = x + y * DIM_X + z * DIM_X * DIM_Y;
         accessor.load(source, count);
@@ -46,10 +46,10 @@ public:
 
 private:
     const char *source;
-    int count;
-    int x;
-    int y;
-    int z;
+    long count;
+    long x;
+    long y;
+    long z;
 };
 
 /**
@@ -64,7 +64,7 @@ public:
         size_t y,
         size_t z,
         char *target,
-        int count) :
+        long count) :
         target(target),
         count(count),
         x(x),
@@ -72,8 +72,8 @@ public:
         z(z)
     {}
 
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
     {
         *index = x + y * DIM_X + z * DIM_X * DIM_Y;
         accessor.save(target, count);
@@ -81,10 +81,10 @@ public:
 
 private:
     char *target;
-    int count;
-    int x;
-    int y;
-    int z;
+    long count;
+    long x;
+    long y;
+    long z;
 };
 
 }

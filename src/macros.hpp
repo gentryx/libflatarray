@@ -26,22 +26,22 @@
  */
 #define LIBFLATARRAY_ACCESS                                             \
     template<typename CELL_TYPE,                                        \
-             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+             long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     friend class LibFlatArray::soa_accessor;                            \
                                                                         \
     template<typename CELL_TYPE,                                        \
-             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+             long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     friend class LibFlatArray::const_soa_accessor;                      \
                                                                         \
     template<typename CELL_TYPE,                                        \
-             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+             long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     friend class LibFlatArray::soa_accessor_light;                      \
                                                                         \
     template<typename CELL_TYPE,                                        \
-             int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+             long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     friend class LibFlatArray::const_soa_accessor_light;                \
                                                                         \
-    template<typename CELL_TYPE, int R>                                 \
+    template<typename CELL_TYPE, long R>                                \
     friend class LibFlatArray::detail::flat_array::offset;
 
 /**
@@ -78,19 +78,19 @@
             detail::flat_array::offset<CELL_TYPE, INDEX>::OFFSET;       \
     };                                                                  \
                                                                         \
-    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     class soa_accessor<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>  \
     {                                                                   \
     public:                                                             \
         typedef CELL_TYPE MyCell;                                       \
                                                                         \
-        static const int DIM_X = MY_DIM_X;                              \
-        static const int DIM_Y = MY_DIM_Y;                              \
-        static const int DIM_Z = MY_DIM_Z;                              \
+        static const long DIM_X = MY_DIM_X;                             \
+        static const long DIM_Y = MY_DIM_Y;                             \
+        static const long DIM_Z = MY_DIM_Z;                             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        explicit soa_accessor(char *data, const int index = 0) :        \
+        explicit soa_accessor(char *data, const long index = 0) :       \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
@@ -106,7 +106,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        void operator+=(const int offset)                               \
+        void operator+=(const long offset)                              \
         {                                                               \
             index += offset;                                            \
         }                                                               \
@@ -118,7 +118,7 @@
             ++index;                                                    \
         }                                                               \
                                                                         \
-        template<int X, int Y, int Z>                                   \
+        template<long X, long Y, long Z>                                \
         inline                                                          \
         __host__ __device__                                             \
         soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
@@ -128,13 +128,13 @@
                 data, index);                                           \
         }                                                               \
                                                                         \
-        template<int X, int Y, int Z>                                   \
+        template<long X, long Y, long Z>                                \
         inline                                                          \
         __host__ __device__                                             \
         const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[]( \
             coord<X, Y, Z>) const                                       \
         {                                                               \
-            return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
+            return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
                 data, index);                                           \
         }                                                               \
                                                                         \
@@ -185,7 +185,7 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
-        template<typename MEMBER_TYPE, int OFFSET>                      \
+        template<typename MEMBER_TYPE, long OFFSET>                     \
         inline                                                          \
         __host__ __device__                                             \
         MEMBER_TYPE& access_member()                                    \
@@ -199,7 +199,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        char *access_member(const int size_of_member, const int offset) \
+        char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
                 data + (DIM_X * DIM_Y * DIM_Z) *                        \
@@ -233,22 +233,22 @@
     private:                                                            \
         char *data;                                                     \
     public:                                                             \
-        int index;                                                      \
+        long index;                                                     \
     };                                                                  \
                                                                         \
-    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     class const_soa_accessor<                                           \
         CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>                 \
     {                                                                   \
     public:                                                             \
         typedef CELL_TYPE MyCell;                                       \
                                                                         \
-        static const int DIM_X = MY_DIM_X;                              \
-        static const int DIM_Y = MY_DIM_Y;                              \
-        static const int DIM_Z = MY_DIM_Z;                              \
+        static const long DIM_X = MY_DIM_X;                             \
+        static const long DIM_Y = MY_DIM_Y;                             \
+        static const long DIM_Z = MY_DIM_Z;                             \
                                                                         \
         __host__ __device__                                             \
-        const_soa_accessor(const char *data, int index) :               \
+        const_soa_accessor(const char *data, long index) :              \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \
@@ -264,7 +264,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        void operator+=(const int offset)                               \
+        void operator+=(const long offset)                              \
         {                                                               \
             index += offset;                                            \
         }                                                               \
@@ -276,7 +276,7 @@
             ++index;                                                    \
         }                                                               \
                                                                         \
-        template<int X, int Y, int Z>                                   \
+        template<long X, long Y, long Z>                                \
         inline                                                          \
         __host__ __device__                                             \
         const_soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
@@ -320,22 +320,22 @@
     private:                                                            \
         const char *data;                                               \
     public:                                                             \
-        int index;                                                      \
+        long index;                                                     \
     };                                                                  \
                                                                         \
-    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     class soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
     {                                                                   \
     public:                                                             \
         typedef CELL_TYPE MyCell;                                       \
                                                                         \
-        static const int DIM_X = MY_DIM_X;                              \
-        static const int DIM_Y = MY_DIM_Y;                              \
-        static const int DIM_Z = MY_DIM_Z;                              \
+        static const long DIM_X = MY_DIM_X;                             \
+        static const long DIM_Y = MY_DIM_Y;                             \
+        static const long DIM_Z = MY_DIM_Z;                             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor_light(char *data, int& index) :                    \
+        soa_accessor_light(char *data, long& index) :                   \
             data(data),                                                 \
             index(&index)                                               \
         {}                                                              \
@@ -351,7 +351,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        void operator+=(const int offset)                               \
+            void operator+=(const long offset)                          \
         {                                                               \
             *index += offset;                                           \
         }                                                               \
@@ -363,7 +363,7 @@
             ++*index;                                                   \
         }                                                               \
                                                                         \
-        template<int X, int Y, int Z>                                   \
+        template<long X, long Y, long Z>                                \
         inline                                                          \
         __host__ __device__                                             \
         soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
@@ -420,7 +420,7 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
-        template<typename MEMBER_TYPE, int OFFSET>                      \
+        template<typename MEMBER_TYPE, long OFFSET>                     \
         inline                                                          \
         __host__ __device__                                             \
         MEMBER_TYPE& access_member()                                    \
@@ -434,7 +434,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        char *access_member(const int size_of_member, const int offset) \
+        char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
                 data + (DIM_X * DIM_Y * DIM_Z) *                        \
@@ -467,22 +467,22 @@
                                                                         \
     private:                                                            \
         char *data;                                                     \
-        int *index;                                                     \
+        long *index;                                                    \
     };                                                                  \
                                                                         \
-    template<int MY_DIM_X, int MY_DIM_Y, int MY_DIM_Z, int INDEX>       \
+    template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
     class const_soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
     {                                                                   \
     public:                                                             \
         typedef CELL_TYPE MyCell;                                       \
                                                                         \
-        static const int DIM_X = MY_DIM_X;                              \
-        static const int DIM_Y = MY_DIM_Y;                              \
-        static const int DIM_Z = MY_DIM_Z;                              \
+        static const long DIM_X = MY_DIM_X;                             \
+        static const long DIM_Y = MY_DIM_Y;                             \
+        static const long DIM_Z = MY_DIM_Z;                             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        const_soa_accessor_light(const char *data, int& index) :        \
+        const_soa_accessor_light(const char *data, long& index) :       \
             data(data),                                                 \
             index(&index)                                               \
         {}                                                              \
@@ -498,7 +498,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        void operator+=(const int offset)                               \
+        void operator+=(const long offset)                              \
         {                                                               \
             *index += offset;                                           \
         }                                                               \
@@ -510,10 +510,10 @@
             ++*index;                                                   \
         }                                                               \
                                                                         \
-        template<int X, int Y, int Z>                                   \
+        template<long X, long Y, long Z>                                \
         inline                                                          \
         __host__ __device__                                             \
-        const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[](  \
+        const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS> operator[]( \
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
@@ -553,12 +553,12 @@
                                                                         \
     private:                                                            \
         const char *data;                                               \
-        int *index;                                                     \
+        long *index;                                                    \
     };                                                                  \
                                                                         \
     }                                                                   \
                                                                         \
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>                \
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>            \
     __host__ __device__                                                 \
     inline                                                              \
     void operator<<(                                                    \
@@ -626,7 +626,7 @@
         throw std::out_of_range("grid dimension X too large");          \
     }                                                                   \
                                                                         \
-    template<typename CELL, int DIM_X, typename FUNCTOR>                \
+    template<typename CELL, long DIM_X, typename FUNCTOR>               \
     void bind_size_y(                                                   \
         const std::size_t dim_y,                                        \
         const std::size_t dim_z,                                        \
@@ -641,7 +641,7 @@
         throw std::out_of_range("grid dimension Y too large");          \
     }                                                                   \
                                                                         \
-    template<typename CELL, int DIM_X, typename FUNCTOR>                \
+    template<typename CELL, long DIM_X, typename FUNCTOR>               \
     void bind_size_y(                                                   \
         const std::size_t dim_y,                                        \
         const std::size_t dim_z,                                        \
@@ -656,7 +656,7 @@
         throw std::out_of_range("grid dimension Y too large");          \
     }                                                                   \
                                                                         \
-    template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>     \
+    template<typename CELL, long DIM_X, long DIM_Y, typename FUNCTOR>   \
     void bind_size_z(                                                   \
         const std::size_t dim_z,                                        \
         char *data,                                                     \
@@ -670,7 +670,7 @@
         throw std::out_of_range("grid dimension Z too large");          \
     }                                                                   \
                                                                         \
-    template<typename CELL, int DIM_X, int DIM_Y, typename FUNCTOR>     \
+    template<typename CELL, long DIM_X, long DIM_Y, typename FUNCTOR>   \
     void bind_size_z(                                                   \
         const std::size_t dim_z,                                        \
         const char *data,                                               \

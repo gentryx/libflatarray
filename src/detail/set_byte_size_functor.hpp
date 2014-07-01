@@ -28,8 +28,8 @@ public:
         byte_size(byte_size)
     {}
 
-    template<int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *index) const
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
     {
         *byte_size = aggregated_member_size<CELL>::VALUE * DIM_X * DIM_Y * DIM_Z;
     }

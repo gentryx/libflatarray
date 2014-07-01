@@ -72,11 +72,11 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index) const
+    void operator()(ACCESSOR& accessor, long *index) const
     {
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
                     *index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
@@ -96,26 +96,26 @@ public:
     }
 
 private:
-    int dimX;
-    int dimY;
-    int dimZ;
+    long dimX;
+    long dimY;
+    long dimZ;
 };
 
 class MemberAccessChecker2
 {
 public:
-    MemberAccessChecker2(int dimX, int dimY, int dimZ) :
+    MemberAccessChecker2(long dimX, long dimY, long dimZ) :
 	dimX(dimX),
 	dimY(dimY),
 	dimZ(dimZ)
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index) const
+    void operator()(ACCESSOR& accessor, long *index) const
     {
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
                     *index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
@@ -135,26 +135,26 @@ public:
     }
 
 private:
-    int dimX;
-    int dimY;
-    int dimZ;
+    long dimX;
+    long dimY;
+    long dimZ;
 };
 
 class InvertTemperature
 {
 public:
-    InvertTemperature(int dimX, int dimY, int dimZ) :
+    InvertTemperature(long dimX, long dimY, long dimZ) :
 	dimX(dimX),
 	dimY(dimY),
 	dimZ(dimZ)
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, int *index) const
+    void operator()(ACCESSOR& accessor, long *index) const
     {
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
                     *index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
@@ -166,21 +166,21 @@ public:
     }
 
 private:
-    int dimX;
-    int dimY;
-    int dimZ;
+    long dimX;
+    long dimY;
+    long dimZ;
 };
 
 class CopyTemperatureNativeStyle
 {
 public:
     CopyTemperatureNativeStyle(
-        int startX,
-        int startY,
-        int startZ,
-        int endX,
-        int endY,
-        int endZ) :
+        long startX,
+        long startY,
+        long startZ,
+        long endX,
+        long endY,
+        long endZ) :
         startX(startX),
         startY(startY),
         startZ(startZ),
@@ -190,12 +190,12 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2) const
+    void operator()(const ACCESSOR1& accessor1, long *index1, ACCESSOR2& accessor2, long *index2) const
     {
-        for (int z = startZ; z < endZ; ++z) {
-            for (int y = startY; y < endY; ++y) {
-                for (int x = startX; x < endX; ++x) {
-                    int index =
+        for (long z = startZ; z < endZ; ++z) {
+            for (long y = startY; y < endY; ++y) {
+                for (long x = startX; x < endX; ++x) {
+                    long index =
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
@@ -208,24 +208,24 @@ public:
     }
 
 private:
-    int startX;
-    int startY;
-    int startZ;
-    int endX;
-    int endY;
-    int endZ;
+    long startX;
+    long startY;
+    long startZ;
+    long endX;
+    long endY;
+    long endZ;
 };
 
 class CopyTemperatureCactusStyle
 {
 public:
     CopyTemperatureCactusStyle(
-        int startX,
-        int startY,
-        int startZ,
-        int endX,
-        int endY,
-        int endZ) :
+        long startX,
+        long startY,
+        long startZ,
+        long endX,
+        long endY,
+        long endZ) :
         startX(startX),
         startY(startY),
         startZ(startZ),
@@ -235,12 +235,12 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, int *index1, ACCESSOR2& accessor2, int *index2) const
+    void operator()(const ACCESSOR1& accessor1, long *index1, ACCESSOR2& accessor2, long *index2) const
     {
-        for (int z = startZ; z < endZ; ++z) {
-            for (int y = startY; y < endY; ++y) {
-                for (int x = startX; x < endX; ++x) {
-                    int index =
+        for (long z = startZ; z < endZ; ++z) {
+            for (long y = startY; y < endY; ++y) {
+                for (long x = startX; x < endX; ++x) {
+                    long index =
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
@@ -251,35 +251,35 @@ public:
     }
 
 private:
-    int startX;
-    int startY;
-    int startZ;
-    int endX;
-    int endY;
-    int endZ;
+    long startX;
+    long startY;
+    long startZ;
+    long endX;
+    long endY;
+    long endZ;
 };
 
 namespace LibFlatArray {
 
 ADD_TEST(TestSingleGetSet)
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 10;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 10;
 
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
                 grid.set(x, y, z, HeatedGameOfLifeCell(temp, false));
 	    }
 	}
     }
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		HeatedGameOfLifeCell cell(temp, false);
 		BOOST_TEST(cell == grid.get(x, y, z));
@@ -290,16 +290,16 @@ ADD_TEST(TestSingleGetSet)
 
 ADD_TEST(TestArrayGetSet)
 {
-    int dimX = 15;
-    int dimY = 3;
-    int dimZ = 10;
+    long dimX = 15;
+    long dimY = 3;
+    long dimZ = 10;
 
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
 	    std::vector<HeatedGameOfLifeCell> cells(dimX);
 
-	    for (int x = 0; x < dimX; ++x) {
+	    for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		cells[x] = HeatedGameOfLifeCell(temp, false);
 	    }
@@ -308,13 +308,13 @@ ADD_TEST(TestArrayGetSet)
 	}
     }
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
 	    std::vector<HeatedGameOfLifeCell> cells(dimX);
 
 	    grid.get(0, y, z, &cells[0], dimX);
 
-            for (int x = 0; x < dimX; ++x) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		HeatedGameOfLifeCell cell(temp, false);
 		BOOST_TEST(cell == cells[x]);
@@ -325,10 +325,10 @@ ADD_TEST(TestArrayGetSet)
 
 ADD_TEST(TestResizeAndByteSize)
 {
-    int dimX = 2;
-    int dimY = 2;
-    int dimZ = 2;
-    int cellSize = 9; // 1 double, 1 bool
+    long dimX = 2;
+    long dimY = 2;
+    long dimZ = 2;
+    long cellSize = 9; // 1 double, 1 bool
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
     BOOST_TEST(grid.byte_size() == (32 * 32 * 32 * cellSize));
 
@@ -344,26 +344,26 @@ ADD_TEST(TestResizeAndByteSize)
 
 ADD_TEST(TestSingleCallback)
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 10;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 10;
 
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
                 grid.set(x, y, z, HeatedGameOfLifeCell(temp, false));
 	    }
 	}
     }
 
-    int index = 0;
+    long index = 0;
     grid.callback(InvertTemperature(dimX, dimY, dimZ), index);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		HeatedGameOfLifeCell cell(-temp, false);
 		BOOST_TEST(cell == grid.get(x, y, z));
@@ -375,16 +375,16 @@ ADD_TEST(TestSingleCallback)
 template<typename COPY_FUNCTOR>
 void testDualCallback()
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 2;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 2;
 
     soa_grid<HeatedGameOfLifeCell> gridOld(dimX, dimY, dimZ);
     soa_grid<HeatedGameOfLifeCell> gridNew(dimX, dimY, dimZ);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
                 gridOld.set(x, y, z, HeatedGameOfLifeCell(temp, false));
             }
@@ -394,9 +394,9 @@ void testDualCallback()
     COPY_FUNCTOR functor(0, 0, 0, dimX, dimY, dimZ);
     gridOld.callback(&gridNew, functor);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
                 HeatedGameOfLifeCell cell = gridOld.get(x, y, z);
 		double temp = z * 100 + y + x * 0.01;
 		BOOST_TEST(cell.temperature == temp);
@@ -434,25 +434,25 @@ ADD_TEST(TestAssignment)
 
 ADD_TEST(TestSwap)
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 2;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 2;
 
     soa_grid<HeatedGameOfLifeCell> gridOld(dimX, dimY, dimZ);
     soa_grid<HeatedGameOfLifeCell> gridNew(dimX, dimY, dimZ);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
                 gridOld.set(x, y, z, HeatedGameOfLifeCell(4711));
                 gridNew.set(x, y, z, HeatedGameOfLifeCell(666));
             }
         }
     }
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		BOOST_TEST(gridOld.get(x, y, z).temperature == 4711);
 		BOOST_TEST(gridNew.get(x, y, z).temperature == 666);
@@ -462,9 +462,9 @@ ADD_TEST(TestSwap)
 
     std::swap(gridOld, gridNew);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
 		double temp = z * 100 + y + x * 0.01;
 		BOOST_TEST(gridOld.get(x, y, z).temperature == 666);
 		BOOST_TEST(gridNew.get(x, y, z).temperature == 4711);
@@ -475,9 +475,9 @@ ADD_TEST(TestSwap)
 
 ADD_TEST(TestCopyArrayIn)
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 2;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 2;
 
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
     std::vector<char> store0(1024);
@@ -506,9 +506,9 @@ ADD_TEST(TestCopyArrayIn)
 
 ADD_TEST(TestCopyArrayOut)
 {
-    int dimX = 5;
-    int dimY = 3;
-    int dimZ = 2;
+    long dimX = 5;
+    long dimY = 3;
+    long dimZ = 2;
 
     std::vector<char> store0(1024);
     double *store1 = reinterpret_cast<double*>(&store0[0]);
@@ -549,15 +549,15 @@ ADD_TEST(TestAggregatedMemberSize)
 
 ADD_TEST(TestAccessMember)
 {
-    int dimX = 15;
-    int dimY = 13;
-    int dimZ = 19;
+    long dimX = 15;
+    long dimY = 13;
+    long dimZ = 19;
 
     soa_grid<HeatedGameOfLifeCell> grid(dimX, dimY, dimZ);
 
-    for (int z = 0; z < dimZ; ++z) {
-        for (int y = 0; y < dimY; ++y) {
-            for (int x = 0; x < dimX; ++x) {
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
                 grid.set(x, y, z, HeatedGameOfLifeCell(x * 1000.0 + y + z * 0.001, (x % 2 == 0)));
             }
         }

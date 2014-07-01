@@ -89,31 +89,31 @@ LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform, ((double)(memberA))((double)(m
 class TestFunctor
 {
 public:
-    TestFunctor(std::vector<int> *report) :
+    TestFunctor(std::vector<long> *report) :
         report(report)
     {}
 
-    template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *unused)
+    template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *unused)
     {
         *report += DIM_X, DIM_Y, DIM_Z, INDEX;
     }
 
-    template<typename CELL, int DIM_X, int DIM_Y, int DIM_Z, int INDEX>
-    void operator()(const_soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, int *unused)
+    template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(const_soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *unused)
     {
             throw std::logic_error("this should not have been called");
     }
 
 private:
-    std::vector<int> *report;
+    std::vector<long> *report;
 };
 
 ADD_TEST(TestSelectSizesDefault)
 {
     char data[1024 * 1024];
-    std::vector<int> actual;
-    std::vector<int> expected;
+    std::vector<long> actual;
+    std::vector<long> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellDefaultSizes> selector;
 
@@ -151,8 +151,8 @@ ADD_TEST(TestSelectSizesDefault)
 ADD_TEST(TestSelectSizesDefault2D)
 {
     char data[1024 * 1024];
-    std::vector<int> actual;
-    std::vector<int> expected;
+    std::vector<long> actual;
+    std::vector<long> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellDefault2DSizes> selector;
 
@@ -203,8 +203,8 @@ ADD_TEST(TestSelectSizesDefault2D)
 ADD_TEST(TestSelectSizesDefault3D)
 {
     char data[1024 * 1024];
-    std::vector<int> actual;
-    std::vector<int> expected;
+    std::vector<long> actual;
+    std::vector<long> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellDefault3DSizes> selector;
 
@@ -248,8 +248,8 @@ ADD_TEST(TestSelectSizesDefault3D)
 ADD_TEST(TestSelectSizesCustom)
 {
     char data[1024 * 1024];
-    std::vector<int> actual;
-    std::vector<int> expected;
+    std::vector<long> actual;
+    std::vector<long> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellCustomSizes> selector;
 
@@ -314,8 +314,8 @@ ADD_TEST(TestSelectSizesCustom)
 ADD_TEST(TestSelectSizesCustomUniform)
 {
     char data[1024 * 1024];
-    std::vector<int> actual;
-    std::vector<int> expected;
+    std::vector<long> actual;
+    std::vector<long> expected;
     TestFunctor functor(&actual);
     typedef api_traits::select_sizes<CellCustomSizesUniform> selector;
 
