@@ -82,6 +82,35 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PACKAGE_NAME})
 
 include(CPack)
 
+set(ConfigPackageLocation lib/cmake/${PACKAGE_NAME})
+
+if(CMAKE_VERSION VERSION_GREATER 2.8.10)
+  include(CMakePackageConfigHelpers)
+
+  write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}ConfigVersion.cmake"
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+
+  install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}ConfigVersion.cmake"
+    DESTINATION "${ConfigPackageLocation}")
+endif()
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
+  "
+get_filename_component(LIBFLATARRAY_CMAKE_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
+include_directories(\"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
+message(info \"LIBFLATARRAY at \${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
+")
+
+set(ConfigPackageLocation lib/cmake/${PACKAGE_NAME})
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
+  DESTINATION "${ConfigPackageLocation}")
+
+
+
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME})
