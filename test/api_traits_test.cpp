@@ -94,13 +94,13 @@ public:
     {}
 
     template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *unused)
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor)
     {
         *report += DIM_X, DIM_Y, DIM_Z, INDEX;
     }
 
     template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(const_soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *unused)
+    void operator()(const_soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor)
     {
             throw std::logic_error("this should not have been called");
     }

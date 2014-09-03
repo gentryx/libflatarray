@@ -101,13 +101,13 @@ public:
     }
 
     template<typename FUNCTOR>
-    void callback(FUNCTOR functor, int index = 0)
+    void callback(FUNCTOR functor)
     {
         api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
     }
 
     template<typename FUNCTOR>
-    void callback(FUNCTOR functor, int index = 0) const
+    void callback(FUNCTOR functor) const
     {
         api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
     }
@@ -128,35 +128,35 @@ public:
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), 0);
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
     }
 
     void set(size_t x, size_t y, size_t z, const CELL_TYPE *cells, size_t count)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count), 0);
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count));
     }
 
     CELL_TYPE get(size_t x, size_t y, size_t z) const
     {
         CELL_TYPE cell;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1), 0);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
 
         return cell;
     }
 
     void get(size_t x, size_t y, size_t z, CELL_TYPE *cells, size_t count) const
     {
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count), 0);
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count));
     }
 
     void load(size_t x, size_t y, size_t z, const char *data, size_t count)
     {
-        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count), 0);
+        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count));
     }
 
     void save(size_t x, size_t y, size_t z, char *data, size_t count) const
     {
-        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count), 0);
+        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count));
     }
 
     size_t byte_size() const
@@ -190,7 +190,7 @@ private:
         ALLOCATOR().deallocate(data, byte_size());
 
         // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size), 0);
+        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
         data = ALLOCATOR().allocate(byte_size());
     }
 

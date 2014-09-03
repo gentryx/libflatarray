@@ -127,8 +127,7 @@
     if (dim_z <= SIZE) {                                                \
         soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(            \
             data, 0);                                                   \
-        functor(accessor,                                               \
-                &accessor.index);                                       \
+        functor(accessor);                                              \
         return;                                                         \
     }
 
@@ -136,8 +135,7 @@
     if (max <= SIZE) {                                                  \
         soa_accessor<CELL, SIZE, SIZE, SIZE, 0>  accessor(              \
             data, 0);                                                   \
-        functor(accessor,                                               \
-                &accessor.index);                                       \
+        functor(accessor);                                              \
         return;                                                         \
     }
 
@@ -145,8 +143,7 @@
     if (max <= SIZE) {                                                  \
         soa_accessor<CELL, SIZE, SIZE, 1, 0>  accessor(                 \
             data, 0);                                                   \
-        functor(accessor,                                               \
-                &accessor.index);                                       \
+        functor(accessor);                                              \
         return;                                                         \
     }
 

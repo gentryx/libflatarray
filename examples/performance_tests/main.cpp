@@ -321,9 +321,7 @@ public:
         template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
                  long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
         void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        long *index1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
-                        long *index2) const
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2) const
         {
             for (long z = 1; z < (dimZ - 1); ++z) {
                 for (long y = 1; y < (dimY - 1); ++y) {
@@ -433,9 +431,7 @@ public:
         template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
                  long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
         void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        long *fixmeUnused1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2,
-                        long *fixmeUnused2) const
+                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2) const
         {
             __m128d factorS = _mm_set1_pd(WEIGHT_S);
             __m128d factorT = _mm_set1_pd(WEIGHT_T);

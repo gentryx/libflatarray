@@ -29,7 +29,7 @@ public:
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
         *byte_size = aggregated_member_size<CELL>::VALUE * DIM_X * DIM_Y * DIM_Z;
     }

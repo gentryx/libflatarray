@@ -18,21 +18,19 @@ template<typename ACCESSOR1, typename FUNCTOR>
 class dual_callback_helper2
 {
 public:
-    dual_callback_helper2(ACCESSOR1& accessor1, long *index1, FUNCTOR& functor) :
+    dual_callback_helper2(ACCESSOR1& accessor1, FUNCTOR& functor) :
         accessor1(accessor1),
-        index1(index1),
         functor(functor)
     {}
 
     template<typename ACCESSOR2>
-    void operator()(ACCESSOR2& accessor2, long *index2)
+    void operator()(ACCESSOR2& accessor2)
     {
-        functor(accessor1, index1, accessor2, index2);
+        functor(accessor1, accessor2);
     }
 
 private:
     ACCESSOR1& accessor1;
-    long *index1;
     FUNCTOR& functor;
 };
 
@@ -46,9 +44,9 @@ public:
     {}
 
     template<typename ACCESSOR1>
-    void operator()(ACCESSOR1& accessor1, long *index1) const
+    void operator()(ACCESSOR1& accessor1) const
     {
-        dual_callback_helper2<ACCESSOR1, FUNCTOR> helper(accessor1, index1, functor);
+        dual_callback_helper2<ACCESSOR1, FUNCTOR> helper(accessor1, functor);
         grid2->callback(helper);
     }
 
@@ -78,12 +76,11 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor1, long *index1) const
+    void operator()(ACCESSOR& accessor1) const
     {
-        long index2 = *index1;
-        ACCESSOR accessor2(other_grid->get_data(), index2);
+        ACCESSOR accessor2(other_grid->get_data());
 
-        functor(accessor1, index1, accessor2, &index2);
+        functor(accessor1, accessor2);
     }
 
 private:
@@ -101,12 +98,11 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor1, long *index1) const
+    void operator()(ACCESSOR& accessor1) const
     {
-        long index2 = *index1;
-        ACCESSOR accessor2(other_grid->get_data(), index2);
+        ACCESSOR accessor2(other_grid->get_data());
 
-        functor(accessor1, index1, accessor2, &index2);
+        functor(accessor1, accessor2);
     }
 
 private:

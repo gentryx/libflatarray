@@ -40,7 +40,7 @@ public:
         elements(elements),
         index(0)
     {
-        for (soa_accessor<CELL, SIZE, 0, 0, 0> accessor(data, 0); accessor.index < elements; accessor += 1/*fixme*/) {
+        for (soa_accessor<CELL, SIZE, 0, 0, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
             accessor << value;
         }
     }

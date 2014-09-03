@@ -38,9 +38,9 @@ public:
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        *index = x + y * DIM_X + z * DIM_X * DIM_Y;
+        accessor.index = x + y * DIM_X + z * DIM_X * DIM_Y;
         accessor.load(source, count);
     }
 
@@ -73,9 +73,9 @@ public:
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor, long *index) const
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        *index = x + y * DIM_X + z * DIM_X * DIM_Y;
+        accessor.index = x + y * DIM_X + z * DIM_X * DIM_Y;
         accessor.save(target, count);
     }
 

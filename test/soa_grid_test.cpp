@@ -72,12 +72,12 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, long *index) const
+    void operator()(ACCESSOR& accessor) const
     {
         for (long z = 0; z < dimZ; ++z) {
             for (long y = 0; y < dimY; ++y) {
                 for (long x = 0; x < dimX; ++x) {
-                    *index =
+                    accessor.index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -111,12 +111,12 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, long *index) const
+    void operator()(ACCESSOR& accessor) const
     {
         for (long z = 0; z < dimZ; ++z) {
             for (long y = 0; y < dimY; ++y) {
                 for (long x = 0; x < dimX; ++x) {
-                    *index =
+                    accessor.index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -150,12 +150,12 @@ public:
     {}
 
     template<typename ACCESSOR>
-    void operator()(ACCESSOR& accessor, long *index) const
+    void operator()(ACCESSOR& accessor) const
     {
         for (long z = 0; z < dimZ; ++z) {
             for (long y = 0; y < dimY; ++y) {
                 for (long x = 0; x < dimX; ++x) {
-                    *index =
+                    accessor.index =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -190,17 +190,20 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, long *index1, ACCESSOR2& accessor2, long *index2) const
+    void operator()(ACCESSOR1& accessor1,
+                    ACCESSOR2& accessor2) const
     {
+        long index = 0;
+
         for (long z = startZ; z < endZ; ++z) {
             for (long y = startY; y < endY; ++y) {
                 for (long x = startX; x < endX; ++x) {
-                    long index =
+                    index =
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
-                    *index1 = index;
-                    *index2 = index;
+                    accessor1.index = index;
+                    accessor2.index = index;
                     accessor2.temperature() = accessor1.temperature();
                 }
             }
@@ -235,7 +238,7 @@ public:
     {}
 
     template<typename ACCESSOR1, typename ACCESSOR2>
-    void operator()(const ACCESSOR1& accessor1, long *index1, ACCESSOR2& accessor2, long *index2) const
+    void operator()(const ACCESSOR1& accessor1, ACCESSOR2& accessor2) const
     {
         for (long z = startZ; z < endZ; ++z) {
             for (long y = startY; y < endY; ++y) {
@@ -359,7 +362,7 @@ ADD_TEST(TestSingleCallback)
     }
 
     long index = 0;
-    grid.callback(InvertTemperature(dimX, dimY, dimZ), index);
+    grid.callback(InvertTemperature(dimX, dimY, dimZ));
 
     for (long z = 0; z < dimZ; ++z) {
         for (long y = 0; y < dimY; ++y) {
