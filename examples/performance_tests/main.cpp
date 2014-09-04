@@ -779,6 +779,8 @@ public:
     }
 };
 
+#ifdef __AVX__
+
 class NBodyPepper : public NBody
 {
 public:
@@ -1084,6 +1086,8 @@ public:
     }
 };
 
+#endif
+
 class NBodyIron : public NBody
 {
 public:
@@ -1173,6 +1177,8 @@ public:
         return gflops(numParticles, repeats, tStart, tEnd);
     }
 };
+
+#ifdef __AVX__
 
 class NBodyBronze : public NBody
 {
@@ -1313,6 +1319,8 @@ public:
         return gflops(numParticles, repeats, tStart, tEnd);
     }
 };
+
+#endif
 
 class NBodySilver : public NBody
 {
@@ -1469,9 +1477,11 @@ int main(int argc, char **argv)
         eval(JacobiD3Q7Vanilla(), *i);
     }
 
+#ifdef __AVX__
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(JacobiD3Q7Pepper(), *i);
     }
+#endif
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(JacobiD3Q7Bronze(), *i);
@@ -1496,6 +1506,7 @@ int main(int argc, char **argv)
         eval(NBodyVanilla(), *i);
     }
 
+#ifdef __AVX__
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodyPepper(),  *i);
     }
@@ -1503,14 +1514,17 @@ int main(int argc, char **argv)
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodyCurry(),  *i);
     }
+#endif
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodyIron(),  *i);
     }
 
+#ifdef __AVX__
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodyBronze(),  *i);
     }
+#endif
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodySilver(),  *i);
