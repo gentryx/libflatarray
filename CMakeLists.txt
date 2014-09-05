@@ -100,8 +100,7 @@ endif()
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   "
 get_filename_component(LIBFLATARRAY_CMAKE_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
-include_directories(\"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
-message(info \"LIBFLATARRAY at \${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
+set(libflatarray_INCLUDE_DIR \"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
 ")
 
 set(ConfigPackageLocation lib/cmake/${PACKAGE_NAME})
