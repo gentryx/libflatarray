@@ -26,11 +26,16 @@ public:
     std::string device()
     {
         std::ifstream file("/proc/cpuinfo");
-        std::size_t bufferSize = 2048;
-        std::string buffer(bufferSize, ' ');
+        const std::size_t bufferSize = 1 << 12;
+        char buffer[bufferSize];
+
         while (file.getline(&buffer[0], bufferSize)) {
             std::vector<std::string> tokens = tokenize(buffer, ":");
             std::vector<std::string> fields = tokenize(tokens[0], " \t");
+
+            if ((fields.size() == 1) && (fields[0] == "cpu")) {
+                return tokens[1];
+            }
 
             if ((fields[0] == "model") && (fields[1] == "name")) {
                 tokens = tokenize(tokens[1], " \t");
