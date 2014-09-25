@@ -21,7 +21,7 @@ public:
 
     void print_header()
     {
-        std::cout << "#rev              ; date                 ; host            ; device                                          ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
+        std::cout << "#rev              ; date                 ; host                            ; device                                          ; order   ; family                          ; species ; dimensions              ; perf        ; unit" << std::endl;
     }
 
     template<class BENCHMARK>
@@ -54,7 +54,7 @@ public:
             std::cout << std::setiosflags(std::ios::left);
             std::cout << std::setw(18) << revision << "; "
                       << now_string << " ; "
-                      << std::setw(16) << hostname << "; "
+                      << std::setw(32) << hostname << "; "
                       << std::setw(48) << device << "; "
                       << std::setw( 8) << benchmark.order() <<  "; "
                       << std::setw(32) << benchmark.family() <<  "; "
