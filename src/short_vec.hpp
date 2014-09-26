@@ -12,5 +12,6 @@
 #include <libflatarray/detail/short_vec_sse_double_8.hpp>
 #include <libflatarray/detail/short_vec_sse_float_8.hpp>
 #include <libflatarray/detail/short_vec_sse_float_16.hpp>
+#include <libflatarray/detail/short_vec_qpx_double_4.hpp>
 
 #endif
