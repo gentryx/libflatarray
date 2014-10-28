@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 
 # 1. GENERIC PACKAGE INFORMATION
 set(PACKAGE_NAME libflatarray)
-set(PACKAGE_VERSION "0.1.1")
+set(PACKAGE_VERSION "0.2.0")
 set(PACKAGE_VENDOR "Chair for Computer Science 3, FAU Erlangen, Germany")
 set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
