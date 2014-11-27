@@ -8,6 +8,7 @@
 #include <cmath>
 #include <boost/detail/lightweight_test.hpp>
 #include <iostream>
+#include <sstream>
 #include <libflatarray/short_vec.hpp>
 #include <stdexcept>
 #include <vector>
@@ -153,10 +154,28 @@ void testImplementation()
     for (int i = 0; i < numElements; ++i) {
         TEST_REAL((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i]);
     }
+
+    // test string conversion
+    for (int i = 0; i < ShortVec::ARITY; ++i) {
+        vec1[i] = i + 0.1;
+    }
+    ShortVec v(&vec1[0]);
+    std::ostringstream buf1;
+    buf1 << v;
+
+    std::ostringstream buf2;
+    buf2 << "[";
+    for (int i = 0; i < (ShortVec::ARITY - 1); ++i) {
+        buf2 << (i + 0.1);
+    }
+    buf2 << (ShortVec::ARITY - 1 + 0.1) << "]";
+
+    BOOST_TEST(buf1.str() == buf2.str());
 }
 
 ADD_TEST(TestBasic)
 {
+    testImplementation<double, 1>();
     testImplementation<double, 8>();
 }
 
