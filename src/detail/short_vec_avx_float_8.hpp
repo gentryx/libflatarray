@@ -35,9 +35,8 @@ class short_vec<float, 8>
 public:
     static const int ARITY = 8;
 
-    // fixme: test default c-tors for all implementations of short_vec
     inline
-    short_vec(const float& data = 0) :
+    short_vec(const float data = 0) :
         val1(_mm256_broadcast_ss(&data))
     {}
 

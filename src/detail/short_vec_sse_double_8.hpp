@@ -37,7 +37,7 @@ public:
         const short_vec<double, 8>& vec);
 
     inline
-    short_vec(const double& data) :
+    short_vec(const double data = 0) :
         val1(_mm_set1_pd(data)),
         val2(_mm_set1_pd(data)),
         val3(_mm_set1_pd(data)),
@@ -182,10 +182,10 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 8>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
-    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
-    const float *data3 = reinterpret_cast<const float *>(&vec.val3);
-    const float *data4 = reinterpret_cast<const float *>(&vec.val4);
+    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
+    const double *data2 = reinterpret_cast<const double *>(&vec.val2);
+    const double *data3 = reinterpret_cast<const double *>(&vec.val3);
+    const double *data4 = reinterpret_cast<const double *>(&vec.val4);
     __os << "[" << data1[0] << ", " << data1[1]  << ", " << data2[0]  << ", " << data2[1]  << ", " << data3[0]  << ", " << data3[1]  << ", " << data4[0]  << ", " << data4[1] << "]";
     return __os;
 }

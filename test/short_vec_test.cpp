@@ -24,11 +24,23 @@ void testImplementation()
     int numElements = ShortVec::ARITY * 10;
 
     std::vector<CARGO> vec1(numElements);
-    std::vector<CARGO> vec2(numElements);
+    std::vector<CARGO> vec2(numElements, 4711);
 
     // init vec1:
     for (int i = 0; i < numElements; ++i) {
         vec1[i] = i + 0.1;
+    }
+
+    // test default c-tor:
+    for (int i = 0; i < numElements; ++i) {
+        BOOST_TEST(4711 == vec2[i]);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v;
+        &vec2[i] << v;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        BOOST_TEST(0 == vec2[i]);
     }
 
     // tests vector load/store:
@@ -166,10 +178,11 @@ void testImplementation()
     std::ostringstream buf2;
     buf2 << "[";
     for (int i = 0; i < (ShortVec::ARITY - 1); ++i) {
-        buf2 << (i + 0.1);
+        buf2 << (i + 0.1) << ", ";
     }
     buf2 << (ShortVec::ARITY - 1 + 0.1) << "]";
 
+    std::cout << "a: " << buf1.str() << " b: " << buf2.str() << "\n";
     BOOST_TEST(buf1.str() == buf2.str());
 }
 

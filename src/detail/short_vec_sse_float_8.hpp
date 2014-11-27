@@ -37,7 +37,7 @@ public:
     static const int ARITY = 8;
 
     inline
-    short_vec(const float& data) :
+    short_vec(const float data = 0) :
         val1(_mm_set1_ps(data)),
         val2(_mm_set1_ps(data))
     {}

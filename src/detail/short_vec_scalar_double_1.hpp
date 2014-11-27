@@ -33,7 +33,7 @@ public:
         const short_vec<double, 1> vec);
 
     inline
-    short_vec(const double data) :
+    short_vec(const double data = 0) :
         val1(data)
     {}
 

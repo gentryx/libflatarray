@@ -35,7 +35,7 @@ public:
     static const int ARITY = 4;
 
     inline
-    short_vec(const double& data = 0) :
+    short_vec(const double data = 0) :
         val1(vec_splats(data))
     {}
 
@@ -172,6 +172,16 @@ short_vec<double, 4> short_vec<double, 4>::operator/(const sqrt_reference<double
 sqrt_reference<double, 4> sqrt(const short_vec<double, 4>& vec)
 {
     return sqrt_reference<double, 4>(vec);
+}
+
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<double, 4>& vec)
+{
+    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
+    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3] << "]";
+    return __os;
 }
 
 }
