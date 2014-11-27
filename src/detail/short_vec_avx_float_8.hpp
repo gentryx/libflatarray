@@ -171,6 +171,16 @@ sqrt_reference<float, 8> sqrt(const short_vec<float, 8>& vec)
     return sqrt_reference<float, 8>(vec);
 }
 
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<float, 8>& vec)
+{
+    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3]  << ", " << data1[4]  << ", " << data1[5]  << ", " << data1[6]  << ", " << data1[7] << "]";
+    return __os;
+}
+
 }
 
 #endif

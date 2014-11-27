@@ -31,6 +31,11 @@ class short_vec<double, 8>
 public:
     static const int ARITY = 8;
 
+    template<typename _CharT, typename _Traits>
+    friend std::basic_ostream<_CharT, _Traits>& operator<<(
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<double, 8>& vec);
+
     inline
     short_vec(const double& data) :
         val1(_mm_set1_pd(data)),
@@ -170,6 +175,19 @@ void operator<<(double *data, const short_vec<double, 8>& vec)
 short_vec<double, 8> sqrt(const short_vec<double, 8>& vec)
 {
     return vec.sqrt();
+}
+
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<double, 8>& vec)
+{
+    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
+    const float *data3 = reinterpret_cast<const float *>(&vec.val3);
+    const float *data4 = reinterpret_cast<const float *>(&vec.val4);
+    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data2[0]  << ", " << data2[1]  << ", " << data3[0]  << ", " << data3[1]  << ", " << data4[0]  << ", " << data4[1] << "]";
+    return __os;
 }
 
 }
