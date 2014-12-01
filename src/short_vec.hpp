@@ -18,10 +18,16 @@
 
 #include <libflatarray/detail/short_vec_scalar_double_1.hpp>
 #include <libflatarray/detail/short_vec_scalar_double_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_16.hpp>
 #include <libflatarray/detail/short_vec_scalar_double_32.hpp>
 
 #include <libflatarray/detail/short_vec_scalar_float_1.hpp>
 #include <libflatarray/detail/short_vec_scalar_float_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_16.hpp>
 #include <libflatarray/detail/short_vec_scalar_float_32.hpp>
 
 #include <libflatarray/detail/short_vec_sse_double_2.hpp>
