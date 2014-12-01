@@ -36,6 +36,11 @@ class short_vec<float, 8>
 public:
     static const int ARITY = 8;
 
+    template<typename _CharT, typename _Traits>
+    friend std::basic_ostream<_CharT, _Traits>& operator<<(
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<float, 8>& vec);
+
     inline
     short_vec(const float data = 0) :
         val1(_mm_set1_ps(data)),
@@ -61,7 +66,7 @@ public:
     void operator-=(const short_vec<float, 8>& other)
     {
         val1 = _mm_sub_ps(val1, other.val1);
-        val2 = _mm_sub_ps(val1, other.val2);
+        val2 = _mm_sub_ps(val2, other.val2);
     }
 
     inline
@@ -106,7 +111,7 @@ public:
     void operator/=(const short_vec<float, 8>& other)
     {
         val1 = _mm_div_ps(val1, other.val1);
-        val1 = _mm_div_ps(val2, other.val2);
+        val2 = _mm_div_ps(val2, other.val2);
     }
 
     inline
@@ -192,6 +197,17 @@ short_vec<float, 8> short_vec<float, 8>::operator/(const sqrt_reference<float, 8
 sqrt_reference<float, 8> sqrt(const short_vec<float, 8>& vec)
 {
     return sqrt_reference<float, 8>(vec);
+}
+
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<float, 8>& vec)
+{
+    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
+    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3]  << ", " << data2[0]  << ", " << data2[1]  << ", " << data2[2]  << ", " << data2[3] << "]";
+    return __os;
 }
 
 }

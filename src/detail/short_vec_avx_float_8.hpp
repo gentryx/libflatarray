@@ -35,6 +35,11 @@ class short_vec<float, 8>
 public:
     static const int ARITY = 8;
 
+    template<typename _CharT, typename _Traits>
+    friend std::basic_ostream<_CharT, _Traits>& operator<<(
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<float, 8>& vec);
+
     inline
     short_vec(const float data = 0) :
         val1(_mm256_broadcast_ss(&data))

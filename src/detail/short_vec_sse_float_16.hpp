@@ -35,6 +35,11 @@ class short_vec<float, 16>
 public:
     static const int ARITY = 16;
 
+    template<typename _CharT, typename _Traits>
+    friend std::basic_ostream<_CharT, _Traits>& operator<<(
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<float, 16>& vec);
+
     inline
     short_vec(const float data = 0) :
         val1(_mm_set1_ps(data)),
@@ -66,9 +71,9 @@ public:
     void operator-=(const short_vec<float, 16>& other)
     {
         val1 = _mm_sub_ps(val1, other.val1);
-        val2 = _mm_sub_ps(val1, other.val2);
-        val3 = _mm_sub_ps(val1, other.val3);
-        val4 = _mm_sub_ps(val1, other.val4);
+        val2 = _mm_sub_ps(val2, other.val2);
+        val3 = _mm_sub_ps(val3, other.val3);
+        val4 = _mm_sub_ps(val4, other.val4);
     }
 
     inline
@@ -123,9 +128,9 @@ public:
     void operator/=(const short_vec<float, 16>& other)
     {
         val1 = _mm_div_ps(val1, other.val1);
-        val1 = _mm_div_ps(val2, other.val2);
-        val1 = _mm_div_ps(val3, other.val3);
-        val1 = _mm_div_ps(val4, other.val4);
+        val2 = _mm_div_ps(val2, other.val2);
+        val3 = _mm_div_ps(val3, other.val3);
+        val4 = _mm_div_ps(val4, other.val4);
     }
 
     inline
@@ -225,6 +230,23 @@ short_vec<float, 16> short_vec<float, 16>::operator/(const sqrt_reference<float,
 sqrt_reference<float, 16> sqrt(const short_vec<float, 16>& vec)
 {
     return sqrt_reference<float, 16>(vec);
+}
+
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<float, 16>& vec)
+{
+    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
+    const float *data3 = reinterpret_cast<const float *>(&vec.val3);
+    const float *data4 = reinterpret_cast<const float *>(&vec.val4);
+    __os << "["
+         << data1[0] << ", " << data1[1]  << ", " << data1[2] << ", " << data1[3] << ", "
+         << data2[0] << ", " << data2[1]  << ", " << data2[2] << ", " << data2[3] << ", "
+         << data3[0] << ", " << data3[1]  << ", " << data3[2] << ", " << data3[3] << ", "
+         << data4[0] << ", " << data4[1]  << ", " << data4[2] << ", " << data4[3] << "]";
+    return __os;
 }
 
 }
