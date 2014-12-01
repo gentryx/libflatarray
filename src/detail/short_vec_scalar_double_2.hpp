@@ -114,8 +114,8 @@ public:
     short_vec<double, 2> sqrt() const
     {
         return short_vec<double, 2>(
-            sqrt(val1),
-            sqrt(val2));
+            std::sqrt(val1),
+            std::sqrt(val2));
     }
 
     inline
