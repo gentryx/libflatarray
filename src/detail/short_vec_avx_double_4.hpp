@@ -5,14 +5,14 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SSE_DOUBLE_4_HPP
-#define FLAT_ARRAY_DETAIL_SHORT_VEC_SSE_DOUBLE_4_HPP
+#ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_DOUBLE_4_HPP
+#define FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_DOUBLE_4_HPP
 
-#ifdef __SSE__
+#ifdef __AVX__
 
-#include <emmintrin.h>
+#include <immintrin.h>
+#include <libflatarray/detail/sqrt_reference.hpp>
 
-#ifndef __AVX__
 #ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
@@ -39,111 +39,97 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(_mm_set1_pd(data)),
-        val2(_mm_set1_pd(data))
+        val1(_mm256_broadcast_sd(&data))
     {}
 
     inline
     short_vec(const double *data) :
-        val1(_mm_loadu_pd(data + 0)),
-        val2(_mm_loadu_pd(data + 2))
+        val1(_mm256_loadu_pd(data + 0))
     {}
 
     inline
-    short_vec(const __m128d& val1, const __m128d& val2) :
-        val1(val1),
-        val2(val2)
+    short_vec(const __m256d& val1) :
+        val1(val1)
     {}
 
     inline
     void operator-=(const short_vec<double, 4>& other)
     {
-        val1 = _mm_sub_pd(val1, other.val1);
-        val2 = _mm_sub_pd(val2, other.val2);
+        val1 = _mm256_sub_pd(val1, other.val1);
     }
 
     inline
     short_vec<double, 4> operator-(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm_sub_pd(val1, other.val1),
-            _mm_sub_pd(val2, other.val2));
+            _mm256_sub_pd(val1, other.val1));
     }
 
     inline
     void operator+=(const short_vec<double, 4>& other)
     {
-        val1 = _mm_add_pd(val1, other.val1);
-        val2 = _mm_add_pd(val2, other.val2);
+        val1 = _mm256_add_pd(val1, other.val1);
     }
 
     inline
     short_vec<double, 4> operator+(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm_add_pd(val1, other.val1),
-            _mm_add_pd(val2, other.val2));
+            _mm256_add_pd(val1, other.val1));
     }
 
     inline
     void operator*=(const short_vec<double, 4>& other)
     {
-        val1 = _mm_mul_pd(val1, other.val1);
-        val2 = _mm_mul_pd(val2, other.val2);
+        val1 = _mm256_mul_pd(val1, other.val1);
     }
 
     inline
     short_vec<double, 4> operator*(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm_mul_pd(val1, other.val1),
-            _mm_mul_pd(val2, other.val2));
+            _mm256_mul_pd(val1, other.val1));
     }
 
     inline
     void operator/=(const short_vec<double, 4>& other)
     {
-        val1 = _mm_div_pd(val1, other.val1);
-        val2 = _mm_div_pd(val2, other.val2);
+        val1 = _mm256_div_pd(val1, other.val1);
     }
 
     inline
     short_vec<double, 4> operator/(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm_div_pd(val1, other.val1),
-            _mm_div_pd(val2, other.val2));
+            _mm256_div_pd(val1, other.val1));
     }
 
     inline
     short_vec<double, 4> sqrt() const
     {
         return short_vec<double, 4>(
-            _mm_sqrt_pd(val1),
-            _mm_sqrt_pd(val2));
+            _mm256_sqrt_pd(val1));
     }
 
     inline
     void store(double *data) const
     {
-        _mm_storeu_pd(data + 0, val1);
-        _mm_storeu_pd(data + 2, val2);
+        _mm256_storeu_pd(data +  0, val1);
     }
 
 private:
-    __m128d val1;
-    __m128d val2;
+    __m256d val1;
 };
-
-#ifdef __ICC
-#pragma warning pop
-#endif
 
 inline
 void operator<<(double *data, const short_vec<double, 4>& vec)
 {
     vec.store(data);
 }
+
+#ifdef __ICC
+#pragma warning pop
+#endif
 
 short_vec<double, 4> sqrt(const short_vec<double, 4>& vec)
 {
@@ -156,14 +142,14 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 4>& vec)
 {
     const double *data1 = reinterpret_cast<const double *>(&vec.val1);
-    const double *data2 = reinterpret_cast<const double *>(&vec.val2);
-    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data2[0]  << ", " << data2[1]  << "]";
+
+    __os << "["  << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
+         << "]";
     return __os;
 }
 
 }
 
-#endif
 #endif
 #endif
 
