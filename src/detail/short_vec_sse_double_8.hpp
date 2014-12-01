@@ -12,6 +12,7 @@
 
 #include <emmintrin.h>
 
+#ifndef __AVX__
 #ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
@@ -192,6 +193,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 
