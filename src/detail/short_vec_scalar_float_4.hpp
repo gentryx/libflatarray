@@ -37,7 +37,7 @@ public:
         val1(data),
         val2(data),
         val3(data),
-        val4(data))
+        val4(data)
     {}
 
     inline
@@ -45,7 +45,7 @@ public:
         val1( *(data +  0)),
         val2( *(data +  1)),
         val3( *(data +  2)),
-        val4( *(data +  3))
+        val4( *(data +  3)
     {}
 
     inline
@@ -57,7 +57,7 @@ public:
         val1( val1),
         val2( val2),
         val3( val3),
-        val4( val4))
+        val4( val4)
     {}
 
     inline
