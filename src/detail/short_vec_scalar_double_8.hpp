@@ -42,7 +42,7 @@ public:
         val5(data),
         val6(data),
         val7(data),
-        val8(data))
+        val8(data)
     {}
 
     inline
@@ -74,7 +74,7 @@ public:
         val5( val5),
         val6( val6),
         val7( val7),
-        val8( val8))
+        val8( val8)
     {}
 
     inline
