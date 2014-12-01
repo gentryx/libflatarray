@@ -9,7 +9,7 @@
 #include <vector>
 #include <libflatarray/cuda_allocator.hpp>
 
-#include "test.h"
+#include "test.hpp"
 
 using namespace LibFlatArray;
 

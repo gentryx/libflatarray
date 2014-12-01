@@ -13,7 +13,7 @@
 #include <libflatarray/soa_grid.hpp>
 #include <libflatarray/macros.hpp>
 
-#include "test.h"
+#include "test.hpp"
 
 using namespace boost::assign;
 using namespace LibFlatArray;

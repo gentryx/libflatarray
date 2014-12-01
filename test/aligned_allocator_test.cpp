@@ -8,7 +8,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <libflatarray/aligned_allocator.hpp>
 
-#include "test.h"
+#include "test.hpp"
 
 using namespace LibFlatArray;
 

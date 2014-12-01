@@ -11,7 +11,7 @@
 #include <libflatarray/flat_array.hpp>
 #include <vector>
 
-#include "test.h"
+#include "test.hpp"
 
 class HeatedGameOfLifeCell
 {

@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "test.h"
+#include "test.hpp"
 
 namespace LibFlatArray {
 
@@ -101,7 +101,8 @@ void testImplementation()
         &vec2[i] << (v * w);
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL((i + 0.1) * (2 * i + 0.3), vec2[i]);
+        double reference = ((i + 0.1) * (2 * i + 0.3));
+        TEST_REAL(reference, vec2[i]);
     }
 
     // test *=
@@ -128,7 +129,8 @@ void testImplementation()
         &vec2[i] << (v / w);
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL((i + 0.1) / (i + 0.2), vec2[i]);
+        // accept lower accuracy for estimated division:
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0002);
     }
 
     // test /=
@@ -142,7 +144,8 @@ void testImplementation()
         &vec2[i] << v;
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL((i + 0.1) / (i + 0.2), vec2[i]);
+        // here, too, lower accuracy is acceptable.
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0002);
     }
 
     // test sqrt()
@@ -164,7 +167,9 @@ void testImplementation()
         &vec2[i] << w / sqrt(v);
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i]);
+        // the expression "foo / sqrt(bar)" will again result in an
+        // estimated result for single precision floats, so lower accuracy is acceptable:
+        TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0003);
     }
 
     // test string conversion
@@ -182,14 +187,22 @@ void testImplementation()
     }
     buf2 << (ShortVec::ARITY - 1 + 0.1) << "]";
 
-    std::cout << "a: " << buf1.str() << " b: " << buf2.str() << "\n";
     BOOST_TEST(buf1.str() == buf2.str());
 }
 
 ADD_TEST(TestBasic)
 {
     testImplementation<double, 1>();
+    // testImplementation<double, 2>();
+    // testImplementation<double, 4>();
     testImplementation<double, 8>();
+    // testImplementation<double, 16>();
+
+    // testImplementation<float, 1>();
+    // testImplementation<float, 2>();
+    // testImplementation<float, 4>();
+    testImplementation<float, 8>();
+    testImplementation<float, 16>();
 }
 
 }
