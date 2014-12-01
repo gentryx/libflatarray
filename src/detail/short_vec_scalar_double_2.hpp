@@ -122,7 +122,7 @@ public:
     void store(double *data) const
     {
         *(data +  0) = val1;
-        *(data +  4) = val2;
+        *(data +  1) = val2;
     }
 
 private:
