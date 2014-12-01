@@ -42,9 +42,9 @@ public:
 
     inline
     short_vec(const float *data) :
-        val1( *(data +  0)),
-        val2( *(data +  1)),
-        val3( *(data +  2)),
+        val1( *(data +  0),
+        val2( *(data +  1),
+        val3( *(data +  2),
         val4( *(data +  3)
     {}
 
