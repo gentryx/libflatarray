@@ -5,8 +5,8 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_HPP
-#define FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_HPP
+#ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_FLOAT_8_HPP
+#define FLAT_ARRAY_DETAIL_SHORT_VEC_AVX_FLOAT_8_HPP
 
 #ifdef __AVX__
 

@@ -27,6 +27,11 @@ Class short_vec<double, 2>
 public:
     static const int ARITY = 2;
 
+    template<typename _CharT, typename _Traits>
+    friend std::basic_ostream<_CharT, _Traits>& operator<<(
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<double, 2>& vec);
+
     inline
     short_vec(const double data = 0) :
         val1(data),
@@ -40,7 +45,7 @@ public:
     {}
 
     inline
-    short_vec(const double& val1, const double& val2) :
+    short_vec(const double val1, const double val2) :
         val1(val1),
         val2(val2)
     {}
@@ -138,6 +143,16 @@ void operator<<(double *data, const short_vec<double, 2>& vec)
 short_vec<double, 2> sqrt(const short_vec<double, 2>& vec)
 {
     return vec.sqrt();
+}
+
+template<typename _CharT, typename _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+           const short_vec<double, 2>& vec)
+{
+    __os << "["  << vec.val1 << ", " << vec.val2
+         << "]";
+    return __os;
 }
 
 }
