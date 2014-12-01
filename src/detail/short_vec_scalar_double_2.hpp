@@ -99,7 +99,7 @@ public:
     void operator/=(const short_vec<double, 2>& other)
     {
         val1 /= other.val1;
-        val1 /= other.val2;
+        val2 /= other.val2;
     }
 
     inline
