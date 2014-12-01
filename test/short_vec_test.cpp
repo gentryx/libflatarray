@@ -207,8 +207,110 @@ ADD_TEST(TestBasic)
     testImplementation<float, 32>();
 }
 
+template<typename STRATEGY>
+void checkForStrategy(STRATEGY, STRATEGY)
+{}
+
+ADD_TEST(TestImplementationStrategyDouble)
+{
+#define EXPECTED_TYPE short_vec_strategy::scalar
+    checkForStrategy(short_vec<double, 1>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#define EXPECTED_TYPE short_vec_strategy::sse
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<double, 2>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::sse
+#endif
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<double, 4>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::sse
+#endif
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<double, 8>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<double, 16>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#define EXPECTED_TYPE short_vec_strategy::scalar
+    checkForStrategy(short_vec<double, 32>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
 }
 
+ADD_TEST(TestImplementationStrategyFloat)
+{
+#define EXPECTED_TYPE short_vec_strategy::scalar
+    checkForStrategy(short_vec<float, 1>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(short_vec<float, 2>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#define EXPECTED_TYPE short_vec_strategy::sse
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::sse
+#endif
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<float, 8>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE__
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::sse
+#endif
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<float, 16>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __AVX__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<float, 32>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+}
+
+}
 
 int main(int argc, char **argv)
 {

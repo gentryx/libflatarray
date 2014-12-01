@@ -32,6 +32,8 @@ class short_vec<double, 8>
 public:
     static const int ARITY = 8;
 
+    typedef short_vec_strategy::sse strategy;
+
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
         std::basic_ostream<_CharT, _Traits>& __os,

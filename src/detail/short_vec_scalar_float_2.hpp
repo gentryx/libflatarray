@@ -25,6 +25,8 @@ class short_vec<float, 2>
 public:
     static const int ARITY = 2;
 
+    typedef short_vec_strategy::scalar strategy;
+
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
         std::basic_ostream<_CharT, _Traits>& __os,
