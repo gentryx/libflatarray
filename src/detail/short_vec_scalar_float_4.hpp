@@ -9,7 +9,6 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_FLOAT_8_HPP
 
 #ifndef __SSE__
-#ifndef __AVX__
 
 namespace LibFlatArray {
 
@@ -190,7 +189,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
-#endif
 #endif
 
 #endif
