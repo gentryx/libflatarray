@@ -22,7 +22,7 @@ class short_vec;
 #endif
 
 template<>
-Class short_vec<double, 2>
+class short_vec<double, 2>
 {
 public:
     static const int ARITY = 2;
