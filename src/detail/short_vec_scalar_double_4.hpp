@@ -38,7 +38,7 @@ public:
         val1(data),
         val2(data),
         val3(data),
-        val4(data))
+        val4(data)
     {}
 
     inline
