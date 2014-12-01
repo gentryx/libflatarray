@@ -31,19 +31,32 @@ public:
     void TEST_NAME::operator()()                \
 
 
-// really lazy (read: bad, inexact) test for equality. we can't use
-// stict equality (operator==()), as vector units may yield
-// non-IEEE-compliannt results.
-#define TEST_REAL(A, B)                                 \
-    {                                                   \
-        double a = (A);                                 \
-        double b = (B);                                 \
-        double delta = a - b;                           \
-        delta = delta < 0? -delta : delta;              \
-        if (delta > 0.0001) {                           \
-            throw std::logic_error(                     \
-                "difference exceeds tolerance");        \
-        }                                               \
+#define TEST_REAL_ACCURACY(A, B, RELATIVE_ERROR_LIMIT)                  \
+    {                                                                   \
+        double a = (A);                                                 \
+        double b = (B);                                                 \
+        double delta = std::abs(a - b);                                 \
+        double relativeError = delta / std::abs(A);                     \
+        if (relativeError > RELATIVE_ERROR_LIMIT) {                     \
+            std::stringstream buf;                                      \
+            buf << "in file "                                           \
+                << __FILE__ << ":"                                      \
+                << __LINE__ << ": "                                     \
+                << "difference exceeds tolerance.\n"                    \
+                << "   A: " << a << "\n"                                \
+                << "   B: " << b << "\n"                                \
+                << "   delta: " << delta << "\n"                        \
+                << "   relativeError: " << relativeError << "\n";       \
+            throw std::logic_error(buf.str());                          \
+        }                                                               \
     }
+
+// lazy (read: bad, inexact) test for equality. we can't use stict
+// equality (operator==()), as vector units may yield
+// non-IEEE-compliannt results. Single-precision accuracy (i.e. ~20
+// bits for the mantissa or 6 digits) shall be suffice for functional
+// testing.
+#define TEST_REAL(A, B)                                                 \
+    TEST_REAL_ACCURACY(A, B, 0.000001)
 
 #endif
