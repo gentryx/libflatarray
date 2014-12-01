@@ -58,7 +58,7 @@ public:
         val1( val1),
         val2( val2),
         val3( val3),
-        val4( val4))
+        val4( val4)
     {}
 
     inline
