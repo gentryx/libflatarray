@@ -41,7 +41,7 @@ public:
     inline
     short_vec(const double *data) :
         val1(*(data +  0)),
-        val2(*(data +  4))
+        val2(*(data +  1))
     {}
 
     inline
