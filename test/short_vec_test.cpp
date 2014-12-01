@@ -193,16 +193,18 @@ void testImplementation()
 ADD_TEST(TestBasic)
 {
     testImplementation<double, 1>();
-    // testImplementation<double, 2>();
-    // testImplementation<double, 4>();
+    testImplementation<double, 2>();
+    testImplementation<double, 4>();
     testImplementation<double, 8>();
     // testImplementation<double, 16>();
+    // testImplementation<double, 32>();
 
-    // testImplementation<float, 1>();
-    // testImplementation<float, 2>();
-    // testImplementation<float, 4>();
+    testImplementation<float, 1>();
+    testImplementation<float, 2>();
+    testImplementation<float, 4>();
     testImplementation<float, 8>();
     testImplementation<float, 16>();
+    testImplementation<float, 32>();
 }
 
 }
