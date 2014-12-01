@@ -196,7 +196,7 @@ ADD_TEST(TestBasic)
     testImplementation<double, 2>();
     testImplementation<double, 4>();
     testImplementation<double, 8>();
-    // testImplementation<double, 16>();
+    testImplementation<double, 16>();
     // testImplementation<double, 32>();
 
     testImplementation<float, 1>();
