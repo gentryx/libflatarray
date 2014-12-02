@@ -9,6 +9,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <iostream>
 #include <sstream>
+#include <libflatarray/macros.hpp>
 #include <libflatarray/short_vec.hpp>
 #include <stdexcept>
 #include <vector>
@@ -308,6 +309,35 @@ ADD_TEST(TestImplementationStrategyFloat)
 #endif
     checkForStrategy(short_vec<float, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
+}
+
+template<typename SHORT_VEC>
+void scaler(int *i, int endX, double *data, double factor)
+{
+    for (; *i < endX - (SHORT_VEC::ARITY - 1); *i +=SHORT_VEC::ARITY) {
+        SHORT_VEC vec(data + *i);
+        vec *= factor;
+        (data + *i) << vec;
+    }
+}
+
+ADD_TEST(TestLoopPeeler)
+{
+    std::vector<double> foo;
+    for (int i = 0; i < 123; ++i) {
+        foo.push_back(1000 + i);
+    }
+
+    LIBFLATARRAY_LOOP_PEELER(double, 8, int, 3, 113, scaler, &foo[0], 2.5);
+
+    for (int i = 0; i < 123; ++i) {
+        double expected = 1000 + i;
+        if ((i >= 3) && (i < 113)) {
+            expected *= 2.5;
+        }
+
+        BOOST_TEST(expected == foo[i]);
+    }
 }
 
 }

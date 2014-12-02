@@ -768,4 +768,23 @@
         throw std::out_of_range("max grid dimension too large");        \
     }
 
+/**
+ * CARGO: element type
+ */
+#define LIBFLATARRAY_LOOP_PEELER(CARGO, ARITY, COUNTER_TYPE,            \
+                                 START_X, END_X, FUNCTION, ARGS...)     \
+    {                                                                   \
+        typedef LibFlatArray::short_vec<CARGO, (ARITY)> ShortVecType;   \
+        typedef LibFlatArray::short_vec<CARGO, 1>     ScalarType;       \
+        COUNTER_TYPE remainder = (START_X) % (ARITY);                   \
+        COUNTER_TYPE next_stop = remainder ?                            \
+            (START_X) + (ARITY) - remainder :                           \
+            (START_X);                                                  \
+        COUNTER_TYPE x = (START_X);                                     \
+                                                                        \
+        FUNCTION<ScalarType  >(&x, next_stop, ARGS);                    \
+        FUNCTION<ShortVecType>(&x, (END_X),   ARGS);                    \
+        FUNCTION<ScalarType  >(&x, (END_X),   ARGS);                    \
+    }
+
 #endif
