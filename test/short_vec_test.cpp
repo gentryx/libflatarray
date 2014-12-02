@@ -328,7 +328,8 @@ ADD_TEST(TestLoopPeeler)
         foo.push_back(1000 + i);
     }
 
-    LIBFLATARRAY_LOOP_PEELER(double, 8, int, 3, 113, scaler, &foo[0], 2.5);
+    int x = 3;
+    LIBFLATARRAY_LOOP_PEELER(double, 8, int, &x, 113, scaler, &foo[0], 2.5);
 
     for (int i = 0; i < 123; ++i) {
         double expected = 1000 + i;
