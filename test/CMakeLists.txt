@@ -3,7 +3,7 @@ if(WITH_CUDA)
 endif()
 add_executable(aligned_allocator_test aligned_allocator_test.cpp)
 add_executable(api_traits_test api_traits_test.cpp)
-add_executable(short_vec_test short_vec_test.cpp)
+add_executable(short_vec_test short_vec_test.cpp short_vec_additional_test.cpp)
 add_executable(soa_array_test soa_array_test.cpp)
 add_executable(soa_grid_test soa_grid_test.cpp)
 
