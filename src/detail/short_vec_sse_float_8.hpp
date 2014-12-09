@@ -196,6 +196,7 @@ short_vec<float, 8> short_vec<float, 8>::operator/(const sqrt_reference<float, 8
         _mm_mul_ps(val2, _mm_rsqrt_ps(other.vec.val2)));
 }
 
+inline
 sqrt_reference<float, 8> sqrt(const short_vec<float, 8>& vec)
 {
     return sqrt_reference<float, 8>(vec);

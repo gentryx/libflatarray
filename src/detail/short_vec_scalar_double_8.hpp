@@ -235,6 +235,7 @@ void operator<<(double *data, const short_vec<double, 8>& vec)
 #pragma warning pop
 #endif
 
+inline
 short_vec<double, 8> sqrt(const short_vec<double, 8>& vec)
 {
     return vec.sqrt();
