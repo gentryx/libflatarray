@@ -594,6 +594,7 @@ void operator<<(float *data, const short_vec<float, 32>& vec)
 #pragma warning pop
 #endif
 
+inline
 short_vec<float, 32> sqrt(const short_vec<float, 32>& vec)
 {
     return vec.sqrt();

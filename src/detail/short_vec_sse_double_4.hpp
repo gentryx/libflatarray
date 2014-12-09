@@ -147,6 +147,7 @@ void operator<<(double *data, const short_vec<double, 4>& vec)
     vec.store(data);
 }
 
+inline
 short_vec<double, 4> sqrt(const short_vec<double, 4>& vec)
 {
     return vec.sqrt();
