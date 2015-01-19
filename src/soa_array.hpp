@@ -99,8 +99,8 @@ public:
         return elements;
     }
 
-private:
     char data[BYTE_SIZE];
+private:
     int elements;
     int index;
 };

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014, 2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -44,8 +44,13 @@
     class offset<CELL_TYPE, r - 1>                                      \
     {                                                                   \
     public:                                                             \
-        static const std::size_t OFFSET = offset<CELL_TYPE, r - 2>::OFFSET +  \
-            sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER));                       \
+        static const std::size_t OFFSET =                               \
+            offset<CELL_TYPE, r - 2>::OFFSET +                          \
+            sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) *                      \
+            LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
+                MEMBER,                                                 \
+                1,                                                      \
+                LIBFLATARRAY_ARRAY_ARITY(MEMBER));                      \
                                                                         \
         template<typename MEMBER_TYPE>                                  \
         inline                                                          \
@@ -91,7 +96,8 @@
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data +                                                      \
             (DIM_X * DIM_Y * DIM_Z) * (                                 \
-                sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) * BOOST_PP_IF(BOOST_PP_LESS(BOOST_PP_SEQ_SIZE(MEMBER), 3), 0, BOOST_PP_SEQ_ELEM(BOOST_PP_SUB(BOOST_PP_SEQ_SIZE(MEMBER), 1), MEMBER)) + \
+                (sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) *                 \
+                 LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, 0, ARRAY_INDEX))  + \
                 detail::flat_array::offset<CELL, MEMBER_INDEX - 2>:: OFFSET) + \
             INDEX_VAR * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))) +    \
             INDEX     * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))));    \
@@ -145,7 +151,7 @@ public:
                         void operator()(const CELL& cell, MEMBER *data)
                         {
                             CopyHelperIn<INDEX - 1>()(cell, data);
-                            data[SIZE * INDEX - 1] = (cell.*MEMBER_POINTER)[INDEX - 1];
+                            data[SIZE * (INDEX - 1)] = (cell.*MEMBER_POINTER)[INDEX - 1];
                         }
                     };
 
@@ -166,7 +172,7 @@ public:
                         void operator()(CELL& cell, const MEMBER *data)
                         {
                             CopyHelperOut<INDEX - 1>()(cell, data);
-                            (cell.*MEMBER_POINTER)[INDEX - 1] = data[SIZE * INDEX - 1];
+                            (cell.*MEMBER_POINTER)[INDEX - 1] = data[SIZE * (INDEX - 1)];
                         }
                     };
 

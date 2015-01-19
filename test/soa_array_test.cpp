@@ -1,5 +1,5 @@
 /**
- * Copyright 2013, 2014 Andreas Schäfer
+ * Copyright 2013, 2014, 2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -59,6 +59,28 @@ LIBFLATARRAY_REGISTER_SOA(
 class ArrayParticle
 {
 public:
+    ArrayParticle(
+        float mass = 0,
+        float charge = 0,
+        float pos0 = 0,
+        float pos1 = 0,
+        float pos2 = 0,
+        float vel0 = 0,
+        float vel1 = 0,
+        float vel2 = 0,
+        int state = 0) :
+        mass(mass),
+        charge(charge),
+        state(state)
+    {
+        pos[0] = pos0;
+        pos[1] = pos1;
+        pos[2] = pos2;
+        vel[0] = vel0;
+        vel[1] = vel1;
+        vel[2] = vel2;
+    }
+
     float mass;
     float charge;
     float pos[3];
@@ -127,6 +149,44 @@ ADD_TEST(TestBasicAccessAndConversion)
 ADD_TEST(TestArrayMember)
 {
     soa_array<ArrayParticle, 50> array;
+    const int num = 50;
+
+    for (int i = 0; i < num; ++i) {
+        array << ArrayParticle(
+            0.1 + i,
+            0.2 + i,
+            1.0 + i,
+            1.1 + i,
+            1.2 + i,
+            2.0 + i,
+            2.1 + i,
+            2.2 + i,
+            3 * i);
+    }
+
+    for (int i = 0; i < num; ++i) {
+        ArrayParticle p = array[i];
+
+        float expectedMass   = 0.1 + i;
+        float expectedCharge = 0.2 + i;
+        float expectedPos0   = 1.0 + i;
+        float expectedPos1   = 1.1 + i;
+        float expectedPos2   = 1.2 + i;
+        float expectedVel0   = 2.0 + i;
+        float expectedVel1   = 2.1 + i;
+        float expectedVel2   = 2.2 + i;
+        int expectedState = 3 * i;
+
+        BOOST_TEST(p.mass   == expectedMass);
+        BOOST_TEST(p.charge == expectedCharge);
+        BOOST_TEST(p.pos[0] == expectedPos0);
+        BOOST_TEST(p.pos[1] == expectedPos1);
+        BOOST_TEST(p.pos[2] == expectedPos2);
+        BOOST_TEST(p.vel[0] == expectedVel0);
+        BOOST_TEST(p.vel[1] == expectedVel1);
+        BOOST_TEST(p.vel[2] == expectedVel2);
+        BOOST_TEST(p.state  == expectedState);
+    }
 }
 
 }
