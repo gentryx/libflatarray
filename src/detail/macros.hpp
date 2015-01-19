@@ -12,6 +12,8 @@
 #include <boost/preprocessor/comparison/less.hpp>
 #include <boost/preprocessor/if.hpp>
 #include <boost/preprocessor/seq.hpp>
+#include <libflatarray/detail/soa_array_member_copy_helper.hpp>
+
 
 // this fixes compilation for non-cuda builds
 #ifndef __host__
@@ -116,82 +118,15 @@
 #define LIBFLATARRAY_COPY_SOA_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)     \
     BOOST_PP_SEQ_ELEM(1, MEMBER)() = cell.BOOST_PP_SEQ_ELEM(1, MEMBER);
 
-template<int SIZE>
-class CellCopyHelperFixme
-{
-public:
-    template<typename CELL>
-    class Inner1
-    {
-    public:
-        template<typename MEMBER>
-        class Inner2
-        {
-        public:
-            template<int ARITY>
-            class Inner3
-            {
-            public:
-                template<MEMBER (CELL:: *MEMBER_POINTER)[ARITY]>
-                class Inner4
-                {
-                public:
-                    template<int INDEX, typename DUMMY = int>
-                    class CopyHelperIn
-                    {
-                    public:
-                        inline
-                        void operator()(const CELL& cell, MEMBER *data)
-                        {
-                            CopyHelperIn<INDEX - 1>()(cell, data);
-                            data[SIZE * (INDEX - 1)] = (cell.*MEMBER_POINTER)[INDEX - 1];
-                        }
-                    };
-
-                    template<typename DUMMY>
-                    class CopyHelperIn<0, DUMMY>
-                    {
-                    public:
-                        inline
-                        void operator()(const CELL& cell, MEMBER *data)
-                        {}
-                    };
-
-                    template<int INDEX, typename DUMMY = int>
-                    class CopyHelperOut
-                    {
-                    public:
-                        inline
-                        void operator()(CELL& cell, const MEMBER *data)
-                        {
-                            CopyHelperOut<INDEX - 1>()(cell, data);
-                            (cell.*MEMBER_POINTER)[INDEX - 1] = data[SIZE * (INDEX - 1)];
-                        }
-                    };
-
-                    template<typename DUMMY>
-                    class CopyHelperOut<0, DUMMY>
-                    {
-                    public:
-                        inline
-                        void operator()(CELL& cell, const MEMBER *data)
-                        {}
-                    };
-};
-            };
-        };
-    };
-};
-
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        typedef CellCopyHelperFixme<DIM_X * DIM_Y * DIM_Z> Foo1;        \
-        typedef typename Foo1::template Inner1<CELL> Foo2;              \
-        typedef typename Foo2::template Inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)> Foo3; \
-        typedef typename Foo3::template Inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> Foo4; \
-        typedef typename Foo4::template Inner4<&CELL::BOOST_PP_SEQ_ELEM(1, MEMBER)> Foo5; \
-        typedef typename Foo5::template CopyHelperIn<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> Foo6; \
-        Foo6()(                                                         \
+        typedef LibFlatArray::detail::soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z> helper1; \
+        typedef typename helper1::template inner1<CELL> helper2;              \
+        typedef typename helper2::template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)> helper3; \
+        typedef typename helper3::template inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> helper4; \
+        typedef typename helper4::template inner4<&CELL::BOOST_PP_SEQ_ELEM(1, MEMBER)> helper5; \
+        typedef typename helper5::template copy_in<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> helper6; \
+        helper6()(                                                      \
             cell,                                                       \
             &BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());                        \
     }
@@ -207,13 +142,13 @@ public:
 
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        typedef CellCopyHelperFixme<DIM_X * DIM_Y * DIM_Z> Foo1;        \
-        typedef typename Foo1::template Inner1<CELL> Foo2;              \
-        typedef typename Foo2::template Inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)> Foo3; \
-        typedef typename Foo3::template Inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> Foo4; \
-        typedef typename Foo4::template Inner4<&CELL::BOOST_PP_SEQ_ELEM(1, MEMBER)> Foo5; \
-        typedef typename Foo5::template CopyHelperOut<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> Foo6; \
-        Foo6()(                                                         \
+        typedef LibFlatArray::detail::soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z> helper1; \
+        typedef typename helper1::template inner1<CELL> helper2;        \
+        typedef typename helper2::template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)> helper3; \
+        typedef typename helper3::template inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> helper4; \
+        typedef typename helper4::template inner4<&CELL::BOOST_PP_SEQ_ELEM(1, MEMBER)> helper5; \
+        typedef typename helper5::template copy_out<LIBFLATARRAY_ARRAY_ARITY(MEMBER)> helper6; \
+        helper6()(                                                      \
             cell,                                                       \
             &BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());                        \
     }
