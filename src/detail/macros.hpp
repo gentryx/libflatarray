@@ -245,24 +245,21 @@ public:
             detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET *\
             count));
 
-// fixme: libflatarray prefix missing
-#define CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)                         \
+#define LIBFLATARRAY_CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)            \
     if (dim_x <= SIZE) {                                             \
         bind_size_y<CELL, SIZE>(                                     \
             dim_y, dim_z, data, functor);                            \
         return;                                                      \
     }
 
-// fixme: libflatarray prefix missing
-#define CASE_DIM_Y(SIZE_INDEX, UNUSED, SIZE)                         \
+#define LIBFLATARRAY_CASE_DIM_Y(SIZE_INDEX, UNUSED, SIZE)            \
     if (dim_y <= SIZE) {                                             \
         bind_size_z<CELL, DIM_X, SIZE>(                              \
             dim_z, data, functor);                                   \
         return;                                                      \
     }
 
-// fixme: libflatarray prefix missing
-#define CASE_DIM_Z(SIZE_INDEX, UNUSED, SIZE)                            \
+#define LIBFLATARRAY_CASE_DIM_Z(SIZE_INDEX, UNUSED, SIZE)               \
     if (dim_z <= SIZE) {                                                \
         soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(            \
             data, 0);                                                   \
@@ -270,8 +267,7 @@ public:
         return;                                                         \
     }
 
-// fixme: libflatarray prefix missing
-#define CASE_DIM_MAX_3D(SIZE_INDEX, UNUSED, SIZE)                       \
+#define LIBFLATARRAY_CASE_DIM_MAX_3D(SIZE_INDEX, UNUSED, SIZE)          \
     if (max <= SIZE) {                                                  \
         soa_accessor<CELL, SIZE, SIZE, SIZE, 0>  accessor(              \
             data, 0);                                                   \
@@ -279,8 +275,7 @@ public:
         return;                                                         \
     }
 
-// fixme: libflatarray prefix missing
-#define CASE_DIM_MAX_2D(SIZE_INDEX, UNUSED, SIZE)                       \
+#define LIBFLATARRAY_CASE_DIM_MAX_2D(SIZE_INDEX, UNUSED, SIZE)          \
     if (max <= SIZE) {                                                  \
         soa_accessor<CELL, SIZE, SIZE, 1, 0>  accessor(                 \
             data, 0);                                                   \

@@ -603,7 +603,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_X,                                                 \
+            LIBFLATARRAY_CASE_DIM_X,                                    \
             unused,                                                     \
             X_SIZES);                                                   \
                                                                         \
@@ -619,7 +619,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_X,                                                 \
+            LIBFLATARRAY_CASE_DIM_X,                                    \
             unused,                                                     \
             X_SIZES);                                                   \
                                                                         \
@@ -634,7 +634,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_Y,                                                 \
+            LIBFLATARRAY_CASE_DIM_Y,                                    \
             unused,                                                     \
             Y_SIZES);                                                   \
                                                                         \
@@ -649,7 +649,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_Y,                                                 \
+            LIBFLATARRAY_CASE_DIM_Y,                                    \
             unused,                                                     \
             Y_SIZES);                                                   \
                                                                         \
@@ -663,7 +663,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_Z,                                                 \
+            LIBFLATARRAY_CASE_DIM_Z,                                                 \
             unused,                                                     \
             Z_SIZES);                                                   \
                                                                         \
@@ -677,7 +677,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_Z,                                                 \
+            LIBFLATARRAY_CASE_DIM_Z,                                                 \
             unused,                                                     \
             Z_SIZES);                                                   \
                                                                         \
@@ -701,7 +701,7 @@
         std::size_t max = std::max(dim_x, dim_z);                       \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX_2D,                                            \
+            LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \
@@ -722,7 +722,7 @@
         std::size_t max = std::max(dim_x, dim_z);                       \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX_2D,                                            \
+            LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \
@@ -743,7 +743,7 @@
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX_3D,                                            \
+            LIBFLATARRAY_CASE_DIM_MAX_3D,                               \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \
@@ -761,7 +761,7 @@
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            CASE_DIM_MAX_3D,                                            \
+            LIBFLATARRAY_CASE_DIM_MAX_3D,                               \
             unused,                                                     \
             SIZES);                                                     \
                                                                         \
