@@ -56,6 +56,24 @@ LIBFLATARRAY_REGISTER_SOA(
     ((float)(charge))
     ((float)(mass)))
 
+class ArrayParticle
+{
+public:
+    float mass;
+    float charge;
+    float pos[3];
+    float vel[3];
+    int state;
+};
+
+LIBFLATARRAY_REGISTER_SOA(
+    ArrayParticle,
+    ((float)(mass))
+    ((float)(charge))
+    ((float)(pos)(3))
+    ((float)(vel)(3))
+    ((int)(state)))
+
 namespace LibFlatArray {
 
 ADD_TEST(TestBasicAccessAndConversion)
@@ -104,6 +122,11 @@ ADD_TEST(TestBasicAccessAndConversion)
     BOOST_TEST(foo.velZ == 70);
     BOOST_TEST(foo.charge == 100);
     BOOST_TEST(foo.mass == -90);
+}
+
+ADD_TEST(TestArrayMember)
+{
+    soa_array<ArrayParticle, 50> array;
 }
 
 }

@@ -143,7 +143,7 @@
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_IN,                                     \
+                COPY_SOA_GENERIC_MEMBER_IN,                             \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -160,7 +160,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_OUT,                                    \
+                COPY_SOA_GENERIC_MEMBER_OUT,                            \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -291,7 +291,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_OUT,                                    \
+                COPY_SOA_GENERIC_MEMBER_OUT,                            \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -378,7 +378,7 @@
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_IN,                                     \
+                COPY_SOA_GENERIC_MEMBER_IN,                             \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -395,7 +395,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_OUT,                                    \
+                COPY_SOA_GENERIC_MEMBER_OUT,                            \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -525,7 +525,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_OUT,                                    \
+                COPY_SOA_GENERIC_MEMBER_OUT,                            \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
