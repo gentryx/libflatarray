@@ -55,7 +55,7 @@
     namespace LibFlatArray {                                            \
                                                                         \
     BOOST_PP_SEQ_FOR_EACH(                                              \
-        DEFINE_FIELD_OFFSET,                                            \
+        LIBFLATARRAY_DEFINE_FIELD_OFFSET,                               \
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
                                                                         \
@@ -143,7 +143,7 @@
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_IN,                             \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_IN,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -160,7 +160,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_OUT,                            \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -170,7 +170,7 @@
         void load(const char *source, size_t count)                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_IN,                               \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN,                  \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -180,7 +180,7 @@
         void save(char *target, size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -209,12 +209,12 @@
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_NORMAL,                                  \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_NORMAL,                     \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_CONST,                                   \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
@@ -291,7 +291,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_OUT,                            \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -301,13 +301,13 @@
         void save(char *target, size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_CONST,                                   \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
@@ -378,7 +378,7 @@
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_IN,                             \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_IN,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -395,7 +395,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_OUT,                            \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -405,7 +405,7 @@
         void load(const char *source, size_t count)                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_IN,                               \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN,                  \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -415,7 +415,7 @@
         void save(char *target, size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -444,12 +444,12 @@
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_LIGHT_NORMAL,                            \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_NORMAL,               \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_LIGHT_CONST,                             \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_CONST,                \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
@@ -525,7 +525,7 @@
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_GENERIC_MEMBER_OUT,                            \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -535,13 +535,13 @@
         void save(char *target, size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                COPY_SOA_MEMBER_ARRAY_OUT,                              \
+                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            DECLARE_SOA_MEMBER_LIGHT_CONST,                             \
+            LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_CONST,                \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \

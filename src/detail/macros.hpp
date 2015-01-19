@@ -13,7 +13,7 @@
 #include <boost/preprocessor/if.hpp>
 #include <boost/preprocessor/seq.hpp>
 
-// fix compilation for non-cuda builds
+// this fixes compilation for non-cuda builds
 #ifndef __host__
 #define __host__
 #endif
@@ -36,8 +36,7 @@
 #define LIBFLATARRAY_ARRAY_ARITY(MEMBER)                                \
     BOOST_PP_SEQ_ELEM(BOOST_PP_SUB(BOOST_PP_SEQ_SIZE(MEMBER), 1), MEMBER)
 
-// fixme: libflatarray prefix missing
-#define DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)                       \
+#define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
     namespace detail {                                                  \
     namespace flat_array {                                              \
     template<>                                                          \
@@ -85,8 +84,7 @@
     }                                                                   \
     }
 
-// fixme: libflatarray prefix missing
-#define DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST, INDEX_VAR) \
+#define LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST, INDEX_VAR) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, , template<int ARRAY_INDEX >) \
     inline                                                              \
     __host__ __device__                                                 \
@@ -103,24 +101,19 @@
             INDEX     * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))));    \
     }
 
-// fixme: libflatarray prefix missing
-#define DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER)            \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, index)
+#define LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, index)
 
-// fixme: libflatarray prefix missing
-#define DECLARE_SOA_MEMBER_NORMAL(MEMBER_INDEX, CELL, MEMBER)           \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , index)
+#define LIBFLATARRAY_DECLARE_SOA_MEMBER_NORMAL(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , index)
 
-// fixme: libflatarray prefix missing
-#define DECLARE_SOA_MEMBER_LIGHT_CONST(MEMBER_INDEX, CELL, MEMBER)      \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, *index)
+#define LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_CONST(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, *index)
 
-// fixme: libflatarray prefix missing
-#define DECLARE_SOA_MEMBER_LIGHT_NORMAL(MEMBER_INDEX, CELL, MEMBER)     \
-    DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , *index)
+#define LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_NORMAL(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER,      , *index)
 
-// fixme: libflatarray prefix missing
-#define COPY_SOA_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)                  \
+#define LIBFLATARRAY_COPY_SOA_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)     \
     BOOST_PP_SEQ_ELEM(1, MEMBER)() = cell.BOOST_PP_SEQ_ELEM(1, MEMBER);
 
 template<int SIZE>
@@ -190,7 +183,7 @@ public:
     };
 };
 
-#define COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)            \
+#define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
         typedef CellCopyHelperFixme<DIM_X * DIM_Y * DIM_Z> Foo1;        \
         typedef typename Foo1::template Inner1<CELL> Foo2;              \
@@ -203,17 +196,16 @@ public:
             &BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());                        \
     }
 
-#define COPY_SOA_GENERIC_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER)          \
+#define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
         MEMBER,                                                         \
-        COPY_SOA_MEMBER_IN(      MEMBER_INDEX, CELL, MEMBER),           \
-        COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER))
+        LIBFLATARRAY_COPY_SOA_MEMBER_IN(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER))
 
-// fixme: libflatarray prefix missing
-#define COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)                 \
+#define LIBFLATARRAY_COPY_SOA_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)    \
     cell.BOOST_PP_SEQ_ELEM(1, MEMBER) = this->BOOST_PP_SEQ_ELEM(1, MEMBER)();
 
-#define COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)           \
+#define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
         typedef CellCopyHelperFixme<DIM_X * DIM_Y * DIM_Z> Foo1;        \
         typedef typename Foo1::template Inner1<CELL> Foo2;              \
@@ -226,14 +218,13 @@ public:
             &BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());                        \
     }
 
-#define COPY_SOA_GENERIC_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER)         \
+#define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
         MEMBER,                                                         \
-        COPY_SOA_MEMBER_OUT(      MEMBER_INDEX, CELL, MEMBER),          \
-        COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER))
+        LIBFLATARRAY_COPY_SOA_MEMBER_OUT(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER))
 
-// fixme: libflatarray prefix missing
-#define COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER)            \
+#define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
     std::copy(                                                          \
         (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                          \
             source +                                                    \
@@ -245,8 +236,7 @@ public:
             count),                                                     \
         &this->BOOST_PP_SEQ_ELEM(1, MEMBER)());
 
-// fixme: libflatarray prefix missing
-#define COPY_SOA_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER)           \
+#define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER) \
     std::copy(                                                          \
         &this->BOOST_PP_SEQ_ELEM(1, MEMBER)(),                          \
         &this->BOOST_PP_SEQ_ELEM(1, MEMBER)() + count,                  \
