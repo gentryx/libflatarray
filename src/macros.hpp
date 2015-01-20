@@ -87,6 +87,7 @@
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
+        static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
@@ -191,10 +192,10 @@
         MEMBER_TYPE& access_member()                                    \
         {                                                               \
             return *(MEMBER_TYPE*)(                                     \
-                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                data + DIM_PROD *                                       \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
                 index * sizeof(MEMBER_TYPE) +                           \
-                INDEX  * sizeof(MEMBER_TYPE));                          \
+                INDEX * sizeof(MEMBER_TYPE));                           \
         }                                                               \
                                                                         \
         inline                                                          \
@@ -202,10 +203,10 @@
         char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
-                data + (DIM_X * DIM_Y * DIM_Z) *                        \
-                offset +                                                \
+                data +                                                  \
+                DIM_PROD * offset +                                     \
                 index * size_of_member +                                \
-                INDEX  * size_of_member;                                \
+                INDEX * size_of_member;                                 \
         }                                                               \
                                                                         \
         BOOST_PP_SEQ_FOR_EACH(                                          \
@@ -246,6 +247,7 @@
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
+        static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
                                                                         \
         __host__ __device__                                             \
         const_soa_accessor(const char *data, long index) :              \
@@ -332,6 +334,7 @@
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
+        static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
@@ -426,7 +429,8 @@
         MEMBER_TYPE& access_member()                                    \
         {                                                               \
             return *(MEMBER_TYPE*)(                                     \
-                data + (DIM_X * DIM_Y * DIM_Z) *                        \
+                data +                                                  \
+                DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
                 *index * sizeof(MEMBER_TYPE) +                          \
                 INDEX  * sizeof(MEMBER_TYPE));                          \
@@ -437,8 +441,8 @@
         char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
-                data + (DIM_X * DIM_Y * DIM_Z) *                        \
-                offset +                                                \
+                data +                                                  \
+                DIM_PROD * offset +                                     \
                 *index * size_of_member +                               \
                 INDEX  * size_of_member;                                \
         }                                                               \
@@ -479,6 +483,7 @@
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
+        static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \

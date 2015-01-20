@@ -95,7 +95,7 @@
     {                                                                   \
         return *(BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
             data +                                                      \
-            (DIM_X * DIM_Y * DIM_Z) * (                                 \
+            (DIM_PROD) * (                                              \
                 (sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) *                 \
                  LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, 0, ARRAY_INDEX))  + \
                 detail::flat_array::offset<CELL, MEMBER_INDEX - 2>:: OFFSET) + \
@@ -109,13 +109,13 @@
         inline                                                          \
         __host__ __device__                                             \
         typename LibFlatArray::detail::                                 \
-        soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>::           \
+        soa_array_member_copy_helper<DIM_PROD>::                        \
         template inner1<CELL>::                                         \
         template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::                 \
         reference BOOST_PP_SEQ_ELEM(1, MEMBER)() CONST                  \
         {                                                               \
             return typename LibFlatArray::detail::                      \
-                soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>::   \
+                soa_array_member_copy_helper<DIM_PROD>::                \
                 template inner1<CELL>::                                 \
                 template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::         \
                 reference((char*)&BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());   \
@@ -139,7 +139,7 @@
 
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        typename LibFlatArray::detail::soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>:: \
+        typename LibFlatArray::detail::soa_array_member_copy_helper<DIM_PROD>:: \
             template inner1<CELL>::                                     \
             template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::             \
             template inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>::         \
@@ -160,7 +160,8 @@
 
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        typename LibFlatArray::detail::soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>:: \
+        typename LibFlatArray::detail::                                 \
+            soa_array_member_copy_helper<DIM_PROD>::                    \
             template inner1<CELL>::                                     \
             template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::             \
             template inner3<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>::         \
