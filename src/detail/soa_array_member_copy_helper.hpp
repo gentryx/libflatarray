@@ -24,6 +24,43 @@ public:
         class inner2
         {
         public:
+
+            class reference
+            {
+            public:
+                inline
+                reference(char *data) :
+                    data(data)
+                {}
+
+                inline
+                MEMBER& operator[](const std::size_t offset)
+                {
+                    return *(reinterpret_cast<MEMBER*>(data) + offset * SIZE);
+                }
+
+            private:
+                char *data;
+            };
+
+            class const_reference
+            {
+            public:
+                inline
+                const_reference(const char *data) :
+                    data(data)
+                {}
+
+                inline
+                const MEMBER& operator[](const std::size_t offset)
+                {
+                    return *(reinterpret_cast<const MEMBER*>(data) + offset * SIZE);
+                }
+
+            private:
+                const char *data;
+            };
+
             template<int ARITY>
             class inner3
             {

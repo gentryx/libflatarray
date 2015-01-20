@@ -101,7 +101,26 @@
                 detail::flat_array::offset<CELL, MEMBER_INDEX - 2>:: OFFSET) + \
             INDEX_VAR * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))) +    \
             INDEX     * long(sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER))));    \
-    }
+    }                                                                   \
+                                                                        \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        ,                                                               \
+        inline                                                          \
+        __host__ __device__                                             \
+        typename LibFlatArray::detail::                                 \
+        soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>::           \
+        template inner1<CELL>::                                         \
+        template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::                 \
+        reference BOOST_PP_SEQ_ELEM(1, MEMBER)() CONST                  \
+        {                                                               \
+            return typename LibFlatArray::detail::                      \
+                soa_array_member_copy_helper<DIM_X * DIM_Y * DIM_Z>::   \
+                template inner1<CELL>::                                 \
+                template inner2<BOOST_PP_SEQ_ELEM(0, MEMBER)>::         \
+                reference((char*)&BOOST_PP_SEQ_ELEM(1, MEMBER)<0>());   \
+        } )
+
 
 #define LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST(MEMBER_INDEX, CELL, MEMBER) \
     LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, const, index)

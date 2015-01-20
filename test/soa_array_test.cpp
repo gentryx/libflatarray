@@ -187,6 +187,45 @@ ADD_TEST(TestArrayMember)
         BOOST_TEST(p.vel[2] == expectedVel2);
         BOOST_TEST(p.state  == expectedState);
     }
+
+    for (int i = 0; i < num; ++i) {
+        float expectedPos0   = 1.0 + i;
+        float expectedPos1   = 1.1 + i;
+        float expectedPos2   = 1.2 + i;
+        float expectedVel0   = 2.0 + i;
+        float expectedVel1   = 2.1 + i;
+        float expectedVel2   = 2.2 + i;
+
+        BOOST_TEST(array[i].pos()[0] == expectedPos0);
+        BOOST_TEST(array[i].pos()[1] == expectedPos1);
+        BOOST_TEST(array[i].pos()[2] == expectedPos2);
+        BOOST_TEST(array[i].vel()[0] == expectedVel0);
+        BOOST_TEST(array[i].vel()[1] == expectedVel1);
+        BOOST_TEST(array[i].vel()[2] == expectedVel2);
+
+        array[i].pos()[0] = expectedPos0 * 2;
+        array[i].pos()[1] = expectedPos1 * 3;
+        array[i].pos()[2] = expectedPos2 * 4;
+        array[i].vel()[0] = expectedVel0 * 5;
+        array[i].vel()[1] = expectedVel1 * 6;
+        array[i].vel()[2] = expectedVel2 * 7;
+    }
+
+    for (int i = 0; i < num; ++i) {
+        float expectedPos0   = float(1.0 + i) * 2;
+        float expectedPos1   = float(1.1 + i) * 3;
+        float expectedPos2   = float(1.2 + i) * 4;
+        float expectedVel0   = float(2.0 + i) * 5;
+        float expectedVel1   = float(2.1 + i) * 6;
+        float expectedVel2   = float(2.2 + i) * 7;
+
+        BOOST_TEST(array[i].pos()[0] == expectedPos0);
+        BOOST_TEST(array[i].pos()[1] == expectedPos1);
+        BOOST_TEST(array[i].pos()[2] == expectedPos2);
+        BOOST_TEST(array[i].vel()[0] == expectedVel0);
+        BOOST_TEST(array[i].vel()[1] == expectedVel1);
+        BOOST_TEST(array[i].vel()[2] == expectedVel2);
+    }
 }
 
 }
