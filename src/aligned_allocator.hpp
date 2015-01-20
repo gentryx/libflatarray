@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013 Andreas Schäfer
+ * Copyright 2012-2013, 2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -29,6 +29,13 @@ public:
     typedef T& reference;
     typedef const T& const_reference;
     typedef T value_type;
+    typedef std::size_t size_type;
+
+    template<typename OTHER>
+    struct rebind
+    {
+        typedef aligned_allocator<OTHER, ALIGNMENT> other;
+    };
 
     inline pointer address(reference x) const
     {
@@ -42,10 +49,10 @@ public:
 
     pointer allocate(std::size_t n, const void* = 0)
     {
-        // This code whould have been a piece of cake if it would have
-        // worket with posix_memalign, which it doesn't. Alternatively
+        // This code would have been a piece of cake if it would have
+        // worked with posix_memalign -- which it didn't. Instead
         // we allocate a larger chunk of memory in which we can
-        // accomodate an array of the selected size, shifted to the
+        // accomodate an array of the required size, shifted to the
         // desired offset. Since we need the original address for the
         // deallocation, we store it directly in front of the aligned
         // array's start. Ugly, but it works.
