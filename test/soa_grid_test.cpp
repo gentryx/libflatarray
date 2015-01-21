@@ -262,6 +262,178 @@ private:
     long endZ;
 };
 
+class ArrayParticle
+{
+public:
+    ArrayParticle(
+        float mass = 0,
+        float charge = 0,
+        float pos0 = 0,
+        float pos1 = 0,
+        float pos2 = 0,
+        float vel0 = 0,
+        float vel1 = 0,
+        float vel2 = 0,
+        int state = 0) :
+        mass(mass),
+        charge(charge),
+        state(state)
+    {
+        pos[0] = pos0;
+        pos[1] = pos1;
+        pos[2] = pos2;
+        vel[0] = vel0;
+        vel[1] = vel1;
+        vel[2] = vel2;
+    }
+
+    float mass;
+    float charge;
+    float pos[3];
+    float vel[3];
+    int state;
+};
+
+LIBFLATARRAY_REGISTER_SOA(
+    ArrayParticle,
+    ((float)(mass))
+    ((float)(charge))
+    ((float)(pos)(3))
+    ((float)(vel)(3))
+    ((int)(state)))
+
+class MultiplyVelocityArrayStyle
+{
+public:
+    MultiplyVelocityArrayStyle(long dimX, long dimY, long dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor) const
+    {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
+                    accessor.index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+                    for (int i = 0; i < 3; ++i) {
+                        accessor.vel()[i] *= (3 + i);
+                    }
+		}
+	    }
+	}
+    }
+
+private:
+    long dimX;
+    long dimY;
+    long dimZ;
+};
+
+class MultiplyVelocityFunctionStyle
+{
+public:
+    MultiplyVelocityFunctionStyle(long dimX, long dimY, long dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor) const
+    {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
+                    accessor.index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+                    accessor.template vel<0>() *= 6;
+                    accessor.template vel<1>() *= 7;
+                    accessor.template vel<2>() *= 8;
+		}
+	    }
+	}
+    }
+
+private:
+    long dimX;
+    long dimY;
+    long dimZ;
+};
+
+class OffsetPositionArrayStyle
+{
+public:
+    OffsetPositionArrayStyle(long dimX, long dimY, long dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor) const
+    {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
+                    accessor.index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+		    accessor.pos()[0] += x * 1000;
+		    accessor.pos()[1] += y * 2000;
+		    accessor.pos()[2] += z * 3000;
+		}
+	    }
+	}
+    }
+
+private:
+    long dimX;
+    long dimY;
+    long dimZ;
+};
+
+class OffsetPositionFunctionStyle
+{
+public:
+    OffsetPositionFunctionStyle(long dimX, long dimY, long dimZ) :
+	dimX(dimX),
+	dimY(dimY),
+	dimZ(dimZ)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& accessor) const
+    {
+        for (long z = 0; z < dimZ; ++z) {
+            for (long y = 0; y < dimY; ++y) {
+                for (long x = 0; x < dimX; ++x) {
+                    accessor.index =
+                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
+                        ACCESSOR::DIM_X * y +
+                        x;
+		    accessor.template pos<0>() += x * 1001;
+		    accessor.template pos<1>() += y * 2001;
+		    accessor.template pos<2>() += z * 3001;
+		}
+	    }
+	}
+    }
+
+private:
+    long dimX;
+    long dimY;
+    long dimZ;
+};
+
 namespace LibFlatArray {
 
 ADD_TEST(TestSingleGetSet)
@@ -361,6 +533,7 @@ ADD_TEST(TestSingleCallback)
 	}
     }
 
+    // fixme: remove superfluous index vars
     long index = 0;
     grid.callback(InvertTemperature(dimX, dimY, dimZ));
 
@@ -583,6 +756,114 @@ ADD_TEST(TestMemberPtrToOffset)
     BOOST_TEST( 0 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberA));
     BOOST_TEST( 8 == member_ptr_to_offset()(&CellWithMultipleMembersOfSameType::memberB));
     BOOST_TEST(16 == member_ptr_to_offset()(CellWithMultipleMembersOfSameType::getMemberCPointer()));
+}
+
+ADD_TEST(TestArrayMember)
+{
+    // fixme: coding style!
+    long dimX = 40;
+    long dimY = 15;
+    long dimZ = 10;
+
+    soa_grid<ArrayParticle> grid(dimX, dimY, dimZ);
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
+                ArrayParticle particle(
+                    0.1 + x,
+                    0.2 + x,
+                    0.3 + x,
+                    0.4 + y,
+                    0.5 + z,
+                    0.6 + x,
+                    0.7 + y,
+                    0.9 + z,
+                    x + y + z);
+                grid.set(x, y, z, particle);
+            }
+        }
+    }
+
+    grid.callback(MultiplyVelocityArrayStyle(dimX, dimY, dimZ));
+
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
+                ArrayParticle particle = grid.get(x, y, z);
+
+                BOOST_TEST(particle.mass   == float(0.1 + x));
+                BOOST_TEST(particle.charge == (float(0.2 + x)));
+                BOOST_TEST(particle.pos[0] == (float(0.3 + x)));
+                BOOST_TEST(particle.pos[1] == (float(0.4 + y)));
+                BOOST_TEST(particle.pos[2] == (float(0.5 + z)));
+                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3));
+                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4));
+                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5));
+                BOOST_TEST(particle.state  == int(x + y + z));
+            }
+        }
+    }
+
+    grid.callback(MultiplyVelocityFunctionStyle(dimX, dimY, dimZ));
+
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
+                ArrayParticle particle = grid.get(x, y, z);
+
+                BOOST_TEST(particle.mass   == float(0.1 + x));
+                BOOST_TEST(particle.charge == (float(0.2 + x)));
+                BOOST_TEST(particle.pos[0] == (float(0.3 + x)));
+                BOOST_TEST(particle.pos[1] == (float(0.4 + y)));
+                BOOST_TEST(particle.pos[2] == (float(0.5 + z)));
+                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
+                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
+                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                BOOST_TEST(particle.state  == int(x + y + z));
+            }
+        }
+    }
+
+    grid.callback(OffsetPositionArrayStyle(dimX, dimY, dimZ));
+
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
+                ArrayParticle particle = grid.get(x, y, z);
+
+                BOOST_TEST(particle.mass   == float(0.1 + x));
+                BOOST_TEST(particle.charge == (float(0.2 + x)));
+                BOOST_TEST(particle.pos[0] == (float(0.3 + x) + x * 1000));
+                BOOST_TEST(particle.pos[1] == (float(0.4 + y) + y * 2000));
+                BOOST_TEST(particle.pos[2] == (float(0.5 + z) + z * 3000));
+                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
+                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
+                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                BOOST_TEST(particle.state  == int(x + y + z));
+            }
+        }
+    }
+
+    grid.callback(OffsetPositionFunctionStyle(dimX, dimY, dimZ));
+
+    for (long z = 0; z < dimZ; ++z) {
+        for (long y = 0; y < dimY; ++y) {
+            for (long x = 0; x < dimX; ++x) {
+                ArrayParticle particle = grid.get(x, y, z);
+
+                BOOST_TEST(particle.mass   == float(0.1 + x));
+                BOOST_TEST(particle.charge == (float(0.2 + x)));
+                BOOST_TEST(particle.pos[0] == (float(0.3 + x) + x * 1000 + x * 1001));
+                BOOST_TEST(particle.pos[1] == (float(0.4 + y) + y * 2000 + y * 2001));
+                BOOST_TEST(particle.pos[2] == (float(0.5 + z) + z * 3000 + z * 3001));
+                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
+                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
+                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                BOOST_TEST(particle.state  == int(x + y + z));
+            }
+        }
+    }
+
 }
 
 }
