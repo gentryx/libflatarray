@@ -1496,7 +1496,7 @@ int main(int argc, char **argv)
     for (int n = 128; n <= 8192; n *= 2) {
         std::vector<int> dim(3);
         dim[0] = n;
-        dim[1] = std::size_t(4) * 1024 * 1024 * 1024 / n / n;
+        dim[1] = std::size_t(4) * 512 * 1024 * 1024 / n / n;
         dim[2] = 0;
 
         sizes.push_back(dim);
