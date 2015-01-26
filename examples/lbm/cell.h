@@ -32,7 +32,6 @@ public:
 #define SET_COMP(DIR)                           \
     accessorNew.DIR()
 
-    // fixme: refactor interface so that all wire-up in Cell can be summarized?
     template<typename ACCESSOR1, typename ACCESSOR2>
     __device__
     __host__

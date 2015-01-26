@@ -206,7 +206,6 @@ private:
         detail::flat_array::dual_callback_helper()(this, other_grid, functor);
     }
 
-    // fixme: test the behavior of both (symmetric, asymmetric) callbacks
     template<typename FUNCTOR>
     void dual_callback(soa_grid<CELL_TYPE> *other_grid, FUNCTOR& functor, api_traits::false_type) const
     {

@@ -77,7 +77,6 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    // fixme: add set_index?
                     accessor.index = accessor.gen_index(x, y, z);
 
                     double actualA = accessor.template access_member<double, 0>();
