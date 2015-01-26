@@ -59,23 +59,23 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        int dimX = dim[0];
-        int dimY = dim[1];
-        int dimZ = dim[2];
-        int maxT = 200000000 / dimX / dimY / dimZ;
+        int dim_x = dim[0];
+        int dim_y = dim[1];
+        int dim_z = dim[2];
+        int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        int offsetZ = dimX * dimY;
-        int gridVolume = dimX * dimY * dimZ;
+        int offsetZ = dim_x * dim_y;
+        int gridVolume = dim_x * dim_y * dim_z;
         std::vector<double> compressedGrid(2 * gridVolume);
         double *gridOld = &compressedGrid[0];
         double *gridNew = &compressedGrid[gridVolume];
 
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
-                    gridOld[z * offsetZ + y * dimY + x] = x + y + z;
-                    gridNew[z * offsetZ + y * dimY + x] = x + y + z;
+        for (int z = 0; z < dim_z; ++z) {
+            for (int y = 0; y < dim_y; ++y) {
+                for (int x = 0; x < dim_x; ++x) {
+                    gridOld[z * offsetZ + y * dim_y + x] = x + y + z;
+                    gridNew[z * offsetZ + y * dim_y + x] = x + y + z;
                 }
             }
         }
@@ -83,17 +83,17 @@ public:
         double tStart = time();
 
         for (int t = 0; t < maxT; ++t) {
-            for (int z = 1; z < (dimZ - 1); ++z) {
-                for (int y = 1; y < (dimY - 1); ++y) {
-                    updateLine(gridOld, gridNew, 1, y, z, dimX - 1, dimX, offsetZ);
+            for (int z = 1; z < (dim_z - 1); ++z) {
+                for (int y = 1; y < (dim_y - 1); ++y) {
+                    updateLine(gridOld, gridNew, 1, y, z, dim_x - 1, dim_x, offsetZ);
                 }
             }
         }
 
         double tEnd = time();
 
-        if (gridOld[1 * offsetZ + 1 * dimY + 1] ==
-            gridNew[1 * offsetZ + 1 * dimY + 1]) {
+        if (gridOld[1 * offsetZ + 1 * dim_y + 1] ==
+            gridNew[1 * offsetZ + 1 * dim_y + 1]) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 
@@ -128,23 +128,23 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        int dimX = dim[0];
-        int dimY = dim[1];
-        int dimZ = dim[2];
-        int maxT = 200000000 / dimX / dimY / dimZ;
+        int dim_x = dim[0];
+        int dim_y = dim[1];
+        int dim_z = dim[2];
+        int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        int offsetZ = dimX * dimY;
-        int gridVolume = dimX * dimY * dimZ;
+        int offsetZ = dim_x * dim_y;
+        int gridVolume = dim_x * dim_y * dim_z;
         std::vector<double> compressedGrid(2 * gridVolume);
         double *gridOld = &compressedGrid[0];
         double *gridNew = &compressedGrid[gridVolume];
 
-        for (int z = 0; z < dimZ; ++z) {
-            for (int y = 0; y < dimY; ++y) {
-                for (int x = 0; x < dimX; ++x) {
-                    gridOld[z * offsetZ + y * dimY + x] = x + y + z;
-                    gridNew[z * offsetZ + y * dimY + x] = x + y + z;
+        for (int z = 0; z < dim_z; ++z) {
+            for (int y = 0; y < dim_y; ++y) {
+                for (int x = 0; x < dim_x; ++x) {
+                    gridOld[z * offsetZ + y * dim_y + x] = x + y + z;
+                    gridNew[z * offsetZ + y * dim_y + x] = x + y + z;
                 }
             }
         }
@@ -152,17 +152,17 @@ public:
         double tStart = time();
 
         for (int t = 0; t < maxT; ++t) {
-            for (int z = 1; z < (dimZ - 1); ++z) {
-                for (int y = 1; y < (dimY - 1); ++y) {
-                    updateLine(gridOld, gridNew, 1, y, z, dimX - 1, dimX, offsetZ);
+            for (int z = 1; z < (dim_z - 1); ++z) {
+                for (int y = 1; y < (dim_y - 1); ++y) {
+                    updateLine(gridOld, gridNew, 1, y, z, dim_x - 1, dim_x, offsetZ);
                 }
             }
         }
 
         double tEnd = time();
 
-        if (gridOld[1 * offsetZ + 1 * dimY + 1] ==
-            gridNew[1 * offsetZ + 1 * dimY + 1]) {
+        if (gridOld[1 * offsetZ + 1 * dim_y + 1] ==
+            gridNew[1 * offsetZ + 1 * dim_y + 1]) {
             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
         }
 
@@ -312,21 +312,19 @@ public:
     class UpdateFunctor
     {
     public:
-        UpdateFunctor(long dimX, long dimY, long dimZ) :
-            dimX(dimX),
-            dimY(dimY),
-            dimZ(dimZ)
+        UpdateFunctor(long dim_x, long dim_y, long dim_z) :
+            dim_x(dim_x),
+            dim_y(dim_y),
+            dim_z(dim_z)
         {}
 
-        template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
-                 long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
-        void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2) const
+        template<typename accessor_type1, typename accessor_type2>
+        void operator()(accessor_type1& accessor1, accessor_type2& accessor2) const
         {
-            for (long z = 1; z < (dimZ - 1); ++z) {
-                for (long y = 1; y < (dimY - 1); ++y) {
-                    long indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
-                    long indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+            for (long z = 1; z < (dim_z - 1); ++z) {
+                for (long y = 1; y < (dim_y - 1); ++y) {
+                    long indexStart = accessor1.gen_index(1,        y, z);
+                    long indexEnd   = accessor1.gen_index(dim_x - 1, y, z);
 
                     for (accessor1.index = indexStart, accessor2.index = indexStart;
                          accessor1.index < indexEnd;
@@ -346,9 +344,9 @@ public:
         }
 
     private:
-        long dimX;
-        long dimY;
-        long dimZ;
+        long dim_x;
+        long dim_y;
+        long dim_z;
     };
 
     std::string species()
@@ -358,20 +356,20 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        long dimX = dim[0];
-        long dimY = dim[1];
-        long dimZ = dim[2];
-        int maxT = 200000000 / dimX / dimY / dimZ;
+        long dim_x = dim[0];
+        long dim_y = dim[1];
+        long dim_z = dim[2];
+        int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        long offsetZ = dimX * dimY;
-        long gridVolume = dimX * dimY * dimZ;
-        soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
-        soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
+        long offsetZ = dim_x * dim_y;
+        long gridVolume = dim_x * dim_y * dim_z;
+        soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
+        soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
 
-        for (long z = 0; z < dimZ; ++z) {
-            for (long y = 0; y < dimY; ++y) {
-                for (long x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dim_z; ++z) {
+            for (long y = 0; y < dim_y; ++y) {
+                for (long x = 0; x < dim_x; ++x) {
                     gridOld.set(x, y, z, x + y + z);
                     gridNew.set(x, y, z, x + y + z);
                 }
@@ -380,7 +378,7 @@ public:
 
         double tStart = time();
 
-        UpdateFunctor functor(dimX, dimY, dimZ);
+        UpdateFunctor functor(dim_x, dim_y, dim_z);
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
             std::swap(gridOld, gridNew);
@@ -422,16 +420,15 @@ public:
     class UpdateFunctor
     {
     public:
-        UpdateFunctor(long dimX, long dimY, long dimZ) :
-            dimX(dimX),
-            dimY(dimY),
-            dimZ(dimZ)
+        UpdateFunctor(long dim_x, long dim_y, long dim_z) :
+            dim_x(dim_x),
+            dim_y(dim_y),
+            dim_z(dim_z)
         {}
 
-        template<long DIM_X1, long DIM_Y1, long DIM_Z1, long INDEX1,
-                 long DIM_X2, long DIM_Y2, long DIM_Z2, long INDEX2>
-        void operator()(soa_accessor<JacobiCell, DIM_X1, DIM_Y1, DIM_Z1, INDEX1>& accessor1,
-                        soa_accessor<JacobiCell, DIM_X2, DIM_Y2, DIM_Z2, INDEX2>& accessor2) const
+        template<typename accessor_type1, typename accessor_type2>
+        void operator()(accessor_type1& accessor1,
+                        accessor_type2& accessor2) const
         {
             __m128d factorS = _mm_set1_pd(WEIGHT_S);
             __m128d factorT = _mm_set1_pd(WEIGHT_T);
@@ -441,10 +438,10 @@ public:
             __m128d factorB = _mm_set1_pd(WEIGHT_B);
             __m128d factorN = _mm_set1_pd(WEIGHT_N);
 
-            for (long z = 1; z < (dimZ - 1); ++z) {
-                for (long y = 1; y < (dimY - 1); ++y) {
-                    long indexStart = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + 1;
-                    long indexEnd   = z * DIM_X1 * DIM_Y1 + y * DIM_X1 + dimX - 1;
+            for (long z = 1; z < (dim_z - 1); ++z) {
+                for (long y = 1; y < (dim_y - 1); ++y) {
+                    long indexStart = accessor1.gen_index(1,         y, z);
+                    long indexEnd   = accessor1.gen_index(dim_x - 1, y, z);
 
                     accessor1.index = indexStart;
                     accessor2.index = indexStart;
@@ -567,9 +564,9 @@ public:
         }
 
     private:
-        long dimX;
-        long dimY;
-        long dimZ;
+        long dim_x;
+        long dim_y;
+        long dim_z;
     };
 
     std::string species()
@@ -579,20 +576,20 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        long dimX = dim[0];
-        long dimY = dim[1];
-        long dimZ = dim[2];
-        int maxT = 200000000 / dimX / dimY / dimZ;
+        long dim_x = dim[0];
+        long dim_y = dim[1];
+        long dim_z = dim[2];
+        int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        long offsetZ = dimX * dimY;
-        long gridVolume = dimX * dimY * dimZ;
-        soa_grid<JacobiCell> gridOld(dimX, dimY, dimZ);
-        soa_grid<JacobiCell> gridNew(dimX, dimY, dimZ);
+        long offsetZ = dim_x * dim_y;
+        long gridVolume = dim_x * dim_y * dim_z;
+        soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
+        soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
 
-        for (long z = 0; z < dimZ; ++z) {
-            for (long y = 0; y < dimY; ++y) {
-                for (long x = 0; x < dimX; ++x) {
+        for (long z = 0; z < dim_z; ++z) {
+            for (long y = 0; y < dim_y; ++y) {
+                for (long x = 0; x < dim_x; ++x) {
                     gridOld.set(x, y, z, x + y + z);
                     gridNew.set(x, y, z, x + y + z);
                 }
@@ -601,7 +598,7 @@ public:
 
         double tStart = time();
 
-        UpdateFunctor functor(dimX, dimY, dimZ);
+        UpdateFunctor functor(dim_x, dim_y, dim_z);
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
             std::swap(gridOld, gridNew);

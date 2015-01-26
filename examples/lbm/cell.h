@@ -41,14 +41,8 @@ public:
         long global_x = blockIdx.x * blockDim.x + threadIdx.x + 2;
         long global_y = blockIdx.y * blockDim.y + threadIdx.y + 2;
         long global_z = startZ;
-        *indexOld =
-            global_z * ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y +
-            global_y * ACCESSOR1::DIM_X +
-            global_x;
-        *indexNew =
-            global_z * ACCESSOR2::DIM_X * ACCESSOR2::DIM_Y +
-            global_y * ACCESSOR2::DIM_X +
-            global_x;
+        *indexOld = accessorOld.gen_index(global_x, global_y, global_z);
+        *indexNew = accessorNew.gen_index(global_x, global_y, global_z);
         const long planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
         const long planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
 

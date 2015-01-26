@@ -91,6 +91,14 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const long x, const long y, const long z)        \
+        {                                                               \
+            return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
         explicit soa_accessor(char *data, const long index = 0) :       \
             data(data),                                                 \
             index(index)                                                \
@@ -249,6 +257,14 @@
         static const long DIM_Z = MY_DIM_Z;                             \
         static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
                                                                         \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const long x, const long y, const long z)        \
+        {                                                               \
+            return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
+                                                                        \
         __host__ __device__                                             \
         const_soa_accessor(const char *data, long index) :              \
             data(data),                                                 \
@@ -335,6 +351,14 @@
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
         static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const long x, const long y, const long z)        \
+        {                                                               \
+            return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
@@ -484,6 +508,14 @@
         static const long DIM_Y = MY_DIM_Y;                             \
         static const long DIM_Z = MY_DIM_Z;                             \
         static const long DIM_PROD = DIM_X * DIM_Y * DIM_Z;             \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const long x, const long y, const long z)        \
+        {                                                               \
+            return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \

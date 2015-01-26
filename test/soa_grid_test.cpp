@@ -77,10 +77,8 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
-                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
-                        ACCESSOR::DIM_X * y +
-                        x;
+                    // fixme: add set_index?
+                    accessor.index = accessor.gen_index(x, y, z);
 
                     double actualA = accessor.template access_member<double, 0>();
                     bool actualB = accessor.template access_member<bool, 1>();
@@ -116,10 +114,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
-                        ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
-                        ACCESSOR::DIM_X * y +
-                        x;
+                    accessor.index = accessor.gen_index(x, y, z);
 
                     double actualA = *reinterpret_cast<double*>(accessor.access_member(8, 0));
                     bool actualB = *reinterpret_cast<bool*>(accessor.access_member(1, 8));
