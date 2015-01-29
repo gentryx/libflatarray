@@ -104,13 +104,13 @@ ADD_TEST(TestBasicAccessAndConversion)
     for (int i = 0; i < 10; ++i) {
         array << Particle(i, 20, 30, 40, 50, 60 + i, i * i, -100 + i);
     }
-    for (int i = 10; i < 13; ++i) {
+    for (int i = 10; i < 18; ++i) {
         array.push_back(Particle(i, 20, 30, 40, 50, 60 + i, i * i, -100 + i));
     }
 
-    BOOST_TEST(array.size() == 13);
+    BOOST_TEST(array.size() == 18);
 
-    for (int i = 0; i < 13; ++i) {
+    for (int i = 0; i < 18; ++i) {
         BOOST_TEST(array[i].posX() == i);
         BOOST_TEST(array[i].posY() == 20);
         BOOST_TEST(array[i].posZ() == 30);
@@ -122,6 +122,24 @@ ADD_TEST(TestBasicAccessAndConversion)
         BOOST_TEST(array[i].charge() == (i * i));
         BOOST_TEST(array[i].mass() == (-100 + i));
     }
+
+    BOOST_TEST((array[10].access_member<float, 0>()) ==  10);
+    BOOST_TEST((array[10].access_member<float, 1>()) ==  20);
+    BOOST_TEST((array[10].access_member<float, 2>()) ==  30);
+    BOOST_TEST((array[10].access_member<float, 3>()) ==  40);
+    BOOST_TEST((array[10].access_member<float, 4>()) ==  50);
+    BOOST_TEST((array[10].access_member<float, 5>()) ==  70);
+    BOOST_TEST((array[10].access_member<float, 6>()) == 100);
+    BOOST_TEST((array[10].access_member<float, 7>()) == -90);
+
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4,  0))) ==  15);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4,  4))) ==  20);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4,  8))) ==  30);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4, 12))) ==  40);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4, 16))) ==  50);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4, 20))) ==  75);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4, 24))) == 225);
+    BOOST_TEST(*(reinterpret_cast<float*>(array[15].access_member(4, 28))) == -85);
 
     Particle foo(array[5]);
 
@@ -189,12 +207,12 @@ ADD_TEST(TestArrayMember)
     }
 
     for (int i = 0; i < num; ++i) {
-        float expectedPos0   = 1.0 + i;
-        float expectedPos1   = 1.1 + i;
-        float expectedPos2   = 1.2 + i;
-        float expectedVel0   = 2.0 + i;
-        float expectedVel1   = 2.1 + i;
-        float expectedVel2   = 2.2 + i;
+        float expectedPos0 = 1.0 + i;
+        float expectedPos1 = 1.1 + i;
+        float expectedPos2 = 1.2 + i;
+        float expectedVel0 = 2.0 + i;
+        float expectedVel1 = 2.1 + i;
+        float expectedVel2 = 2.2 + i;
 
         BOOST_TEST(array[i].pos()[0] == expectedPos0);
         BOOST_TEST(array[i].pos()[1] == expectedPos1);
@@ -212,12 +230,61 @@ ADD_TEST(TestArrayMember)
     }
 
     for (int i = 0; i < num; ++i) {
-        float expectedPos0   = float(1.0 + i) * 2;
-        float expectedPos1   = float(1.1 + i) * 3;
-        float expectedPos2   = float(1.2 + i) * 4;
-        float expectedVel0   = float(2.0 + i) * 5;
-        float expectedVel1   = float(2.1 + i) * 6;
-        float expectedVel2   = float(2.2 + i) * 7;
+        float expectedPos0 = float(1.0 + i) * 2;
+        float expectedPos1 = float(1.1 + i) * 3;
+        float expectedPos2 = float(1.2 + i) * 4;
+        float expectedVel0 = float(2.0 + i) * 5;
+        float expectedVel1 = float(2.1 + i) * 6;
+        float expectedVel2 = float(2.2 + i) * 7;
+
+        BOOST_TEST(array[i].pos()[0] == expectedPos0);
+        BOOST_TEST(array[i].pos()[1] == expectedPos1);
+        BOOST_TEST(array[i].pos()[2] == expectedPos2);
+        BOOST_TEST(array[i].vel()[0] == expectedVel0);
+        BOOST_TEST(array[i].vel()[1] == expectedVel1);
+        BOOST_TEST(array[i].vel()[2] == expectedVel2);
+    }
+
+    std::vector<float> buf(num * 3, -1);
+    for (int i = 0; i < num; ++i) {
+        buf[i + 0 * num] = -i - 0.1;
+        buf[i + 1 * num] = -i - 0.2;
+        buf[i + 2 * num] = -i - 0.3;
+    }
+
+    std::copy(&buf[0], &buf[3 * num], &array[0].access_member<float, 2>());
+
+    for (int i = 0; i < num; ++i) {
+        float expectedPos0 = float(-i - 0.1);
+        float expectedPos1 = float(-i - 0.2);
+        float expectedPos2 = float(-i - 0.3);
+        float expectedVel0 = float(2.0 + i) * 5;
+        float expectedVel1 = float(2.1 + i) * 6;
+        float expectedVel2 = float(2.2 + i) * 7;
+
+        BOOST_TEST(array[i].pos()[0] == expectedPos0);
+        BOOST_TEST(array[i].pos()[1] == expectedPos1);
+        BOOST_TEST(array[i].pos()[2] == expectedPos2);
+        BOOST_TEST(array[i].vel()[0] == expectedVel0);
+        BOOST_TEST(array[i].vel()[1] == expectedVel1);
+        BOOST_TEST(array[i].vel()[2] == expectedVel2);
+    }
+
+    for (int i = 0; i < num; ++i) {
+        buf[i + 0 * num] = -i - 0.15;
+        buf[i + 1 * num] = -i - 0.25;
+        buf[i + 2 * num] = -i - 0.35;
+    }
+
+    std::copy(&buf[0], &buf[3 * num], reinterpret_cast<float*>(array[0].access_member(sizeof(float), 20)));
+
+    for (int i = 0; i < num; ++i) {
+        float expectedPos0 = float(-i - 0.1);
+        float expectedPos1 = float(-i - 0.2);
+        float expectedPos2 = float(-i - 0.3);
+        float expectedVel0 = float(-i - 0.15);
+        float expectedVel1 = float(-i - 0.25);
+        float expectedVel2 = float(-i - 0.35);
 
         BOOST_TEST(array[i].pos()[0] == expectedPos0);
         BOOST_TEST(array[i].pos()[1] == expectedPos1);

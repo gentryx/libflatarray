@@ -200,7 +200,8 @@
         MEMBER_TYPE& access_member()                                    \
         {                                                               \
             return *(MEMBER_TYPE*)(                                     \
-                data + DIM_PROD *                                       \
+                data +                                                  \
+                DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
                 index * sizeof(MEMBER_TYPE) +                           \
                 INDEX * sizeof(MEMBER_TYPE));                           \
