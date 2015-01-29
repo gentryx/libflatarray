@@ -670,6 +670,37 @@ LIBFLATARRAY_REGISTER_SOA(Particle,
                           ((float)(velZ))
                           ((float)(charge)))
 
+class ArrayParticle
+{
+public:
+    inline ArrayParticle(
+        const float posX = 0,
+        const float posY = 0,
+        const float posZ = 0,
+        const float velX = 0,
+        const float velY = 0,
+        const float velZ = 0,
+        const float charge = 0) :
+        charge(charge)
+    {
+        pos[0] = posX;
+        pos[1] = posY;
+        pos[2] = posZ;
+        vel[0] = velX;
+        vel[1] = velY;
+        vel[2] = velZ;
+    }
+
+    float pos[3];
+    float vel[3];
+    float charge;
+};
+
+LIBFLATARRAY_REGISTER_SOA(ArrayParticle,
+                          ((float)(pos)(3))
+                          ((float)(vel)(3))
+                          ((float)(charge)))
+
 class NBody : public cpu_benchmark
 {
 public:
@@ -1437,6 +1468,124 @@ public:
     }
 };
 
+class NBodyGold : public NBody
+{
+public:
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        if (dim[0] <= 128) {
+            return performance<128,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 256) {
+            return performance<256,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 512) {
+            return performance<512,  short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 1024) {
+            return performance<1024, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 2048) {
+            return performance<2048, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 4096) {
+            return performance<4096, short_vec<float, 8> >(dim);
+        }
+        if (dim[0] <= 8192) {
+            return performance<8192, short_vec<float, 8> >(dim);
+        }
+
+        throw std::out_of_range("could not run test NBodySilver as grid dimension X was too large");
+    }
+
+    template<int DIM, typename REAL>
+    double performance(std::vector<int> dim)
+    {
+        using namespace LibFlatArray;
+
+        int numParticles = dim[0];
+        int repeats = dim[1];
+
+        soa_array<ArrayParticle, DIM> particlesA;
+        soa_array<ArrayParticle, DIM> particlesB;
+
+        for (int i = 0; i < numParticles; ++i) {
+            ArrayParticle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
+
+            particlesA.push_back(p);
+            particlesB.push_back(p);
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorA = particlesA[0];
+            soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorB = particlesB[0];
+            soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
+
+            for (; accessorA.index < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
+                REAL posX = &accessorA.pos()[0];
+                REAL posY = &accessorA.pos()[1];
+                REAL posZ = &accessorA.pos()[2];
+
+                REAL velX = &accessorA.vel()[0];
+                REAL velY = &accessorA.vel()[1];
+                REAL velZ = &accessorA.vel()[2];
+
+                REAL charge = &accessorA.charge();
+
+                REAL accelerationX = 0.0;
+                REAL accelerationY = 0.0;
+                REAL accelerationZ = 0.0;
+
+                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
+                    REAL deltaX = posX - REAL(accessorA2.pos()[0]);
+                    REAL deltaY = posY - REAL(accessorA2.pos()[1]);
+                    REAL deltaZ = posZ - REAL(accessorA2.pos()[2]);
+                    REAL distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
+
+                    REAL factor = charge * accessorA2.charge() * DELTA_T / distance2 / sqrt(distance2);
+                    REAL forceX = deltaX * factor;
+                    REAL forceY = deltaY * factor;
+                    REAL forceZ = deltaZ * factor;
+
+                    accelerationX += forceX;
+                    accelerationY += forceY;
+                    accelerationZ += forceZ;
+                }
+
+                &accessorB.pos()[0] << posX + velX * DELTA_T;
+                &accessorB.pos()[1] << posY + velY * DELTA_T;
+                &accessorB.pos()[2] << posZ + velZ * DELTA_T;
+
+                &accessorB.vel()[0] << velX + accelerationX;
+                &accessorB.vel()[1] << velY + accelerationY;
+                &accessorB.vel()[2] << velZ + accelerationZ;
+
+                &accessorB.charge() << charge;
+            }
+
+            std::swap(particlesA, particlesB);
+        }
+
+        double tEnd = time();
+
+        if (particlesA[0].pos()[0] == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
+
 int main(int argc, char **argv)
 {
     if ((argc < 3) || (argc > 4)) {
@@ -1525,6 +1674,10 @@ int main(int argc, char **argv)
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(NBodySilver(),  *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodyGold(),  *i);
     }
 
     return 0;
