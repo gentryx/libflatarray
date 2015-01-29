@@ -221,12 +221,12 @@ ADD_TEST(TestArrayMember)
         BOOST_TEST(array[i].vel()[1] == expectedVel1);
         BOOST_TEST(array[i].vel()[2] == expectedVel2);
 
-        array[i].template pos<0>() = expectedPos0 * 2;
-        array[i].template pos<1>() = expectedPos1 * 3;
-        array[i].template pos<2>() = expectedPos2 * 4;
-        array[i].template vel<0>() = expectedVel0 * 5;
-        array[i].template vel<1>() = expectedVel1 * 6;
-        array[i].template vel<2>() = expectedVel2 * 7;
+        array[i].pos<0>() = expectedPos0 * 2;
+        array[i].pos<1>() = expectedPos1 * 3;
+        array[i].pos<2>() = expectedPos2 * 4;
+        array[i].vel<0>() = expectedVel0 * 5;
+        array[i].vel<1>() = expectedVel1 * 6;
+        array[i].vel<2>() = expectedVel2 * 7;
     }
 
     for (int i = 0; i < num; ++i) {
