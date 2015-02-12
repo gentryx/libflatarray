@@ -82,7 +82,9 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PACKAGE_NAME})
 
 include(CPack)
 
-set(ConfigPackageLocation lib/cmake/${PACKAGE_NAME})
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of LIB_INSTALL_DIR" )
+set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}" CACHE STRING "Libraries will be installed to")
+set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})
 
 if(CMAKE_VERSION VERSION_GREATER 2.8.10)
   include(CMakePackageConfigHelpers)
@@ -103,7 +105,7 @@ get_filename_component(LIBFLATARRAY_CMAKE_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
 set(libflatarray_INCLUDE_DIR \"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
 ")
 
-set(ConfigPackageLocation lib/cmake/${PACKAGE_NAME})
+set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})
 install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   DESTINATION "${ConfigPackageLocation}")
