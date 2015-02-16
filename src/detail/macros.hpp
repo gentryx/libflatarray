@@ -178,25 +178,70 @@
         LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER))
 
 #define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
-    std::copy(                                                          \
-        (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                          \
-            source +                                                    \
-            detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET *\
-            count),                                                     \
-        (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                          \
-            source +                                                    \
-            detail::flat_array::offset<CELL, MEMBER_INDEX - 1>::OFFSET *\
-            count),                                                     \
-        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)());
+    {                                                                   \
+        std::copy(                                                      \
+            (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                      \
+                source +                                                \
+                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                count),                                                 \
+            (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                      \
+                source +                                                \
+                detail::flat_array::offset<CELL, MEMBER_INDEX - 1>::OFFSET * \
+                count),                                                 \
+            &this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                     \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
+    {                                                                   \
+        typename LibFlatArray::detail::                                 \
+            soa_array_member_copy_helper<DIM_PROD>::                    \
+            template inner_a<BOOST_PP_SEQ_ELEM(0, MEMBER)>::            \
+            template copy_array_in<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>()( \
+                (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                  \
+                    source +                                            \
+                    detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                    count),                                             \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]),             \
+                count);                                                 \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER))
+
 
 #define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER) \
-    std::copy(                                                          \
-        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)(),                          \
-        &this->BOOST_PP_SEQ_ELEM(1, MEMBER)() + count,                  \
-        (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                                \
-            target +                                                    \
-            detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET *\
-            count));
+    {                                                                   \
+        std::copy(                                                      \
+            &this->BOOST_PP_SEQ_ELEM(1, MEMBER)(),                      \
+            &this->BOOST_PP_SEQ_ELEM(1, MEMBER)() + count,              \
+            (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                            \
+                target +                                                \
+                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                count));                                                \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER) \
+    {                                                                   \
+        typename LibFlatArray::detail::                                 \
+            soa_array_member_copy_helper<DIM_PROD>::                    \
+            template inner_a<BOOST_PP_SEQ_ELEM(0, MEMBER)>::            \
+            template copy_array_out<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>()( \
+                (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
+                    target +                                            \
+                    detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                    count),                                             \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]),             \
+                count);                                                 \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER))
 
 #define LIBFLATARRAY_CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)            \
     if (dim_x <= SIZE) {                                             \

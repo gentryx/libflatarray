@@ -179,7 +179,7 @@
         void load(const char *source, size_t count)                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN,                  \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -189,7 +189,7 @@
         void save(char *target, size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -701,7 +701,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            LIBFLATARRAY_CASE_DIM_Z,                                                 \
+            LIBFLATARRAY_CASE_DIM_Z,                                    \
             unused,                                                     \
             Z_SIZES);                                                   \
                                                                         \
@@ -715,7 +715,7 @@
         FUNCTOR& functor) const                                         \
     {                                                                   \
         BOOST_PP_SEQ_FOR_EACH(                                          \
-            LIBFLATARRAY_CASE_DIM_Z,                                                 \
+            LIBFLATARRAY_CASE_DIM_Z,                                    \
             unused,                                                     \
             Z_SIZES);                                                   \
                                                                         \

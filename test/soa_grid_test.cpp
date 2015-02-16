@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 - 2014 Andreas Schäfer
+ * Copyright 2013 - 2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -52,6 +52,18 @@ private:
 };
 
 LIBFLATARRAY_REGISTER_SOA(CellWithMultipleMembersOfSameType, ((double)(memberA))((double)(memberB))((double)(memberC)))
+
+class CellWithArrayMember
+{
+public:
+
+    double temp[40];
+};
+
+
+LIBFLATARRAY_REGISTER_SOA(
+    CellWithArrayMember,
+    ((double)(temp)(40)) )
 
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
@@ -854,7 +866,35 @@ ADD_TEST(TestArrayMember)
             }
         }
     }
+}
 
+ADD_TEST(TestArrayMemberLoadSave)
+{
+    soa_grid<CellWithArrayMember> grid(10, 10, 10);
+    std::vector<char> store0(3 * 40 * sizeof(double));
+    std::vector<char> store1 = store0;
+    BOOST_TEST(store0 == store1);
+
+    double *storeA = reinterpret_cast<double*>(&store0[0]);
+    for (int j = 0; j < 40; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            storeA[j * 3 + i] = j * 1000 + i;
+        }
+    }
+    BOOST_TEST(store0 != store1);
+
+    grid.load(5, 2, 1, &store0[0], 3);
+    grid.save(5, 2, 1, &store1[0], 3);
+    BOOST_TEST(store0 == store1);
+
+    storeA = reinterpret_cast<double*>(&store1[0]);
+    for (int j = 0; j < 40; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            double expected = j * 1000 + i;
+            double actual = storeA[j * 3 + i];
+            BOOST_TEST(expected == actual);
+        }
+    }
 }
 
 }

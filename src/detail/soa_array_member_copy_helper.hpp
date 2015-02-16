@@ -16,6 +16,59 @@ template<int SIZE>
 class soa_array_member_copy_helper
 {
 public:
+    template<typename MEMBER>
+    class inner_a
+    {
+    public:
+        template<int INDEX, typename DUMMY=int>
+        class copy_array_in
+        {
+        public:
+            inline
+            void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
+            {
+                copy_array_in<INDEX - 1, DUMMY>()(source, data, count);
+                std::copy(
+                    source + count * (INDEX - 1),
+                    source + count * (INDEX + 0),
+                    data + SIZE * (INDEX - 1));
+            }
+        };
+
+        template<typename DUMMY>
+        class copy_array_in<0, DUMMY>
+        {
+        public:
+            inline
+            void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
+            {}
+        };
+
+        template<int INDEX, typename DUMMY=int>
+        class copy_array_out
+        {
+        public:
+            inline
+            void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
+            {
+                copy_array_out<INDEX - 1, DUMMY>()(target, data, count);
+                std::copy(
+                    data + SIZE * (INDEX - 1),
+                    data + SIZE * (INDEX - 1) + count,
+                    target + count * (INDEX - 1));
+            }
+        };
+
+        template<typename DUMMY>
+        class copy_array_out<0, DUMMY>
+        {
+        public:
+            inline
+            void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
+            {}
+        };
+    };
+
     template<typename CELL>
     class inner1
     {
