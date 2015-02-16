@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_DETAIL_SOA_ARRAY_MEMBER_COPY_HELPER_HPP
 #define FLAT_ARRAY_DETAIL_SOA_ARRAY_MEMBER_COPY_HELPER_HPP
 
+#include <algorithm>
+
 namespace LibFlatArray {
 
 namespace detail {
