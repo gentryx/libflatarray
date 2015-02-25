@@ -57,6 +57,7 @@ endfunction(add_config_option)
 
 add_config_option(ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
+add_config_option(LIB_INSTALL_DIR "Directory where libraries will be installed to, may be overridden for 64-bit installations" "lib" false)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
   message(FATAL_ERROR "WITH_CUDA selected, but could not find the NVIDIA CUDA toolkit.")
@@ -82,8 +83,6 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY ${PACKAGE_NAME})
 
 include(CPack)
 
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of LIB_INSTALL_DIR" )
-set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}" CACHE STRING "Libraries will be installed to")
 set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})
 
 if(CMAKE_VERSION VERSION_GREATER 2.8.10)
