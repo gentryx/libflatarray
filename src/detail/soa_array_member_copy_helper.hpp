@@ -14,7 +14,7 @@ namespace LibFlatArray {
 
 namespace detail {
 
-template<int SIZE>
+template<long SIZE>
 class soa_array_member_copy_helper
 {
 public:
@@ -22,7 +22,7 @@ public:
     class inner_a
     {
     public:
-        template<int INDEX, typename DUMMY=int>
+        template<long INDEX, typename DUMMY=int>
         class copy_array_in
         {
         public:
@@ -46,7 +46,7 @@ public:
             {}
         };
 
-        template<int INDEX, typename DUMMY=int>
+        template<long INDEX, typename DUMMY=int>
         class copy_array_out
         {
         public:
@@ -116,7 +116,7 @@ public:
                 const char *data;
             };
 
-            template<int ARITY>
+            template<long ARITY>
             class inner3
             {
             public:
@@ -124,7 +124,7 @@ public:
                 class inner4
                 {
                 public:
-                    template<int INDEX, typename DUMMY = int>
+                    template<long INDEX, typename DUMMY = int>
                     class copy_in
                     {
                     public:
@@ -145,7 +145,7 @@ public:
                         {}
                     };
 
-                    template<int INDEX, typename DUMMY = int>
+                    template<long INDEX, typename DUMMY = int>
                     class copy_out
                     {
                     public:
