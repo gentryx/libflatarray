@@ -32,7 +32,7 @@ public:
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
         std::basic_ostream<_CharT, _Traits>& __os,
-        const short_vec<float, 1> vec);
+        const short_vec<float, 1>& vec);
 
     inline
     short_vec(const float data = 0) :
@@ -45,52 +45,52 @@ public:
     {}
 
     inline
-    void operator-=(const short_vec<float, 1> other)
+    void operator-=(const short_vec<float, 1>& other)
     {
         val1 -= other.val1;
     }
 
     inline
-    short_vec<float, 1> operator-(const short_vec<float, 1> other) const
+    short_vec<float, 1> operator-(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
             val1 - other.val1);
     }
 
     inline
-    void operator+=(const short_vec<float, 1> other)
+    void operator+=(const short_vec<float, 1>& other)
     {
         val1 += other.val1;
     }
 
     inline
-    short_vec<float, 1> operator+(const short_vec<float, 1> other) const
+    short_vec<float, 1> operator+(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
             val1 + other.val1);
     }
 
     inline
-    void operator*=(const short_vec<float, 1> other)
+    void operator*=(const short_vec<float, 1>& other)
     {
         val1 *= other.val1;
     }
 
     inline
-    short_vec<float, 1> operator*(const short_vec<float, 1> other) const
+    short_vec<float, 1> operator*(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
             val1 * other.val1);
     }
 
     inline
-    void operator/=(const short_vec<float, 1> other)
+    void operator/=(const short_vec<float, 1>& other)
     {
         val1 /= other.val1;
     }
 
     inline
-    short_vec<float, 1> operator/(const short_vec<float, 1> other) const
+    short_vec<float, 1> operator/(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
             val1 / other.val1);
@@ -130,13 +130,13 @@ private:
 #endif
 
 inline
-void operator<<(float *data, const short_vec<float, 1> vec)
+void operator<<(float *data, const short_vec<float, 1>& vec)
 {
     vec.store(data);
 }
 
 inline
-short_vec<float, 1> sqrt(const short_vec<float, 1> vec)
+short_vec<float, 1> sqrt(const short_vec<float, 1>& vec)
 {
     return vec.sqrt();
 }
@@ -144,7 +144,7 @@ short_vec<float, 1> sqrt(const short_vec<float, 1> vec)
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-           const short_vec<float, 1> vec)
+           const short_vec<float, 1>& vec)
 {
     __os << "[" << vec.val1 << "]";
     return __os;
