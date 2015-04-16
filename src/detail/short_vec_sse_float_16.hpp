@@ -15,6 +15,7 @@
 
 #ifdef __SSE4_1__
 #include <smmintrin.h>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 #endif
 
 #ifndef __AVX__
@@ -180,42 +181,59 @@ public:
     void gather(const float *ptr, unsigned *offsets)
     {
         val1 = _mm_load_ss(ptr + offsets[0]);
-        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[1]), _MM_MK_INSERTPS_NDX(0,1,0));
-        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[2]), _MM_MK_INSERTPS_NDX(0,2,0));
-        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[3]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 1], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 2], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 3], _MM_MK_INSERTPS_NDX(0,3,0));
         val2 = _mm_load_ss(ptr + offsets[4]);
-        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[5]), _MM_MK_INSERTPS_NDX(0,1,0));
-        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[6]), _MM_MK_INSERTPS_NDX(0,2,0));
-        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[7]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 5], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 6], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 7], _MM_MK_INSERTPS_NDX(0,3,0));
         val3 = _mm_load_ss(ptr + offsets[8]);
-        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[ 9]), _MM_MK_INSERTPS_NDX(0,1,0));
-        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[10]), _MM_MK_INSERTPS_NDX(0,2,0));
-        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[11]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[ 9], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[10], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[11], _MM_MK_INSERTPS_NDX(0,3,0));
         val4 = _mm_load_ss(ptr + offsets[12]);
-        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[13]), _MM_MK_INSERTPS_NDX(0,1,0));
-        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[14]), _MM_MK_INSERTPS_NDX(0,2,0));
-        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[15]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[13], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[14], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline
     void scatter(float *ptr, unsigned *offsets) const
     {
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 0]], val1, 0);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 1]], val1, 1);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 2]], val1, 2);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 3]], val1, 3);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 4]], val2, 0);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 5]], val2, 1);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 6]], val2, 2);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 7]], val2, 3);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 8]], val3, 0);
-        _MM_EXTRACT_FLOAT(ptr[offsets[ 9]], val3, 1);
-        _MM_EXTRACT_FLOAT(ptr[offsets[10]], val3, 2);
-        _MM_EXTRACT_FLOAT(ptr[offsets[11]], val3, 3);
-        _MM_EXTRACT_FLOAT(ptr[offsets[12]], val4, 0);
-        _MM_EXTRACT_FLOAT(ptr[offsets[13]], val4, 1);
-        _MM_EXTRACT_FLOAT(ptr[offsets[14]], val4, 2);
-        _MM_EXTRACT_FLOAT(ptr[offsets[15]], val4, 3);
+        ShortVecHelpers::ExtractResult r1, r2, r3, r4;
+        r1.i = _mm_extract_ps(val1, 0);
+        r2.i = _mm_extract_ps(val1, 1);
+        r3.i = _mm_extract_ps(val1, 2);
+        r4.i = _mm_extract_ps(val1, 3);
+        ptr[offsets[0]] = r1.f;
+        ptr[offsets[1]] = r2.f;
+        ptr[offsets[2]] = r3.f;
+        ptr[offsets[3]] = r4.f;
+        r1.i = _mm_extract_ps(val2, 0);
+        r2.i = _mm_extract_ps(val2, 1);
+        r3.i = _mm_extract_ps(val2, 2);
+        r4.i = _mm_extract_ps(val2, 3);
+        ptr[offsets[4]] = r1.f;
+        ptr[offsets[5]] = r2.f;
+        ptr[offsets[6]] = r3.f;
+        ptr[offsets[7]] = r4.f;
+        r1.i = _mm_extract_ps(val3, 0);
+        r2.i = _mm_extract_ps(val3, 1);
+        r3.i = _mm_extract_ps(val3, 2);
+        r4.i = _mm_extract_ps(val3, 3);
+        ptr[offsets[ 8]] = r1.f;
+        ptr[offsets[ 9]] = r2.f;
+        ptr[offsets[10]] = r3.f;
+        ptr[offsets[11]] = r4.f;
+        r1.i = _mm_extract_ps(val4, 0);
+        r2.i = _mm_extract_ps(val4, 1);
+        r3.i = _mm_extract_ps(val4, 2);
+        r4.i = _mm_extract_ps(val4, 3);
+        ptr[offsets[12]] = r1.f;
+        ptr[offsets[13]] = r2.f;
+        ptr[offsets[14]] = r3.f;
+        ptr[offsets[15]] = r4.f;
     }
 #else
     inline
