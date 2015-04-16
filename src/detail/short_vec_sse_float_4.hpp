@@ -185,7 +185,7 @@ public:
         _mm_store_ss(ptr + offsets[2], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[3], tmp);
-   }
+    }
 #endif
 
 private:
