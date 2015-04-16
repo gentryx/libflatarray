@@ -12,6 +12,7 @@
 
 #include <immintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __CUDA_ARCH__
 
@@ -175,44 +176,44 @@ public:
     {
         __m128 tmp;
         tmp  = _mm_load_ss(ptr + offsets[0]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[1]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[2]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[3]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[2], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[3], _MM_MK_INSERTPS_NDX(0,3,0));
         val1 = _mm256_insertf128_ps(val1, tmp, 0);
         tmp  = _mm_load_ss(ptr + offsets[4]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[5]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[6]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[7]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[5], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[6], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[7], _MM_MK_INSERTPS_NDX(0,3,0));
         val1 = _mm256_insertf128_ps(val1, tmp, 1);
         tmp  = _mm_load_ss(ptr + offsets[8]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[ 9]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[10]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[11]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[ 9], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[10], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[11], _MM_MK_INSERTPS_NDX(0,3,0));
         val2 = _mm256_insertf128_ps(val2, tmp, 0);
         tmp  = _mm_load_ss(ptr + offsets[12]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[13]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[14]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[15]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[13], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[14], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
         val2 = _mm256_insertf128_ps(val2, tmp, 1);
         tmp  = _mm_load_ss(ptr + offsets[16]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[17]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[18]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[19]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
         val3 = _mm256_insertf128_ps(val3, tmp, 0);
         tmp  = _mm_load_ss(ptr + offsets[20]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[21]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[22]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[23]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
         val3 = _mm256_insertf128_ps(val3, tmp, 1);
         tmp  = _mm_load_ss(ptr + offsets[24]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[25]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[26]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[27]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
         val4 = _mm256_insertf128_ps(val4, tmp, 0);
         tmp  = _mm_load_ss(ptr + offsets[28]);
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[29]), _MM_MK_INSERTPS_NDX(0,1,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[30]), _MM_MK_INSERTPS_NDX(0,2,0));
-        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[31]), _MM_MK_INSERTPS_NDX(0,3,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
+        ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
         val4 = _mm256_insertf128_ps(val4, tmp, 1);
     }
 

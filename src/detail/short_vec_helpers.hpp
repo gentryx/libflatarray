@@ -34,6 +34,21 @@ union ExtractResult {
 
 #endif
 
+#ifdef __AVX__
+
+/**
+ * For AVX we can use the vinsertps instruction.
+ */
+inline
+void _mm_insert_ps2_avx(__m128& a, const float *base, unsigned offset, int idx)
+{
+    // vinsertps xmm, xmm, xmm/m32, imm8
+    asm volatile (
+        "vinsertps %0, (%q1, %q2, 4), %3, %3\n"
+        : : "K" (idx), "r" (base), "r" (offset), "x" (a));
+}
+#endif
+
 /**
  * For some implementations there is the problem, that the compiler does not
  * see, that some variables should be used uninitialized.
