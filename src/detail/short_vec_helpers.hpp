@@ -18,9 +18,8 @@ inline
 void _mm_insert_ps2(__m128& a, const float *base, unsigned offset, int idx)
 {
     // instruction: insertps xmm, xmm/m32, imm8
-    asm volatile (
-        "insertps %0, (%q1, %q2, 4), %3\n"
-        : : "K" (idx), "r" (base), "r" (offset), "x" (a));
+    asm volatile ("insertps %1, (%q2, %q3, 4), %0\n"
+                  : "+x" (a) : "K" (idx), "r" (base), "r" (offset) : "memory");
 }
 
 /**
@@ -44,8 +43,8 @@ void _mm_insert_ps2_avx(__m128& a, const float *base, unsigned offset, int idx)
 {
     // vinsertps xmm, xmm, xmm/m32, imm8
     asm volatile (
-        "vinsertps %0, (%q1, %q2, 4), %3, %3\n"
-        : : "K" (idx), "r" (base), "r" (offset), "x" (a));
+        "vinsertps %1, (%q2, %q3, 4), %0, %0\n"
+        : "+x" (a) : "K" (idx), "r" (base), "r" (offset) : "memory");
 }
 #endif
 
