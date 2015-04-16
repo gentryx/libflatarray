@@ -69,6 +69,16 @@ void _mm_insert_ps2_avx(__m128& a, const float *base, unsigned offset, int idx)
 	_Pragma("clang diagnostic pop")
 #endif
 
+/**
+ * If compiler is not gcc and not clang, just remove these macros.
+ */
+#ifndef SHORTVEC_DISABLE_WARNING_UNINITIALIZED
+# define SHORTVEC_DISABLE_WARNING_UNINITIALIZED
+#endif
+#ifndef SHORTVEC_ENABLE_WARNING_UNINITIALIZED
+# define SHORTVEC_ENABLE_WARNING_UNINITIALIZED
+#endif
+
 }
 
 }
