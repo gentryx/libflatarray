@@ -13,6 +13,7 @@
 #include <libflatarray/short_vec.hpp>
 #include <stdexcept>
 #include <vector>
+#include <cstring>
 
 #include "test.hpp"
 
@@ -189,6 +190,48 @@ void testImplementation()
     buf2 << (ShortVec::ARITY - 1 + 0.1) << "]";
 
     BOOST_TEST(buf1.str() == buf2.str());
+
+    // test gather
+    {
+        CARGO array[ARITY * 10];
+        unsigned indices[ARITY];
+        CARGO actual[ARITY];
+        CARGO expected[ARITY];
+        std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
+        for (unsigned i = 0; i < ARITY * 10; ++i)
+            if (i % 10 == 0)
+                array[i] = i * 0.75;
+        for (unsigned i = 0; i < ARITY; ++i) {
+            indices[i] = i * 10;
+            expected[i] = (i * 10) * 0.75;
+        }
+
+        ShortVec vec;
+        vec.gather(array, indices);
+        actual << vec;
+        for (unsigned i = 0; i < ARITY; ++i)
+            TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
+    }
+
+    // test scatter
+    {
+        ShortVec vec;
+        CARGO array[ARITY * 10];
+        CARGO expected[ARITY * 10];
+        unsigned indices[ARITY];
+        std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
+        std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
+        for (unsigned i = 0; i < ARITY * 10; ++i)
+            if (i % 10 == 0)
+                expected[i] = i * 0.75;
+        for (unsigned i = 0; i < ARITY; ++i)
+            indices[i] = i * 10;
+
+        vec.gather(expected, indices);
+        vec.scatter(array, indices);
+        for (unsigned i = 0; i < ARITY * 10; ++i)
+            TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+    }
 }
 
 ADD_TEST(TestBasic)
