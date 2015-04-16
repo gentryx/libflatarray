@@ -170,6 +170,98 @@ public:
         _mm256_storeu_ps(data + 24, val4);
     }
 
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        __m128 tmp;
+        tmp  = _mm_load_ss(ptr + offsets[0]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[1]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[2]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[3]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val1 = _mm256_insertf128_ps(val1, tmp, 0);
+        tmp  = _mm_load_ss(ptr + offsets[4]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[5]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[6]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[7]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val1 = _mm256_insertf128_ps(val1, tmp, 1);
+        tmp  = _mm_load_ss(ptr + offsets[8]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[ 9]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[10]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[11]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val2 = _mm256_insertf128_ps(val2, tmp, 0);
+        tmp  = _mm_load_ss(ptr + offsets[12]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[13]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[14]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[15]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val2 = _mm256_insertf128_ps(val2, tmp, 1);
+        tmp  = _mm_load_ss(ptr + offsets[16]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[17]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[18]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[19]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val3 = _mm256_insertf128_ps(val3, tmp, 0);
+        tmp  = _mm_load_ss(ptr + offsets[20]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[21]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[22]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[23]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val3 = _mm256_insertf128_ps(val3, tmp, 1);
+        tmp  = _mm_load_ss(ptr + offsets[24]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[25]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[26]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[27]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val4 = _mm256_insertf128_ps(val4, tmp, 0);
+        tmp  = _mm_load_ss(ptr + offsets[28]);
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[29]), _MM_MK_INSERTPS_NDX(0,1,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[30]), _MM_MK_INSERTPS_NDX(0,2,0));
+        tmp  = _mm_insert_ps(tmp, _mm_load_ss(ptr + offsets[31]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val4 = _mm256_insertf128_ps(val4, tmp, 1);
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        __m128 tmp;
+        tmp = _mm256_extractf128_ps(val1, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 0]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 1]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 2]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 3]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val1, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 4]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 5]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 6]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 7]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val2, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 8]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 9]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[10]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[11]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val2, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[12]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[13]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[14]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[15]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val3, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[16]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[17]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[18]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[19]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val3, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[20]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[21]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[22]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[23]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val4, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[24]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[25]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[26]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[27]], tmp, 3);
+        tmp = _mm256_extractf128_ps(val4, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[28]], tmp, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[29]], tmp, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[30]], tmp, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[31]], tmp, 3);
+    }
+
 private:
     __m256 val1;
     __m256 val2;

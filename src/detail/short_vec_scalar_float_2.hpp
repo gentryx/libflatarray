@@ -125,6 +125,20 @@ public:
         *(data +  1) = val2;
     }
 
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        val1 = ptr[offsets[0]];
+        val2 = ptr[offsets[1]];
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        ptr[offsets[0]] = val1;
+        ptr[offsets[1]] = val2;
+    }
+
 private:
     float val1;
     float val2;

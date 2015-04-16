@@ -326,6 +326,48 @@ public:
         *(data + 15) = val16;
     }
 
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        val1  = ptr[offsets[ 0]];
+        val2  = ptr[offsets[ 1]];
+        val3  = ptr[offsets[ 2]];
+        val4  = ptr[offsets[ 3]];
+        val5  = ptr[offsets[ 4]];
+        val6  = ptr[offsets[ 5]];
+        val7  = ptr[offsets[ 6]];
+        val8  = ptr[offsets[ 7]];
+        val9  = ptr[offsets[ 8]];
+        val10 = ptr[offsets[ 9]];
+        val11 = ptr[offsets[10]];
+        val12 = ptr[offsets[11]];
+        val13 = ptr[offsets[12]];
+        val14 = ptr[offsets[13]];
+        val15 = ptr[offsets[14]];
+        val16 = ptr[offsets[15]];
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        ptr[offsets[0]]  = val1;
+        ptr[offsets[1]]  = val2;
+        ptr[offsets[2]]  = val3;
+        ptr[offsets[3]]  = val4;
+        ptr[offsets[4]]  = val5;
+        ptr[offsets[5]]  = val6;
+        ptr[offsets[6]]  = val7;
+        ptr[offsets[7]]  = val8;
+        ptr[offsets[8]]  = val9;
+        ptr[offsets[9]]  = val10;
+        ptr[offsets[10]] = val11;
+        ptr[offsets[11]] = val12;
+        ptr[offsets[12]] = val13;
+        ptr[offsets[13]] = val14;
+        ptr[offsets[14]] = val15;
+        ptr[offsets[15]] = val16;
+    }
+
 private:
     float val1;
     float val2;

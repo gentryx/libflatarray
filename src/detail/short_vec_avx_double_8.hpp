@@ -132,6 +132,42 @@ public:
         _mm256_storeu_pd(data +  4, val2);
     }
 
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        __m128d tmp;
+        tmp  = _mm_loadl_pd(tmp, ptr + offsets[0]);
+        tmp  = _mm_loadh_pd(tmp, ptr + offsets[1]);
+        val1 = _mm256_insertf128_pd(val1, tmp, 0);
+        tmp  = _mm_loadl_pd(tmp, ptr + offsets[2]);
+        tmp  = _mm_loadh_pd(tmp, ptr + offsets[3]);
+        val1 = _mm256_insertf128_pd(val1, tmp, 1);
+        tmp  = _mm_loadl_pd(tmp, ptr + offsets[4]);
+        tmp  = _mm_loadh_pd(tmp, ptr + offsets[5]);
+        val2 = _mm256_insertf128_pd(val2, tmp, 0);
+        tmp  = _mm_loadl_pd(tmp, ptr + offsets[6]);
+        tmp  = _mm_loadh_pd(tmp, ptr + offsets[7]);
+        val2 = _mm256_insertf128_pd(val2, tmp, 1);
+    }
+
+    inline
+    void scatter(double *ptr, unsigned *offsets) const
+    {
+        __m128d tmp;
+        tmp = _mm256_extractf128_pd(val1, 0);
+        _mm_storel_pd(ptr + offsets[0], tmp);
+        _mm_storeh_pd(ptr + offsets[1], tmp);
+        tmp = _mm256_extractf128_pd(val1, 1);
+        _mm_storel_pd(ptr + offsets[2], tmp);
+        _mm_storeh_pd(ptr + offsets[3], tmp);
+        tmp = _mm256_extractf128_pd(val2, 0);
+        _mm_storel_pd(ptr + offsets[4], tmp);
+        _mm_storeh_pd(ptr + offsets[5], tmp);
+        tmp = _mm256_extractf128_pd(val2, 1);
+        _mm_storel_pd(ptr + offsets[6], tmp);
+        _mm_storeh_pd(ptr + offsets[7], tmp);
+    }
+
 private:
     __m256d val1;
     __m256d val2;

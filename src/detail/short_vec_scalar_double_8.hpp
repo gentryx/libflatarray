@@ -214,6 +214,32 @@ public:
         *(data +  7) = val8;
     }
 
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        val1 = ptr[offsets[0]];
+        val2 = ptr[offsets[1]];
+        val3 = ptr[offsets[2]];
+        val4 = ptr[offsets[3]];
+        val5 = ptr[offsets[4]];
+        val6 = ptr[offsets[5]];
+        val7 = ptr[offsets[6]];
+        val8 = ptr[offsets[7]];
+    }
+
+    inline
+    void scatter(double *ptr, unsigned *offsets) const
+    {
+        ptr[offsets[0]] = val1;
+        ptr[offsets[1]] = val2;
+        ptr[offsets[2]] = val3;
+        ptr[offsets[3]] = val4;
+        ptr[offsets[4]] = val5;
+        ptr[offsets[5]] = val6;
+        ptr[offsets[6]] = val7;
+        ptr[offsets[7]] = val8;
+    }
+
 private:
     double val1;
     double val2;

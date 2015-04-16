@@ -547,6 +547,80 @@ public:
         *(data + 31) = val32;
     }
 
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        val1  = ptr[offsets[ 0]];
+        val2  = ptr[offsets[ 1]];
+        val3  = ptr[offsets[ 2]];
+        val4  = ptr[offsets[ 3]];
+        val5  = ptr[offsets[ 4]];
+        val6  = ptr[offsets[ 5]];
+        val7  = ptr[offsets[ 6]];
+        val8  = ptr[offsets[ 7]];
+        val9  = ptr[offsets[ 8]];
+        val10 = ptr[offsets[ 9]];
+        val11 = ptr[offsets[10]];
+        val12 = ptr[offsets[11]];
+        val13 = ptr[offsets[12]];
+        val14 = ptr[offsets[13]];
+        val15 = ptr[offsets[14]];
+        val16 = ptr[offsets[15]];
+        val17 = ptr[offsets[16]];
+        val18 = ptr[offsets[17]];
+        val19 = ptr[offsets[18]];
+        val20 = ptr[offsets[19]];
+        val21 = ptr[offsets[20]];
+        val22 = ptr[offsets[21]];
+        val23 = ptr[offsets[22]];
+        val24 = ptr[offsets[23]];
+        val25 = ptr[offsets[24]];
+        val26 = ptr[offsets[25]];
+        val27 = ptr[offsets[26]];
+        val28 = ptr[offsets[27]];
+        val29 = ptr[offsets[28]];
+        val30 = ptr[offsets[29]];
+        val31 = ptr[offsets[30]];
+        val32 = ptr[offsets[31]];
+    }
+
+    inline
+    void scatter(double *ptr, unsigned *offsets) const
+    {
+        ptr[offsets[0]]  = val1;
+        ptr[offsets[1]]  = val2;
+        ptr[offsets[2]]  = val3;
+        ptr[offsets[3]]  = val4;
+        ptr[offsets[4]]  = val5;
+        ptr[offsets[5]]  = val6;
+        ptr[offsets[6]]  = val7;
+        ptr[offsets[7]]  = val8;
+        ptr[offsets[8]]  = val9;
+        ptr[offsets[9]]  = val10;
+        ptr[offsets[10]] = val11;
+        ptr[offsets[11]] = val12;
+        ptr[offsets[12]] = val13;
+        ptr[offsets[13]] = val14;
+        ptr[offsets[14]] = val15;
+        ptr[offsets[15]] = val16;
+        ptr[offsets[16]] = val17;
+        ptr[offsets[17]] = val18;
+        ptr[offsets[18]] = val19;
+        ptr[offsets[19]] = val20;
+        ptr[offsets[20]] = val21;
+        ptr[offsets[21]] = val22;
+        ptr[offsets[22]] = val23;
+        ptr[offsets[23]] = val24;
+        ptr[offsets[24]] = val25;
+        ptr[offsets[25]] = val26;
+        ptr[offsets[26]] = val27;
+        ptr[offsets[27]] = val28;
+        ptr[offsets[28]] = val29;
+        ptr[offsets[29]] = val30;
+        ptr[offsets[30]] = val31;
+        ptr[offsets[31]] = val32;
+    }
+
 private:
     double val1;
     double val2;

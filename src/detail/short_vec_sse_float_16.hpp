@@ -13,6 +13,10 @@
 #include <emmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
 
+#ifdef __SSE4_1__
+#include <smmintrin.h>
+#endif
+
 #ifndef __AVX__
 #ifndef __CUDA_ARCH__
 
@@ -170,6 +174,121 @@ public:
         _mm_storeu_ps(data +  8, val3);
         _mm_storeu_ps(data + 12, val4);
     }
+
+#ifdef __SSE4_1__
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        val1 = _mm_load_ss(ptr + offsets[0]);
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[1]), _MM_MK_INSERTPS_NDX(0,1,0));
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[2]), _MM_MK_INSERTPS_NDX(0,2,0));
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[3]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val2 = _mm_load_ss(ptr + offsets[4]);
+        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[5]), _MM_MK_INSERTPS_NDX(0,1,0));
+        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[6]), _MM_MK_INSERTPS_NDX(0,2,0));
+        val2 = _mm_insert_ps(val2, _mm_load_ss(ptr + offsets[7]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val3 = _mm_load_ss(ptr + offsets[8]);
+        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[ 9]), _MM_MK_INSERTPS_NDX(0,1,0));
+        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[10]), _MM_MK_INSERTPS_NDX(0,2,0));
+        val3 = _mm_insert_ps(val3, _mm_load_ss(ptr + offsets[11]), _MM_MK_INSERTPS_NDX(0,3,0));
+        val4 = _mm_load_ss(ptr + offsets[12]);
+        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[13]), _MM_MK_INSERTPS_NDX(0,1,0));
+        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[14]), _MM_MK_INSERTPS_NDX(0,2,0));
+        val4 = _mm_insert_ps(val4, _mm_load_ss(ptr + offsets[15]), _MM_MK_INSERTPS_NDX(0,3,0));
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 0]], val1, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 1]], val1, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 2]], val1, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 3]], val1, 3);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 4]], val2, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 5]], val2, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 6]], val2, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 7]], val2, 3);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 8]], val3, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[ 9]], val3, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[10]], val3, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[11]], val3, 3);
+        _MM_EXTRACT_FLOAT(ptr[offsets[12]], val4, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[13]], val4, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[14]], val4, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[15]], val4, 3);
+    }
+#else
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        __m128 f1, f2, f3, f4;
+        f1   = _mm_load_ss(ptr + offsets[0]);
+        f2   = _mm_load_ss(ptr + offsets[2]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[1]);
+        f4   = _mm_load_ss(ptr + offsets[3]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val1 = _mm_unpacklo_ps(f1, f3);
+        f1   = _mm_load_ss(ptr + offsets[4]);
+        f2   = _mm_load_ss(ptr + offsets[6]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[5]);
+        f4   = _mm_load_ss(ptr + offsets[7]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val2 = _mm_unpacklo_ps(f1, f3);
+        f1   = _mm_load_ss(ptr + offsets[ 8]);
+        f2   = _mm_load_ss(ptr + offsets[10]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[ 9]);
+        f4   = _mm_load_ss(ptr + offsets[11]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val3 = _mm_unpacklo_ps(f1, f3);
+        f1   = _mm_load_ss(ptr + offsets[12]);
+        f2   = _mm_load_ss(ptr + offsets[14]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[13]);
+        f4   = _mm_load_ss(ptr + offsets[15]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val4 = _mm_unpacklo_ps(f1, f3);
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        __m128 tmp = val1;
+        _mm_store_ss(ptr + offsets[0], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[1], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[2], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[3], tmp);
+        tmp = val2;
+        _mm_store_ss(ptr + offsets[4], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[5], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[6], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[7], tmp);
+        tmp = val3;
+        _mm_store_ss(ptr + offsets[8], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[9], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[10], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[11], tmp);
+        tmp = val4;
+        _mm_store_ss(ptr + offsets[12], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[13], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[14], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[15], tmp);
+   }
+#endif
 
 private:
     __m128 val1;

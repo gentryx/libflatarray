@@ -12,6 +12,11 @@
 
 #include <emmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <iostream>
+
+#ifdef __SSE4_1__
+#include <smmintrin.h>
+#endif
 
 #ifndef __CUDA_ARCH__
 
@@ -130,6 +135,52 @@ public:
     {
         _mm_storeu_ps(data +  0, val1);
     }
+
+#ifdef __SSE4_1__
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        val1 = _mm_load_ss(ptr + offsets[0]);
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[1]), _MM_MK_INSERTPS_NDX(0,1,0));
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[2]), _MM_MK_INSERTPS_NDX(0,2,0));
+        val1 = _mm_insert_ps(val1, _mm_load_ss(ptr + offsets[3]), _MM_MK_INSERTPS_NDX(0,3,0));
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        _MM_EXTRACT_FLOAT(ptr[offsets[0]], val1, 0);
+        _MM_EXTRACT_FLOAT(ptr[offsets[1]], val1, 1);
+        _MM_EXTRACT_FLOAT(ptr[offsets[2]], val1, 2);
+        _MM_EXTRACT_FLOAT(ptr[offsets[3]], val1, 3);
+    }
+#else
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        __m128 f1, f2, f3, f4;
+        f1   = _mm_load_ss(ptr + offsets[0]);
+        f2   = _mm_load_ss(ptr + offsets[2]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[1]);
+        f4   = _mm_load_ss(ptr + offsets[3]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val1 = _mm_unpacklo_ps(f1, f3);
+    }
+
+    inline
+    void scatter(float *ptr, unsigned *offsets) const
+    {
+        __m128 tmp = val1;
+        _mm_store_ss(ptr + offsets[0], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[1], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[2], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[3], tmp);
+   }
+#endif
 
 private:
     __m128 val1;

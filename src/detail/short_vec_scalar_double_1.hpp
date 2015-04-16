@@ -109,6 +109,18 @@ public:
         *(data + 0) = val1;
     }
 
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        val1 = ptr[offsets[0]];
+    }
+
+    inline
+    void scatter(double *ptr, unsigned *offsets) const
+    {
+        ptr[offsets[0]] = val1;
+    }
+
 private:
     double val1;
 };

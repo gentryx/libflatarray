@@ -132,6 +132,24 @@ public:
         _mm_storeu_pd(data + 2, val2);
     }
 
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        val1 = _mm_loadl_pd(val1, ptr + offsets[0]);
+        val1 = _mm_loadh_pd(val1, ptr + offsets[1]);
+        val2 = _mm_loadl_pd(val2, ptr + offsets[2]);
+        val2 = _mm_loadh_pd(val2, ptr + offsets[3]);
+    }
+
+    inline
+    void scatter(double *ptr, unsigned *offsets) const
+    {
+        _mm_storel_pd(ptr + offsets[0], val1);
+        _mm_storeh_pd(ptr + offsets[1], val1);
+        _mm_storel_pd(ptr + offsets[2], val2);
+        _mm_storeh_pd(ptr + offsets[3], val2);
+    }
+
 private:
     __m128d val1;
     __m128d val2;
