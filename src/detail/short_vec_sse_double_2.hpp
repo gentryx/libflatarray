@@ -120,7 +120,6 @@ public:
 
 private:
     __m128d val1;
-    __m128d val2;
 };
 
 #ifdef __ICC
