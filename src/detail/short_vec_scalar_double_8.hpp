@@ -210,7 +210,7 @@ public:
     }
 
     inline
-    void loadAligned(const double *data)
+    void load_aligned(const double *data)
     {
         load(data);
     }
@@ -229,13 +229,13 @@ public:
     }
 
     inline
-    void storeAligned(double *data) const
+    void store_aligned(double *data) const
     {
         store(data);
     }
 
     inline
-    void storeNT(double *data) const
+    void store_nt(double *data) const
     {
         store(data);
     }

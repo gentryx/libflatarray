@@ -147,7 +147,7 @@ public:
     }
 
     inline
-    void loadAligned(const float *data)
+    void load_aligned(const float *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         val1 = _mm256_load_ps(data + 0);
@@ -162,7 +162,7 @@ public:
     }
 
     inline
-    void storeAligned(float *data) const
+    void store_aligned(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         _mm256_store_ps(data + 0, val1);
@@ -170,7 +170,7 @@ public:
     }
 
     inline
-    void storeNT(float *data) const
+    void store_nt(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         _mm256_stream_ps(data + 0, val1);

@@ -241,14 +241,14 @@ void testImplementation()
         for (unsigned i = 0; i < ARITY; ++i)
             expected[i] = 5.0;
         ShortVec v1 = 5.0;
-        v1.storeNT(array);
+        v1.store_nt(array);
         for (unsigned i = 0; i < ARITY; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
 
         for (unsigned i = 0; i < ARITY; ++i)
             expected[i] = i + 0.1;
         ShortVec v2 = expected;
-        v2.storeNT(array);
+        v2.store_nt(array);
         for (unsigned i = 0; i < ARITY; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
     }
@@ -261,14 +261,14 @@ void testImplementation()
         for (unsigned i = 0; i < ARITY; ++i)
             expected[i] = 5.0;
         ShortVec v1 = 5.0;
-        v1.storeAligned(array);
+        v1.store_aligned(array);
         for (unsigned i = 0; i < ARITY; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
 
         for (unsigned i = 0; i < ARITY; ++i)
             expected[i] = i + 0.1;
         ShortVec v2 = expected;
-        v2.storeAligned(array);
+        v2.store_aligned(array);
         for (unsigned i = 0; i < ARITY; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
     }
@@ -283,7 +283,7 @@ void testImplementation()
             expected[i] = 0;
         }
         ShortVec v1;
-        v1.loadAligned(array);
+        v1.load_aligned(array);
         v1.store(expected);
         for (unsigned i = 0; i < ARITY; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);

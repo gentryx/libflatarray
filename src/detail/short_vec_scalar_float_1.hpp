@@ -111,7 +111,7 @@ public:
     }
 
     inline
-    void loadAligned(const float *data)
+    void load_aligned(const float *data)
     {
         load(data);
     }
@@ -123,13 +123,13 @@ public:
     }
 
     inline
-    void storeAligned(float *data) const
+    void store_aligned(float *data) const
     {
         store(data);
     }
 
     inline
-    void storeNT(float *data) const
+    void store_nt(float *data) const
     {
         store(data);
     }

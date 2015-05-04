@@ -122,7 +122,7 @@ public:
     }
 
     inline
-    void loadAligned(const double *data)
+    void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         val1 = _mm256_load_pd(data);
@@ -135,14 +135,14 @@ public:
     }
 
     inline
-    void storeAligned(double *data) const
+    void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         _mm256_store_pd(data, val1);
     }
 
     inline
-    void storeNT(double *data) const
+    void store_nt(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
         _mm256_stream_pd(data, val1);
