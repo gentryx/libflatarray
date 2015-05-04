@@ -139,7 +139,7 @@ public:
 
 #ifdef __SSE4_1__
     inline
-    void gather(const float *ptr, unsigned *offsets)
+    void gather(const float *ptr, const unsigned *offsets)
     {
         val1 = _mm_load_ss(ptr + offsets[0]);
         ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
@@ -148,7 +148,7 @@ public:
     }
 
     inline
-    void scatter(float *ptr, unsigned *offsets) const
+    void scatter(float *ptr, const unsigned *offsets) const
     {
         ShortVecHelpers::ExtractResult r1, r2, r3, r4;
         r1.i = _mm_extract_ps(val1, 0);
@@ -162,7 +162,7 @@ public:
     }
 #else
     inline
-    void gather(const float *ptr, unsigned *offsets)
+    void gather(const float *ptr, const unsigned *offsets)
     {
         __m128 f1, f2, f3, f4;
         f1   = _mm_load_ss(ptr + offsets[0]);
@@ -175,7 +175,7 @@ public:
     }
 
     inline
-    void scatter(float *ptr, unsigned *offsets) const
+    void scatter(float *ptr, const unsigned *offsets) const
     {
         __m128 tmp = val1;
         _mm_store_ss(ptr + offsets[0], tmp);

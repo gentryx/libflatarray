@@ -134,17 +134,17 @@ public:
 
 #ifdef __AVX2__
     inline
-    void gather(const double *ptr, unsigned *offsets)
+    void gather(const double *ptr, const unsigned *offsets)
     {
         __m128i indices;
-        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets));
+        indices = _mm_loadu_si128(reinterpret_cast<const __m128i *>(offsets));
         val1    = _mm256_i32gather_pd(ptr, indices, 8);
-        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets + 4));
+        indices = _mm_loadu_si128(reinterpret_cast<const __m128i *>(offsets + 4));
         val2    = _mm256_i32gather_pd(ptr, indices, 8);
     }
 #else
     inline
-    void gather(const double *ptr, unsigned *offsets)
+    void gather(const double *ptr, const unsigned *offsets)
     {
         __m128d tmp;
         tmp  = _mm_loadl_pd(tmp, ptr + offsets[0]);
@@ -163,7 +163,7 @@ public:
 #endif
 
     inline
-    void scatter(double *ptr, unsigned *offsets) const
+    void scatter(double *ptr, const unsigned *offsets) const
     {
         __m128d tmp;
         tmp = _mm256_extractf128_pd(val1, 0);

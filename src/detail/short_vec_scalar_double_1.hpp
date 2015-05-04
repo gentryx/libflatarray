@@ -110,13 +110,13 @@ public:
     }
 
     inline
-    void gather(const double *ptr, unsigned *offsets)
+    void gather(const double *ptr, const unsigned *offsets)
     {
         val1 = ptr[offsets[0]];
     }
 
     inline
-    void scatter(double *ptr, unsigned *offsets) const
+    void scatter(double *ptr, const unsigned *offsets) const
     {
         ptr[offsets[0]] = val1;
     }

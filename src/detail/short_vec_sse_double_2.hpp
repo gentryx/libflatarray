@@ -119,14 +119,14 @@ public:
     }
 
     inline
-    void gather(const double *ptr, unsigned *offsets)
+    void gather(const double *ptr, const unsigned *offsets)
     {
         val1 = _mm_loadl_pd(val1, ptr + offsets[0]);
         val1 = _mm_loadh_pd(val1, ptr + offsets[1]);
     }
 
     inline
-    void scatter(double *ptr, unsigned *offsets) const
+    void scatter(double *ptr, const unsigned *offsets) const
     {
         _mm_storel_pd(ptr + offsets[0], val1);
         _mm_storeh_pd(ptr + offsets[1], val1);
