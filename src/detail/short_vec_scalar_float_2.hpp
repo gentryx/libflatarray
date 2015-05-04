@@ -126,6 +126,12 @@ public:
     }
 
     inline
+    void storeNT(float *data) const
+    {
+        store(data);
+    }
+
+    inline
     void gather(const float *ptr, const unsigned *offsets)
     {
         val1 = ptr[offsets[0]];

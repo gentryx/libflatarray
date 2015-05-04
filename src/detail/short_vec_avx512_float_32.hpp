@@ -5,6 +5,7 @@
 
 #include <immintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __CUDA_ARCH__
 
@@ -134,6 +135,14 @@ public:
     {
         _mm512_storeu_ps(data +  0, val1);
         _mm512_storeu_ps(data + 16, val2);
+    }
+
+    inline
+    void storeNT(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 64);
+        _mm512_stream_ps(data +  0, val1);
+        _mm512_stream_ps(data + 16, val2);
     }
 
     inline

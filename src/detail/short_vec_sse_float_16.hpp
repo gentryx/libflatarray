@@ -12,10 +12,10 @@
 
 #include <emmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifdef __SSE4_1__
 #include <smmintrin.h>
-#include <libflatarray/detail/short_vec_helpers.hpp>
 #endif
 
 #ifndef __AVX512F__
@@ -175,6 +175,16 @@ public:
         _mm_storeu_ps(data +  4, val2);
         _mm_storeu_ps(data +  8, val3);
         _mm_storeu_ps(data + 12, val4);
+    }
+
+    inline
+    void storeNT(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        _mm_stream_ps(data +  0, val1);
+        _mm_stream_ps(data +  4, val2);
+        _mm_stream_ps(data +  8, val3);
+        _mm_stream_ps(data + 12, val4);
     }
 
 #ifdef __SSE4_1__

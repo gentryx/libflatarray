@@ -11,6 +11,7 @@
 #ifdef __SSE__
 
 #include <emmintrin.h>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __AVX512F__
 #ifndef __AVX__
@@ -157,6 +158,16 @@ public:
         _mm_storeu_pd(data + 2, val2);
         _mm_storeu_pd(data + 4, val3);
         _mm_storeu_pd(data + 6, val4);
+    }
+
+    inline
+    void storeNT(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        _mm_stream_pd(data + 0, val1);
+        _mm_stream_pd(data + 2, val2);
+        _mm_stream_pd(data + 4, val3);
+        _mm_stream_pd(data + 6, val4);
     }
 
     inline

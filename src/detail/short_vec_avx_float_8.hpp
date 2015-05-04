@@ -127,6 +127,13 @@ public:
         _mm256_storeu_ps(data, val1);
     }
 
+    inline
+    void storeNT(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        _mm256_stream_ps(data, val1);
+    }
+
 #ifdef __AVX2__
     inline
     void gather(const float *ptr, const unsigned *offsets)

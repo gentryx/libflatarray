@@ -128,6 +128,12 @@ public:
     }
 
     inline
+    void storeNT(double *data) const
+    {
+        store(data);
+    }
+
+    inline
     void gather(const double *ptr, const unsigned *offsets)
     {
         val1 = ptr[offsets[0]];

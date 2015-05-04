@@ -12,6 +12,7 @@
 
 #include <immintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __AVX512F__
 #ifndef __CUDA_ARCH__
@@ -157,6 +158,16 @@ public:
         _mm256_storeu_pd(data +  4, val2);
         _mm256_storeu_pd(data +  8, val3);
         _mm256_storeu_pd(data + 12, val4);
+    }
+
+    inline
+    void storeNT(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        _mm256_stream_pd(data +  0, val1);
+        _mm256_stream_pd(data +  4, val2);
+        _mm256_stream_pd(data +  8, val3);
+        _mm256_stream_pd(data + 12, val4);
     }
 
 #ifdef __AVX2__

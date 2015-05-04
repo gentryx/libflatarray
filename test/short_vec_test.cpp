@@ -232,6 +232,26 @@ void testImplementation()
         for (unsigned i = 0; i < ARITY * 10; ++i)
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
     }
+
+    // test non temporal stores
+    {
+        CARGO array[ARITY] __attribute__((aligned(64)));
+        CARGO expected[ARITY] __attribute__((aligned(64)));
+
+        for (unsigned i = 0; i < ARITY; ++i)
+            expected[i] = 5.0;
+        ShortVec v1 = 5.0;
+        v1.storeNT(array);
+        for (unsigned i = 0; i < ARITY; ++i)
+            TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+
+        for (unsigned i = 0; i < ARITY; ++i)
+            expected[i] = i + 0.1;
+        ShortVec v2 = expected;
+        v2.storeNT(array);
+        for (unsigned i = 0; i < ARITY; ++i)
+            TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+    }
 }
 
 ADD_TEST(TestBasic)

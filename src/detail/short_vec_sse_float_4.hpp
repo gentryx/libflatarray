@@ -12,11 +12,11 @@
 
 #include <emmintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 #include <iostream>
 
 #ifdef __SSE4_1__
 #include <smmintrin.h>
-#include <libflatarray/detail/short_vec_helpers.hpp>
 #endif
 
 #ifndef __CUDA_ARCH__
@@ -135,6 +135,13 @@ public:
     void store(float *data) const
     {
         _mm_storeu_ps(data +  0, val1);
+    }
+
+    inline
+    void storeNT(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        _mm_stream_ps(data + 0, val1);
     }
 
 #ifdef __SSE4_1__

@@ -11,6 +11,7 @@
 #ifdef __SSE__
 
 #include <emmintrin.h>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __CUDA_ARCH__
 
@@ -116,6 +117,13 @@ public:
     void store(double *data) const
     {
         _mm_storeu_pd(data + 0, val1);
+    }
+
+    inline
+    void storeNT(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        _mm_stream_pd(data + 0, val1);
     }
 
     inline
