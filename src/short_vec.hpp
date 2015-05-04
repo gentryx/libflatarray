@@ -32,6 +32,13 @@ public:
 
 #include <sstream>
 
+#include <libflatarray/detail/short_vec_avx512_double_8.hpp>
+#include <libflatarray/detail/short_vec_avx512_double_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_double_32.hpp>
+
+#include <libflatarray/detail/short_vec_avx512_float_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_float_32.hpp>
+
 #include <libflatarray/detail/short_vec_avx_double_4.hpp>
 #include <libflatarray/detail/short_vec_avx_double_8.hpp>
 #include <libflatarray/detail/short_vec_avx_double_16.hpp>

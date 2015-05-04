@@ -14,6 +14,7 @@
 #include <libflatarray/detail/sqrt_reference.hpp>
 #include <libflatarray/detail/short_vec_helpers.hpp>
 
+#ifndef __AVX512F__
 #ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
@@ -283,6 +284,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 

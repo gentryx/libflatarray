@@ -10,6 +10,7 @@
 
 #ifndef __SSE__
 #ifndef __AVX__
+#ifndef __AVX512F__
 
 namespace LibFlatArray {
 
@@ -280,6 +281,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 
