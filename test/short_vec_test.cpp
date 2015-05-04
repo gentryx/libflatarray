@@ -230,8 +230,9 @@ void testImplementation()
                          120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
                          180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
         actual << vec;
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
+        }
     }
 #endif
 
@@ -243,16 +244,20 @@ void testImplementation()
         unsigned indices[ARITY];
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
-        for (unsigned i = 0; i < ARITY * 10; ++i)
-            if (i % 10 == 0)
+        for (unsigned i = 0; i < ARITY * 10; ++i) {
+            if (i % 10 == 0) {
                 expected[i] = i * 0.75;
-        for (unsigned i = 0; i < ARITY; ++i)
+            }
+        }
+        for (unsigned i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
+        }
 
         vec.gather(expected, indices);
         vec.scatter(array, indices);
-        for (unsigned i = 0; i < ARITY * 10; ++i)
+        for (unsigned i = 0; i < ARITY * 10; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
     }
 
     // test non temporal stores
@@ -260,19 +265,23 @@ void testImplementation()
         CARGO array[ARITY] __attribute__((aligned(64)));
         CARGO expected[ARITY] __attribute__((aligned(64)));
 
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
+        }
         ShortVec v1 = 5.0;
         v1.store_nt(array);
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
 
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
+        }
         ShortVec v2 = expected;
         v2.store_nt(array);
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
     }
 
     // test aligned stores
@@ -280,19 +289,23 @@ void testImplementation()
         CARGO array[ARITY] __attribute__((aligned(64)));
         CARGO expected[ARITY] __attribute__((aligned(64)));
 
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
+        }
         ShortVec v1 = 5.0;
         v1.store_aligned(array);
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
 
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
+        }
         ShortVec v2 = expected;
         v2.store_aligned(array);
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
     }
 
     // test aligned loads
@@ -307,8 +320,9 @@ void testImplementation()
         ShortVec v1;
         v1.load_aligned(array);
         v1.store(expected);
-        for (unsigned i = 0; i < ARITY; ++i)
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
+        }
     }
 }
 
