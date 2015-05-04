@@ -17,15 +17,6 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
-# check for C++11 flag
-check_cxx_compiler_flag("-std=c++11" SUPPORTS_CXX11)
-check_cxx_compiler_flag("-std=c++0x" SUPPORTS_CXX0X)
-if(SUPPORTS_CXX11)
-  set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -std=c++11")
-elseif(SUPPORTS_CXX0X)
-  set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -std=c++0x")
-endif()
-
 # pretty print build options
 function(print_options)
   message("-- The following options have been configured:")
@@ -67,9 +58,15 @@ endfunction(add_config_option)
 add_config_option(ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
 add_config_option(LIB_INSTALL_DIR "Directory where libraries will be installed to, may be overridden for 64-bit installations" "lib" false)
+add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" false true)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
   message(FATAL_ERROR "WITH_CUDA selected, but could not find the NVIDIA CUDA toolkit.")
+endif()
+
+if(WITH_CPP14)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+  set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11")
 endif()
 
 dump_config("src/config.h")
