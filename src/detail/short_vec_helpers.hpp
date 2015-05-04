@@ -7,9 +7,9 @@
 // uintptr_t is only available through C++11
 #ifdef LIBFLATARRAY_WITH_CPP14
 # include <cstdint>
-# define UINTPTR_T uintptr_r
+# define _SHORTVEC_UINTPTR_T uintptr_t
 #else
-# define UINTPTR_T unsigned long long
+# define _SHORTVEC_UINTPTR_T unsigned long long
 #endif
 
 #ifdef __SSE4_1__
@@ -24,9 +24,8 @@
  */
 #define SHORTVEC_ASSERT_ALIGNED(ptr, alignment)                         \
     do {                                                                \
-        assert((reinterpret_cast<UINTPTR_T>(ptr) % (alignment)) == 0);  \
+        assert((reinterpret_cast<_SHORTVEC_UINTPTR_T>(ptr) % (alignment)) == 0); \
     } while (0)
-#undef UINTPTR_T
 
 /**
  * For some implementations there is the problem, that the compiler does not
