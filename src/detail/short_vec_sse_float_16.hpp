@@ -236,21 +236,21 @@ public:
     void gather(const float *ptr, const unsigned *offsets)
     {
         val1 = _mm_load_ss(ptr + offsets[0]);
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 1], _MM_MK_INSERTPS_NDX(0,1,0));
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 2], _MM_MK_INSERTPS_NDX(0,2,0));
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[ 3], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[ 1], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[ 2], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[ 3], _MM_MK_INSERTPS_NDX(0,3,0));
         val2 = _mm_load_ss(ptr + offsets[4]);
-        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 5], _MM_MK_INSERTPS_NDX(0,1,0));
-        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 6], _MM_MK_INSERTPS_NDX(0,2,0));
-        ShortVecHelpers::_mm_insert_ps2(val2, ptr, offsets[ 7], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[ 5], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[ 6], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[ 7], _MM_MK_INSERTPS_NDX(0,3,0));
         val3 = _mm_load_ss(ptr + offsets[8]);
-        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[ 9], _MM_MK_INSERTPS_NDX(0,1,0));
-        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[10], _MM_MK_INSERTPS_NDX(0,2,0));
-        ShortVecHelpers::_mm_insert_ps2(val3, ptr, offsets[11], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[ 9], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[10], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[11], _MM_MK_INSERTPS_NDX(0,3,0));
         val4 = _mm_load_ss(ptr + offsets[12]);
-        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[13], _MM_MK_INSERTPS_NDX(0,1,0));
-        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[14], _MM_MK_INSERTPS_NDX(0,2,0));
-        ShortVecHelpers::_mm_insert_ps2(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[13], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[14], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline

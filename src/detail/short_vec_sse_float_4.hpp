@@ -186,9 +186,9 @@ public:
     void gather(const float *ptr, const unsigned *offsets)
     {
         val1 = _mm_load_ss(ptr + offsets[0]);
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[2], _MM_MK_INSERTPS_NDX(0,2,0));
-        ShortVecHelpers::_mm_insert_ps2(val1, ptr, offsets[3], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[2], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[3], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline

@@ -59,24 +59,50 @@
 #endif
 
 
+#ifdef __SSE4_1__
+
+/**
+ * Insertps instruction which allows to insert an memory location
+ * into a xmm register.
+ * Instruction: insertps xmm, xmm/m32, imm8
+ *
+ * @param a xmm register
+ * @param base base pointer
+ * @param offset offset
+ * @param idx index, has to be a constant number like 0x10, no variable
+ */
+#define SHORTVEC_INSERT_PS(a, base, offset, idx)                        \
+    do {                                                                \
+        asm volatile ("insertps %1, (%q2, %q3, 4), %0\n"                \
+                      : "+x" (a) : "N" (idx), "r" (base), "r" (offset) : "memory"); \
+    } while (0)
+
+#endif
+
+#ifdef __AVX__
+
+/**
+ * Same as above just for AVX.
+ * Instruction: vinsertps xmm, xmm, xmm/m32, imm8
+ *
+ * @param a xmm register
+ * @param base base pointer
+ * @param offset offset
+ * @param idx index, has to be a constant number like 0x10, no variable
+ */
+#define SHORTVEC_INSERT_PS_AVX(a, base, offset, idx)                    \
+    do {                                                                \
+        asm volatile ("vinsertps %1, (%q2, %q3, 4), %0, %0\n"           \
+                      : "+x" (a) : "N" (idx), "r" (base), "r" (offset) : "memory"); \
+    } while (0)
+
+#endif
+
 namespace LibFlatArray {
 
 namespace ShortVecHelpers {
 
 #ifdef __SSE4_1__
-
-/**
- * _mm_insert_ps needs a __m128 as second parameter, which is kind of annoying
- * since we need just a pointer, which is actually supported by the hardware
- * -> simply define a new function: _mm_insert_ps2...
- */
-inline
-void _mm_insert_ps2(__m128& a, const float *base, unsigned offset, int idx)
-{
-    // instruction: insertps xmm, xmm/m32, imm8
-    asm volatile ("insertps %1, (%q2, %q3, 4), %0\n"
-                  : "+x" (a) : "N" (idx), "r" (base), "r" (offset) : "memory");
-}
 
 /**
  * _mm_extract_ps returns an integer, but we need a float.
@@ -87,21 +113,6 @@ union ExtractResult {
     float f;
 };
 
-#endif
-
-#ifdef __AVX__
-
-/**
- * For AVX we can use the vinsertps instruction.
- */
-inline
-void _mm_insert_ps2_avx(__m128& a, const float *base, unsigned offset, int idx)
-{
-    // vinsertps xmm, xmm, xmm/m32, imm8
-    asm volatile (
-        "vinsertps %1, (%q2, %q3, 4), %0, %0\n"
-        : "+x" (a) : "N" (idx), "r" (base), "r" (offset) : "memory");
-}
 #endif
 
 }
