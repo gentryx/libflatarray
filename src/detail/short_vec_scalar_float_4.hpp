@@ -10,6 +10,12 @@
 
 #ifndef __SSE__
 
+#include <libflatarray/detail/short_vec_helpers.hpp>
+
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
+
 namespace LibFlatArray {
 
 template<typename CARGO, int ARITY>
@@ -59,6 +65,17 @@ public:
         val3( val3),
         val4( val4)
     {}
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<float>& il)
+    {
+        static const unsigned indices[] = { 0, 1, 2, 3 };
+        const float    *ptr = reinterpret_cast<const float *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<float, 4>& other)

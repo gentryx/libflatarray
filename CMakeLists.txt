@@ -17,6 +17,15 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
+# check for C++11 flag
+check_cxx_compiler_flag("-std=c++11" SUPPORTS_CXX11)
+check_cxx_compiler_flag("-std=c++0x" SUPPORTS_CXX0X)
+if(SUPPORTS_CXX11)
+  set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -std=c++11")
+elseif(SUPPORTS_CXX0X)
+  set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -std=c++0x")
+endif()
+
 # pretty print build options
 function(print_options)
   message("-- The following options have been configured:")

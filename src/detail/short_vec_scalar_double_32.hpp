@@ -10,6 +10,12 @@
 
 #ifndef __AVX512F__
 
+#include <libflatarray/detail/short_vec_helpers.hpp>
+
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
+
 namespace LibFlatArray {
 
 template<typename CARGO, int ARITY>
@@ -143,6 +149,20 @@ public:
         val31(val31),
         val32(val32)
     {}
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<double>& il)
+    {
+        static const unsigned indices[] = { 0, 1, 2, 3, 4, 5, 6, 7,
+                                            8, 9, 10, 11, 12, 13, 14, 15,
+                                            16, 17, 18, 19, 20, 21, 22, 23,
+                                            24, 25, 26, 27, 28, 29, 30, 31 };
+        const double   *ptr = reinterpret_cast<const double *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<double, 32>& other)

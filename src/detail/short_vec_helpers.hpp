@@ -1,9 +1,14 @@
 #ifndef _SHORT_VEC_HELPERS_H_
 #define _SHORT_VEC_HELPERS_H_
 
+// first check for C++11 support, which is needed for some features
+#if defined(__cplusplus) && __cplusplus > 199711L
+# define SHORTVEC_HAS_CPP11 1
+#endif
+
 #include <cassert>
 // uintptr_t is only available through C++11
-#if __cplusplus > 199711L
+#ifdef SHORTVEC_HAS_CPP11
 # include <cstdint>
 # define UINTPTR_T uintptr_r
 #else

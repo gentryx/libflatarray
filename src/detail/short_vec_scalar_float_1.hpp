@@ -9,6 +9,11 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_FLOAT_1_HPP
 
 #include <cmath>
+#include <libflatarray/detail/short_vec_helpers.hpp>
+
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
 
 namespace LibFlatArray {
 
@@ -44,6 +49,17 @@ public:
     {
         load(data);
     }
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<float>& il)
+    {
+        static const unsigned indices[] = { 0 };
+        const float    *ptr = reinterpret_cast<const float *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<float, 1>& other)

@@ -213,6 +213,28 @@ void testImplementation()
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
     }
 
+#ifdef SHORTVEC_HAS_CPP11
+    // test gather via initializer_list
+    {
+        unsigned indices[ARITY];
+        CARGO actual[ARITY];
+        CARGO expected[ARITY];
+        for (unsigned i = 0; i < ARITY; ++i) {
+            indices[i] = i * 10;
+            expected[i] = (i * 10) * 0.75;
+        }
+
+        // max: 32
+        ShortVec vec = { 0.0, 7.5, 15.0, 22.50, 30.0, 37.5, 45.0, 52.5,
+                         60.0, 67.5, 75.0, 82.5, 90.0, 97.5, 105.0, 112.5,
+                         120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
+                         180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
+        actual << vec;
+        for (unsigned i = 0; i < ARITY; ++i)
+            TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
+    }
+#endif
+
     // test scatter
     {
         ShortVec vec;

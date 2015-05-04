@@ -7,6 +7,10 @@
 #include <libflatarray/detail/sqrt_reference.hpp>
 #include <libflatarray/detail/short_vec_helpers.hpp>
 
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
+
 #ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
@@ -50,6 +54,18 @@ public:
         val1(val1),
         val2(val2)
     {}
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<double>& il)
+    {
+        static const unsigned indices[] = { 0, 1, 2, 3, 4, 5, 6, 7,
+                                            8, 9, 10, 11, 12, 13, 14, 15 };
+        const double   *ptr = reinterpret_cast<const double *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<double, 16>& other)

@@ -19,6 +19,10 @@
 #include <smmintrin.h>
 #endif
 
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
+
 #ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
@@ -63,6 +67,17 @@ public:
     short_vec(const __m128& val1) :
         val1(val1)
     {}
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<float>& il)
+    {
+        static const unsigned indices[] = { 0, 1, 2, 3 };
+        const float    *ptr = reinterpret_cast<const float *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     short_vec(const sqrt_reference<float, 4>& other);

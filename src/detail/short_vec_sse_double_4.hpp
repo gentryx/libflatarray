@@ -13,6 +13,10 @@
 #include <emmintrin.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
 
+#ifdef SHORTVEC_HAS_CPP11
+#include <initializer_list>
+#endif
+
 #ifndef __AVX__
 #ifndef __CUDA_ARCH__
 
@@ -57,6 +61,17 @@ public:
         val1(val1),
         val2(val2)
     {}
+
+#ifdef SHORTVEC_HAS_CPP11
+    inline
+    short_vec(const std::initializer_list<double>& il)
+    {
+        static const unsigned indices[] = { 0, 1, 2, 3 };
+        const double   *ptr = reinterpret_cast<const double *>(&(*il.begin()));
+        const unsigned *ind = static_cast<const unsigned *>(indices);
+        gather(ptr, ind);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<double, 4>& other)
