@@ -1,5 +1,5 @@
-#ifndef _SHORT_VEC_HELPERS_H_
-#define _SHORT_VEC_HELPERS_H_
+#ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_HELPERS_HPP
+#define FLAT_ARRAY_DETAIL_SHORT_VEC_HELPERS_HPP
 
 #include <libflatarray/config.h>
 #include <cassert>
@@ -109,4 +109,4 @@ void _mm_insert_ps2_avx(__m128& a, const float *base, unsigned offset, int idx)
 
 }
 
-#endif /* _SHORT_VEC_HELPERS_H_ */
+#endif
