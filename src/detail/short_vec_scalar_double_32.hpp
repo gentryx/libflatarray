@@ -71,40 +71,10 @@ public:
     {}
 
     inline
-    short_vec(const double *data) :
-        val1( *(data +  0)),
-        val2( *(data +  1)),
-        val3( *(data +  2)),
-        val4( *(data +  3)),
-        val5( *(data +  4)),
-        val6( *(data +  5)),
-        val7( *(data +  6)),
-        val8( *(data +  7)),
-        val9( *(data +  8)),
-        val10(*(data +  9)),
-        val11(*(data + 10)),
-        val12(*(data + 11)),
-        val13(*(data + 12)),
-        val14(*(data + 13)),
-        val15(*(data + 14)),
-        val16(*(data + 15)),
-        val17(*(data + 16)),
-        val18(*(data + 17)),
-        val19(*(data + 18)),
-        val20(*(data + 19)),
-        val21(*(data + 20)),
-        val22(*(data + 21)),
-        val23(*(data + 22)),
-        val24(*(data + 23)),
-        val25(*(data + 24)),
-        val26(*(data + 25)),
-        val27(*(data + 26)),
-        val28(*(data + 27)),
-        val29(*(data + 28)),
-        val30(*(data + 29)),
-        val31(*(data + 30)),
-        val32(*(data + 31))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(
@@ -513,6 +483,49 @@ public:
     }
 
     inline
+    void load(const double *data)
+    {
+        val1  = data[ 0];
+        val2  = data[ 1];
+        val3  = data[ 2];
+        val4  = data[ 3];
+        val5  = data[ 4];
+        val6  = data[ 5];
+        val7  = data[ 6];
+        val8  = data[ 7];
+        val9  = data[ 8];
+        val10 = data[ 9];
+        val11 = data[10];
+        val12 = data[11];
+        val13 = data[12];
+        val14 = data[13];
+        val15 = data[14];
+        val16 = data[15];
+        val17 = data[16];
+        val18 = data[17];
+        val19 = data[18];
+        val20 = data[19];
+        val21 = data[20];
+        val22 = data[21];
+        val23 = data[22];
+        val24 = data[23];
+        val25 = data[24];
+        val26 = data[25];
+        val27 = data[26];
+        val28 = data[27];
+        val29 = data[28];
+        val30 = data[29];
+        val31 = data[30];
+        val32 = data[31];
+    }
+
+    inline
+    void loadAligned(const double *data)
+    {
+        load(data);
+    }
+
+    inline
     void store(double *data) const
     {
         *(data +  0) = val1;
@@ -547,6 +560,12 @@ public:
         *(data + 29) = val30;
         *(data + 30) = val31;
         *(data + 31) = val32;
+    }
+
+    inline
+    void storeAligned(double *data) const
+    {
+        store(data);
     }
 
     inline

@@ -40,9 +40,10 @@ public:
     {}
 
     inline
-    short_vec(const float *data) :
-        val1(*data)
-    {}
+    short_vec(const float *data)
+    {
+        load(data);
+    }
 
     inline
     void operator-=(const short_vec<float, 1>& other)
@@ -104,9 +105,27 @@ public:
     }
 
     inline
+    void load(const float *data)
+    {
+        val1 = data[0];
+    }
+
+    inline
+    void loadAligned(const float *data)
+    {
+        load(data);
+    }
+
+    inline
     void store(float *data) const
     {
         *(data + 0) = val1;
+    }
+
+    inline
+    void storeAligned(float *data) const
+    {
+        store(data);
     }
 
     inline

@@ -51,10 +51,10 @@ public:
     {}
 
     inline
-    short_vec(const float *data) :
-        val1(_mm256_loadu_ps(data + 0)),
-        val2(_mm256_loadu_ps(data + 8))
-    {}
+    short_vec(const float *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const __m256& val1, const __m256& val2) :
@@ -140,10 +140,33 @@ public:
     }
 
     inline
+    void load(const float *data)
+    {
+        val1 = _mm256_loadu_ps(data + 0);
+        val2 = _mm256_loadu_ps(data + 8);
+    }
+
+    inline
+    void loadAligned(const float *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        val1 = _mm256_load_ps(data + 0);
+        val2 = _mm256_load_ps(data + 8);
+    }
+
+    inline
     void store(float *data) const
     {
         _mm256_storeu_ps(data + 0, val1);
         _mm256_storeu_ps(data + 8, val2);
+    }
+
+    inline
+    void storeAligned(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        _mm256_store_ps(data + 0, val1);
+        _mm256_store_ps(data + 8, val2);
     }
 
     inline

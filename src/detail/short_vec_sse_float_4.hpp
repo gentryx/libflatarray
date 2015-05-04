@@ -54,9 +54,10 @@ public:
     {}
 
     inline
-    short_vec(const float *data) :
-        val1(_mm_loadu_ps(data +  0))
-    {}
+    short_vec(const float *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const __m128& val1) :
@@ -132,9 +133,29 @@ public:
     }
 
     inline
+    void load(const float *data)
+    {
+        val1 = _mm_loadu_ps(data);
+    }
+
+    inline
+    void loadAligned(const float *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        val1 = _mm_load_ps(data);
+    }
+
+    inline
     void store(float *data) const
     {
-        _mm_storeu_ps(data +  0, val1);
+        _mm_storeu_ps(data + 0, val1);
+    }
+
+    inline
+    void storeAligned(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        _mm_store_ps(data + 0, val1);
     }
 
     inline

@@ -39,10 +39,10 @@ public:
     {}
 
     inline
-    short_vec(const float *data) :
-        val1(*(data +  0)),
-        val2(*(data +  1))
-    {}
+    short_vec(const float *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const float val1, const float val2) :
@@ -119,10 +119,29 @@ public:
     }
 
     inline
+    void load(const float *data)
+    {
+        val1 = data[0];
+        val2 = data[1];
+    }
+
+    inline
+    void loadAligned(const float *data)
+    {
+        load(data);
+    }
+
+    inline
     void store(float *data) const
     {
         *(data +  0) = val1;
         *(data +  1) = val2;
+    }
+
+    inline
+    void storeAligned(float *data) const
+    {
+        store(data);
     }
 
     inline

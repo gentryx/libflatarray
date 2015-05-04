@@ -46,9 +46,10 @@ public:
     {}
 
     inline
-    short_vec(const double *data) :
-        val1(_mm256_loadu_pd(data + 0))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const __m256d& val1) :
@@ -115,9 +116,29 @@ public:
     }
 
     inline
+    void load(const double *data)
+    {
+        val1 = _mm256_loadu_pd(data);
+    }
+
+    inline
+    void loadAligned(const double *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        val1 = _mm256_load_pd(data);
+    }
+
+    inline
     void store(double *data) const
     {
         _mm256_storeu_pd(data +  0, val1);
+    }
+
+    inline
+    void storeAligned(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        _mm256_store_pd(data, val1);
     }
 
     inline

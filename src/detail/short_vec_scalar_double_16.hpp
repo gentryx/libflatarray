@@ -56,24 +56,10 @@ public:
     {}
 
     inline
-    short_vec(const double *data) :
-        val1( *(data +  0)),
-        val2( *(data +  1)),
-        val3( *(data +  2)),
-        val4( *(data +  3)),
-        val5( *(data +  4)),
-        val6( *(data +  5)),
-        val7( *(data +  6)),
-        val8( *(data +  7)),
-        val9( *(data +  8)),
-        val10(*(data +  9)),
-        val11(*(data + 10)),
-        val12(*(data + 11)),
-        val13(*(data + 12)),
-        val14(*(data + 13)),
-        val15(*(data + 14)),
-        val16(*(data + 15))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(
@@ -306,6 +292,33 @@ public:
     }
 
     inline
+    void load(const double *data)
+    {
+        val1  = data[ 0];
+        val2  = data[ 1];
+        val3  = data[ 2];
+        val4  = data[ 3];
+        val5  = data[ 4];
+        val6  = data[ 5];
+        val7  = data[ 6];
+        val8  = data[ 7];
+        val9  = data[ 8];
+        val10 = data[ 9];
+        val11 = data[10];
+        val12 = data[11];
+        val13 = data[12];
+        val14 = data[13];
+        val15 = data[14];
+        val16 = data[15];
+    }
+
+    inline
+    void loadAligned(const double *data)
+    {
+        load(data);
+    }
+
+    inline
     void store(double *data) const
     {
         *(data +  0) = val1;
@@ -324,6 +337,12 @@ public:
         *(data + 13) = val14;
         *(data + 14) = val15;
         *(data + 15) = val16;
+    }
+
+    inline
+    void storeAligned(double *data) const
+    {
+        store(data);
     }
 
     inline

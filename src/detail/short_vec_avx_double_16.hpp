@@ -50,12 +50,10 @@ public:
     {}
 
     inline
-    short_vec(const double *data) :
-        val1(_mm256_loadu_pd(data + 0)),
-        val2(_mm256_loadu_pd(data + 4)),
-        val3(_mm256_loadu_pd(data + 8)),
-        val4(_mm256_loadu_pd(data + 12))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const __m256d& val1, const __m256d& val2, const __m256d& val3, const __m256d& val4) :
@@ -152,12 +150,41 @@ public:
     }
 
     inline
+    void load(const double *data)
+    {
+        val1 = _mm256_loadu_pd(data +  0);
+        val2 = _mm256_loadu_pd(data +  4);
+        val3 = _mm256_loadu_pd(data +  8);
+        val4 = _mm256_loadu_pd(data + 12);
+    }
+
+    inline
+    void loadAligned(const double *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        val1 = _mm256_load_pd(data +  0);
+        val2 = _mm256_load_pd(data +  4);
+        val3 = _mm256_load_pd(data +  8);
+        val4 = _mm256_load_pd(data + 12);
+    }
+
+    inline
     void store(double *data) const
     {
         _mm256_storeu_pd(data +  0, val1);
         _mm256_storeu_pd(data +  4, val2);
         _mm256_storeu_pd(data +  8, val3);
         _mm256_storeu_pd(data + 12, val4);
+    }
+
+    inline
+    void storeAligned(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 32);
+        _mm256_store_pd(data +  0, val1);
+        _mm256_store_pd(data +  4, val2);
+        _mm256_store_pd(data +  8, val3);
+        _mm256_store_pd(data + 12, val4);
     }
 
     inline

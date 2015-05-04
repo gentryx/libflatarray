@@ -42,12 +42,10 @@ public:
     {}
 
     inline
-    short_vec(const double *data) :
-        val1(_mm512_loadu_pd(data + 0)),
-        val2(_mm512_loadu_pd(data + 8)),
-        val3(_mm512_loadu_pd(data + 16)),
-        val4(_mm512_loadu_pd(data + 24))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(const __m512d& val1, const __m512d& val2, const __m512d& val3, const __m512d& val4) :
@@ -144,12 +142,41 @@ public:
     }
 
     inline
+    void load(const double *data)
+    {
+        val1 = _mm512_loadu_pd(data +  0);
+        val2 = _mm512_loadu_pd(data +  8);
+        val3 = _mm512_loadu_pd(data + 16);
+        val4 = _mm512_loadu_pd(data + 24);
+    }
+
+    inline
+    void loadAligned(const double *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 64);
+        val1 = _mm512_load_pd(data +  0);
+        val2 = _mm512_load_pd(data +  8);
+        val3 = _mm512_load_pd(data + 16);
+        val4 = _mm512_load_pd(data + 24);
+    }
+
+    inline
     void store(double *data) const
     {
         _mm512_storeu_pd(data +  0, val1);
         _mm512_storeu_pd(data +  8, val2);
         _mm512_storeu_pd(data + 16, val3);
         _mm512_storeu_pd(data + 24, val4);
+    }
+
+    inline
+    void storeAligned(double *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 64);
+        _mm512_store_pd(data +  0, val1);
+        _mm512_store_pd(data +  8, val2);
+        _mm512_store_pd(data + 16, val3);
+        _mm512_store_pd(data + 24, val4);
     }
 
     inline
