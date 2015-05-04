@@ -12,8 +12,9 @@
 
 #include <emmintrin.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
+#include <libflatarray/config.h>
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
 #endif
 
@@ -67,7 +68,7 @@ public:
         val4(val4)
     {}
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
     inline
     short_vec(const std::initializer_list<double>& il)
     {

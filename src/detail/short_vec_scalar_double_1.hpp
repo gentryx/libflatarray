@@ -9,9 +9,9 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_1_HPP
 
 #include <cmath>
-#include <libflatarray/detail/short_vec_helpers.hpp>
+#include <libflatarray/config.h>
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
 #endif
 
@@ -50,7 +50,7 @@ public:
         load(data);
     }
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
     inline
     short_vec(const std::initializer_list<double>& il)
     {

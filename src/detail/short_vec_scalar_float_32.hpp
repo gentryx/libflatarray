@@ -11,9 +11,9 @@
 #ifndef __AVX512F__
 #ifndef __AVX__
 
-#include <libflatarray/detail/short_vec_helpers.hpp>
+#include <libflatarray/config.h>
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
 #endif
 
@@ -151,7 +151,7 @@ public:
         val32(val32)
     {}
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
     inline
     short_vec(const std::initializer_list<float>& il)
     {
