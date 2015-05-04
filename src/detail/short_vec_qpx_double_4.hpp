@@ -50,7 +50,7 @@ public:
     {}
 
     inline
-    short_vec(const sqrt_reference<double, 4> other);
+    short_vec(const sqrt_reference<double, 4>& other);
 
     inline
     void operator-=(const short_vec<double, 4>& other)
@@ -153,7 +153,7 @@ private:
 };
 
 inline
-short_vec<double, 4>::short_vec(const sqrt_reference<double, 4> other) :
+short_vec<double, 4>::short_vec(const sqrt_reference<double, 4>& other) :
     val1(vec_swsqrt(other.vec.val1))
 {}
 
