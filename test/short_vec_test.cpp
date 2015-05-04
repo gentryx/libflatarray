@@ -194,7 +194,7 @@ void testImplementation()
     // test gather
     {
         CARGO array[ARITY * 10];
-        unsigned indices[ARITY];
+        unsigned indices[ARITY] __attribute__((aligned (64)));
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
@@ -216,7 +216,7 @@ void testImplementation()
 #ifdef SHORTVEC_HAS_CPP11
     // test gather via initializer_list
     {
-        unsigned indices[ARITY];
+        unsigned indices[ARITY] __attribute__((aligned (64)));
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         for (unsigned i = 0; i < ARITY; ++i) {
@@ -241,7 +241,7 @@ void testImplementation()
         ShortVec vec;
         CARGO array[ARITY * 10];
         CARGO expected[ARITY * 10];
-        unsigned indices[ARITY];
+        unsigned indices[ARITY] __attribute__((aligned (64)));
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
         for (unsigned i = 0; i < ARITY * 10; ++i) {
