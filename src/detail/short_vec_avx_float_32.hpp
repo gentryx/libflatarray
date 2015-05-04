@@ -171,6 +171,21 @@ public:
         _mm256_storeu_ps(data + 24, val4);
     }
 
+#ifdef __AVX2__
+    inline
+    void gather(const float *ptr, unsigned *offsets)
+    {
+        __m256i indices;
+        indices = _mm256_loadu_si256(reinterpret_cast<__m256i *>(offsets));
+        val1    = _mm256_i32gather_ps(ptr, indices, 4);
+        indices = _mm256_loadu_si256(reinterpret_cast<__m256i *>(offsets + 8));
+        val2    = _mm256_i32gather_ps(ptr, indices, 4);
+        indices = _mm256_loadu_si256(reinterpret_cast<__m256i *>(offsets + 16));
+        val3    = _mm256_i32gather_ps(ptr, indices, 4);
+        indices = _mm256_loadu_si256(reinterpret_cast<__m256i *>(offsets + 24));
+        val4    = _mm256_i32gather_ps(ptr, indices, 4);
+    }
+#else
     inline
     void gather(const float *ptr, unsigned *offsets)
     {
@@ -216,6 +231,7 @@ public:
         ShortVecHelpers::_mm_insert_ps2_avx(tmp, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
         val4 = _mm256_insertf128_ps(val4, tmp, 1);
     }
+#endif
 
     inline
     void scatter(float *ptr, unsigned *offsets) const

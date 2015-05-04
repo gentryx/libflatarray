@@ -158,6 +158,21 @@ public:
         _mm256_storeu_pd(data + 12, val4);
     }
 
+#ifdef __AVX2__
+    inline
+    void gather(const double *ptr, unsigned *offsets)
+    {
+        __m128i indices;
+        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets));
+        val1    = _mm256_i32gather_pd(ptr, indices, 8);
+        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets + 4));
+        val2    = _mm256_i32gather_pd(ptr, indices, 8);
+        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets + 8));
+        val3    = _mm256_i32gather_pd(ptr, indices, 8);
+        indices = _mm_loadu_si128(reinterpret_cast<__m128i *>(offsets + 12));
+        val4    = _mm256_i32gather_pd(ptr, indices, 8);
+    }
+#else
     inline
     void gather(const double *ptr, unsigned *offsets)
     {
@@ -187,6 +202,7 @@ public:
         tmp  = _mm_loadh_pd(tmp, ptr + offsets[15]);
         val4 = _mm256_insertf128_pd(val4, tmp, 1);
     }
+#endif
 
     inline
     void scatter(double *ptr, unsigned *offsets) const
