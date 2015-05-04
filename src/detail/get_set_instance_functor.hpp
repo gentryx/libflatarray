@@ -29,12 +29,12 @@ public:
         long x,
         long y,
         long z,
-	long count) :
+        long count) :
         target(target),
         x(x),
         y(y),
         z(z),
-	count(count)
+        count(count)
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
@@ -44,13 +44,13 @@ public:
             z * DIM_X * DIM_Y +
             y * DIM_X +
             x;
-	CELL *cursor = target;
+        CELL *cursor = target;
 
-	for (long i = 0; i < count; ++i) {
+        for (long i = 0; i < count; ++i) {
             accessor >> *cursor;
-	    ++cursor;
-	    ++accessor.index;
-	}
+            ++cursor;
+            ++accessor.index;
+        }
     }
 
 private:

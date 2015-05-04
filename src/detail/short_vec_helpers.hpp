@@ -33,18 +33,18 @@
  */
 #if defined(__GNUC__) && !defined(__clang__)
 # define SHORTVEC_DISABLE_WARNING_UNINITIALIZED             \
-	_Pragma("GCC diagnostic push")							\
-	_Pragma("GCC diagnostic ignored \"-Wuninitialized\"")
+    _Pragma("GCC diagnostic push")							\
+    _Pragma("GCC diagnostic ignored \"-Wuninitialized\"")
 # define SHORTVEC_ENABLE_WARNING_UNINITIALIZED  \
-	_Pragma("GCC diagnostic pop")
+    _Pragma("GCC diagnostic pop")
 #endif
 
 #ifdef __clang__
 # define SHORTVEC_DISABLE_WARNING_UNINITIALIZED             \
-	_Pragma("clang diagnostic push")						\
-	_Pragma("clang diagnostic ignored \"-Wuninitialized\"")
+    _Pragma("clang diagnostic push")						\
+    _Pragma("clang diagnostic ignored \"-Wuninitialized\"")
 # define SHORTVEC_ENABLE_WARNING_UNINITIALIZED  \
-	_Pragma("clang diagnostic pop")
+    _Pragma("clang diagnostic pop")
 #endif
 
 /**
