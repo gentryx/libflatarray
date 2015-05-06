@@ -10,7 +10,14 @@
 #include <libflatarray/short_vec.hpp>
 #include <libflatarray/testbed/cpu_benchmark.hpp>
 #include <libflatarray/testbed/evaluate.hpp>
+
+#ifdef __SSE__
+#include <xmmintrin.h>
+#endif
+
+#ifdef __AVX__
 #include <immintrin.h>
+#endif
 
 #define WEIGHT_S 0.11
 #define WEIGHT_T 0.12
