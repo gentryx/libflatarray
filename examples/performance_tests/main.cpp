@@ -425,6 +425,8 @@ private:
     }
 };
 
+#ifdef __SSE__
+
 class JacobiD3Q7Silver : public JacobiD3Q7
 {
 public:
@@ -642,6 +644,8 @@ private:
         }
     }
 };
+
+#endif
 
 class Particle
 {
@@ -1644,9 +1648,11 @@ int main(int argc, char **argv)
         eval(JacobiD3Q7Bronze(), *i);
     }
 
+#ifdef __SSE__
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(JacobiD3Q7Silver(), *i);
     }
+#endif
 
     sizes.clear();
 
