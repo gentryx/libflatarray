@@ -118,6 +118,8 @@ private:
     }
 };
 
+#ifdef __SSE__
+
 class JacobiD3Q7Pepper : public JacobiD3Q7
 {
 public:
@@ -292,6 +294,8 @@ private:
         }
     }
 };
+
+#endif
 
 class JacobiCell
 {
@@ -1623,7 +1627,7 @@ int main(int argc, char **argv)
         eval(JacobiD3Q7Vanilla(), *i);
     }
 
-#ifdef __AVX__
+#ifdef __SSE__
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
         eval(JacobiD3Q7Pepper(), *i);
     }
