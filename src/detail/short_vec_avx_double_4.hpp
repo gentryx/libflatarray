@@ -94,8 +94,7 @@ public:
     inline
     short_vec<double, 4> operator+(const short_vec<double, 4>& other) const
     {
-        return short_vec<double, 4>(
-            _mm256_add_pd(val1, other.val1));
+        return short_vec<double, 4>(_mm256_add_pd(val1, other.val1));
     }
 
     inline

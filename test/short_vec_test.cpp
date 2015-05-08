@@ -56,6 +56,7 @@ void testImplementation()
 
     // tests scalar load, vector add:
     ShortVec w = vec1[0];
+
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << (v + w);
@@ -198,9 +199,13 @@ void testImplementation()
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
-        for (unsigned i = 0; i < ARITY * 10; ++i)
-            if (i % 10 == 0)
+
+        for (unsigned i = 0; i < ARITY * 10; ++i) {
+            if (i % 10 == 0) {
                 array[i] = i * 0.75;
+            }
+        }
+
         for (unsigned i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
             expected[i] = (i * 10) * 0.75;
@@ -209,8 +214,10 @@ void testImplementation()
         ShortVec vec;
         vec.gather(array, indices);
         actual << vec;
-        for (unsigned i = 0; i < ARITY; ++i)
+
+        for (unsigned i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
+        }
     }
 
 #ifdef SHORTVEC_HAS_CPP11
