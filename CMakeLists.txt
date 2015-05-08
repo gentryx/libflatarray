@@ -120,8 +120,6 @@ install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   DESTINATION "${ConfigPackageLocation}")
 
-
-
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME})
@@ -136,6 +134,10 @@ file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/testbed/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME}/testbed)
 endforeach()
+
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}/config.h"
+    DESTINATION include/${PACKAGE_NAME})
 
 # 3. BUILD DESCRIPTION
 if(NOT CMAKE_BUILD_TYPE)
