@@ -33,7 +33,7 @@ function(lfa_dump_config outfile)
   set(CONTENT "#ifndef LIBFLATARRAY_CONFIG_H\n\n")
   set(CONTENT "${CONTENT}${CONFIG_HEADER}\n")
   set(CONTENT "${CONTENT}#endif\n")
-  set(PATHNAME "${CMAKE_BINARY_DIR}/libflatarray/${outfile}")
+  set(PATHNAME "${CMAKE_BINARY_DIR}/${PACKAGE_NAME}/${outfile}")
   file(WRITE "${PATHNAME}.new" "${CONTENT}")
 
   execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files "${PATHNAME}" "${PATHNAME}.new" RESULT_VARIABLE res)
@@ -136,7 +136,7 @@ foreach(i ${HEADERS})
 endforeach()
 
 install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}/config.h"
+  FILES "${CMAKE_BINARY_DIR}/${PACKAGE_NAME}/config.h"
     DESTINATION include/${PACKAGE_NAME})
 
 # 3. BUILD DESCRIPTION
