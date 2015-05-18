@@ -99,6 +99,16 @@ public:
         std::allocator<T>().destroy(p);
     }
 
+    bool operator!=(const aligned_allocator& other) const
+    {
+        return !(*this == other);
+    }
+
+    bool operator==(const aligned_allocator& other) const
+    {
+        return true;
+    }
+
 private:
     std::size_t graceOffset()
     {
