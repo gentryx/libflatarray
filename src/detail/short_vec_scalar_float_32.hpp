@@ -155,13 +155,8 @@ public:
     inline
     short_vec(const std::initializer_list<float>& il)
     {
-        static const unsigned indices[] = { 0, 1, 2, 3, 4, 5, 6, 7,
-                                            8, 9, 10, 11, 12, 13, 14, 15,
-                                            16, 17, 18, 19, 20, 21, 22, 23,
-                                            24, 25, 26, 27, 28, 29, 30, 31 };
-        const float    *ptr = reinterpret_cast<const float *>(&(*il.begin()));
-        const unsigned *ind = static_cast<const unsigned *>(indices);
-        gather(ptr, ind);
+        const float *ptr = static_cast<const float *>(&(*il.begin()));
+        load(ptr);
     }
 #endif
 
