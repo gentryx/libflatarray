@@ -494,6 +494,18 @@
             return data;                                                \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        const long *get_index() const                                   \
+        {                                                               \
+            return index;                                               \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        long *get_index()                                               \
+        {                                                               \
+            return index;                                               \
+        }                                                               \
+                                                                        \
     private:                                                            \
         char *data;                                                     \
         long *index;                                                    \
