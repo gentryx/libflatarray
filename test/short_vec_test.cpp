@@ -133,7 +133,7 @@ void testImplementation()
     }
     for (int i = 0; i < numElements; ++i) {
         // accept lower accuracy for estimated division:
-        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0002);
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0003);
     }
 
     // test /=
@@ -148,7 +148,7 @@ void testImplementation()
     }
     for (int i = 0; i < numElements; ++i) {
         // here, too, lower accuracy is acceptable.
-        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0002);
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0003);
     }
 
     // test sqrt()
