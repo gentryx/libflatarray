@@ -9,6 +9,7 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_32_HPP
 
 #ifndef __AVX512F__
+#ifndef __MIC__
 
 #include <libflatarray/config.h>
 
@@ -733,6 +734,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 
 #endif
