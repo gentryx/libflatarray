@@ -28,6 +28,11 @@ public:
 	    (alive == other.alive);
     }
 
+    inline bool operator!=(const HeatedGameOfLifeCell& other) const
+    {
+	return !(*this == other);
+    }
+
     double temperature;
     bool alive;
 };
@@ -476,18 +481,23 @@ ADD_TEST(TestArrayGetSet)
     long dim_z = 10;
 
     soa_grid<HeatedGameOfLifeCell> grid(dim_x, dim_y, dim_z);
+    std::vector<double> temp_buffer;
+
     for (long z = 0; z < dim_z; ++z) {
         for (long y = 0; y < dim_y; ++y) {
 	    std::vector<HeatedGameOfLifeCell> cells(dim_x);
 
 	    for (long x = 0; x < dim_x; ++x) {
 		double temp = z * 100 + y + x * 0.01;
+                temp_buffer.push_back(temp);
 		cells[x] = HeatedGameOfLifeCell(temp, false);
 	    }
 
 	    grid.set(0, y, z, &cells[0], dim_x);
 	}
     }
+
+    std::size_t index = 0;
 
     for (long z = 0; z < dim_z; ++z) {
         for (long y = 0; y < dim_y; ++y) {
@@ -496,7 +506,7 @@ ADD_TEST(TestArrayGetSet)
 	    grid.get(0, y, z, &cells[0], dim_x);
 
             for (long x = 0; x < dim_x; ++x) {
-		double temp = z * 100 + y + x * 0.01;
+		double temp = temp_buffer[index++];
 		HeatedGameOfLifeCell cell(temp, false);
 		BOOST_TEST(cell == cells[x]);
 	    }
