@@ -94,6 +94,15 @@ public:
         std::allocator<T>().construct(p, val);
     }
 
+    /**
+     * Added due to compiling for Intel MIC with CPP14=TRUE
+     * GCC Bug Report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51626
+     */
+    void construct(pointer p)
+    {
+        std::allocator<T>().construct(p, value_type());
+    }
+
     void destroy(pointer p)
     {
         std::allocator<T>().destroy(p);
