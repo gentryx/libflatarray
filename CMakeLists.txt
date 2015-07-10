@@ -12,14 +12,16 @@ set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
 
-find_package(Boost REQUIRED date_time filesystem system)
-find_package(CUDA)
-
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
 if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
+
+if(NOT WITH_SIMPLE_BOOST)
+  find_package(Boost REQUIRED date_time filesystem system)
+endif()
+find_package(CUDA)
 
 # pretty print build options
 function(lfa_print_options)
@@ -63,6 +65,7 @@ endfunction(lfa_add_config_option)
 lfa_add_config_option(ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 lfa_add_config_option(UNITEXEC "May be used to specify a wrapper which then calls a unit test executable. Handy if for instance the unit tests shall be run inside of Intel's Software Development Emulator (SDE)." "" false)
 lfa_add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
+lfa_add_config_option(WITH_SIMPLE_BOOST "fixme: temporary workaround for weird boost installs, resolutin will be to bundle header-only boost libs" false false)
 lfa_add_config_option(LIB_INSTALL_DIR "Directory where libraries will be installed to, may be overridden for 64-bit installations" "lib" false)
 lfa_add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" false true)
 
