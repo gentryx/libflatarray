@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,7 +9,7 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_FLOAT_4_HPP
 
 #ifndef __SSE__
-#ifndef __NEON__
+#ifndef __ARM_NEON__
 
 #include <libflatarray/config.h>
 

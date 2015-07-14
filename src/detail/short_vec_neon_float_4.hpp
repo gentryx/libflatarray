@@ -1,7 +1,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_NEON_FLOAT_4_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_NEON_FLOAT_4_HPP
 
-#ifdef __NEON__
+#ifdef __ARM_NEON__
 #include <arm_neon.h>
 
 #ifndef __CUDA_ARCH__
@@ -93,7 +93,7 @@ public:
     inline
     short_vec<float, 4> sqrt() const
     {
-        // seems that vsqrtq_f32 is not yet implemented in the compiler 
+        // seems that vsqrtq_f32 is not yet implemented in the compiler
         //short_vec<float, 4> ret(vsqrtq_f32(val1));
         float32x4_t reciprocal = vrsqrteq_f32(val1);
         short_vec<float, 4> ret(vmulq_f32(val1, reciprocal));
