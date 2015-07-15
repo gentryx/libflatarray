@@ -128,12 +128,14 @@ public:
         store(data); // store aligned not found
     }
 
+    // todo
     inline
     void store_nt(float *data) const
     {
         store(data);
     }
 
+    // simple approach
     inline
     void gather(const float *ptr, const unsigned *offsets)
     {
@@ -142,9 +144,10 @@ public:
         data[1] = ptr[offsets[1]];
         data[2] = ptr[offsets[2]];
         data[3] = ptr[offsets[3]];
-        store(data);
+        load(data);
     }
 
+    // simple approach
     inline
     void scatter(float *ptr, const unsigned *offsets) const
     {

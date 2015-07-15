@@ -132,8 +132,9 @@ void testImplementation()
         &vec2[i] << (v / w);
     }
     for (int i = 0; i < numElements; ++i) {
-        // accept lower accuracy for estimated division:
-        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0003);
+        // accept lower accuracy for estimated division, really low
+        // accuracy accepted because of results from ARM NEON:
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0025);
     }
 
     // test /=
@@ -147,8 +148,9 @@ void testImplementation()
         &vec2[i] << v;
     }
     for (int i = 0; i < numElements; ++i) {
-        // here, too, lower accuracy is acceptable.
-        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0003);
+        // here, too, lower accuracy is acceptable. As with divisions,
+        // ARM NEON costs us an order of magnitude here compared to X86.
+        TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0025);
     }
 
     // test sqrt()
@@ -157,7 +159,8 @@ void testImplementation()
         &vec2[i] << sqrt(v);
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL(std::sqrt(double(i + 0.1)), vec2[i]);
+        // lower accuracy, mainly for ARM NEON
+        TEST_REAL_ACCURACY(std::sqrt(double(i + 0.1)), vec2[i], 0.002);
     }
 
     // test "/ sqrt()"
@@ -172,7 +175,7 @@ void testImplementation()
     for (int i = 0; i < numElements; ++i) {
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
-        TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0003);
+        TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.003);
     }
 
     // test string conversion
@@ -438,6 +441,8 @@ ADD_TEST(TestImplementationStrategyFloat)
 
 #ifdef __SSE__
 #define EXPECTED_TYPE short_vec_strategy::sse
+#elif __ARM_NEON__
+#define EXPECTED_TYPE short_vec_strategy::neon
 #else
 #define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
