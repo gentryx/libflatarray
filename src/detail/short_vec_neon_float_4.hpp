@@ -3,6 +3,8 @@
 
 #ifdef __ARM_NEON__
 #include <arm_neon.h>
+#include <stdlib.h>
+#include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __CUDA_ARCH__
 
@@ -101,13 +103,56 @@ public:
     }
 
     inline
+    void load(const float *data)
+    {
+        val1 = vld1q_f32((data + 0));
+    }
+
+    inline
+    void load_aligned(const float *data)
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        load(data); // load aligned not found
+    }
+
+    inline
     void store(float *data) const
     {
+        vst1q_f32(data, val1);
+    }
+
+    inline
+    void store_aligned(float *data) const
+    {
+        SHORTVEC_ASSERT_ALIGNED(data, 16);
+        store(data); // store aligned not found
+    }
+
+    inline
+    void store_nt(float *data) const
+    {
+        store(data);
+    }
+
+    inline
+    void gather(const float *ptr, const unsigned *offsets)
+    {
+        float * data = (float *) malloc(4 * sizeof(float));
+        data[0] = ptr[offsets[0]];
+        data[1] = ptr[offsets[1]];
+        data[2] = ptr[offsets[2]];
+        data[3] = ptr[offsets[3]];
+        store(data);
+    }
+
+    inline
+    void scatter(float *ptr, const unsigned *offsets) const
+    {
         const float *data1 = reinterpret_cast<const float *>(&val1);
-        *(data +  0) = data1[0];
-        *(data +  1) = data1[1];
-        *(data +  2) = data1[2];
-        *(data +  3) = data1[3];
+        ptr[offsets[0]] = data1[0];
+        ptr[offsets[1]] = data1[1];
+        ptr[offsets[2]] = data1[2];
+        ptr[offsets[3]] = data1[3];
     }
 
 private:
