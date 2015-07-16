@@ -112,7 +112,7 @@ public:
     void load_aligned(const float *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        load(data); // load aligned not found
+        load(data);
     }
 
     inline
@@ -125,17 +125,31 @@ public:
     void store_aligned(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        store(data); // store aligned not found
-    }
-
-    // todo
-    inline
-    void store_nt(float *data) const
-    {
         store(data);
     }
 
-    // simple approach
+    inline
+    void store_nt(float *data) const
+    {
+        // in arm only stnp support non-temporal hint, thus need to
+        // break into two registers. (use helper val2)
+        // see if it can get optimized by compiler
+        
+        // the mapping between Q registers and D registers
+
+        // stnp is for arm 64 (armv8)
+        #if __LP64__
+            register float32x4_t val2 asm ("q0");
+            val2 = val1;
+            asm("stnp d0, d1, %[store]"
+                :[store] "=m" (data)
+            );
+        #else
+            store(data);
+        #endif
+    }
+
+    // dummy approach. NEON only supports loading in fixed interleaving
     inline
     void gather(const float *ptr, const unsigned *offsets)
     {
@@ -147,7 +161,7 @@ public:
         load(data);
     }
 
-    // simple approach
+    // dummy approach
     inline
     void scatter(float *ptr, const unsigned *offsets) const
     {
