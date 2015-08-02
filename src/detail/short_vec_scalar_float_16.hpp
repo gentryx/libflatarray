@@ -12,6 +12,7 @@
 #ifndef __AVX__
 #ifndef __SSE__
 #ifndef __MIC__
+#ifndef __ARM_NEON__
 
 #include <libflatarray/config.h>
 
@@ -460,6 +461,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 #endif
