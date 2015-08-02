@@ -162,8 +162,8 @@ public:
         #if __LP64__
             register float32x4_t tmp1 asm ("q0");
             tmp1 = val1;
-            register float32x4_t tmp1 asm ("q1");
-            tmp1 = val2;
+            register float32x4_t tmp2 asm ("q1");
+            tmp2 = val2;
             asm("stnp d0, d1, %[store]"
                 :[store] "=m" (data)
             );

@@ -81,6 +81,8 @@ public:
 
 #include <libflatarray/detail/short_vec_neon_float_4.hpp>
 #include <libflatarray/detail/short_vec_neon_float_8.hpp>
+#include <libflatarray/detail/short_vec_neon_float_16.hpp>
+#include <libflatarray/detail/short_vec_neon_float_32.hpp>
 
 #include <libflatarray/detail/short_vec_mic_double_8.hpp>
 #include <libflatarray/detail/short_vec_mic_double_16.hpp>
