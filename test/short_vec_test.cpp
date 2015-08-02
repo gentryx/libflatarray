@@ -160,7 +160,7 @@ void testImplementation()
     }
     for (int i = 0; i < numElements; ++i) {
         // lower accuracy, mainly for ARM NEON
-        TEST_REAL_ACCURACY(std::sqrt(double(i + 0.1)), vec2[i], 0.002);
+        TEST_REAL_ACCURACY(std::sqrt(double(i + 0.1)), vec2[i], 0.0025);
     }
 
     // test "/ sqrt()"
@@ -175,7 +175,7 @@ void testImplementation()
     for (int i = 0; i < numElements; ++i) {
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
-        TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.003);
+        TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
     }
 
     // test string conversion
@@ -455,6 +455,8 @@ ADD_TEST(TestImplementationStrategyFloat)
 #else
 #define EXPECTED_TYPE short_vec_strategy::sse
 #endif
+#elif __ARM_NEON__
+#define EXPECTED_TYPE short_vec_strategy::neon
 #else
 #define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
