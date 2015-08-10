@@ -297,7 +297,7 @@ public:
         float32x4_t result6 = vmulq_f32(val6, x6);
         float32x4_t result7 = vmulq_f32(val7, x7);
         float32x4_t result8 = vmulq_f32(val8, x8);
-        short_vec<float, 8> ret(
+        short_vec<float, 32> ret(
             result1, result2, result3, result4,
             result5, result6, result7, result8
             );
