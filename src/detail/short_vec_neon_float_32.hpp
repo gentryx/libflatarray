@@ -131,28 +131,99 @@ public:
     inline
     void operator/=(const short_vec<float, 32>& other)
     {
-        val1 = vmulq_f32(val1, vrecpeq_f32(other.val1));
-        val2 = vmulq_f32(val2, vrecpeq_f32(other.val2));
-        val3 = vmulq_f32(val3, vrecpeq_f32(other.val3));
-        val4 = vmulq_f32(val4, vrecpeq_f32(other.val4));
-        val5 = vmulq_f32(val5, vrecpeq_f32(other.val5));
-        val6 = vmulq_f32(val6, vrecpeq_f32(other.val6));
-        val7 = vmulq_f32(val7, vrecpeq_f32(other.val7));
-        val8 = vmulq_f32(val8, vrecpeq_f32(other.val8));
+        // get an initial estimate of 1/b.
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+        float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
+        float32x4_t reciprocal3 = vrecpeq_f32(other.val3);
+        float32x4_t reciprocal4 = vrecpeq_f32(other.val4);
+        float32x4_t reciprocal5 = vrecpeq_f32(other.val5);
+        float32x4_t reciprocal6 = vrecpeq_f32(other.val6);
+        float32x4_t reciprocal7 = vrecpeq_f32(other.val7);
+        float32x4_t reciprocal8 = vrecpeq_f32(other.val8);
+
+        // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
+        // application's accuracy requirements, you may be able to get away with only
+        // one refinement (instead of the two used here).  Be sure to test!
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
+        reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
+        reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
+        reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
+        reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
+        reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
+        reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+        reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+
+        // and finally, compute a/b = a*(1/b)
+        val1 = vmulq_f32(val1, reciprocal1);
+        val2 = vmulq_f32(val2, reciprocal2);
+        val3 = vmulq_f32(val3, reciprocal3);
+        val4 = vmulq_f32(val4, reciprocal4);
+        val5 = vmulq_f32(val5, reciprocal5);
+        val6 = vmulq_f32(val6, reciprocal6);
+        val7 = vmulq_f32(val7, reciprocal7);
+        val8 = vmulq_f32(val8, reciprocal8);
     }
 
     inline
     short_vec<float, 32> operator/(const short_vec<float, 32>& other) const
     {
+        // get an initial estimate of 1/b.
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+        float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
+        float32x4_t reciprocal3 = vrecpeq_f32(other.val3);
+        float32x4_t reciprocal4 = vrecpeq_f32(other.val4);
+        float32x4_t reciprocal5 = vrecpeq_f32(other.val5);
+        float32x4_t reciprocal6 = vrecpeq_f32(other.val6);
+        float32x4_t reciprocal7 = vrecpeq_f32(other.val7);
+        float32x4_t reciprocal8 = vrecpeq_f32(other.val8);
+
+        // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
+        // application's accuracy requirements, you may be able to get away with only
+        // one refinement (instead of the two used here).  Be sure to test!
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
+        reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
+        reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
+        reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
+        reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
+        reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
+        reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+        reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+
+        // and finally, compute a/b = a*(1/b)
+        result1 = vmulq_f32(val1, reciprocal1);
+        result2 = vmulq_f32(val2, reciprocal2);
+        result3 = vmulq_f32(val3, reciprocal3);
+        result4 = vmulq_f32(val4, reciprocal4);
+        result5 = vmulq_f32(val5, reciprocal5);
+        result6 = vmulq_f32(val6, reciprocal6);
+        result7 = vmulq_f32(val7, reciprocal7);
+        result8 = vmulq_f32(val8, reciprocal8);
+
         short_vec<float, 32> ret(
-            vmulq_f32(val1, vrecpeq_f32(other.val1)),
-            vmulq_f32(val2, vrecpeq_f32(other.val2)),
-            vmulq_f32(val3, vrecpeq_f32(other.val3)),
-            vmulq_f32(val4, vrecpeq_f32(other.val4)),
-            vmulq_f32(val5, vrecpeq_f32(other.val5)),
-            vmulq_f32(val6, vrecpeq_f32(other.val6)),
-            vmulq_f32(val7, vrecpeq_f32(other.val7)),
-            vmulq_f32(val8, vrecpeq_f32(other.val8))
+            result1,
+            result2,
+            result3,
+            result4,
+            result5,
+            result6,
+            result7,
+            result8
             );
         return ret;
     }
@@ -160,21 +231,75 @@ public:
     inline
     short_vec<float, 32> sqrt() const
     {
-        // seems that vsqrtq_f32 is not yet implemented in the compiler
-        //short_vec<float, 32> ret(vsqrtq_f32(val1));
-        float32x4_t reciprocal1 = vrsqrteq_f32(val1);
-        float32x4_t reciprocal2 = vrsqrteq_f32(val2);
-        float32x4_t reciprocal3 = vrsqrteq_f32(val3);
-        float32x4_t reciprocal4 = vrsqrteq_f32(val4);
-        float32x4_t reciprocal5 = vrsqrteq_f32(val5);
-        float32x4_t reciprocal6 = vrsqrteq_f32(val6);
-        float32x4_t reciprocal7 = vrsqrteq_f32(val7);
-        float32x4_t reciprocal8 = vrsqrteq_f32(val8);
-        short_vec<float, 32> ret(
-            vmulq_f32(val1, reciprocal1), vmulq_f32(val2, reciprocal2),
-            vmulq_f32(val3, reciprocal3), vmulq_f32(val4, reciprocal4),
-            vmulq_f32(val5, reciprocal5), vmulq_f32(val6, reciprocal6),
-            vmulq_f32(val7, reciprocal7), vmulq_f32(val8, reciprocal8)
+        // note that vsqrtq_f32 is to be implemented in the gcc compiler
+        int i;
+        float32x4_t x1 = vrsqrteq_f32(val1);
+        float32x4_t x2 = vrsqrteq_f32(val2);
+        float32x4_t x3 = vrsqrteq_f32(val3);
+        float32x4_t x4 = vrsqrteq_f32(val4);
+        float32x4_t x5 = vrsqrteq_f32(val5);
+        float32x4_t x6 = vrsqrteq_f32(val6);
+        float32x4_t x7 = vrsqrteq_f32(val7);
+        float32x4_t x8 = vrsqrteq_f32(val8);
+  
+        // Code to handle sqrt(0).
+        // If the input to sqrtf() is zero, a zero will be returned.
+        // If the input to vrsqrteq_f32() is zero, positive infinity is returned.
+        const uint32x4_t vec_p_inf = vdupq_n_u32(0x7F800000);
+        // check for divide by zero
+        const uint32x4_t div_by_zero1 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x1));
+        const uint32x4_t div_by_zero2 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x2));
+        const uint32x4_t div_by_zero3 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x3));
+        const uint32x4_t div_by_zero4 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x4));
+        const uint32x4_t div_by_zero5 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x5));
+        const uint32x4_t div_by_zero6 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x6));
+        const uint32x4_t div_by_zero7 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x7));
+        const uint32x4_t div_by_zero8 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x8));
+        // zero out the positive infinity results
+        x1 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero1),
+                                            vreinterpretq_u32_f32(x1)));
+        x2 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero2),
+                                            vreinterpretq_u32_f32(x2)));
+        x3 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero3),
+                                            vreinterpretq_u32_f32(x3)));
+        x4 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero4),
+                                            vreinterpretq_u32_f32(x4)));
+        x5 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero5),
+                                            vreinterpretq_u32_f32(x5)));
+        x6 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero6),
+                                            vreinterpretq_u32_f32(x6)));
+        x7 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero7),
+                                            vreinterpretq_u32_f32(x7)));
+        x8 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero8),
+                                            vreinterpretq_u32_f32(x8)));
+        // from arm documentation
+        // The Newton-Raphson iteration:
+        //     x[n+1] = x[n] * (3 - d * (x[n] * x[n])) / 2)
+        // converges to (1/√d) if x0 is the result of VRSQRTE applied to d.
+        //
+        // Note: The precision did not improve after 2 iterations.
+        for (i = 0; i < 2; i++) {
+          x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+          x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
+          x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val3), x3);
+          x4 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x4, x4), val4), x4);
+          x5 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x5, x5), val5), x5);
+          x6 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x6, x6), val6), x6);
+          x7 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x7, x7), val7), x7);
+          x8 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x8, x8), val8), x8);
+        }
+        // sqrt(s) = s * 1/sqrt(s)
+        float32x4_t result1 = vmulq_f32(val1, x1);
+        float32x4_t result2 = vmulq_f32(val2, x2);
+        float32x4_t result3 = vmulq_f32(val3, x3);
+        float32x4_t result4 = vmulq_f32(val4, x4);
+        float32x4_t result5 = vmulq_f32(val5, x5);
+        float32x4_t result6 = vmulq_f32(val6, x6);
+        float32x4_t result7 = vmulq_f32(val7, x7);
+        float32x4_t result8 = vmulq_f32(val8, x8);
+        short_vec<float, 8> ret(
+            result1, result2, result3, result4,
+            result5, result6, result7, result8
             );
         return ret;
     }

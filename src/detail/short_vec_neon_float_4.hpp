@@ -82,24 +82,65 @@ public:
     inline
     void operator/=(const short_vec<float, 4>& other)
     {
-        val1 = vmulq_f32(val1, vrecpeq_f32(other.val1));
+        // get an initial estimate of 1/b.
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+
+        // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
+        // application's accuracy requirements, you may be able to get away with only
+        // one refinement (instead of the two used here).  Be sure to test!
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+
+        // and finally, compute a/b = a*(1/b)
+        val1 = vmulq_f32(val1, reciprocal1);
     }
 
     inline
     short_vec<float, 4> operator/(const short_vec<float, 4>& other) const
     {
-        short_vec<float, 4> ret(vmulq_f32(val1, vrecpeq_f32(other.val1)));
+        // get an initial estimate of 1/b.
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+
+        // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
+        // application's accuracy requirements, you may be able to get away with only
+        // one refinement (instead of the two used here).  Be sure to test!
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+
+        // and finally, compute a/b = a*(1/b)
+        float32x4_t result = vmulq_f32(val1, reciprocal1);
+
+        short_vec<float, 4> ret(result);
         return ret;
     }
 
     inline
     short_vec<float, 4> sqrt() const
     {
-        // seems that vsqrtq_f32 is not yet implemented in the compiler
-        //short_vec<float, 4> ret(vsqrtq_f32(val1));
-        float32x4_t reciprocal = vrsqrteq_f32(val1);
-        short_vec<float, 4> ret(vmulq_f32(val1, reciprocal));
-        return ret;
+        // note that vsqrtq_f32 is to be implemented in the gcc compiler
+        int i;
+        float32x4_t x1 = vrsqrteq_f32(val1);
+  
+        // Code to handle sqrt(0).
+        // If the input to sqrtf() is zero, a zero will be returned.
+        // If the input to vrsqrteq_f32() is zero, positive infinity is returned.
+        const uint32x4_t vec_p_inf = vdupq_n_u32(0x7F800000);
+        // check for divide by zero
+        const uint32x4_t div_by_zero = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x1));
+        // zero out the positive infinity results
+        x1 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero),
+                                            vreinterpretq_u32_f32(x1)));
+        // from arm documentation
+        // The Newton-Raphson iteration:
+        //     x[n+1] = x[n] * (3 - d * (x[n] * x[n])) / 2)
+        // converges to (1/√d) if x0 is the result of VRSQRTE applied to d.
+        //
+        // Note: The precision did not improve after 2 iterations.
+        for (i = 0; i < 2; i++) {
+          x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+        }
+        // sqrt(s) = s * 1/sqrt(s)
+        return vmulq_f32(val1, x1);
     }
 
     inline
