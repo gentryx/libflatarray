@@ -206,14 +206,14 @@ public:
         reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
 
         // and finally, compute a/b = a*(1/b)
-        result1 = vmulq_f32(val1, reciprocal1);
-        result2 = vmulq_f32(val2, reciprocal2);
-        result3 = vmulq_f32(val3, reciprocal3);
-        result4 = vmulq_f32(val4, reciprocal4);
-        result5 = vmulq_f32(val5, reciprocal5);
-        result6 = vmulq_f32(val6, reciprocal6);
-        result7 = vmulq_f32(val7, reciprocal7);
-        result8 = vmulq_f32(val8, reciprocal8);
+        float32x4_t result1 = vmulq_f32(val1, reciprocal1);
+        float32x4_t result2 = vmulq_f32(val2, reciprocal2);
+        float32x4_t result3 = vmulq_f32(val3, reciprocal3);
+        float32x4_t result4 = vmulq_f32(val4, reciprocal4);
+        float32x4_t result5 = vmulq_f32(val5, reciprocal5);
+        float32x4_t result6 = vmulq_f32(val6, reciprocal6);
+        float32x4_t result7 = vmulq_f32(val7, reciprocal7);
+        float32x4_t result8 = vmulq_f32(val8, reciprocal8);
 
         short_vec<float, 32> ret(
             result1,
