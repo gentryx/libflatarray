@@ -408,7 +408,7 @@ public:
     inline
     void gather(const float *ptr, const unsigned *offsets)
     {
-        float * data = (float *) malloc(32 * sizeof(float));
+        float data[32];
         data[0] = ptr[offsets[0]];
         data[1] = ptr[offsets[1]];
         data[2] = ptr[offsets[2]];
