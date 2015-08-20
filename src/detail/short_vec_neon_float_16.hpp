@@ -17,7 +17,7 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, int ARITY, bool INCREASE_PRECISION = 1>
 class short_vec;
 
 template<>
@@ -123,6 +123,7 @@ public:
     inline
     void operator/=(const short_vec<float, 16>& other)
     {
+        int i, iterations=1;
         // get an initial estimate of 1/b.
         float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
         float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
@@ -132,14 +133,15 @@ public:
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
-        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        if (INCREASE_PRECISION)
+            iterations = 2;
+        for (int i = 0; i < iterations; ++i)
+        {
+            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        }
 
         // and finally, compute a/b = a*(1/b)
         val1 = vmulq_f32(val1, reciprocal1);
@@ -157,6 +159,7 @@ public:
     inline
     short_vec<float, 16> operator/(const short_vec<float, 16>& other) const
     {
+        int i, iterations=1;
         // get an initial estimate of 1/b.
         float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
         float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
@@ -166,14 +169,15 @@ public:
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-        reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
-        reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        if (INCREASE_PRECISION)
+            iterations = 2;
+        for (int i = 0; i < iterations; ++i)
+        {
+            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
+            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
+        }
 
         // and finally, compute a/b = a*(1/b)
         float32x4_t result1 = vmulq_f32(val1, reciprocal1);
@@ -195,7 +199,7 @@ public:
     short_vec<float, 16> sqrt() const
     {
         // note that vsqrtq_f32 is to be implemented in the gcc compiler
-        int i;
+        int i, iterations = 1;
         float32x4_t x1 = vrsqrteq_f32(val1);
         float32x4_t x2 = vrsqrteq_f32(val2);
         float32x4_t x3 = vrsqrteq_f32(val3);
@@ -225,7 +229,9 @@ public:
         // converges to (1/√d) if x0 is the result of VRSQRTE applied to d.
         //
         // Note: The precision did not improve after 2 iterations.
-        for (i = 0; i < 2; i++) {
+        if (INCREASE_PRECISION)
+            iterations = 2;
+        for (i = 0; i < iterations; i++) {
           x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
           x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
           x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val3), x3);
