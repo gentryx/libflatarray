@@ -1,3 +1,10 @@
+/**
+ * Copyright 2015 Di Xiao
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_NEON_FLOAT_32_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_NEON_FLOAT_32_HPP
 
@@ -128,6 +135,12 @@ public:
         return ret;
     }
 
+    // Code created with the help of Stack Overflow question
+    // http://stackoverflow.com/questions/3808808/how-to-get-element-by-class-in-javascript
+    // Question by Taylor:
+    // http://stackoverflow.com/users/853570/darkmax
+    // Answer by Andrew Dunn:
+    // http://stackoverflow.com/users/142434/stephen-canon
     inline
     void operator/=(const short_vec<float, 32>& other)
     {
@@ -172,6 +185,12 @@ public:
         val8 = vmulq_f32(val8, reciprocal8);
     }
 
+    // Code created with the help of Stack Overflow question
+    // http://stackoverflow.com/questions/3808808/how-to-get-element-by-class-in-javascript
+    // Question by Taylor:
+    // http://stackoverflow.com/users/853570/darkmax
+    // Answer by Andrew Dunn:
+    // http://stackoverflow.com/users/142434/stephen-canon
     inline
     short_vec<float, 32> operator/(const short_vec<float, 32>& other) const
     {
@@ -228,6 +247,7 @@ public:
         return ret;
     }
 
+    // Copyright (c) 2011, The WebRTC project authors. All rights reserved.
     inline
     short_vec<float, 32> sqrt() const
     {
