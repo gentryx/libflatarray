@@ -1,5 +1,6 @@
 /**
- * Copyright 2012-2013, 2015 Andreas Schäfer
+ * Copyright 2012-2015 Andreas Schäfer
+ * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
