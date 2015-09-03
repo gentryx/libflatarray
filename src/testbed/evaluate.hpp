@@ -15,7 +15,8 @@ namespace LibFlatArray {
 class evaluate
 {
 public:
-    explicit evaluate(const std::string& revision) :
+    explicit evaluate(const std::string& name, const std::string& revision) :
+        name(name),
         revision(revision)
     {}
 
@@ -27,6 +28,10 @@ public:
     template<class BENCHMARK>
     void operator()(BENCHMARK benchmark, std::vector<int> dim, bool output = true)
     {
+        if (benchmark.family().find(name, 0) == std::string::npos) {
+            return;
+        }
+
         boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
         std::stringstream buf;
         buf << now;
@@ -66,6 +71,7 @@ public:
     }
 
 private:
+    std::string name;
     std::string revision;
 };
 
