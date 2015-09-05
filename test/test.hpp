@@ -1,6 +1,9 @@
 #ifndef TEST_H
 #define TEST_H
 
+#include <cmath>
+#include <sstream>
+
 // Runner and ADD_TEST are some convenience functions to simplify
 // definition of new tests. ADD_TEST will add scaffolding that causes
 // the following block to be executed once the program starts.
@@ -36,7 +39,7 @@ public:
         double a = (A);                                                 \
         double b = (B);                                                 \
         double delta = std::abs(a - b);                                 \
-        double relativeError = delta / std::abs(A);                     \
+        double relativeError = delta / std::abs(a);                     \
         if (relativeError > RELATIVE_ERROR_LIMIT) {                     \
             std::stringstream buf;                                      \
             buf << "in file "                                           \
