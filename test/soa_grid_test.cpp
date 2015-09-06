@@ -829,9 +829,9 @@ ADD_TEST(TestArrayMember)
                 BOOST_TEST(particle.pos[0] == (float(0.3 + x)));
                 BOOST_TEST(particle.pos[1] == (float(0.4 + y)));
                 BOOST_TEST(particle.pos[2] == (float(0.5 + z)));
-                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
-                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
-                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                TEST_REAL_ACCURACY(particle.vel[0], (float(0.6 + x) * 3 * 6), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[1], (float(0.7 + y) * 4 * 7), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[2], (float(0.9 + z) * 5 * 8), 0.00001);
                 BOOST_TEST(particle.state  == int(x + y + z));
             }
         }
@@ -849,9 +849,9 @@ ADD_TEST(TestArrayMember)
                 BOOST_TEST(particle.pos[0] == (float(0.3 + x) + x * 1000));
                 BOOST_TEST(particle.pos[1] == (float(0.4 + y) + y * 2000));
                 BOOST_TEST(particle.pos[2] == (float(0.5 + z) + z * 3000));
-                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
-                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
-                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                TEST_REAL_ACCURACY(particle.vel[0], (float(0.6 + x) * 3 * 6), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[1], (float(0.7 + y) * 4 * 7), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[2], (float(0.9 + z) * 5 * 8), 0.00001);
                 BOOST_TEST(particle.state  == int(x + y + z));
             }
         }
@@ -869,9 +869,9 @@ ADD_TEST(TestArrayMember)
                 BOOST_TEST(particle.pos[0] == (float(0.3 + x) + x * 1000 + x * 1001));
                 BOOST_TEST(particle.pos[1] == (float(0.4 + y) + y * 2000 + y * 2001));
                 BOOST_TEST(particle.pos[2] == (float(0.5 + z) + z * 3000 + z * 3001));
-                BOOST_TEST(particle.vel[0] == (float(0.6 + x) * 3 * 6));
-                BOOST_TEST(particle.vel[1] == (float(0.7 + y) * 4 * 7));
-                BOOST_TEST(particle.vel[2] == (float(0.9 + z) * 5 * 8));
+                TEST_REAL_ACCURACY(particle.vel[0], (float(0.6 + x) * 3 * 6), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[1], (float(0.7 + y) * 4 * 7), 0.00001);
+                TEST_REAL_ACCURACY(particle.vel[2], (float(0.9 + z) * 5 * 8), 0.00001);
                 BOOST_TEST(particle.state  == int(x + y + z));
             }
         }
