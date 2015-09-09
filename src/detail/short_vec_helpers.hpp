@@ -1,3 +1,10 @@
+/**
+ * Copyright 2015 Kurt Kanzenbach
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_HELPERS_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_HELPERS_HPP
 
@@ -6,14 +13,14 @@
 
 // uintptr_t is only available through C++11
 #ifdef LIBFLATARRAY_WITH_CPP14
-# include <cstdint>
-# define _SHORTVEC_UINTPTR_T uintptr_t
+#include <cstdint>
+#define _SHORTVEC_UINTPTR_T uintptr_t
 #else
-# define _SHORTVEC_UINTPTR_T unsigned long long
+#define _SHORTVEC_UINTPTR_T unsigned long long
 #endif
 
 #ifdef __SSE4_1__
-# include <smmintrin.h>
+#include <smmintrin.h>
 #endif
 
 /**
@@ -33,18 +40,18 @@
  * Therefore here are compiler specific macros to disable and enable this warning.
  */
 #if defined(__GNUC__) && !defined(__clang__)
-# define SHORTVEC_DISABLE_WARNING_UNINITIALIZED             \
-    _Pragma("GCC diagnostic push")							\
+#define SHORTVEC_DISABLE_WARNING_UNINITIALIZED             \
+    _Pragma("GCC diagnostic push")                         \
     _Pragma("GCC diagnostic ignored \"-Wuninitialized\"")
-# define SHORTVEC_ENABLE_WARNING_UNINITIALIZED  \
+#define SHORTVEC_ENABLE_WARNING_UNINITIALIZED   \
     _Pragma("GCC diagnostic pop")
 #endif
 
 #ifdef __clang__
-# define SHORTVEC_DISABLE_WARNING_UNINITIALIZED             \
-    _Pragma("clang diagnostic push")						\
+#define SHORTVEC_DISABLE_WARNING_UNINITIALIZED              \
+    _Pragma("clang diagnostic push")                        \
     _Pragma("clang diagnostic ignored \"-Wuninitialized\"")
-# define SHORTVEC_ENABLE_WARNING_UNINITIALIZED  \
+#define SHORTVEC_ENABLE_WARNING_UNINITIALIZED   \
     _Pragma("clang diagnostic pop")
 #endif
 
@@ -52,10 +59,10 @@
  * If compiler is not gcc and not clang, just remove these macros.
  */
 #ifndef SHORTVEC_DISABLE_WARNING_UNINITIALIZED
-# define SHORTVEC_DISABLE_WARNING_UNINITIALIZED
+#define SHORTVEC_DISABLE_WARNING_UNINITIALIZED
 #endif
 #ifndef SHORTVEC_ENABLE_WARNING_UNINITIALIZED
-# define SHORTVEC_ENABLE_WARNING_UNINITIALIZED
+#define SHORTVEC_ENABLE_WARNING_UNINITIALIZED
 #endif
 
 
