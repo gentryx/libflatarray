@@ -55,9 +55,9 @@ public:
         const float32x4_t& val5, const float32x4_t& val6,
         const float32x4_t& val7, const float32x4_t& val8
         ) :
-        val1(val1), val2(val2), 
-        val3(val3), val4(val4), 
-        val5(val5), val6(val6), 
+        val1(val1), val2(val2),
+        val3(val3), val4(val4),
+        val5(val5), val6(val6),
         val7(val7), val8(val8)
     {}
 
@@ -257,7 +257,7 @@ public:
         float32x4_t x6 = vrsqrteq_f32(val6);
         float32x4_t x7 = vrsqrteq_f32(val7);
         float32x4_t x8 = vrsqrteq_f32(val8);
-  
+
         // Code to handle sqrt(0).
         // If the input to sqrtf() is zero, a zero will be returned.
         // If the input to vrsqrteq_f32() is zero, positive infinity is returned.
@@ -368,7 +368,7 @@ public:
         // in arm only stnp support non-temporal hint, thus need to
         // break into two registers. (use helper val2)
         // see if it can get optimized by compiler
-        
+
         // the mapping between Q registers and D registers
 
         // stnp is for arm 64 (armv32)

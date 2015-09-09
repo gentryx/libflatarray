@@ -524,7 +524,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #endif /* __ARM_NEON__ */
 
 #endif /* __AVX__ */
-    
+
 #endif
     checkForStrategy(short_vec<float, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
