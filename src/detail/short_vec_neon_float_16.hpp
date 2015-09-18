@@ -204,7 +204,7 @@ public:
         float32x4_t x2 = vrsqrteq_f32(val2);
         float32x4_t x3 = vrsqrteq_f32(val3);
         float32x4_t x4 = vrsqrteq_f32(val4);
-  
+
         // Code to handle sqrt(0).
         // If the input to sqrtf() is zero, a zero will be returned.
         // If the input to vrsqrteq_f32() is zero, positive infinity is returned.
@@ -286,7 +286,7 @@ public:
         // in arm only stnp support non-temporal hint, thus need to
         // break into two registers. (use helper val2)
         // see if it can get optimized by compiler
-        
+
         // the mapping between Q registers and D registers
 
         // stnp is for arm 64 (armv16)
