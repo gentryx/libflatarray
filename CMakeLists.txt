@@ -12,6 +12,7 @@ set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
 
+set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall -Wno-sign-promo -Wnon-virtual-dtor")
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
 if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
@@ -62,7 +63,7 @@ function(lfa_add_config_option name help_message default add_to_header)
   endif()
 endfunction(lfa_add_config_option)
 
-lfa_add_config_option(ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
+lfa_add_config_option(LFA_ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 lfa_add_config_option(UNITEXEC "May be used to specify a wrapper which then calls a unit test executable. Handy if for instance the unit tests shall be run inside of Intel's Software Development Emulator (SDE)." "" false)
 lfa_add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
 lfa_add_config_option(WITH_SIMPLE_BOOST "fixme: temporary workaround for weird boost installs, resolutin will be to bundle header-only boost libs" false false)
@@ -81,8 +82,8 @@ endif()
 lfa_dump_config("config.h")
 lfa_print_options()
 
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${ADDITIONAL_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADDITIONAL_COMPILE_FLAGS}")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${LFA_ADDITIONAL_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
 
 # 2. CONFIGURE INSTALLER
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME})
