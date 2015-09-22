@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
+include(CheckCXXCompilerFlag)
 
 # 1. GENERIC PACKAGE INFORMATION
 if(PACKAGE_NAME)
@@ -63,12 +64,17 @@ function(lfa_add_config_option name help_message default add_to_header)
   endif()
 endfunction(lfa_add_config_option)
 
+check_cxx_compiler_flag("-std=c++14" SUPPORTS_CPP14)
+if(NOT SUPPORTS_CPP14)
+  set(SUPPORTS_CPP14 false)
+endif()
+
 lfa_add_config_option(LFA_ADDITIONAL_COMPILE_FLAGS "Add these flags when compiling." "${DEFAULT_FLAGS}" false)
 lfa_add_config_option(UNITEXEC "May be used to specify a wrapper which then calls a unit test executable. Handy if for instance the unit tests shall be run inside of Intel's Software Development Emulator (SDE)." "" false)
 lfa_add_config_option(WITH_CUDA "Enable modules which harness Nvidia CUDA GPUs" ${CUDA_FOUND} true)
 lfa_add_config_option(WITH_SIMPLE_BOOST "fixme: temporary workaround for weird boost installs, resolutin will be to bundle header-only boost libs" false false)
 lfa_add_config_option(LIB_INSTALL_DIR "Directory where libraries will be installed to, may be overridden for 64-bit installations" "lib" false)
-lfa_add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" false true)
+lfa_add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" ${SUPPORTS_CPP14} true)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
   message(FATAL_ERROR "WITH_CUDA selected, but could not find the NVIDIA CUDA toolkit.")
