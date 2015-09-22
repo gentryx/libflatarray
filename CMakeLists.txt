@@ -12,7 +12,7 @@ set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
 
-set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall -Wno-sign-promo -Wnon-virtual-dtor")
+set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall -Wno-sign-conversion -Wnon-virtual-dtor")
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
 if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
