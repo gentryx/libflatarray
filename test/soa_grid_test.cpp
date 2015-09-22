@@ -521,7 +521,7 @@ ADD_TEST(TestResizeAndByteSize)
     long dim_z = 2;
     long cellSize = 9; // 1 double, 1 bool
     soa_grid<HeatedGameOfLifeCell> grid(dim_x, dim_y, dim_z);
-    BOOST_TEST(grid.byte_size() == (32 * 32 * 32 * cellSize));
+    BOOST_TEST(grid.byte_size() == static_cast<unsigned long>((32 * 32 * 32 * cellSize)));
 
     dim_x = 10;
     dim_y = 20;
@@ -529,7 +529,7 @@ ADD_TEST(TestResizeAndByteSize)
     grid.resize(dim_x, dim_y, dim_z);
     grid.set(dim_x - 1, dim_y - 1, dim_z - 1, HeatedGameOfLifeCell(4711));
     BOOST_TEST(grid.get(dim_x - 1, dim_y - 1, dim_z - 1) == HeatedGameOfLifeCell(4711));
-    BOOST_TEST(grid.byte_size() == (64 * 64 * 64 * cellSize));
+    BOOST_TEST(grid.byte_size() == static_cast<unsigned long>((64 * 64 * 64 * cellSize)));
 
 }
 
@@ -643,7 +643,6 @@ ADD_TEST(TestSwap)
     for (long z = 0; z < dim_z; ++z) {
         for (long y = 0; y < dim_y; ++y) {
             for (long x = 0; x < dim_x; ++x) {
-                double temp = z * 100 + y + x * 0.01;
                 BOOST_TEST(gridOld.get(x, y, z).temperature == 4711);
                 BOOST_TEST(gridNew.get(x, y, z).temperature == 666);
             }
@@ -655,7 +654,6 @@ ADD_TEST(TestSwap)
     for (long z = 0; z < dim_z; ++z) {
         for (long y = 0; y < dim_y; ++y) {
             for (long x = 0; x < dim_x; ++x) {
-                double temp = z * 100 + y + x * 0.01;
                 BOOST_TEST(gridOld.get(x, y, z).temperature == 666);
                 BOOST_TEST(gridNew.get(x, y, z).temperature == 4711);
             }
