@@ -1453,13 +1453,13 @@ public:
                     accelerationZ += forceZ;
                 }
 
-                &accessorB.posX() << posX + velX * DELTA_T;
-                &accessorB.posY() << posY + velY * DELTA_T;
-                &accessorB.posZ() << posZ + velZ * DELTA_T;
+                &accessorB.posX() << (posX + velX * DELTA_T);
+                &accessorB.posY() << (posY + velY * DELTA_T);
+                &accessorB.posZ() << (posZ + velZ * DELTA_T);
 
-                &accessorB.velX() << velX + accelerationX;
-                &accessorB.velY() << velY + accelerationY;
-                &accessorB.velZ() << velZ + accelerationZ;
+                &accessorB.velX() << (velX + accelerationX);
+                &accessorB.velY() << (velY + accelerationY);
+                &accessorB.velZ() << (velZ + accelerationZ);
 
                 &accessorB.charge() << charge;
             }
@@ -1571,13 +1571,13 @@ public:
                     accelerationZ += forceZ;
                 }
 
-                &accessorB.pos()[0] << posX + velX * DELTA_T;
-                &accessorB.pos()[1] << posY + velY * DELTA_T;
-                &accessorB.pos()[2] << posZ + velZ * DELTA_T;
+                &accessorB.pos()[0] << (posX + velX * DELTA_T);
+                &accessorB.pos()[1] << (posY + velY * DELTA_T);
+                &accessorB.pos()[2] << (posZ + velZ * DELTA_T);
 
-                &accessorB.vel()[0] << velX + accelerationX;
-                &accessorB.vel()[1] << velY + accelerationY;
-                &accessorB.vel()[2] << velZ + accelerationZ;
+                &accessorB.vel()[0] << (velX + accelerationX);
+                &accessorB.vel()[1] << (velY + accelerationY);
+                &accessorB.vel()[2] << (velZ + accelerationZ);
 
                 &accessorB.charge() << charge;
             }
