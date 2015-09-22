@@ -186,7 +186,6 @@ private:
         __m128d factorS = _mm_set1_pd(WEIGHT_S);
         __m128d factorT = _mm_set1_pd(WEIGHT_T);
         __m128d factorW = _mm_set1_pd(WEIGHT_W);
-        __m128d factorC = _mm_set1_pd(WEIGHT_C);
         __m128d factorE = _mm_set1_pd(WEIGHT_E);
         __m128d factorB = _mm_set1_pd(WEIGHT_B);
         __m128d factorN = _mm_set1_pd(WEIGHT_N);
@@ -373,8 +372,6 @@ public:
         int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        long offsetZ = dim_x * dim_y;
-        long gridVolume = dim_x * dim_y * dim_z;
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
 
@@ -446,7 +443,6 @@ public:
             __m128d factorS = _mm_set1_pd(WEIGHT_S);
             __m128d factorT = _mm_set1_pd(WEIGHT_T);
             __m128d factorW = _mm_set1_pd(WEIGHT_W);
-            __m128d factorC = _mm_set1_pd(WEIGHT_C);
             __m128d factorE = _mm_set1_pd(WEIGHT_E);
             __m128d factorB = _mm_set1_pd(WEIGHT_B);
             __m128d factorN = _mm_set1_pd(WEIGHT_N);
@@ -595,8 +591,6 @@ public:
         int maxT = 200000000 / dim_x / dim_y / dim_z;
         maxT = std::max(16, maxT);
 
-        long offsetZ = dim_x * dim_y;
-        long gridVolume = dim_x * dim_y * dim_z;
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
 
@@ -1459,13 +1453,13 @@ public:
                     accelerationZ += forceZ;
                 }
 
-                &accessorB.posX() << posX + velX * DELTA_T;
-                &accessorB.posY() << posY + velY * DELTA_T;
-                &accessorB.posZ() << posZ + velZ * DELTA_T;
+                &accessorB.posX() << (posX + velX * DELTA_T);
+                &accessorB.posY() << (posY + velY * DELTA_T);
+                &accessorB.posZ() << (posZ + velZ * DELTA_T);
 
-                &accessorB.velX() << velX + accelerationX;
-                &accessorB.velY() << velY + accelerationY;
-                &accessorB.velZ() << velZ + accelerationZ;
+                &accessorB.velX() << (velX + accelerationX);
+                &accessorB.velY() << (velY + accelerationY);
+                &accessorB.velZ() << (velZ + accelerationZ);
 
                 &accessorB.charge() << charge;
             }
@@ -1577,13 +1571,13 @@ public:
                     accelerationZ += forceZ;
                 }
 
-                &accessorB.pos()[0] << posX + velX * DELTA_T;
-                &accessorB.pos()[1] << posY + velY * DELTA_T;
-                &accessorB.pos()[2] << posZ + velZ * DELTA_T;
+                &accessorB.pos()[0] << (posX + velX * DELTA_T);
+                &accessorB.pos()[1] << (posY + velY * DELTA_T);
+                &accessorB.pos()[2] << (posZ + velZ * DELTA_T);
 
-                &accessorB.vel()[0] << velX + accelerationX;
-                &accessorB.vel()[1] << velY + accelerationY;
-                &accessorB.vel()[2] << velZ + accelerationZ;
+                &accessorB.vel()[0] << (velX + accelerationX);
+                &accessorB.vel()[1] << (velY + accelerationY);
+                &accessorB.vel()[2] << (velZ + accelerationZ);
 
                 &accessorB.charge() << charge;
             }
