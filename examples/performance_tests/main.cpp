@@ -306,7 +306,7 @@ private:
 class JacobiCell
 {
 public:
-    JacobiCell(double temp = 0) :
+    explicit JacobiCell(double temp = 0) :
         temp(temp)
     {}
 
@@ -378,8 +378,8 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    gridOld.set(x, y, z, x + y + z);
-                    gridNew.set(x, y, z, x + y + z);
+                    gridOld.set(x, y, z, JacobiCell(x + y + z));
+                    gridNew.set(x, y, z, JacobiCell(x + y + z));
                 }
             }
         }
@@ -597,8 +597,8 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    gridOld.set(x, y, z, x + y + z);
-                    gridNew.set(x, y, z, x + y + z);
+                    gridOld.set(x, y, z, JacobiCell(x + y + z));
+                    gridNew.set(x, y, z, JacobiCell(x + y + z));
                 }
             }
         }
@@ -644,7 +644,7 @@ private:
 class Particle
 {
 public:
-    inline Particle(
+    explicit inline Particle(
         const float posX = 0,
         const float posY = 0,
         const float posZ = 0,
@@ -682,7 +682,8 @@ LIBFLATARRAY_REGISTER_SOA(Particle,
 class ArrayParticle
 {
 public:
-    inline ArrayParticle(
+    inline
+    explicit ArrayParticle(
         const float posX = 0,
         const float posY = 0,
         const float posZ = 0,

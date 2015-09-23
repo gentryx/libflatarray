@@ -15,7 +15,7 @@ class Particle
 {
 public:
     inline
-    Particle(
+    explicit Particle(
         float posX = 0.0,
         float posY = 0.0,
         float posZ = 0.0,

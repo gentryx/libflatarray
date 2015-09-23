@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2013 Andreas Schäfer
+ * Copyright 2012-2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,7 +8,17 @@
 #ifndef CUDA_ALLOCATOR_HPP
 #define CUDA_ALLOCATOR_HPP
 
+#ifdef __ICC
+// disabling this warning as implicit type conversion here as it's an intented feature for dim3
+#pragma warning push
+#pragma warning (disable: 2304)
+#endif
+
 #include <cuda.h>
+
+#ifdef __ICC
+#pragma warning pop
+#endif
 
 namespace LibFlatArray {
 

@@ -89,7 +89,7 @@ LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform, ((double)(memberA))((double)(m
 class TestFunctor
 {
 public:
-    TestFunctor(std::vector<long> *report) :
+    explicit TestFunctor(std::vector<long> *report) :
         report(report)
     {}
 

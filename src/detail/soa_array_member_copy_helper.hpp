@@ -84,7 +84,7 @@ public:
             {
             public:
                 inline
-                reference(char *data) :
+                explicit reference(char *data) :
                     data(data)
                 {}
 
@@ -102,7 +102,7 @@ public:
             {
             public:
                 inline
-                const_reference(const char *data) :
+                explicit const_reference(const char *data) :
                     data(data)
                 {}
 

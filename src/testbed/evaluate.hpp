@@ -15,7 +15,7 @@ namespace LibFlatArray {
 class evaluate
 {
 public:
-    explicit evaluate(const std::string& name, const std::string& revision) :
+    evaluate(const std::string& name, const std::string& revision) :
         name(name),
         revision(revision)
     {}

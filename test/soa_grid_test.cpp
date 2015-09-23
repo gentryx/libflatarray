@@ -16,7 +16,8 @@
 class HeatedGameOfLifeCell
 {
 public:
-    inline HeatedGameOfLifeCell(double temperature=0.0, bool alive=false) :
+    inline
+    explicit HeatedGameOfLifeCell(double temperature=0.0, bool alive=false) :
         temperature(temperature),
         alive(alive)
     {}
@@ -276,7 +277,7 @@ private:
 class ArrayParticle
 {
 public:
-    ArrayParticle(
+    explicit ArrayParticle(
         float mass = 0,
         float charge = 0,
         float pos0 = 0,

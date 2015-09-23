@@ -16,7 +16,7 @@ class Particle
 {
 public:
     inline
-    Particle(
+    explicit Particle(
         float posX = 0.0,
         float posY = 0.0,
         float posZ = 0.0,
@@ -59,7 +59,7 @@ LIBFLATARRAY_REGISTER_SOA(
 class ArrayParticle
 {
 public:
-    ArrayParticle(
+    explicit ArrayParticle(
         float mass = 0,
         float charge = 0,
         float pos0 = 0,
