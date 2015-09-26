@@ -1,10 +1,12 @@
 /**
  * Copyright 2013 - 2014 Andreas Schäfer, Di Xiao
+ * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <libflatarray/config.h>
 #include <cmath>
 #include <boost/detail/lightweight_test.hpp>
 #include <iostream>
@@ -223,25 +225,31 @@ void testImplementation()
         }
     }
 
-#ifdef SHORTVEC_HAS_CPP11
+#ifdef LIBFLATARRAY_WITH_CPP14
     // test gather via initializer_list
     {
-        unsigned indices[ARITY] __attribute__((aligned (64)));
-        CARGO actual[ARITY];
+        CARGO actual1[ARITY];
+        CARGO actual2[ARITY];
         CARGO expected[ARITY];
         for (unsigned i = 0; i < ARITY; ++i) {
-            indices[i] = i * 10;
             expected[i] = (i * 10) * 0.75;
         }
 
         // max: 32
-        ShortVec vec = { 0.0, 7.5, 15.0, 22.50, 30.0, 37.5, 45.0, 52.5,
-                         60.0, 67.5, 75.0, 82.5, 90.0, 97.5, 105.0, 112.5,
-                         120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
-                         180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
-        actual << vec;
+        ShortVec vec1 = { 0.0, 7.5, 15.0, 22.50, 30.0, 37.5, 45.0, 52.5,
+                          60.0, 67.5, 75.0, 82.5, 90.0, 97.5, 105.0, 112.5,
+                          120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
+                          180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
+        ShortVec vec2;
+        vec2 = { 0.0, 7.5, 15.0, 22.50, 30.0, 37.5, 45.0, 52.5,
+                 60.0, 67.5, 75.0, 82.5, 90.0, 97.5, 105.0, 112.5,
+                 120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
+                 180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
+        actual1 << vec1;
+        actual2 << vec2;
         for (unsigned i = 0; i < ARITY; ++i) {
-            TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
+            TEST_REAL_ACCURACY(actual1[i], expected[i], 0.001);
+            TEST_REAL_ACCURACY(actual2[i], expected[i], 0.001);
         }
     }
 #endif
