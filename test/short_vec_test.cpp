@@ -205,13 +205,13 @@ void testImplementation()
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
-        for (unsigned i = 0; i < ARITY * 10; ++i) {
+        for (int i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 array[i] = i * 0.75;
             }
         }
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
             expected[i] = (i * 10) * 0.75;
         }
@@ -220,7 +220,7 @@ void testImplementation()
         vec.gather(array, indices);
         actual << vec;
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
         }
     }
@@ -231,7 +231,7 @@ void testImplementation()
         CARGO actual1[ARITY];
         CARGO actual2[ARITY];
         CARGO expected[ARITY];
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) * 0.75;
         }
 
@@ -247,7 +247,7 @@ void testImplementation()
                  180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
         actual1 << vec1;
         actual2 << vec2;
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual1[i], expected[i], 0.001);
             TEST_REAL_ACCURACY(actual2[i], expected[i], 0.001);
         }
@@ -262,18 +262,18 @@ void testImplementation()
         unsigned indices[ARITY] __attribute__((aligned (64)));
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
-        for (unsigned i = 0; i < ARITY * 10; ++i) {
+        for (int i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 expected[i] = i * 0.75;
             }
         }
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
         }
 
         vec.gather(expected, indices);
         vec.scatter(array, indices);
-        for (unsigned i = 0; i < ARITY * 10; ++i) {
+        for (int i = 0; i < ARITY * 10; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -283,21 +283,21 @@ void testImplementation()
         CARGO array[ARITY] __attribute__((aligned(64)));
         CARGO expected[ARITY] __attribute__((aligned(64)));
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
         }
         ShortVec v1 = 5.0;
         v1.store_nt(array);
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
         }
         ShortVec v2 = expected;
         v2.store_nt(array);
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -307,21 +307,21 @@ void testImplementation()
         CARGO array[ARITY] __attribute__((aligned(64)));
         CARGO expected[ARITY] __attribute__((aligned(64)));
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
         }
         ShortVec v1 = 5.0;
         v1.store_aligned(array);
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
         }
         ShortVec v2 = expected;
         v2.store_aligned(array);
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -331,14 +331,14 @@ void testImplementation()
         CARGO array[ARITY] __attribute__((aligned(64)));
         CARGO expected[ARITY] __attribute__((aligned(64)));
 
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             array[i]    = i + 0.1;
             expected[i] = 0;
         }
         ShortVec v1;
         v1.load_aligned(array);
         v1.store(expected);
-        for (unsigned i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
