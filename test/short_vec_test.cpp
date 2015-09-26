@@ -21,6 +21,11 @@
 
 namespace LibFlatArray {
 
+// maximum alignment needed for AVX512 is currently 64 bytes
+#ifndef __ALIGNED
+#define __ALIGNED __attribute__ ((aligned (64)))
+#endif
+
 template<typename CARGO, int ARITY>
 void testImplementation()
 {
@@ -200,7 +205,7 @@ void testImplementation()
     // test gather
     {
         CARGO array[ARITY * 10];
-        unsigned indices[ARITY] __attribute__((aligned (64)));
+        unsigned indices[ARITY] __ALIGNED;
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
@@ -259,7 +264,7 @@ void testImplementation()
         ShortVec vec;
         CARGO array[ARITY * 10];
         CARGO expected[ARITY * 10];
-        unsigned indices[ARITY] __attribute__((aligned (64)));
+        unsigned indices[ARITY] __ALIGNED;
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
         for (int i = 0; i < ARITY * 10; ++i) {
@@ -280,8 +285,8 @@ void testImplementation()
 
     // test non temporal stores
     {
-        CARGO array[ARITY] __attribute__((aligned(64)));
-        CARGO expected[ARITY] __attribute__((aligned(64)));
+        CARGO array[ARITY] __ALIGNED;
+        CARGO expected[ARITY] __ALIGNED;
 
         for (int i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
@@ -304,8 +309,8 @@ void testImplementation()
 
     // test aligned stores
     {
-        CARGO array[ARITY] __attribute__((aligned(64)));
-        CARGO expected[ARITY] __attribute__((aligned(64)));
+        CARGO array[ARITY] __ALIGNED;
+        CARGO expected[ARITY] __ALIGNED;
 
         for (int i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
@@ -328,8 +333,8 @@ void testImplementation()
 
     // test aligned loads
     {
-        CARGO array[ARITY] __attribute__((aligned(64)));
-        CARGO expected[ARITY] __attribute__((aligned(64)));
+        CARGO array[ARITY] __ALIGNED;
+        CARGO expected[ARITY] __ALIGNED;
 
         for (int i = 0; i < ARITY; ++i) {
             array[i]    = i + 0.1;
