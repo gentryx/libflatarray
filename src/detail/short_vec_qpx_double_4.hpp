@@ -1,5 +1,6 @@
 /**
  * Copyright 2014 Andreas Schäfer
+ * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -102,7 +103,7 @@ public:
     short_vec<double, 4> operator*(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-           vec_mul(val1, other.val1));
+            vec_mul(val1, other.val1));
     }
 
     inline
@@ -134,14 +135,14 @@ public:
     inline
     void load(const double *data)
     {
-        val1 = vec_ld(0, const_cast<double*>(data))
+        val1 = vec_ld(0, const_cast<double*>(data));
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        val1 = vec_lda(0, const_cast<double*>(data))
+        val1 = vec_lda(0, const_cast<double*>(data));
     }
 
     inline
