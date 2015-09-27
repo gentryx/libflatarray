@@ -1,5 +1,6 @@
 /**
  * Copyright 2014 Andreas Schäfer
+ * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +11,7 @@
 
 #ifndef __SSE__
 #ifndef __AVX__
+#ifndef __VECTOR4DOUBLE__
 
 #include <libflatarray/config.h>
 
@@ -251,6 +253,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 
