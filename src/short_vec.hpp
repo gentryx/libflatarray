@@ -78,6 +78,8 @@ public:
 #include <libflatarray/detail/short_vec_sse_float_16.hpp>
 
 #include <libflatarray/detail/short_vec_qpx_double_4.hpp>
+#include <libflatarray/detail/short_vec_qpx_double_8.hpp>
+#include <libflatarray/detail/short_vec_qpx_double_16.hpp>
 
 #include <libflatarray/detail/short_vec_neon_float_4.hpp>
 #include <libflatarray/detail/short_vec_neon_float_8.hpp>
