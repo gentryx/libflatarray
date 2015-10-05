@@ -12,6 +12,7 @@
 #include <arm_neon.h>
 #include <libflatarray/config.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
+#include <iostream>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
@@ -521,7 +522,7 @@ inline
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
-        const short_vec<float, 32>& vec)
+           const short_vec<float, 32>& vec)
 {
     const float *data1 = reinterpret_cast<const float *>(&vec.val1);
     const float *data2 = reinterpret_cast<const float *>(&vec.val2);
