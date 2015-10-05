@@ -10,7 +10,6 @@
 
 #ifdef __ARM_NEON__
 #include <arm_neon.h>
-#include <stdlib.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
 
 #ifndef __CUDA_ARCH__
