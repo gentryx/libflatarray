@@ -10,7 +10,12 @@
 
 #ifdef __ARM_NEON__
 #include <arm_neon.h>
+#include <libflatarray/config.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
+
+#ifdef LIBFLATARRAY_WITH_CPP14
+#include <initializer_list>
+#endif
 
 #ifndef __CUDA_ARCH__
 
@@ -49,6 +54,15 @@ public:
         val1(val1),
         val2(val2)
     {}
+
+#ifdef LIBFLATARRAY_WITH_CPP14
+    inline
+    short_vec(const std::initializer_list<float>& il)
+    {
+        const float *ptr = static_cast<const float *>(&(*il.begin()));
+        load(ptr);
+    }
+#endif
 
     inline
     void operator-=(const short_vec<float, 8>& other)
