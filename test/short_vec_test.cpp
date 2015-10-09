@@ -872,6 +872,42 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 }
 
+ADD_TEST(TestImplementationStrategyInt)
+{
+#define EXPECTED_TYPE short_vec_strategy::scalar
+    checkForStrategy(short_vec<int, 1>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(short_vec<int, 2>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE2__
+#define EXPECTED_TYPE short_vec_strategy::sse
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<int, 4>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE2__
+#define EXPECTED_TYPE short_vec_strategy::sse
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<int, 8>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#ifdef __SSE2__
+#define EXPECTED_TYPE short_vec_strategy::sse
+#else
+#define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
+    checkForStrategy(short_vec<int, 16>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+
+#define EXPECTED_TYPE short_vec_strategy::scalar
+    checkForStrategy(short_vec<int, 32>::strategy(), EXPECTED_TYPE());
+#undef EXPECTED_TYPE
+}
+
 template<typename SHORT_VEC>
 void scaler(int *i, int endX, double *data, double factor)
 {
