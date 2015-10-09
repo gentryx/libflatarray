@@ -69,6 +69,13 @@ public:
 #include <libflatarray/detail/short_vec_scalar_float_16.hpp>
 #include <libflatarray/detail/short_vec_scalar_float_32.hpp>
 
+#include <libflatarray/detail/short_vec_scalar_int_1.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_16.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_32.hpp>
+
 #include <libflatarray/detail/short_vec_sse_double_2.hpp>
 #include <libflatarray/detail/short_vec_sse_double_4.hpp>
 #include <libflatarray/detail/short_vec_sse_double_8.hpp>
