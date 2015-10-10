@@ -887,23 +887,35 @@ ADD_TEST(TestImplementationStrategyInt)
     checkForStrategy(short_vec<int, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+#ifdef __AVX2__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
 #ifdef __SSE2__
 #define EXPECTED_TYPE short_vec_strategy::sse
 #else
 #define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
 #endif
     checkForStrategy(short_vec<int, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+#ifdef __AVX2__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
 #ifdef __SSE2__
 #define EXPECTED_TYPE short_vec_strategy::sse
 #else
 #define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
+#endif
     checkForStrategy(short_vec<int, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+#ifdef __AVX2__
+#define EXPECTED_TYPE short_vec_strategy::avx
+#else
 #define EXPECTED_TYPE short_vec_strategy::scalar
+#endif
     checkForStrategy(short_vec<int, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 }

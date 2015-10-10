@@ -25,6 +25,7 @@
 #endif
 
 #ifndef __CUDA_ARCH__
+#ifndef __AVX2__
 
 namespace LibFlatArray {
 
@@ -393,6 +394,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 

@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_INT_8_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_INT_8_HPP
 
+#ifndef __AVX2__
 #ifndef __SSE2__
 
 #include <libflatarray/config.h>
@@ -319,6 +320,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 
 #endif

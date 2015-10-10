@@ -14,6 +14,8 @@
 #include <initializer_list>
 #endif
 
+#ifndef __AVX2__
+
 namespace LibFlatArray {
 
 template<typename CARGO, int ARITY>
@@ -730,5 +732,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 }
 
 }
+
+#endif
 
 #endif
