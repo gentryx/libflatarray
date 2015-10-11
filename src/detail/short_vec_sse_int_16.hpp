@@ -24,8 +24,9 @@
 #include <initializer_list>
 #endif
 
-#ifndef __CUDA_ARCH__
+#ifndef __AVX512F__
 #ifndef __AVX2__
+#ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
 
@@ -531,6 +532,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 #endif

@@ -84,6 +84,9 @@ public:
 #include <libflatarray/detail/short_vec_avx_int_16.hpp>
 #include <libflatarray/detail/short_vec_avx_int_32.hpp>
 
+#include <libflatarray/detail/short_vec_avx512_int_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_int_32.hpp>
+
 #include <libflatarray/detail/short_vec_sse_double_2.hpp>
 #include <libflatarray/detail/short_vec_sse_double_4.hpp>
 #include <libflatarray/detail/short_vec_sse_double_8.hpp>

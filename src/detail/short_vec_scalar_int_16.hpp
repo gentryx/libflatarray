@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_INT_16_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_INT_16_HPP
 
+#ifndef __AVX512F__
 #ifndef __AVX2__
 #ifndef __SSE2__
 
@@ -458,6 +459,7 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
+#endif
 #endif
 #endif
 
