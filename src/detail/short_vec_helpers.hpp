@@ -14,7 +14,7 @@
 // uintptr_t is only available through C++11
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <cstdint>
-#define _SHORTVEC_UINTPTR_T uintptr_t
+#define _SHORTVEC_UINTPTR_T std::uintptr_t
 #else
 #define _SHORTVEC_UINTPTR_T unsigned long long
 #endif
