@@ -154,7 +154,6 @@ public:
     short_vec<float, 4> sqrt() const
     {
         // note that vsqrtq_f32 is to be implemented in the gcc compiler
-        int i;
         float32x4_t x1 = vrsqrteq_f32(val1);
 
         // Code to handle sqrt(0).

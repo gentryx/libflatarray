@@ -137,7 +137,7 @@ public:
     inline
     void operator/=(const short_vec<float, 16>& other)
     {
-        int i, iterations=1;
+        int iterations = 1;
         // get an initial estimate of 1/b.
         float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
         float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
@@ -173,7 +173,7 @@ public:
     inline
     short_vec<float, 16> operator/(const short_vec<float, 16>& other) const
     {
-        int i, iterations=1;
+        int iterations = 1;
         // get an initial estimate of 1/b.
         float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
         float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
