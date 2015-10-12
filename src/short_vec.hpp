@@ -53,8 +53,6 @@ public:
 #include <libflatarray/detail/short_vec_avx_float_16.hpp>
 #include <libflatarray/detail/short_vec_avx_float_32.hpp>
 
-#include <libflatarray/detail/short_vec_neon_float_4.hpp>
-
 #include <libflatarray/detail/short_vec_scalar_double_1.hpp>
 #include <libflatarray/detail/short_vec_scalar_double_2.hpp>
 #include <libflatarray/detail/short_vec_scalar_double_4.hpp>
