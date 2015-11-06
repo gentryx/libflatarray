@@ -23,7 +23,18 @@ endif()
 if(NOT WITH_SIMPLE_BOOST)
   find_package(Boost REQUIRED date_time filesystem system)
 endif()
+
 find_package(CUDA)
+# Force the selection of the NVCC host compiler to circumvent the
+# studid FindCUDA CMake module from resolving symlinks (*wink* ccache
+# *wink*).
+if(CUDA_FOUND)
+  get_filename_component(exe_name "${CUDA_HOST_COMPILER}" NAME)
+  if(exe_name STREQUAL "ccache")
+    set(CUDA_HOST_COMPILER "${CMAKE_CXX_COMPILER}" CACHE FILEPATH "Override host side compiler for NVCC" FORCE)
+  endif()
+endif()
+
 
 # pretty print build options
 function(lfa_print_options)
