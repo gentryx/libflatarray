@@ -174,10 +174,11 @@ public:
     inline
     void gather(const double *ptr, const unsigned *offsets)
     {
-        __m128d tmp = _mm_set_pd(ptr[offsets[1]], ptr[offsets[0]]);
-        val1 = _mm256_insertf128_pd(val1, tmp, 0);
-        tmp = _mm_set_pd(ptr[offsets[3]], ptr[offsets[2]]);
-        val1 = _mm256_insertf128_pd(val1, tmp, 1);
+        val1 = _mm256_set_pd(
+            *(ptr + offsets[3]),
+            *(ptr + offsets[2]),
+            *(ptr + offsets[1]),
+            *(ptr + offsets[0]));
     }
 #endif
 
