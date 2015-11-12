@@ -92,8 +92,14 @@ if(WITH_CUDA AND NOT CUDA_FOUND)
 endif()
 
 if(WITH_CPP14)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-  set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11")
+  # At the moment, CUDA doesn't support C++14, so we limt ourselves to
+  # C++11 and hope for the best.
+  IF(WITH_CUDA)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+  endif()
 endif()
 
 lfa_dump_config("config.h")
