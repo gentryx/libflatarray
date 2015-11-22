@@ -9,13 +9,7 @@
 #ifndef FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 #define FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 
-#ifdef __APPLE__
 #include <cstddef>
-#include <stdlib.h>
-#else
-#include <malloc.h>
-#endif
-
 #include <memory>
 
 namespace LibFlatArray {
