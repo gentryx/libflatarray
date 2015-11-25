@@ -95,11 +95,18 @@ if(WITH_CPP14)
   # At the moment, CUDA doesn't support C++14, so we limt ourselves to
   # C++11 and hope for the best.
   IF(WITH_CUDA)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11")
+    set(libflatarray_FLAGS "-std=c++11")
   else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    set(libflatarray_FLAGS "-std=c++14")
   endif()
+endif()
+
+get_directory_property(lfa_has_parent PARENT_DIRECTORY)
+if(lfa_has_parent)
+  set(libflatarray_FLAGS "${libflatarray_FLAGS}" PARENT_SCOPE)
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${libflatarray_FLAGS}")
+  set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${libflatarray_FLAGS}")
 endif()
 
 lfa_dump_config("config.h")
@@ -141,6 +148,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   "
 get_filename_component(LIBFLATARRAY_CMAKE_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
 set(libflatarray_INCLUDE_DIR \"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
+set(libflatarray_FLAGS \"${libflatarray_FLAGS}\")
 ")
 
 set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})
