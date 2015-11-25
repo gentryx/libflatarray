@@ -104,16 +104,22 @@ endif()
 get_directory_property(lfa_has_parent PARENT_DIRECTORY)
 if(lfa_has_parent)
   set(libflatarray_FLAGS "${libflatarray_FLAGS}" PARENT_SCOPE)
-else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${libflatarray_FLAGS}")
-  set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${libflatarray_FLAGS}")
 endif()
+
+# We need to back up previously set compiler flags so we can restore
+# them at the end of this file. Purpose: avoid pollution of
+# user-defined compiler flags. This is important since some compilers
+# will complain if certain options are given multiple times (e.g. nvcc
+# and -std=c++11).
+set(LFA_C_FLAGS_BACKUP    "${CMAKE_C_FLAGS}")
+set(LFA_CXX_FLAGS_BACKUP  "${CMAKE_CXX_FLAGS}")
+set(LFA_NVCC_FLAGS_BACKUP "$CUDA_NVCC_FLAGS}")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${libflatarray_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${libflatarray_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
+set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${libflatarray_FLAGS}")
 
 lfa_dump_config("config.h")
 lfa_print_options()
-
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${LFA_ADDITIONAL_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
 
 # 2. CONFIGURE INSTALLER
 set(CPACK_PACKAGE_NAME ${PACKAGE_NAME})
@@ -197,3 +203,7 @@ if(GLOBAL_PACKAGE_NAME)
   set(PACKAGE_NAME ${GLOBAL_PACKAGE_NAME})
 endif()
 
+# restore compiler flags to original values:
+set(CMAKE_C_FLAGS   "${LFA_C_FLAGS_BACKUP}")
+set(CMAKE_CXX_FLAGS "${LFA_CXX_FLAGS_BACKUP}")
+set(CUDA_NVCC_FLAGS "${LFA_NVCC_FLAGS_BACKUP}")
