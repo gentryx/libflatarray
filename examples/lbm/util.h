@@ -2,7 +2,7 @@
 #define LIBFLATARRAY_EXAMPLES_LBM_UTIL_H
 
 /**
- * Copyright 2013 Andreas Schäfer
+ * Copyright 2013-2015 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -30,6 +30,9 @@ void check_cuda_error()
 class benchmark
 {
 public:
+    virtual ~benchmark()
+    {}
+
     void evaluate()
     {
         for (int dim = 32; dim <= 160; dim += 4) {
@@ -100,6 +103,9 @@ protected:
 class benchmark_lbm_cuda_basic : public benchmark_lbm_cuda
 {
 protected:
+    virtual ~benchmark_lbm_cuda_basic()
+    {}
+
     virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         int size = dim * dim * (256 + 64) * 20;
