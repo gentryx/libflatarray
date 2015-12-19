@@ -1,0 +1,10 @@
+dependencies:
+    pre:
+        - mkdir build
+    override:
+        - cd build && cmake  ..
+
+test:
+    override:
+        - cd build && make -j2
+        - cd build && make -j2 check
