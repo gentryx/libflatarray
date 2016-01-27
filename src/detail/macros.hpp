@@ -259,7 +259,7 @@
 
 #define LIBFLATARRAY_CASE_DIM_Z(SIZE_INDEX, UNUSED, SIZE)               \
     if (dim_z <= SIZE) {                                                \
-        soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor(            \
+        LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, SIZE, 0>  accessor( \
             data, 0);                                                   \
         functor(accessor);                                              \
         return;                                                         \
@@ -267,7 +267,7 @@
 
 #define LIBFLATARRAY_CASE_DIM_MAX_3D(SIZE_INDEX, UNUSED, SIZE)          \
     if (max <= SIZE) {                                                  \
-        soa_accessor<CELL, SIZE, SIZE, SIZE, 0>  accessor(              \
+        LibFlatArray::soa_accessor<CELL, SIZE, SIZE, SIZE, 0>  accessor( \
             data, 0);                                                   \
         functor(accessor);                                              \
         return;                                                         \
@@ -275,7 +275,7 @@
 
 #define LIBFLATARRAY_CASE_DIM_MAX_2D(SIZE_INDEX, UNUSED, SIZE)          \
     if (max <= SIZE) {                                                  \
-        soa_accessor<CELL, SIZE, SIZE, 1, 0>  accessor(                 \
+        LibFlatArray::soa_accessor<CELL, SIZE, SIZE, 1, 0>  accessor(   \
             data, 0);                                                   \
         functor(accessor);                                              \
         return;                                                         \
