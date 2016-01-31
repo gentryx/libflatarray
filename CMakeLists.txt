@@ -192,6 +192,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_BINARY_DIR})
 
 add_custom_target(check echo "Tests passed.")
+add_custom_target(tests echo "All tests have been built.")
 
 add_subdirectory(test)
 add_subdirectory(examples)
