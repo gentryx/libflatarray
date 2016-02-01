@@ -10,6 +10,7 @@
 
 #include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/api_traits.hpp>
+#include <libflatarray/detail/construct_functor.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_set_instance_functor.hpp>
 #include <libflatarray/detail/load_save_functor.hpp>
@@ -51,6 +52,7 @@ public:
         data(0)
     {
         resize();
+        init();
     }
 
     soa_grid(const soa_grid& other) :
@@ -234,6 +236,11 @@ private:
             dim_x,
             dim_y,
             dim_z);
+    }
+
+    void init()
+    {
+        callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
     }
 
     void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const

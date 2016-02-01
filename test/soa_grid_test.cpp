@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 - 2015 Andreas Schäfer
+ * Copyright 2013 - 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <libflatarray/flat_array.hpp>
+#include <map>
 #include <vector>
 
 #include "test.hpp"
@@ -313,6 +314,19 @@ LIBFLATARRAY_REGISTER_SOA(
     ((float)(pos)(3))
     ((float)(vel)(3))
     ((int)(state)))
+
+class CellWithNonTrivialMembers
+{
+public:
+    typedef std::map<int, std::vector<double> > MapType;
+    int id;
+    MapType map;
+};
+
+LIBFLATARRAY_REGISTER_SOA(
+    CellWithNonTrivialMembers,
+    ((int)(id))
+    ((CellWithNonTrivialMembers::MapType)(map)))
 
 class MultiplyVelocityArrayStyle
 {
@@ -904,6 +918,47 @@ ADD_TEST(TestArrayMemberLoadSave)
             BOOST_TEST(expected == actual);
         }
     }
+}
+
+ADD_TEST(TestNonTrivialMembers)
+{
+    std::cout << "========================================================================================\n";
+    CellWithNonTrivialMembers cell1;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    {
+        soa_grid<HeatedGameOfLifeCell> grid1(3, 3, 3);
+        std::cout << "get_data: " << (void*)(grid1.get_data()) << ", " << grid1.byte_size() << "\n";
+        std::fill(grid1.get_data(), grid1.get_data() + grid1.byte_size(), char(1));
+    }
+    {
+        std::vector<char, aligned_allocator<char, 64> > buf(10000, 1);
+        std::cout << "get_data: " << (void*)(&buf[0]) << ", " << buf.size() << "\n";
+    }
+    std::cout << "========================================================================================\n";
+    {
+        soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+        grid1.set(1, 1, 1, cell1);
+    }
+    std::cout << "========================================================================================\n";
+}
+
+ADD_TEST(TestNonTrivialMembers2)
+{
+    // std::cout << "========================================================================================\n";
+    // CellWithNonTrivialMembers cell1;
+    // cell1.map[5] = std::vector<double>(4711, 47.11);
+    // CellWithNonTrivialMembers cell2;
+    // cell1.map[7] = std::vector<double>(666, 1.1);
+    // {
+    //     soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+    //     soa_grid<CellWithNonTrivialMembers> grid2(3, 3, 3);
+
+    //     grid1.set(1, 1, 1, cell1);
+    //     grid2 = grid1;
+    //     grid1.set(1, 1, 1, cell2);
+    //     grid2.set(1, 1, 1, cell2);
+    // }
+    // std::cout << "========================================================================================\n";
 }
 
 }

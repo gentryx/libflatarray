@@ -1,5 +1,5 @@
 /**
- * Copyright 2014, 2015 Andreas Schäfer
+ * Copyright 2014 - 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -242,6 +242,23 @@
         MEMBER,                                                         \
         LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(      MEMBER_INDEX, CELL, MEMBER), \
         LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER))
+
+#define LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER)  \
+    {                                                                   \
+        BOOST_PP_SEQ_ELEM(0, MEMBER)* instance =                        \
+            &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                    \
+        new (instance) BOOST_PP_SEQ_ELEM(0, MEMBER)();                  \
+    }
+
+#define LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER) \
+    {                                                                   \
+    }
+
+#define LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER))
 
 #define LIBFLATARRAY_CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)            \
     if (dim_x <= SIZE) {                                             \

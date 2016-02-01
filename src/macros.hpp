@@ -1,5 +1,5 @@
 /**
- * Copyright 2014, 2015 Andreas Schäfer
+ * Copyright 2014 - 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -194,6 +194,16 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        inline                                                          \
+        void construct_members()                                        \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
         template<typename MEMBER_TYPE, long OFFSET>                     \
         inline                                                          \
         __host__ __device__                                             \
@@ -325,6 +335,16 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        inline                                                          \
+        void construct_members()                                        \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
         BOOST_PP_SEQ_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
@@ -444,6 +464,16 @@
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void construct_members()                                        \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -586,6 +616,16 @@
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void construct_members()                                        \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
