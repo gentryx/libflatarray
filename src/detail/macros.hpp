@@ -12,17 +12,8 @@
 #include <boost/preprocessor/comparison/less.hpp>
 #include <boost/preprocessor/if.hpp>
 #include <boost/preprocessor/seq.hpp>
+#include <libflatarray/detail/generic_destruct.hpp>
 #include <libflatarray/detail/soa_array_member_copy_helper.hpp>
-
-
-// this fixes compilation for non-cuda builds
-#ifndef __host__
-#define __host__
-#endif
-
-#ifndef __device__
-#define __device__
-#endif
 
 #define LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
     (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)
@@ -262,6 +253,27 @@
         MEMBER,                                                         \
         LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(      MEMBER_INDEX, CELL, MEMBER), \
         LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER))
+
+#define LIBFLATARRAY_DESTROY_SOA_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER)  \
+    {                                                                   \
+        BOOST_PP_SEQ_ELEM(0, MEMBER) *instance =                        \
+            &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                    \
+        detail::flat_array::generic_destruct(instance);                 \
+    }
+
+#define LIBFLATARRAY_DESTROY_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER) \
+    {                                                                   \
+        for (int i = 0; i < LIBFLATARRAY_ARRAY_ARITY(MEMBER); ++i) {    \
+            detail::flat_array::generic_destruct(                       \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[i]));            \
+        }                                                               \
+    }
+
+#define LIBFLATARRAY_DESTROY_SOA_GENERIC_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        LIBFLATARRAY_DESTROY_SOA_MEMBER_ARRAY(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_DESTROY_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER))
 
 #define LIBFLATARRAY_CASE_DIM_X(SIZE_INDEX, UNUSED, SIZE)            \
     if (dim_x <= SIZE) {                                             \

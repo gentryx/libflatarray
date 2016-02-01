@@ -11,6 +11,7 @@
 #include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/api_traits.hpp>
 #include <libflatarray/detail/construct_functor.hpp>
+#include <libflatarray/detail/destroy_functor.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_set_instance_functor.hpp>
 #include <libflatarray/detail/load_save_functor.hpp>
@@ -61,11 +62,13 @@ public:
         my_byte_size(other.my_byte_size)
     {
         data = ALLOCATOR().allocate(byte_size());
+        init();
         std::copy(other.data, other.data + byte_size(), data);
     }
 
     ~soa_grid()
     {
+        destroy();
         ALLOCATOR().deallocate(data, byte_size());
     }
 
@@ -186,6 +189,7 @@ private:
      */
     void resize()
     {
+        destroy();
         ALLOCATOR().deallocate(data, byte_size());
 
         // we need callback() to round up our grid size
@@ -239,6 +243,15 @@ private:
     void init()
     {
         callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+    }
+
+    void destroy()
+    {
+        if (data == 0) {
+            return;
+        }
+
+        callback(detail::flat_array::destroy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
     }
 
     void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const

@@ -315,6 +315,19 @@ LIBFLATARRAY_REGISTER_SOA(
     ((float)(vel)(3))
     ((int)(state)))
 
+class DestructionCounterClass
+{
+public:
+    static size_t count;
+
+    ~DestructionCounterClass()
+    {
+        ++count;
+    }
+};
+
+size_t DestructionCounterClass::count = 0;
+
 class CellWithNonTrivialMembers
 {
 public:
@@ -322,13 +335,15 @@ public:
     int id;
     MapType map;
     MapType maps[4];
+    DestructionCounterClass destructCounter;
 };
 
 LIBFLATARRAY_REGISTER_SOA(
     CellWithNonTrivialMembers,
     ((int)(id))
     ((CellWithNonTrivialMembers::MapType)(map))
-    ((CellWithNonTrivialMembers::MapType)(maps)(4)))
+    ((CellWithNonTrivialMembers::MapType)(maps)(4))
+    ((DestructionCounterClass)(destructCounter)))
 
 class MultiplyVelocityArrayStyle
 {
@@ -924,43 +939,46 @@ ADD_TEST(TestArrayMemberLoadSave)
 
 ADD_TEST(TestNonTrivialMembers)
 {
-    std::cout << "========================================================================================\n";
     CellWithNonTrivialMembers cell1;
     cell1.map[5] = std::vector<double>(4711, 47.11);
     {
         soa_grid<HeatedGameOfLifeCell> grid1(63, 63, 63);
-        std::cout << "get_data: " << (void*)(grid1.get_data()) << ", " << grid1.byte_size() << "\n";
         std::fill(grid1.get_data(), grid1.get_data() + grid1.byte_size(), char(1));
     }
     {
         std::vector<char, aligned_allocator<char, 64> > buf(10000, 1);
-        std::cout << "get_data: " << (void*)(&buf[0]) << ", " << buf.size() << "\n";
     }
-    std::cout << "========================================================================================\n";
+    int counter = DestructionCounterClass::count;
     {
-        soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+        soa_grid<CellWithNonTrivialMembers> grid1(3, 4, 5);
         grid1.set(1, 1, 1, cell1);
     }
-    std::cout << "========================================================================================\n";
+    // ensure d-tor got called
+    int expected = 3 * 4 * 5 + counter;
+    BOOST_TEST(expected == DestructionCounterClass::count);
 }
 
 ADD_TEST(TestNonTrivialMembers2)
 {
-    // std::cout << "========================================================================================\n";
+    // std::cout << "========================================================================================1\n";
     // CellWithNonTrivialMembers cell1;
     // cell1.map[5] = std::vector<double>(4711, 47.11);
     // CellWithNonTrivialMembers cell2;
     // cell1.map[7] = std::vector<double>(666, 1.1);
+    // std::cout << "========================================================================================4\n";
     // {
     //     soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
     //     soa_grid<CellWithNonTrivialMembers> grid2(3, 3, 3);
 
     //     grid1.set(1, 1, 1, cell1);
     //     grid2 = grid1;
+    //     std::cout << "========================================================================================7\n";
     //     grid1.set(1, 1, 1, cell2);
+    //     std::cout << "========================================================================================8\n";
     //     grid2.set(1, 1, 1, cell2);
+    //     std::cout << "========================================================================================9\n";
     // }
-    // std::cout << "========================================================================================\n";
+    // std::cout << "========================================================================================A\n";
 }
 
 }
