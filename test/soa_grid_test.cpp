@@ -321,12 +321,14 @@ public:
     typedef std::map<int, std::vector<double> > MapType;
     int id;
     MapType map;
+    MapType maps[4];
 };
 
 LIBFLATARRAY_REGISTER_SOA(
     CellWithNonTrivialMembers,
     ((int)(id))
-    ((CellWithNonTrivialMembers::MapType)(map)))
+    ((CellWithNonTrivialMembers::MapType)(map))
+    ((CellWithNonTrivialMembers::MapType)(maps)(4)))
 
 class MultiplyVelocityArrayStyle
 {
@@ -926,7 +928,7 @@ ADD_TEST(TestNonTrivialMembers)
     CellWithNonTrivialMembers cell1;
     cell1.map[5] = std::vector<double>(4711, 47.11);
     {
-        soa_grid<HeatedGameOfLifeCell> grid1(3, 3, 3);
+        soa_grid<HeatedGameOfLifeCell> grid1(63, 63, 63);
         std::cout << "get_data: " << (void*)(grid1.get_data()) << ", " << grid1.byte_size() << "\n";
         std::fill(grid1.get_data(), grid1.get_data() + grid1.byte_size(), char(1));
     }

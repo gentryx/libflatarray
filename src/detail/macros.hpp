@@ -245,13 +245,16 @@
 
 #define LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER)  \
     {                                                                   \
-        BOOST_PP_SEQ_ELEM(0, MEMBER)* instance =                        \
+        BOOST_PP_SEQ_ELEM(0, MEMBER) *instance =                        \
             &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                    \
         new (instance) BOOST_PP_SEQ_ELEM(0, MEMBER)();                  \
     }
 
 #define LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
+        for (int i = 0; i < LIBFLATARRAY_ARRAY_ARITY(MEMBER); ++i) {    \
+            new (&(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[i])) BOOST_PP_SEQ_ELEM(0, MEMBER)(); \
+        }                                                               \
     }
 
 #define LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
