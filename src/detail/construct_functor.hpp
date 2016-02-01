@@ -15,7 +15,7 @@ namespace detail {
 namespace flat_array {
 
 /**
- * Will initialize all grid cells by, relies on the SoA (Struct of
+ * Will initialize all grid cells, relies on the SoA (Struct of
  * Arrays) accessor to initialize a cell's members individually.
  */
 template<typename CELL>
