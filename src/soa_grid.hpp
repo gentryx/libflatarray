@@ -52,7 +52,6 @@ public:
         data(0)
     {
         resize();
-        init();
     }
 
     soa_grid(const soa_grid& other) :
@@ -72,14 +71,7 @@ public:
 
     soa_grid& operator=(const soa_grid& other)
     {
-        ALLOCATOR().deallocate(data, byte_size());
-
-        dim_x = other.dim_x;
-        dim_y = other.dim_y;
-        dim_z = other.dim_z;
-        my_byte_size = other.my_byte_size;
-
-        data = ALLOCATOR().allocate(byte_size());
+        resize(other.dim_x, other.dim_y, other.dim_z);
         std::copy(other.data, other.data + byte_size(), data);
 
         return *this;
@@ -96,6 +88,11 @@ public:
 
     void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
     {
+        if ((dim_x == new_dim_x) &&
+            (dim_y == new_dim_y) &&
+            (dim_z == new_dim_z)) {
+            return;
+        }
         dim_x = new_dim_x;
         dim_y = new_dim_y;
         dim_z = new_dim_z;
@@ -194,6 +191,7 @@ private:
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
         data = ALLOCATOR().allocate(byte_size());
+        init();
     }
 
     template<typename FUNCTOR>
