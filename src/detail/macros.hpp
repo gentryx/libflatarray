@@ -234,14 +234,39 @@
         LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(      MEMBER_INDEX, CELL, MEMBER), \
         LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER))
 
-#define LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER)  \
+#define LIBFLATARRAY_COPY_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER)        \
+    {                                                                   \
+        std::copy(                                                      \
+            &(other.BOOST_PP_SEQ_ELEM(1, MEMBER)()),                    \
+            &(other.BOOST_PP_SEQ_ELEM(1, MEMBER)()) + count,            \
+            &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()));                   \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER(MEMBER_INDEX, CELL, MEMBER)  \
+    {                                                                   \
+        for (int i = 0; i < LIBFLATARRAY_ARRAY_ARITY(MEMBER); ++i) {    \
+            std::copy(                                                  \
+                &(other.BOOST_PP_SEQ_ELEM(1, MEMBER)()[i]),             \
+                &(other.BOOST_PP_SEQ_ELEM(1, MEMBER)()[i]) + count,     \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[i]));            \
+        }                                                               \
+    }
+
+#define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
+    LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
+        MEMBER,                                                         \
+        LIBFLATARRAY_COPY_SOA_MEMBER(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER(MEMBER_INDEX, CELL, MEMBER))
+
+
+#define LIBFLATARRAY_INIT_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER)  \
     {                                                                   \
         BOOST_PP_SEQ_ELEM(0, MEMBER) *instance =                        \
             &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                    \
         new (instance) BOOST_PP_SEQ_ELEM(0, MEMBER)();                  \
     }
 
-#define LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER) \
+#define LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
         for (int i = 0; i < LIBFLATARRAY_ARRAY_ARITY(MEMBER); ++i) {    \
             new (&(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[i])) BOOST_PP_SEQ_ELEM(0, MEMBER)(); \
@@ -251,8 +276,8 @@
 #define LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER(MEMBER_INDEX, CELL, MEMBER) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(                                     \
         MEMBER,                                                         \
-        LIBFLATARRAY_INIT_SOA_MEMBER_ARRAY(      MEMBER_INDEX, CELL, MEMBER), \
-        LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER))
+        LIBFLATARRAY_INIT_SOA_MEMBER(      MEMBER_INDEX, CELL, MEMBER), \
+        LIBFLATARRAY_INIT_SOA_ARRAY_MEMBER(MEMBER_INDEX, CELL, MEMBER))
 
 #define LIBFLATARRAY_DESTROY_SOA_MEMBER_ARRAY(MEMBER_INDEX, CELL, MEMBER)  \
     {                                                                   \

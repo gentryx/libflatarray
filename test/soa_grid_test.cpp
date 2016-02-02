@@ -940,45 +940,47 @@ ADD_TEST(TestArrayMemberLoadSave)
 ADD_TEST(TestNonTrivialMembers)
 {
     CellWithNonTrivialMembers cell1;
+    CellWithNonTrivialMembers cell2;
     cell1.map[5] = std::vector<double>(4711, 47.11);
+    cell2.map[7] = std::vector<double>( 666, 66.66);
     {
-        soa_grid<HeatedGameOfLifeCell> grid1(63, 63, 63);
+        // fill memory with non-zero values...
+        soa_grid<HeatedGameOfLifeCell> grid1(63, 63, 120);
         std::fill(grid1.get_data(), grid1.get_data() + grid1.byte_size(), char(1));
-    }
-    {
-        std::vector<char, aligned_allocator<char, 64> > buf(10000, 1);
     }
     int counter = DestructionCounterClass::count;
     {
         soa_grid<CellWithNonTrivialMembers> grid1(3, 4, 5);
+        // ...so that deallocation of memory upon assignment of maps
+        // here will fail. Memory initialized to 0 might make the maps
+        // inside not run free() at all). The effect would be that the
+        // code "accidentally" works.
         grid1.set(1, 1, 1, cell1);
+        grid1.set(1, 1, 1, cell2);
     }
     // ensure d-tor got called
-    int expected = 3 * 4 * 5 + counter;
+    size_t expected = 3 * 4 * 5 + counter;
     BOOST_TEST(expected == DestructionCounterClass::count);
 }
 
 ADD_TEST(TestNonTrivialMembers2)
 {
-    // std::cout << "========================================================================================1\n";
-    // CellWithNonTrivialMembers cell1;
-    // cell1.map[5] = std::vector<double>(4711, 47.11);
-    // CellWithNonTrivialMembers cell2;
-    // cell1.map[7] = std::vector<double>(666, 1.1);
-    // std::cout << "========================================================================================4\n";
-    // {
-    //     soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
-    //     soa_grid<CellWithNonTrivialMembers> grid2(3, 3, 3);
+    CellWithNonTrivialMembers cell1;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    CellWithNonTrivialMembers cell2;
+    cell1.map[7] = std::vector<double>(666, 1.1);
+    {
+        soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+        soa_grid<CellWithNonTrivialMembers> grid2(3, 3, 3);
 
-    //     grid1.set(1, 1, 1, cell1);
-    //     grid2 = grid1;
-    //     std::cout << "========================================================================================7\n";
-    //     grid1.set(1, 1, 1, cell2);
-    //     std::cout << "========================================================================================8\n";
-    //     grid2.set(1, 1, 1, cell2);
-    //     std::cout << "========================================================================================9\n";
-    // }
-    // std::cout << "========================================================================================A\n";
+        grid1.set(1, 1, 1, cell1);
+        grid2 = grid1;
+        // this ensures no bit-wise copy was done in the assignment
+        // above. It it had been done then the two copy assignments
+        // below would cause a double free error below:
+        grid1.set(1, 1, 1, cell2);
+        grid2.set(1, 1, 1, cell2);
+    }
 }
 
 }

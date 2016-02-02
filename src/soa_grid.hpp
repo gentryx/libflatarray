@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2015 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 
 #include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/api_traits.hpp>
+#include <libflatarray/detail/copy_functor.hpp>
 #include <libflatarray/detail/construct_functor.hpp>
 #include <libflatarray/detail/destroy_functor.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
@@ -75,7 +76,7 @@ public:
     soa_grid& operator=(const soa_grid& other)
     {
         resize(other.dim_x, other.dim_y, other.dim_z);
-        std::copy(other.data, other.data + byte_size(), data);
+        callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
 
         return *this;
     }

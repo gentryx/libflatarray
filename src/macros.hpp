@@ -214,6 +214,17 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
+        template<typename OTHER_ACCESSOR>                               \
+        __host__ __device__                                             \
+        inline                                                          \
+        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
         template<typename MEMBER_TYPE, long OFFSET>                     \
         inline                                                          \
         __host__ __device__                                             \
@@ -365,6 +376,17 @@
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
+        template<typename OTHER_ACCESSOR>                               \
+        __host__ __device__                                             \
+        inline                                                          \
+        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
         BOOST_PP_SEQ_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
@@ -504,6 +526,17 @@
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_DESTROY_SOA_GENERIC_MEMBER,                \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        template<typename OTHER_ACCESSOR>                               \
+        __host__ __device__                                             \
+        inline                                                          \
+        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -666,6 +699,17 @@
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_DESTROY_SOA_GENERIC_MEMBER,                \
+                CELL_TYPE,                                              \
+                CELL_MEMBERS);                                          \
+        }                                                               \
+                                                                        \
+        template<typename OTHER_ACCESSOR>                               \
+        __host__ __device__                                             \
+        inline                                                          \
+        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        {                                                               \
+            BOOST_PP_SEQ_FOR_EACH(                                      \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
