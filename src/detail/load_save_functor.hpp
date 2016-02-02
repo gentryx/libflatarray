@@ -25,9 +25,9 @@ class load_functor
 {
 public:
     load_functor(
-        size_t x,
-        size_t y,
-        size_t z,
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
         const char *source,
         long count) :
         source(source),
@@ -60,9 +60,9 @@ class save_functor
 {
 public:
     save_functor(
-        size_t x,
-        size_t y,
-        size_t z,
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
         char *target,
         long count) :
         target(target),

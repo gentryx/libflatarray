@@ -47,7 +47,7 @@ class soa_grid
 public:
     friend class TestAssignment;
 
-    explicit soa_grid(size_t dim_x = 0, size_t dim_y = 0, size_t dim_z = 0) :
+    explicit soa_grid(std::size_t dim_x = 0, std::size_t dim_y = 0, std::size_t dim_z = 0) :
         dim_x(dim_x),
         dim_y(dim_y),
         dim_z(dim_z),
@@ -91,7 +91,7 @@ public:
         swap(data, other.data);
     }
 
-    void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
+    void resize(std::size_t new_dim_x, std::size_t new_dim_y, std::size_t new_dim_z)
     {
         if ((dim_x == new_dim_x) &&
             (dim_y == new_dim_y) &&
@@ -130,17 +130,17 @@ public:
         dual_callback(other_grid, functor, value());
     }
 
-    void set(size_t x, size_t y, size_t z, const CELL_TYPE& cell)
+    void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE& cell)
     {
         callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
     }
 
-    void set(size_t x, size_t y, size_t z, const CELL_TYPE *cells, size_t count)
+    void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE *cells, std::size_t count)
     {
         callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count));
     }
 
-    CELL_TYPE get(size_t x, size_t y, size_t z) const
+    CELL_TYPE get(std::size_t x, std::size_t y, std::size_t z) const
     {
         CELL_TYPE cell;
         callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
@@ -148,22 +148,22 @@ public:
         return cell;
     }
 
-    void get(size_t x, size_t y, size_t z, CELL_TYPE *cells, size_t count) const
+    void get(std::size_t x, std::size_t y, std::size_t z, CELL_TYPE *cells, std::size_t count) const
     {
         callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count));
     }
 
-    void load(size_t x, size_t y, size_t z, const char *data, size_t count)
+    void load(std::size_t x, std::size_t y, std::size_t z, const char *data, std::size_t count)
     {
         callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count));
     }
 
-    void save(size_t x, size_t y, size_t z, char *data, size_t count) const
+    void save(std::size_t x, std::size_t y, std::size_t z, char *data, std::size_t count) const
     {
         callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count));
     }
 
-    size_t byte_size() const
+    std::size_t byte_size() const
     {
         return my_byte_size;
     }
@@ -179,10 +179,10 @@ public:
     }
 
 private:
-    size_t dim_x;
-    size_t dim_y;
-    size_t dim_z;
-    size_t my_byte_size;
+    std::size_t dim_x;
+    std::size_t dim_y;
+    std::size_t dim_z;
+    std::size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
 

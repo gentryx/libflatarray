@@ -63,18 +63,19 @@
     class number_of_members<CELL_TYPE>                                  \
     {                                                                   \
     public:                                                             \
-        static const size_t VALUE = BOOST_PP_SEQ_SIZE(CELL_MEMBERS);    \
+        static const std::size_t VALUE =                                \
+            BOOST_PP_SEQ_SIZE(CELL_MEMBERS);                            \
     };                                                                  \
                                                                         \
     template<>                                                          \
     class aggregated_member_size<CELL_TYPE>                             \
     {                                                                   \
     private:                                                            \
-        static const size_t INDEX =                                     \
+        static const std::size_t INDEX =                                \
             number_of_members<CELL_TYPE>::VALUE;                        \
                                                                         \
     public:                                                             \
-        static const size_t VALUE =                                     \
+        static const std::size_t VALUE =                                     \
             detail::flat_array::offset<CELL_TYPE, INDEX>::OFFSET;       \
     };                                                                  \
                                                                         \
@@ -176,7 +177,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void load(const char *source, size_t count)                     \
+        void load(const char *source, std::size_t count)                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
@@ -186,7 +187,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void save(char *target, size_t count) const                     \
+        void save(char *target, std::size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
@@ -217,7 +218,7 @@
         template<typename OTHER_ACCESSOR>                               \
         __host__ __device__                                             \
         inline                                                          \
-        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        void copy_members(const OTHER_ACCESSOR& other, std::size_t count)    \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
@@ -348,7 +349,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void save(char *target, size_t count) const                     \
+        void save(char *target, std::size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
@@ -461,7 +462,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void load(const char *source, size_t count)                     \
+        void load(const char *source, std::size_t count)                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN,                  \
@@ -471,7 +472,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void save(char *target, size_t count) const                     \
+        void save(char *target, std::size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
@@ -502,7 +503,7 @@
         template<typename OTHER_ACCESSOR>                               \
         __host__ __device__                                             \
         inline                                                          \
-        void copy_members(const OTHER_ACCESSOR& other, size_t count)    \
+        void copy_members(const OTHER_ACCESSOR& other, std::size_t count)    \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
@@ -644,7 +645,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void save(char *target, size_t count) const                     \
+        void save(char *target, std::size_t count) const                     \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \

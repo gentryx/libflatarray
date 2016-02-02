@@ -23,9 +23,9 @@ class construct_functor
 {
 public:
     construct_functor(
-        size_t dim_x,
-        size_t dim_y,
-        size_t dim_z) :
+        std::size_t dim_x,
+        std::size_t dim_y,
+        std::size_t dim_z) :
         dim_x(dim_x),
         dim_y(dim_y),
         dim_z(dim_z)
@@ -34,11 +34,11 @@ public:
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        for (size_t z = 0; z < dim_z; ++z) {
-            for (size_t y = 0; y < dim_y; ++y) {
+        for (std::size_t z = 0; z < dim_z; ++z) {
+            for (std::size_t y = 0; y < dim_y; ++y) {
                 accessor.index = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(0, y, z);
 
-                for (size_t x = 0; x < dim_x; ++x) {
+                for (std::size_t x = 0; x < dim_x; ++x) {
                     accessor.construct_members();
                     ++accessor;
                 }
@@ -47,9 +47,9 @@ public:
     }
 
 private:
-    size_t dim_x;
-    size_t dim_y;
-    size_t dim_z;
+    std::size_t dim_x;
+    std::size_t dim_y;
+    std::size_t dim_z;
 };
 
 }

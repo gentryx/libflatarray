@@ -318,7 +318,7 @@ LIBFLATARRAY_REGISTER_SOA(
 class DestructionCounterClass
 {
 public:
-    static size_t count;
+    static std::size_t count;
 
     ~DestructionCounterClass()
     {
@@ -326,7 +326,7 @@ public:
     }
 };
 
-size_t DestructionCounterClass::count = 0;
+std::size_t DestructionCounterClass::count = 0;
 
 class CellWithNonTrivialMembers
 {

@@ -25,9 +25,9 @@ class copy_functor
 {
 public:
     copy_functor(
-        size_t dim_x,
-        size_t dim_y,
-        size_t dim_z) :
+        std::size_t dim_x,
+        std::size_t dim_y,
+        std::size_t dim_z) :
         dim_x(dim_x),
         dim_y(dim_y),
         dim_z(dim_z)
@@ -36,8 +36,8 @@ public:
     template<typename ACCESSOR1, typename ACCESSOR2>
     void operator()(ACCESSOR1& source_accessor, ACCESSOR2 target_accessor) const
     {
-        for (size_t z = 0; z < dim_z; ++z) {
-            for (size_t y = 0; y < dim_y; ++y) {
+        for (std::size_t z = 0; z < dim_z; ++z) {
+            for (std::size_t y = 0; y < dim_y; ++y) {
                 target_accessor.index = ACCESSOR1::gen_index(0, y, z);
                 source_accessor.index = target_accessor.index;
                 target_accessor.copy_members(source_accessor, dim_x);
@@ -46,9 +46,9 @@ public:
     }
 
 private:
-    size_t dim_x;
-    size_t dim_y;
-    size_t dim_z;
+    std::size_t dim_x;
+    std::size_t dim_y;
+    std::size_t dim_z;
 };
 
 }

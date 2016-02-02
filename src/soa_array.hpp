@@ -94,7 +94,7 @@ public:
 
     inline
     __host__ __device__
-    size_t size() const
+    std::size_t size() const
     {
         return elements;
     }
