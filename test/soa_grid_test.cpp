@@ -681,7 +681,8 @@ ADD_TEST(TestSwap)
         }
     }
 
-    std::swap(gridOld, gridNew);
+    using std::swap;
+    swap(gridOld, gridNew);
 
     for (long z = 0; z < dim_z; ++z) {
         for (long y = 0; y < dim_y; ++y) {

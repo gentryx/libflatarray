@@ -83,11 +83,12 @@ public:
 
     void swap(soa_grid& other)
     {
-        std::swap(dim_x, other.dim_x);
-        std::swap(dim_x, other.dim_x);
-        std::swap(dim_x, other.dim_x);
-        std::swap(my_byte_size, other.my_byte_size);
-        std::swap(data, other.data);
+        using std::swap;
+        swap(dim_x, other.dim_x);
+        swap(dim_x, other.dim_x);
+        swap(dim_x, other.dim_x);
+        swap(my_byte_size, other.my_byte_size);
+        swap(data, other.data);
     }
 
     void resize(size_t new_dim_x, size_t new_dim_y, size_t new_dim_z)
