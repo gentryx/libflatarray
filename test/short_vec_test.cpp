@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 - 2015 Andreas Schäfer
+ * Copyright 2013-2015 Andreas Schäfer
  * Copyright 2015 Di Xiao
  * Copyright 2015 Kurt Kanzenbach
  *
