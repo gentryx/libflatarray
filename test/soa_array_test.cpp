@@ -1,5 +1,5 @@
 /**
- * Copyright 2013, 2014, 2015 Andreas Schäfer
+ * Copyright 2013-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,6 +8,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <iostream>
 #include <libflatarray/flat_array.hpp>
+#include <map>
 #include <vector>
 
 #include "test.hpp"
@@ -95,6 +96,44 @@ LIBFLATARRAY_REGISTER_SOA(
     ((float)(pos)(3))
     ((float)(vel)(3))
     ((int)(state)))
+
+class DestructionCounterClass
+{
+public:
+    static std::size_t countConstruct;
+    static std::size_t countDestruct;
+
+    DestructionCounterClass()
+    {
+        ++countConstruct;
+    }
+
+    ~DestructionCounterClass()
+    {
+        ++countDestruct;
+    }
+};
+
+std::size_t DestructionCounterClass::countConstruct = 0;
+std::size_t DestructionCounterClass::countDestruct = 0;
+
+class CellWithNonTrivialMembers
+{
+public:
+    typedef std::map<int, std::vector<double> > MapType;
+    int id;
+    MapType map;
+    MapType maps[4];
+    DestructionCounterClass destructCounter;
+};
+
+LIBFLATARRAY_REGISTER_SOA(
+    CellWithNonTrivialMembers,
+    ((int)(id))
+    ((CellWithNonTrivialMembers::MapType)(map))
+    ((CellWithNonTrivialMembers::MapType)(maps)(4))
+    ((DestructionCounterClass)(destructCounter)))
+
 
 namespace LibFlatArray {
 
@@ -294,6 +333,52 @@ ADD_TEST(TestArrayMember)
         BOOST_TEST(array[i].vel()[2] == expectedVel2);
     }
 }
+
+ADD_TEST(TestNonTrivialMembers)
+{
+    CellWithNonTrivialMembers cell1;
+    CellWithNonTrivialMembers cell2;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    cell2.map[7] = std::vector<double>( 666, 66.66);
+    {
+        // fill memory with non-zero values...
+        soa_array<Particle, 2000> array(1200);
+        std::fill(array.get_data(), array.get_data() + array.size(), char(1));
+    }
+    int counter = DestructionCounterClass::countDestruct;
+    {
+        soa_array<CellWithNonTrivialMembers, 30> array(20);
+        // ...so that deallocation of memory upon assignment of maps
+        // here will fail. Memory initialized to 0 might make the maps
+        // inside not run free() at all). The effect would be that the
+        // code "accidentally" works.
+        array[10] = cell1;
+        array[10] = cell2;
+    }
+    // ensure d-tor got called
+    size_t expected = 30 + 1 + counter;
+    BOOST_TEST(expected == DestructionCounterClass::countDestruct);
+}
+
+// ADD_TEST(TestNonTrivialMembers2)
+// {
+//     CellWithNonTrivialMembers cell1;
+//     cell1.map[5] = std::vector<double>(4711, 47.11);
+//     CellWithNonTrivialMembers cell2;
+//     cell1.map[7] = std::vector<double>(666, 1.1);
+//     {
+//         soa_array<CellWithNonTrivialMembers, 200> array1(30);
+//         soa_array<CellWithNonTrivialMembers, 100> array2(30);
+
+//         array1[69] = cell1;
+//         array2 = array1;
+//         // this ensures no bit-wise copy was done in the assignment
+//         // above. It it had been done then the two copy assignments
+//         // below would cause a double free error below:
+//         array1[69] = cell2;
+//         array2[69] = cell2;
+//     }
+// }
 
 }
 
