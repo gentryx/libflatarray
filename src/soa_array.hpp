@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014, 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -40,9 +40,21 @@ public:
         elements(elements),
         index(0)
     {
-        for (soa_accessor<CELL, SIZE, 0, 0, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
+            accessor.construct_members();
+        }
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
             accessor << value;
         }
+    }
+
+    inline
+    ~soa_array()
+    {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
+            accessor.destroy_members();
+        }
+
     }
 
     inline
