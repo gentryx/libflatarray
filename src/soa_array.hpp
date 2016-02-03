@@ -111,6 +111,16 @@ public:
         return elements;
     }
 
+    char *get_data()
+    {
+        return data;
+    }
+
+    std::size_t byte_size() const
+    {
+        return elements * aggregated_member_size<CELL>::VALUE;
+    }
+
     char data[BYTE_SIZE];
 private:
     int elements;
