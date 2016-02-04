@@ -294,15 +294,12 @@ private:
     }
 };
 
+template<typename CELL_TYPE>
+void swap(soa_grid<CELL_TYPE>& a, soa_grid<CELL_TYPE>& b)
+{
+    a.swap(b);
 }
 
-namespace std
-{
-    template<typename CELL_TYPE>
-    void swap(LibFlatArray::soa_grid<CELL_TYPE>& a, LibFlatArray::soa_grid<CELL_TYPE>& b)
-    {
-        a.swap(b);
-    }
 }
 
 #endif
