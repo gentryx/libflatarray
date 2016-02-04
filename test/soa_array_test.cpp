@@ -427,6 +427,57 @@ ADD_TEST(TestSwap)
     }
 }
 
+ADD_TEST(TestCopyConstructor1)
+{
+    soa_array<Particle, 20> array1(10);
+    for (int i = 0; i < 10; ++i) {
+        array1[i].posX() = 10 + i;
+        array1[i].posY() = 20 + i;
+        array1[i].posZ() = 30 + i;
+    }
+
+    soa_array<Particle, 10> array2(array1);
+
+    for (int i = 0; i < 10; ++i) {
+        array1[i].posX() = -1;
+        array1[i].posY() = -1;
+        array1[i].posZ() = -1;
+    }
+
+    BOOST_TEST(10 == array2.size());
+    for (int i = 0; i < 10; ++i) {
+        BOOST_TEST(array2[i].posX() == (10 + i));
+        BOOST_TEST(array2[i].posY() == (20 + i));
+        BOOST_TEST(array2[i].posZ() == (30 + i));
+    }
+}
+
+ADD_TEST(TestCopyConstructor2)
+{
+    soa_array<Particle, 20> array1(10);
+    for (int i = 0; i < 10; ++i) {
+        array1[i].posX() = 10 + i;
+        array1[i].posY() = 20 + i;
+        array1[i].posZ() = 30 + i;
+    }
+
+    const soa_array<Particle, 20>& array_reference(array1);
+    soa_array<Particle, 10> array2(array_reference);
+
+    for (int i = 0; i < 10; ++i) {
+        array1[i].posX() = -1;
+        array1[i].posY() = -1;
+        array1[i].posZ() = -1;
+    }
+
+    BOOST_TEST(10 == array2.size());
+    for (int i = 0; i < 10; ++i) {
+        BOOST_TEST(array2[i].posX() == (10 + i));
+        BOOST_TEST(array2[i].posY() == (20 + i));
+        BOOST_TEST(array2[i].posZ() == (30 + i));
+    }
+}
+
 }
 
 int main(int argc, char **argv)

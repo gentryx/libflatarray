@@ -167,7 +167,7 @@ private:
     inline
     void copy_in(const soa_array<CELL, OTHER_SIZE>& other)
     {
-        if (other.size() >= SIZE) {
+        if (other.size() > SIZE) {
             throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
         }
 
