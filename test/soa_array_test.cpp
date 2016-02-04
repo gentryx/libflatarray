@@ -410,6 +410,7 @@ ADD_TEST(TestSwap)
         array2[i].posX() = -1;
     }
 
+    using std::swap;
     swap(array1, array2);
 
     BOOST_TEST(10 == array1.size());

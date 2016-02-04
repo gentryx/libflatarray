@@ -79,13 +79,6 @@ public:
         return *this;
     }
 
-    void swap(soa_array& other)
-    {
-        using std::swap;
-        swap(elements, other.elements);
-        swap(data,     other.data);
-    }
-
     template<int OTHER_SIZE>
     inline
     soa_array& operator=(const soa_array<CELL, OTHER_SIZE>& other)
@@ -158,9 +151,9 @@ public:
         return elements * aggregated_member_size<CELL>::VALUE;
     }
 
-    char data[BYTE_SIZE];
 private:
     int elements;
+    char data[BYTE_SIZE];
 
     inline
     void construct_all_instances()
@@ -182,12 +175,6 @@ private:
         elements = other.size();
     }
 };
-
-template<typename CELL, int SIZE>
-void swap(soa_array<CELL, SIZE>& array1, soa_array<CELL, SIZE>& array2)
-{
-    array1.swap(array2);
-}
 
 }
 
