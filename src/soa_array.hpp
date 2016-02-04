@@ -37,8 +37,7 @@ public:
     inline
     __host__ __device__
     explicit soa_array(int elements = 0, const CELL& value = CELL()) :
-        elements(elements),
-        index(0)
+        elements(elements)
     {
         construct_all_instances();
         for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
@@ -162,7 +161,6 @@ public:
     char data[BYTE_SIZE];
 private:
     int elements;
-    int index;
 
     inline
     void construct_all_instances()
