@@ -634,7 +634,7 @@ ADD_TEST(TestDualCallback)
     testDualCallback<CopyTemperatureNativeStyle>();
 }
 
-ADD_TEST(TestAssignment)
+ADD_TEST(TestAssignment1)
 {
     soa_grid<HeatedGameOfLifeCell> gridOld(20, 30, 40);
     soa_grid<HeatedGameOfLifeCell> gridNew(70, 60, 50);
@@ -652,6 +652,81 @@ ADD_TEST(TestAssignment)
     BOOST_TEST(gridOld.dim_y == gridNew.dim_y);
     BOOST_TEST(gridOld.dim_z == gridNew.dim_z);
     BOOST_TEST(gridOld.my_byte_size == gridNew.my_byte_size);
+}
+
+ADD_TEST(TestAssignment2)
+{
+    soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(y * 100 + x, true));
+        }
+    }
+
+    soa_grid<HeatedGameOfLifeCell> grid2;
+    grid2 = grid1;
+
+    // overwrite old grid to ensure both are still separate
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));
+        }
+    }
+
+    BOOST_TEST(grid1.get_dim_x() == 20);
+    BOOST_TEST(grid1.get_dim_y() == 10);
+    BOOST_TEST(grid1.get_dim_z() ==  1);
+
+    BOOST_TEST(grid2.get_dim_x() == 20);
+    BOOST_TEST(grid2.get_dim_y() == 10);
+    BOOST_TEST(grid2.get_dim_z() ==  1);
+
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            HeatedGameOfLifeCell cell = grid2.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(y * 100 + x, true));
+            cell = grid1.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(-1, false));
+        }
+    }
+}
+
+ADD_TEST(TestAssignment2)
+{
+    soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(y * 100 + x, true));
+        }
+    }
+
+    const soa_grid<HeatedGameOfLifeCell>& grid_reference;
+    soa_grid<HeatedGameOfLifeCell> grid2;
+    grid2 = grid_reference;
+
+    // overwrite old grid to ensure both are still separate
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));
+        }
+    }
+
+    BOOST_TEST(grid1.get_dim_x() == 20);
+    BOOST_TEST(grid1.get_dim_y() == 10);
+    BOOST_TEST(grid1.get_dim_z() ==  1);
+
+    BOOST_TEST(grid2.get_dim_x() == 20);
+    BOOST_TEST(grid2.get_dim_y() == 10);
+    BOOST_TEST(grid2.get_dim_z() ==  1);
+
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            HeatedGameOfLifeCell cell = grid2.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(y * 100 + x, true));
+            cell = grid1.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(-1, false));
+        }
+    }
 }
 
 ADD_TEST(TestSwap)
@@ -1023,7 +1098,7 @@ ADD_TEST(TestNonTrivialMembers4)
     }
 }
 
-ADD_TEST(CopyConstructor1)
+ADD_TEST(TestCopyConstructor1)
 {
     soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
     for (int y = 0; y < 10; ++y) {
@@ -1033,6 +1108,8 @@ ADD_TEST(CopyConstructor1)
     }
 
     soa_grid<HeatedGameOfLifeCell> grid2(grid1);
+
+    // overwrite old grid to ensure both are still separate
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {
             grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));
@@ -1057,7 +1134,7 @@ ADD_TEST(CopyConstructor1)
     }
 }
 
-ADD_TEST(CopyConstructor2)
+ADD_TEST(TestCopyConstructor2)
 {
     soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
     for (int y = 0; y < 10; ++y) {
@@ -1068,6 +1145,8 @@ ADD_TEST(CopyConstructor2)
 
     const soa_grid<HeatedGameOfLifeCell>& grid_temp(grid1);
     soa_grid<HeatedGameOfLifeCell> grid2(grid_temp);
+
+    // overwrite old grid to ensure both are still separate
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {
             grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));

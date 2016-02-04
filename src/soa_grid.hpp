@@ -45,7 +45,7 @@ template<typename CELL_TYPE, typename ALLOCATOR = aligned_allocator<char, 4096> 
 class soa_grid
 {
 public:
-    friend class TestAssignment;
+    friend class TestAssignment1;
 
     explicit soa_grid(std::size_t dim_x = 0, std::size_t dim_y = 0, std::size_t dim_z = 0) :
         dim_x(dim_x),
@@ -87,7 +87,7 @@ public:
     soa_grid& operator=(const soa_grid& other)
     {
         resize(other.dim_x, other.dim_y, other.dim_z);
-        callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+        copy_in(other);
         return *this;
     }
 
