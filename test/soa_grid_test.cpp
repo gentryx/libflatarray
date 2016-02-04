@@ -691,7 +691,7 @@ ADD_TEST(TestAssignment2)
     }
 }
 
-ADD_TEST(TestAssignment2)
+ADD_TEST(TestAssignment3)
 {
     soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
     for (int y = 0; y < 10; ++y) {
@@ -700,7 +700,7 @@ ADD_TEST(TestAssignment2)
         }
     }
 
-    const soa_grid<HeatedGameOfLifeCell>& grid_reference;
+    const soa_grid<HeatedGameOfLifeCell>& grid_reference(grid1);
     soa_grid<HeatedGameOfLifeCell> grid2;
     grid2 = grid_reference;
 
