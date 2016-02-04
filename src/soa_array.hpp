@@ -80,6 +80,13 @@ public:
         return *this;
     }
 
+    void swap(soa_array& other)
+    {
+        using std::swap;
+        swap(elements, other.elements);
+        swap(data,     other.data);
+    }
+
     template<int OTHER_SIZE>
     inline
     soa_array& operator=(const soa_array<CELL, OTHER_SIZE>& other)
@@ -177,6 +184,12 @@ private:
         elements = other.size();
     }
 };
+
+template<typename CELL, int SIZE>
+void swap(soa_array<CELL, SIZE>& array1, soa_array<CELL, SIZE>& array2)
+{
+    array1.swap(array2);
+}
 
 }
 

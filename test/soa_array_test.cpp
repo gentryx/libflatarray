@@ -399,6 +399,31 @@ ADD_TEST(TestNonTrivialMembers3)
     }
 }
 
+ADD_TEST(TestSwap)
+{
+    soa_array<Particle, 20> array1(20);
+    soa_array<Particle, 20> array2(10);
+    for (int i = 0; i < 20; ++i) {
+        array1[i].posX() = i;
+    }
+    for (int i = 0; i < 10; ++i) {
+        array2[i].posX() = -1;
+    }
+
+    swap(array1, array2);
+
+    BOOST_TEST(10 == array1.size());
+    BOOST_TEST(20 == array2.size());
+
+    for (int i = 0; i < 20; ++i) {
+        BOOST_TEST(i == array2[i].posX());
+    }
+    for (int i = 0; i < 10; ++i) {
+        BOOST_TEST(-1 == array1[i].posX());
+    }
+
+}
+
 }
 
 int main(int argc, char **argv)
