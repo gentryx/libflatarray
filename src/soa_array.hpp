@@ -40,12 +40,27 @@ public:
         elements(elements),
         index(0)
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
-            accessor.construct_members();
-        }
+        construct_all_instances();
         for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
             accessor << value;
         }
+    }
+
+    template<int OTHER_SIZE>
+    inline
+    soa_array(soa_array<CELL, OTHER_SIZE>& other)
+    {
+        construct_all_instances();
+        copy_in(other);
+    }
+
+
+    template<int OTHER_SIZE>
+    inline
+    soa_array(const soa_array<CELL, OTHER_SIZE>& other)
+    {
+        construct_all_instances();
+        copy_in(other);
     }
 
     inline
@@ -141,6 +156,14 @@ public:
 private:
     int elements;
     int index;
+
+    inline
+    void construct_all_instances()
+    {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
+            accessor.construct_members();
+        }
+    }
 
     template<int OTHER_SIZE>
     inline
