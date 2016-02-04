@@ -1023,6 +1023,75 @@ ADD_TEST(TestNonTrivialMembers4)
     }
 }
 
+ADD_TEST(CopyConstructor1)
+{
+    soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(y * 100 + x, true));
+        }
+    }
+
+    soa_grid<HeatedGameOfLifeCell> grid2(grid1);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));
+        }
+    }
+
+    BOOST_TEST(grid1.get_dim_x() == 20);
+    BOOST_TEST(grid1.get_dim_y() == 10);
+    BOOST_TEST(grid1.get_dim_z() ==  1);
+
+    BOOST_TEST(grid2.get_dim_x() == 20);
+    BOOST_TEST(grid2.get_dim_y() == 10);
+    BOOST_TEST(grid2.get_dim_z() ==  1);
+
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            HeatedGameOfLifeCell cell = grid2.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(y * 100 + x, true));
+            cell = grid1.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(-1, false));
+        }
+    }
+}
+
+ADD_TEST(CopyConstructor2)
+{
+    soa_grid<HeatedGameOfLifeCell> grid1(20, 10, 1);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(y * 100 + x, true));
+        }
+    }
+
+    const soa_grid<HeatedGameOfLifeCell>& grid_temp(grid1);
+    soa_grid<HeatedGameOfLifeCell> grid2(grid_temp);
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            grid1.set(x, y, 0, HeatedGameOfLifeCell(-1, false));
+        }
+    }
+
+    BOOST_TEST(grid1.get_dim_x() == 20);
+    BOOST_TEST(grid1.get_dim_y() == 10);
+    BOOST_TEST(grid1.get_dim_z() ==  1);
+
+    BOOST_TEST(grid2.get_dim_x() == 20);
+    BOOST_TEST(grid2.get_dim_y() == 10);
+    BOOST_TEST(grid2.get_dim_z() ==  1);
+
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            HeatedGameOfLifeCell cell = grid2.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(y * 100 + x, true));
+            cell = grid1.get(x, y, 0);
+            BOOST_TEST(cell == HeatedGameOfLifeCell(-1, false));
+        }
+    }
+}
+
 }
 
 int main(int argc, char **argv)

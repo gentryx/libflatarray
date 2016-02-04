@@ -88,7 +88,6 @@ public:
     {
         resize(other.dim_x, other.dim_y, other.dim_z);
         callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
-        // fixme
         return *this;
     }
 
@@ -187,6 +186,21 @@ public:
     void set_data(char *new_data)
     {
         data = new_data;
+    }
+
+    std::size_t get_dim_x()
+    {
+        return dim_x;
+    }
+
+    std::size_t get_dim_y()
+    {
+        return dim_y;
+    }
+
+    std::size_t get_dim_z()
+    {
+        return dim_z;
     }
 
 private:
