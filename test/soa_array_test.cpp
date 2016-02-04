@@ -148,6 +148,7 @@ ADD_TEST(TestBasicAccessAndConversion)
     }
 
     BOOST_TEST(array.size() == 18);
+    BOOST_TEST(array.byte_size() == (18 * 8 * sizeof(float)));
 
     for (int i = 0; i < 18; ++i) {
         BOOST_TEST(array[i].posX() == i);
@@ -220,6 +221,8 @@ ADD_TEST(TestArrayMember)
             2.2 + i,
             3 * i);
     }
+
+    BOOST_ASSERT(array.byte_size() == (num * (8 * sizeof(float) + sizeof(int))));
 
     for (int i = 0; i < num; ++i) {
         ArrayParticle p = array[i];
@@ -422,7 +425,6 @@ ADD_TEST(TestSwap)
     for (int i = 0; i < 10; ++i) {
         BOOST_TEST(-1 == array1[i].posX());
     }
-
 }
 
 }
