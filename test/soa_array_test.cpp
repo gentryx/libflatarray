@@ -360,25 +360,25 @@ ADD_TEST(TestNonTrivialMembers)
     BOOST_TEST(expected == DestructionCounterClass::countDestruct);
 }
 
-// ADD_TEST(TestNonTrivialMembers2)
-// {
-//     CellWithNonTrivialMembers cell1;
-//     cell1.map[5] = std::vector<double>(4711, 47.11);
-//     CellWithNonTrivialMembers cell2;
-//     cell1.map[7] = std::vector<double>(666, 1.1);
-//     {
-//         soa_array<CellWithNonTrivialMembers, 200> array1(30);
-//         soa_array<CellWithNonTrivialMembers, 100> array2(30);
+ADD_TEST(TestNonTrivialMembers2)
+{
+    CellWithNonTrivialMembers cell1;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    CellWithNonTrivialMembers cell2;
+    cell1.map[7] = std::vector<double>(666, 1.1);
+    {
+        soa_array<CellWithNonTrivialMembers, 200> array1(30);
+        soa_array<CellWithNonTrivialMembers, 300> array2(30);
 
-//         array1[69] = cell1;
-//         array2 = array1;
-//         // this ensures no bit-wise copy was done in the assignment
-//         // above. It it had been done then the two copy assignments
-//         // below would cause a double free error below:
-//         array1[69] = cell2;
-//         array2[69] = cell2;
-//     }
-// }
+        array1[69] = cell1;
+        array2 = array1;
+        // this ensures no bit-wise copy was done in the assignment
+        // above. It it had been done then the two copy assignments
+        // below would cause a double free error below:
+        array1[69] = cell2;
+        array2[69] = cell2;
+    }
+}
 
 }
 

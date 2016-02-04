@@ -57,6 +57,22 @@ public:
 
     }
 
+    template<int OTHER_SIZE>
+    inline
+    soa_array& operator=(soa_array<CELL, OTHER_SIZE>& other)
+    {
+        copy_in(other);
+        return *this;
+    }
+
+    template<int OTHER_SIZE>
+    inline
+    soa_array& operator=(const soa_array<CELL, OTHER_SIZE>& other)
+    {
+        copy_in(other);
+        return *this;
+    }
+
     inline
     __host__ __device__
     soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index)
@@ -125,6 +141,18 @@ public:
 private:
     int elements;
     int index;
+
+    template<int OTHER_SIZE>
+    inline
+    void copy_in(const soa_array<CELL, OTHER_SIZE>& other)
+    {
+        if (other.size() >= SIZE) {
+            throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
+        }
+
+        at(0).copy_members(other[0], other.size());
+        elements = other.size();
+    }
 };
 
 }
