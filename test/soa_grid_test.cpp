@@ -984,6 +984,45 @@ ADD_TEST(TestNonTrivialMembers2)
     }
 }
 
+ADD_TEST(TestNonTrivialMembers3)
+{
+    CellWithNonTrivialMembers cell1;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    CellWithNonTrivialMembers cell2;
+    cell1.map[7] = std::vector<double>(666, 1.1);
+    {
+        soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+        grid1.set(1, 1, 1, cell1);
+        soa_grid<CellWithNonTrivialMembers> grid2(grid1);
+
+        // this ensures no bit-wise copy was done in the assignment
+        // above. It it had been done then the two copy assignments
+        // below would cause a double free error below:
+        grid1.set(1, 1, 1, cell2);
+        grid2.set(1, 1, 1, cell2);
+    }
+}
+
+ADD_TEST(TestNonTrivialMembers4)
+{
+    CellWithNonTrivialMembers cell1;
+    cell1.map[5] = std::vector<double>(4711, 47.11);
+    CellWithNonTrivialMembers cell2;
+    cell1.map[7] = std::vector<double>(666, 1.1);
+    {
+        soa_grid<CellWithNonTrivialMembers> grid1(3, 3, 3);
+        const soa_grid<CellWithNonTrivialMembers>& grid_const_ref(grid1);
+        grid1.set(1, 1, 1, cell1);
+        soa_grid<CellWithNonTrivialMembers> grid2(grid_const_ref);
+
+        // this ensures no bit-wise copy was done in the assignment
+        // above. It it had been done then the two copy assignments
+        // below would cause a double free error below:
+        grid1.set(1, 1, 1, cell2);
+        grid2.set(1, 1, 1, cell2);
+    }
+}
+
 }
 
 int main(int argc, char **argv)

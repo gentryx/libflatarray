@@ -56,15 +56,26 @@ public:
         resize();
     }
 
+    soa_grid(soa_grid& other) :
+        dim_x(other.dim_x),
+        dim_y(other.dim_y),
+        dim_z(other.dim_z),
+        my_byte_size(other.byte_size()),
+        data(ALLOCATOR().allocate(other.byte_size()))
+    {
+        init();
+        copy_in(other);
+    }
+
     soa_grid(const soa_grid& other) :
         dim_x(other.dim_x),
         dim_y(other.dim_y),
         dim_z(other.dim_z),
-        my_byte_size(other.my_byte_size)
+        my_byte_size(other.byte_size()),
+        data(ALLOCATOR().allocate(other.byte_size()))
     {
-        data = ALLOCATOR().allocate(byte_size());
         init();
-        std::copy(other.data, other.data + byte_size(), data);
+        copy_in(other);
     }
 
     ~soa_grid()
@@ -77,7 +88,7 @@ public:
     {
         resize(other.dim_x, other.dim_y, other.dim_z);
         callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
-
+        // fixme
         return *this;
     }
 
@@ -254,6 +265,11 @@ private:
         }
 
         callback(detail::flat_array::destroy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+    }
+
+    void copy_in(const soa_grid& other)
+    {
+        other.callback(this, detail::flat_array::copy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
     }
 
     void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const
