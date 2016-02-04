@@ -15,7 +15,8 @@
 #include <libflatarray/detail/destroy_functor.hpp>
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_set_instance_functor.hpp>
-#include <libflatarray/detail/load_save_functor.hpp>
+#include <libflatarray/detail/load_functor.hpp>
+#include <libflatarray/detail/save_functor.hpp>
 #include <libflatarray/detail/set_byte_size_functor.hpp>
 
 #include <stdexcept>
