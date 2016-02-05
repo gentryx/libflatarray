@@ -49,12 +49,12 @@ public:
     friend class TestAssignment1;
 
     explicit soa_grid(std::size_t dim_x = 0, std::size_t dim_y = 0, std::size_t dim_z = 0) :
-        dim_x(dim_x),
-        dim_y(dim_y),
-        dim_z(dim_z),
+        dim_x(0),
+        dim_y(0),
+        dim_z(0),
         data(0)
     {
-        resize();
+        resize(dim_x, dim_y, dim_z);
     }
 
     soa_grid(soa_grid& other) :
@@ -81,8 +81,7 @@ public:
 
     ~soa_grid()
     {
-        destroy();
-        ALLOCATOR().deallocate(data, byte_size());
+        destroy_and_deallocate();
     }
 
     soa_grid& operator=(const soa_grid& other)
@@ -102,6 +101,9 @@ public:
         swap(data, other.data);
     }
 
+    /**
+     * Adapt size of allocated memory to dim_[x-z]
+     */
     void resize(std::size_t new_dim_x, std::size_t new_dim_y, std::size_t new_dim_z)
     {
         if ((dim_x == new_dim_x) &&
@@ -109,10 +111,16 @@ public:
             (dim_z == new_dim_z)) {
             return;
         }
+
+        destroy_and_deallocate();
+
         dim_x = new_dim_x;
         dim_y = new_dim_y;
         dim_z = new_dim_z;
-        resize();
+        // we need callback() to round up our grid size
+        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
+        data = ALLOCATOR().allocate(byte_size());
+        init();
     }
 
     template<typename FUNCTOR>
@@ -212,20 +220,6 @@ private:
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
 
-    /**
-     * Adapt size of allocated memory to dim_[x-z]
-     */
-    void resize()
-    {
-        destroy();
-        ALLOCATOR().deallocate(data, byte_size());
-
-        // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
-        data = ALLOCATOR().allocate(byte_size());
-        init();
-    }
-
     template<typename FUNCTOR>
     void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type)
     {
@@ -273,13 +267,14 @@ private:
         callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
     }
 
-    void destroy()
+    void destroy_and_deallocate()
     {
         if (data == 0) {
             return;
         }
 
         callback(detail::flat_array::destroy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+        ALLOCATOR().deallocate(data, byte_size());
     }
 
     void copy_in(const soa_grid& other)
