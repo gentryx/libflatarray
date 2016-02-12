@@ -731,9 +731,9 @@ ADD_TEST(TestAssignment3)
 
 ADD_TEST(TestAssignment4)
 {
-    soa_grid<CellWithNonTrivialMembers> grid1(400, 500, 1);
-    for (int y = 0; y < 500; ++y) {
-        for (int x = 0; x < 400; ++x) {
+    soa_grid<CellWithNonTrivialMembers> grid1(100, 50, 1);
+    for (int y = 0; y < 50; ++y) {
+        for (int x = 0; x < 100; ++x) {
             CellWithNonTrivialMembers dummy;
             dummy.map[y].push_back(x);
             grid1.set(x, y, 0, dummy);
@@ -744,8 +744,8 @@ ADD_TEST(TestAssignment4)
     grid2 = grid1;
 
     // overwrite old grid to ensure both are still separate
-    for (int y = 0; y < 500; ++y) {
-        for (int x = 0; x < 400; ++x) {
+    for (int y = 0; y < 50; ++y) {
+        for (int x = 0; x < 100; ++x) {
             CellWithNonTrivialMembers dummy;
             dummy.map[y].push_back(-1);
             dummy.map[y].push_back(-2);
@@ -753,16 +753,16 @@ ADD_TEST(TestAssignment4)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 400);
-    BOOST_TEST(grid1.get_dim_y() == 500);
+    BOOST_TEST(grid1.get_dim_x() == 100);
+    BOOST_TEST(grid1.get_dim_y() ==  50);
     BOOST_TEST(grid1.get_dim_z() ==   1);
 
-    BOOST_TEST(grid2.get_dim_x() == 400);
-    BOOST_TEST(grid2.get_dim_y() == 500);
+    BOOST_TEST(grid2.get_dim_x() == 100);
+    BOOST_TEST(grid2.get_dim_y() ==  50);
     BOOST_TEST(grid2.get_dim_z() ==   1);
 
-    for (int y = 0; y < 500; ++y) {
-        for (int x = 0; x < 400; ++x) {
+    for (int y = 0; y < 50; ++y) {
+        for (int x = 0; x < 100; ++x) {
             CellWithNonTrivialMembers cell = grid2.get(x, y, 0);
             BOOST_TEST(cell.map[y].size() == 1);
             BOOST_TEST(cell.map[y][0] == x);
