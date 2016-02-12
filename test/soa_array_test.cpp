@@ -222,7 +222,7 @@ ADD_TEST(TestArrayMember)
             3 * i);
     }
 
-    BOOST_ASSERT(array.byte_size() == (num * (8 * sizeof(float) + sizeof(int))));
+    BOOST_TEST(array.byte_size() == (num * (8 * sizeof(float) + sizeof(int))));
 
     for (int i = 0; i < num; ++i) {
         ArrayParticle p = array[i];
