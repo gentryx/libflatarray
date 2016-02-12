@@ -31,16 +31,16 @@ class soa_array
 {
 public:
     typedef CELL Cell;
-    static const int SIZE = MY_SIZE;
-    static const int BYTE_SIZE = aggregated_member_size<CELL>::VALUE * SIZE;
+    static const std::size_t SIZE = MY_SIZE;
+    static const std::size_t BYTE_SIZE = aggregated_member_size<CELL>::VALUE * SIZE;
 
     inline
     __host__ __device__
-    explicit soa_array(int elements = 0, const CELL& value = CELL()) :
+    explicit soa_array(std::size_t elements = 0, const CELL& value = CELL()) :
         elements(elements)
     {
         construct_all_instances();
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < elements; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < int(elements); accessor += 1) {
             accessor << value;
         }
     }
@@ -152,7 +152,7 @@ public:
     }
 
 private:
-    int elements;
+    std::size_t elements;
     char data[BYTE_SIZE];
 
     inline
