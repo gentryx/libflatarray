@@ -57,17 +57,6 @@ public:
         resize(dim_x, dim_y, dim_z);
     }
 
-    soa_grid(soa_grid& other) :
-        dim_x(other.dim_x),
-        dim_y(other.dim_y),
-        dim_z(other.dim_z),
-        my_byte_size(other.byte_size()),
-        data(ALLOCATOR().allocate(other.byte_size()))
-    {
-        init();
-        copy_in(other);
-    }
-
     soa_grid(const soa_grid& other) :
         dim_x(other.dim_x),
         dim_y(other.dim_y),
