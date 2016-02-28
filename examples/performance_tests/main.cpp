@@ -389,7 +389,8 @@ public:
         UpdateFunctor functor(dim_x, dim_y, dim_z);
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
-            std::swap(gridOld, gridNew);
+            using std::swap;
+            swap(gridOld, gridNew);
         }
 
         double tEnd = time();
@@ -608,7 +609,8 @@ public:
         UpdateFunctor functor(dim_x, dim_y, dim_z);
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
-            std::swap(gridOld, gridNew);
+            using std::swap;
+            swap(gridOld, gridNew);
         }
 
         double tEnd = time();
@@ -804,7 +806,8 @@ public:
                 particlesB[i].charge = charge;
             }
 
-            std::swap(particlesA, particlesB);
+            using std::swap;
+            swap(particlesA, particlesB);
         }
 
         double tEnd = time();
@@ -959,15 +962,16 @@ public:
                 chargeB[i] = charge;
             }
 
-            std::swap(posXA, posXB);
-            std::swap(posYA, posYB);
-            std::swap(posZA, posZB);
+            using std::swap;
+            swap(posXA, posXB);
+            swap(posYA, posYB);
+            swap(posZA, posZB);
 
-            std::swap(velXA, velXB);
-            std::swap(velYA, velYB);
-            std::swap(velZA, velZB);
+            swap(velXA, velXB);
+            swap(velYA, velYB);
+            swap(velZA, velZB);
 
-            std::swap(chargeA, chargeB);
+            swap(chargeA, chargeB);
         }
 
         double tEnd = time();
@@ -1103,15 +1107,16 @@ public:
                 _mm256_storeu_ps(&chargeB[i], chargeV);
             }
 
-            std::swap(posXA, posXB);
-            std::swap(posYA, posYB);
-            std::swap(posZA, posZB);
+            using std::swap;
+            swap(posXA, posXB);
+            swap(posYA, posYB);
+            swap(posZA, posZB);
 
-            std::swap(velXA, velXB);
-            std::swap(velYA, velYB);
-            std::swap(velZA, velZB);
+            swap(velXA, velXB);
+            swap(velYA, velYB);
+            swap(velZA, velZB);
 
-            std::swap(chargeA, chargeB);
+            swap(chargeA, chargeB);
         }
 
         double tEnd = time();
@@ -1203,7 +1208,8 @@ public:
                 accessorB.charge() = charge;
             }
 
-            std::swap(particlesA, particlesB);
+            using std::swap;
+            swap(particlesA, particlesB);
         }
 
         double tEnd = time();
@@ -1345,7 +1351,8 @@ public:
                 _mm256_storeu_ps(&accessorB.charge(), charge);
             }
 
-            std::swap(particlesA, particlesB);
+            using std::swap;
+            swap(particlesA, particlesB);
         }
 
         double tEnd = time();
@@ -1465,7 +1472,8 @@ public:
                 &accessorB.charge() << charge;
             }
 
-            std::swap(particlesA, particlesB);
+            using std::swap;
+            swap(particlesA, particlesB);
         }
 
         double tEnd = time();
@@ -1583,7 +1591,8 @@ public:
                 &accessorB.charge() << charge;
             }
 
-            std::swap(particlesA, particlesB);
+            using std::swap;
+            swap(particlesA, particlesB);
         }
 
         double tEnd = time();
