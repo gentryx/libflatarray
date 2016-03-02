@@ -1,5 +1,6 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -193,7 +194,7 @@ public:
 
 #ifdef __AVX2__
     inline
-    void gather(const float *ptr, const unsigned *offsets)
+    void gather(const float *ptr, const int *offsets)
     {
         __m256i indices;
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets));
@@ -203,7 +204,7 @@ public:
     }
 #else
     inline
-    void gather(const float *ptr, const unsigned *offsets)
+    void gather(const float *ptr, const int *offsets)
     {
         __m128 tmp;
         tmp  = _mm_load_ss(ptr + offsets[0]);
@@ -230,7 +231,7 @@ public:
 #endif
 
     inline
-    void scatter(float *ptr, const unsigned *offsets) const
+    void scatter(float *ptr, const int *offsets) const
     {
         __m128 tmp;
         tmp = _mm256_extractf128_ps(val1, 0);

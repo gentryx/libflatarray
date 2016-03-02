@@ -1,5 +1,6 @@
 /**
  * Copyright 2015 Di Xiao
+ * Copyright 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -332,7 +333,7 @@ public:
 
     // dummy approach. NEON only supports loading in fixed interleaving
     inline
-    void gather(const float *ptr, const unsigned *offsets)
+    void gather(const float *ptr, const int *offsets)
     {
         float data[16];
         data[0] = ptr[offsets[0]];
@@ -356,7 +357,7 @@ public:
 
     // dummy approach
     inline
-    void scatter(float *ptr, const unsigned *offsets) const
+    void scatter(float *ptr, const int *offsets) const
     {
         const float *data1 = reinterpret_cast<const float *>(&val1);
         const float *data2 = reinterpret_cast<const float *>(&val2);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2015 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -163,14 +163,14 @@ public:
     }
 
     inline
-    void gather(const double *ptr, const unsigned *offsets)
+    void gather(const double *ptr, const int *offsets)
     {
         val1 = _mm_loadl_pd(val1, ptr + offsets[0]);
         val1 = _mm_loadh_pd(val1, ptr + offsets[1]);
     }
 
     inline
-    void scatter(double *ptr, const unsigned *offsets) const
+    void scatter(double *ptr, const int *offsets) const
     {
         _mm_storel_pd(ptr + offsets[0], val1);
         _mm_storeh_pd(ptr + offsets[1], val1);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -165,7 +165,7 @@ public:
     }
 
     inline
-    void gather(const double *ptr, const unsigned *offsets)
+    void gather(const double *ptr, const int *offsets)
     {
         double *base = const_cast<double *>(ptr);
         val1 = vec_insert(base[offsets[0]], val1, 0);
@@ -175,7 +175,7 @@ public:
     }
 
     inline
-    void scatter(double *ptr, const unsigned *offsets) const
+    void scatter(double *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = vec_extract(val1, 0);
         ptr[offsets[1]] = vec_extract(val1, 1);

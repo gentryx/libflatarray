@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -370,7 +370,7 @@ public:
     }
 
     inline
-    void gather(const float *ptr, const unsigned *offsets)
+    void gather(const float *ptr, const int *offsets)
     {
         val1  = ptr[offsets[ 0]];
         val2  = ptr[offsets[ 1]];
@@ -391,7 +391,7 @@ public:
     }
 
     inline
-    void scatter(float *ptr, const unsigned *offsets) const
+    void scatter(float *ptr, const int *offsets) const
     {
         ptr[offsets[0]]  = val1;
         ptr[offsets[1]]  = val2;

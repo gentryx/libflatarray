@@ -1,5 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
+ * Copyright 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -246,7 +247,7 @@ public:
 
 #ifdef __SSE4_1__
     inline
-    void gather(const int *ptr, const unsigned *offsets)
+    void gather(const int *ptr, const int *offsets)
     {
         val1 = _mm_insert_epi32(val1, ptr[offsets[0]], 0);
         val1 = _mm_insert_epi32(val1, ptr[offsets[1]], 1);
@@ -260,7 +261,7 @@ public:
     }
 
     inline
-    void scatter(int *ptr, const unsigned *offsets) const
+    void scatter(int *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = _mm_extract_epi32(val1, 0);
         ptr[offsets[1]] = _mm_extract_epi32(val1, 1);
@@ -274,7 +275,7 @@ public:
     }
 #else
     inline
-    void gather(const int *ptr, const unsigned *offsets)
+    void gather(const int *ptr, const int *offsets)
     {
         __m128i i2, i3, i4;
         val1 = _mm_cvtsi32_si128(ptr[offsets[0]]);
@@ -295,7 +296,7 @@ public:
     }
 
     inline
-    void scatter(int *ptr, const unsigned *offsets) const
+    void scatter(int *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = _mm_cvtsi128_si32(val1);
         ptr[offsets[1]] = _mm_cvtsi128_si32(_mm_shuffle_epi32(val1, _MM_SHUFFLE(0,3,2,1)));

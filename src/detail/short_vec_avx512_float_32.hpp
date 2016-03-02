@@ -1,3 +1,11 @@
+/**
+ * Copyright 2015 Kurt Kanzenbach
+ * Copyright 2016 Andreas Schäfer
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_AVX512_FLOAT_32_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_AVX512_FLOAT_32_HPP
 
@@ -183,7 +191,7 @@ public:
     }
 
     inline
-    void gather(const float *ptr, const unsigned *offsets)
+    void gather(const float *ptr, const int *offsets)
     {
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);
@@ -194,7 +202,7 @@ public:
     }
 
     inline
-    void scatter(float *ptr, const unsigned *offsets) const
+    void scatter(float *ptr, const int *offsets) const
     {
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);

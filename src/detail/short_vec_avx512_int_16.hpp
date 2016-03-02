@@ -1,5 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
+ * Copyright 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -179,14 +180,14 @@ public:
     }
 
     inline
-    void gather(const int *ptr, const unsigned *offsets)
+    void gather(const int *ptr, const int *offsets)
     {
         __m512i indices = _mm512_loadu_si512(offsets);
         val1 = _mm512_i32gather_epi32(indices, ptr, 4);
     }
 
     inline
-    void scatter(int *ptr, const unsigned *offsets) const
+    void scatter(int *ptr, const int *offsets) const
     {
         __m512i indices = _mm512_loadu_si512(offsets);
         _mm512_i32scatter_epi32(ptr, indices, val1, 4);

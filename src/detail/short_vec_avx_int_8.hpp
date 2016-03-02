@@ -1,5 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
+ * Copyright 2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -179,14 +180,14 @@ public:
     }
 
     inline
-    void gather(const int *ptr, const unsigned *offsets)
+    void gather(const int *ptr, const int *offsets)
     {
         __m256i indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets));
         val1 = _mm256_i32gather_epi32(ptr, indices, 4);
     }
 
     inline
-    void scatter(int *ptr, const unsigned *offsets) const
+    void scatter(int *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = _mm256_extract_epi32(val1, 0);
         ptr[offsets[1]] = _mm256_extract_epi32(val1, 1);

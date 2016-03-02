@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2015 Andreas Schäfer
+ * Copyright 2013-2016 Andreas Schäfer
  * Copyright 2015 Di Xiao
  * Copyright 2015 Kurt Kanzenbach
  *
@@ -202,7 +202,7 @@ void testImplementationReal()
     // test gather
     {
         CARGO array[ARITY * 10];
-        std::vector<unsigned, aligned_allocator<unsigned, 64> > indices(ARITY);
+        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
@@ -261,7 +261,7 @@ void testImplementationReal()
         ShortVec vec;
         CARGO array[ARITY * 10];
         CARGO expected[ARITY * 10];
-        std::vector<unsigned, aligned_allocator<unsigned, 64> > indices(ARITY);
+        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
         for (int i = 0; i < ARITY * 10; ++i) {
@@ -524,7 +524,7 @@ void testImplementationInt()
     // test gather
     {
         CARGO array[ARITY * 10];
-        std::vector<unsigned, aligned_allocator<unsigned, 64> > indices(ARITY);
+        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         CARGO actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
@@ -583,7 +583,7 @@ void testImplementationInt()
         ShortVec vec;
         CARGO array[ARITY * 10];
         CARGO expected[ARITY * 10];
-        std::vector<unsigned, aligned_allocator<unsigned, 64> > indices(ARITY);
+        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
         for (int i = 0; i < ARITY * 10; ++i) {

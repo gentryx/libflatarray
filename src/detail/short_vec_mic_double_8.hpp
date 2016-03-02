@@ -1,3 +1,11 @@
+/**
+ * Copyright 2015 Kurt Kanzenbach
+ * Copyright 2016 Andreas Schäfer
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_MIC_DOUBLE_8_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_MIC_DOUBLE_8_HPP
 
@@ -158,7 +166,7 @@ public:
     }
 
     inline
-    void gather(const double *ptr, const unsigned *offsets)
+    void gather(const double *ptr, const int *offsets)
     {
         __m512i indices;
         indices = _mm512_loadunpacklo_epi32(indices, offsets);
@@ -166,7 +174,7 @@ public:
     }
 
     inline
-    void scatter(double *ptr, const unsigned *offsets) const
+    void scatter(double *ptr, const int *offsets) const
     {
         __m512i indices;
         indices = _mm512_loadunpacklo_epi32(indices, offsets);
