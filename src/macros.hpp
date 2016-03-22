@@ -75,7 +75,7 @@
             number_of_members<CELL_TYPE>::VALUE;                        \
                                                                         \
     public:                                                             \
-        static const std::size_t VALUE =                                     \
+        static const std::size_t VALUE =                                \
             detail::flat_array::offset<CELL_TYPE, INDEX>::OFFSET;       \
     };                                                                  \
                                                                         \
@@ -349,7 +349,7 @@
                                                                         \
         __host__ __device__                                             \
         inline                                                          \
-        void save(char *target, std::size_t count) const                     \
+        void save(char *target, std::size_t count) const                \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
