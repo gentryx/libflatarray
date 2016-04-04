@@ -11,7 +11,11 @@
 #include <libflatarray/detail/macros.hpp>
 #include <libflatarray/detail/offset.hpp>
 #include <libflatarray/aligned_allocator.hpp>
+
+#ifdef __CUDACC__
 #include <libflatarray/cuda_allocator.hpp>
+#endif
+
 #include <libflatarray/coord.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/member_ptr_to_offset.hpp>
