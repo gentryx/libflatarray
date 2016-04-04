@@ -262,7 +262,7 @@ private:
 
     void init()
     {
-        callback(detail::flat_array::construct_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+        callback(detail::flat_array::construct_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(dim_x, dim_y, dim_z));
     }
 
     void destroy_and_deallocate()
@@ -271,7 +271,7 @@ private:
             return;
         }
 
-        callback(detail::flat_array::destroy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+        callback(detail::flat_array::destroy_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(dim_x, dim_y, dim_z));
         ALLOCATOR().deallocate(data, byte_size());
     }
 
