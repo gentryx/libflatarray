@@ -41,8 +41,17 @@ namespace LibFlatArray {
  * development time). Compilation time may jump from seconds to tens
  * of minutes. See the LBM example for how to split compilation into
  * smaller, parallelizable chunks.
+ *
+ * Allocation on CUDA devices can be selected by setting the template
+ * parameter ALLOCATOR to cuda_allocator. In this case you may want to
+ * set USE_CUDA_FUNCTORS to true. This will cause all constructors and
+ * destructors to run on the current CUDA device and will also
+ * manage data transfer to/from the device.
  */
-template<typename CELL_TYPE, typename ALLOCATOR = aligned_allocator<char, 4096> >
+template<
+    typename CELL_TYPE,
+    typename ALLOCATOR = aligned_allocator<char, 4096>,
+    bool USE_CUDA_FUNCTORS = false>
 class soa_grid
 {
 public:
