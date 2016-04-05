@@ -20,7 +20,7 @@ namespace flat_array {
  * This helper class uses an accessor to push an object's members into
  * the SoA storage.
  */
-template<typename CELL>
+template<typename CELL, bool USE_CUDA_FUNCTORS = false>
 class set_instance_functor
 {
 public:
@@ -40,12 +40,10 @@ public:
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        accessor.index =
-            z * DIM_X * DIM_Y +
-            y * DIM_X +
-            x;
+        accessor.index = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(x, y, z);
         const CELL *cursor = source;
-        for (long i = 0; i < count; ++i) {
+
+        for (std::size_t i = 0; i < count; ++i) {
             accessor << *cursor;
             ++cursor;
             ++accessor.index;
@@ -54,11 +52,79 @@ public:
 
 private:
     const CELL *source;
-    long x;
-    long y;
-    long z;
-    long count;
+    std::size_t x;
+    std::size_t y;
+    std::size_t z;
+    std::size_t count;
 };
+
+#ifdef LIBFLATARRAY_WITH_CUDA
+#ifdef __CUDACC__
+
+template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+__global__
+void set_kernel(const CELL *source, char *target, long count, long x, long y, long z)
+{
+    long offset = blockDim.x * blockIdx.x + threadIdx.x;
+    if (offset >= count) {
+        return;
+    }
+
+    typedef soa_accessor_light<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor_type;
+
+    long index = accessor_type::gen_index(x + offset, y, z);
+    accessor_type accessor(target, index);
+
+    // accessor << *source;
+}
+
+/**
+ * Specialization for CUDA
+ */
+template<typename CELL>
+class set_instance_functor<CELL, true>
+{
+public:
+    set_instance_functor(
+        const CELL *source,
+        long x,
+        long y,
+        long z,
+        long count) :
+        source(source),
+        x(x),
+        y(y),
+        z(z),
+        count(count)
+    {}
+
+    template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
+    {
+        dim3 grid_dim;
+        dim3 block_dim;
+        generate_launch_config()(&grid_dim, &block_dim, count, 1, 1);
+
+        set_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
+            source,
+            accessor.get_data(),
+            count,
+            x,
+            y,
+            z);
+    }
+
+private:
+    const CELL *source;
+    std::size_t x;
+    std::size_t y;
+    std::size_t z;
+    std::size_t count;
+
+};
+
+#endif
+#endif
 
 }
 

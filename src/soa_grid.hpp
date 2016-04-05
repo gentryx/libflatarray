@@ -150,12 +150,12 @@ public:
 
     void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE& cell)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(&cell, x, y, z, 1));
     }
 
     void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE *cells, std::size_t count)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE>(cells, x, y, z, count));
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(cells, x, y, z, count));
     }
 
     CELL_TYPE get(std::size_t x, std::size_t y, std::size_t z) const

@@ -218,6 +218,21 @@ ADD_TEST(TestCUDAConstructionDestruction)
     fake_cuda_allocator<char>().deallocate_all();
 }
 
+ADD_TEST(TestCUDAGetSetSingleElements)
+{
+    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> grid(40, 13, 8);
+
+    for (int z = 0; z < 8; ++z) {
+        for (int y = 0; y < 13; ++y) {
+            for (int x = 0; x < 40; ++x) {
+                ConstructorDestructorTestCellPassive cell;
+                cell.element.val = 10000 + x + y * 40 + z * 40 * 13;
+                grid.set(x, y, z, cell);
+            }
+        }
+    }
+}
+
 }
 
 int main(int argc, char **argv)
