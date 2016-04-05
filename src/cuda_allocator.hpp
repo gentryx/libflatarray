@@ -5,8 +5,8 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef CUDA_ALLOCATOR_HPP
-#define CUDA_ALLOCATOR_HPP
+#ifndef FLAT_ARRAY_CUDA_ALLOCATOR_HPP
+#define FLAT_ARRAY_CUDA_ALLOCATOR_HPP
 
 #ifdef __ICC
 // disabling this warning as implicit type conversion here as it's an intented feature for dim3
