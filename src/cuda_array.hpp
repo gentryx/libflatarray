@@ -20,156 +20,156 @@ namespace LibFlatArray {
  * (possibly slow) mem copies to the device.
  */
 template<typename ELEMENT_TYPE>
-class CUDAArray
+class cuda_array
 {
 public:
-    explicit inline CUDAArray(std::size_t size = 0) :
-        mySize(size),
-        myCapacity(size),
-        dataPointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
+    explicit inline cuda_array(std::size_t size = 0) :
+        my_size(size),
+        my_capacity(size),
+        data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
     {}
 
-    inline CUDAArray(std::size_t size, const ELEMENT_TYPE& defaultValue) :
-        mySize(size),
-        myCapacity(size),
-        dataPointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
+    inline cuda_array(std::size_t size, const ELEMENT_TYPE& defaultValue) :
+        my_size(size),
+        my_capacity(size),
+        data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
     {
         for (std::size_t i = 0; i < size; ++i) {
-            cudaMemcpy(dataPointer + i, &defaultValue, sizeof(ELEMENT_TYPE), cudaMemcpyHostToDevice);
+            cudaMemcpy(data_pointer + i, &defaultValue, sizeof(ELEMENT_TYPE), cudaMemcpyHostToDevice);
         }
     }
 
-    inline CUDAArray(const CUDAArray& array) :
-        mySize(array.size()),
-        myCapacity(array.size()),
-        dataPointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(array.size()))
+    inline cuda_array(const cuda_array& array) :
+        my_size(array.size()),
+        my_capacity(array.size()),
+        data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(array.size()))
     {
-        cudaMemcpy(dataPointer, array.dataPointer, byteSize(), cudaMemcpyDeviceToDevice);
+        cudaMemcpy(data_pointer, array.data_pointer, byte_size(), cudaMemcpyDeviceToDevice);
     }
 
-    inline CUDAArray(const ELEMENT_TYPE *hostData, std::size_t size) :
-        mySize(size),
-        myCapacity(size),
-        dataPointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
+    inline cuda_array(const ELEMENT_TYPE *hostData, std::size_t size) :
+        my_size(size),
+        my_capacity(size),
+        data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
     {
-        cudaMemcpy(dataPointer, hostData, byteSize(), cudaMemcpyHostToDevice);
+        cudaMemcpy(data_pointer, hostData, byte_size(), cudaMemcpyHostToDevice);
     }
 
-    explicit inline CUDAArray(const std::vector<ELEMENT_TYPE>& hostVector) :
-        mySize(hostVector.size()),
-        myCapacity(hostVector.size()),
-        dataPointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(hostVector.size()))
+    explicit inline cuda_array(const std::vector<ELEMENT_TYPE>& hostVector) :
+        my_size(hostVector.size()),
+        my_capacity(hostVector.size()),
+        data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(hostVector.size()))
     {
-        cudaMemcpy(dataPointer, &hostVector.front(), byteSize(), cudaMemcpyHostToDevice);
+        cudaMemcpy(data_pointer, &hostVector.front(), byte_size(), cudaMemcpyHostToDevice);
     }
 
-    inline ~CUDAArray()
+    inline ~cuda_array()
     {
-        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(dataPointer, myCapacity);
+        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(data_pointer, my_capacity);
     }
 
-    inline void operator=(const CUDAArray& array)
+    inline void operator=(const cuda_array& array)
     {
-        if (array.size() > myCapacity) {
-            LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(dataPointer, myCapacity);
-            dataPointer = LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(array.size());
+        if (array.size() > my_capacity) {
+            LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(data_pointer, my_capacity);
+            data_pointer = LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(array.size());
 
-            myCapacity = array.size();
+            my_capacity = array.size();
         }
 
-        mySize = array.size();
-        cudaMemcpy(dataPointer, array.dataPointer, byteSize(), cudaMemcpyDeviceToDevice);
+        my_size = array.size();
+        cudaMemcpy(data_pointer, array.data_pointer, byte_size(), cudaMemcpyDeviceToDevice);
     }
 
     inline std::size_t size() const
     {
-        return mySize;
+        return my_size;
     }
 
     inline std::size_t capacity() const
     {
-        return myCapacity;
+        return my_capacity;
     }
 
     inline void resize(std::size_t newSize)
     {
-        resizeImplementation(newSize, 0);
+        resize_implementation(newSize, 0);
     }
 
     inline void resize(std::size_t newSize, const ELEMENT_TYPE& defaultElement)
     {
-        resizeImplementation(newSize, &defaultElement);
+        resize_implementation(newSize, &defaultElement);
     }
 
     inline void reserve(std::size_t newCapacity)
     {
-        if (newCapacity <= myCapacity) {
+        if (newCapacity <= my_capacity) {
             return;
         }
 
         ELEMENT_TYPE *newData = LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(newCapacity);
-        cudaMemcpy(newData, dataPointer, byteSize(), cudaMemcpyDeviceToDevice);
-        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(dataPointer, myCapacity);
+        cudaMemcpy(newData, data_pointer, byte_size(), cudaMemcpyDeviceToDevice);
+        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(data_pointer, my_capacity);
 
-        dataPointer = newData;
-        myCapacity = newCapacity;
+        data_pointer = newData;
+        my_capacity = newCapacity;
     }
 
     inline void load(const ELEMENT_TYPE *hostData)
     {
-        cudaMemcpy(dataPointer, hostData, byteSize(), cudaMemcpyHostToDevice);
+        cudaMemcpy(data_pointer, hostData, byte_size(), cudaMemcpyHostToDevice);
     }
 
     inline void save(ELEMENT_TYPE *hostData) const
     {
-        cudaMemcpy(hostData, dataPointer, byteSize(), cudaMemcpyDeviceToHost);
+        cudaMemcpy(hostData, data_pointer, byte_size(), cudaMemcpyDeviceToHost);
     }
 
-    inline std::size_t byteSize() const
+    inline std::size_t byte_size() const
     {
-        return mySize * sizeof(ELEMENT_TYPE);
+        return my_size * sizeof(ELEMENT_TYPE);
     }
 
     __host__ __device__
     inline ELEMENT_TYPE *data()
     {
-        return dataPointer;
+        return data_pointer;
     }
 
     __host__ __device__
     inline const ELEMENT_TYPE *data() const
     {
-        return dataPointer;
+        return data_pointer;
     }
 
 private:
-    std::size_t mySize;
-    std::size_t myCapacity;
-    ELEMENT_TYPE *dataPointer;
+    std::size_t my_size;
+    std::size_t my_capacity;
+    ELEMENT_TYPE *data_pointer;
 
-    inline void resizeImplementation(std::size_t newSize, const ELEMENT_TYPE *defaultElement = 0)
+    inline void resize_implementation(std::size_t newSize, const ELEMENT_TYPE *defaultElement = 0)
     {
-        if (newSize <= myCapacity) {
+        if (newSize <= my_capacity) {
             if (defaultElement != 0) {
-                for (std::size_t i = mySize; i < newSize; ++i) {
+                for (std::size_t i = my_size; i < newSize; ++i) {
                     cudaMemcpy(
-                        dataPointer + i,
+                        data_pointer + i,
                         defaultElement,
                         sizeof(ELEMENT_TYPE),
                         cudaMemcpyHostToDevice);
                 }
             }
 
-            mySize = newSize;
+            my_size = newSize;
             return;
         }
 
         ELEMENT_TYPE *newData = LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(newSize);
-        cudaMemcpy(newData, dataPointer, byteSize(), cudaMemcpyDeviceToDevice);
-        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(dataPointer, myCapacity);
+        cudaMemcpy(newData, data_pointer, byte_size(), cudaMemcpyDeviceToDevice);
+        LibFlatArray::cuda_allocator<ELEMENT_TYPE>().deallocate(data_pointer, my_capacity);
 
         if (defaultElement != 0) {
-            for (std::size_t i = mySize; i < newSize; ++i) {
+            for (std::size_t i = my_size; i < newSize; ++i) {
                 cudaMemcpy(
                     newData + i,
                     defaultElement,
@@ -178,9 +178,9 @@ private:
             }
         }
 
-        dataPointer = newData;
-        mySize = newSize;
-        myCapacity = newSize;
+        data_pointer = newData;
+        my_size = newSize;
+        my_capacity = newSize;
     }
 
 };
