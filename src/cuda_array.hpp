@@ -1,11 +1,17 @@
-#ifndef LIBGEODECOMP_STORAGE_CUDAARRAY_H
-#define LIBGEODECOMP_STORAGE_CUDAARRAY_H
+/**
+ * Copyright 2016 Andreas Schäfer
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+#ifndef FLAT_ARRAY_CUDA_ARRAY_HPP
+#define FLAT_ARRAY_CUDA_ARRAY_HPP
 
 #include <libflatarray/cuda_allocator.hpp>
-#include <libgeodecomp/io/logger.h>
 #include <cuda.h>
 
-namespace LibGeoDecomp {
+namespace LibFlatArray {
 
 /**
  * A CUDA-enabled counterpart to std::vector. Handles memory
