@@ -171,19 +171,13 @@
 // fixme start
 #define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        std::copy(                                                      \
-            (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                      \
+        for (int i = offset; i < (offset + count); ++i) {               \
+            (&this->BOOST_PP_SEQ_ELEM(1, MEMBER)())[i] =                \
+            ((const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                     \
                 source +                                                \
                 detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
-                stride) +                                               \
-            offset,                                                     \
-            (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                      \
-                source +                                                \
-                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
-                stride) +                                               \
-            count +                                                     \
-            offset,                                                     \
-            &this->BOOST_PP_SEQ_ELEM(1, MEMBER)());                     \
+                stride))[i];                                            \
+        }                                                               \
     }
 
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
