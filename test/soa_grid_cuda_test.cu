@@ -231,6 +231,45 @@ ADD_TEST(TestCUDAGetSetSingleElements)
             }
         }
     }
+
+    for (int z = 0; z < 8; ++z) {
+        for (int y = 0; y < 13; ++y) {
+            for (int x = 0; x < 40; ++x) {
+                ConstructorDestructorTestCellPassive cell = grid.get(x, y, z);
+
+                int expected = 10000 + x + y * 40 + z * 40 * 13;
+                BOOST_TEST(cell.element.val == expected);
+            }
+        }
+    }
+}
+
+ADD_TEST(TestCUDAGetSetMultipleElements)
+{
+    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> grid(35, 25, 15);
+
+    for (int z = 0; z < 15; ++z) {
+        for (int y = 0; y < 25; ++y) {
+            std::vector<ConstructorDestructorTestCellPassive> cells(35);
+            for (int x = 0; x < 35; ++x) {
+                cells[x].element.val = 20000 + x + y * 35 + z * 35 * 25;
+            }
+
+            grid.set(0, y, z, cells.data(), 35);
+        }
+    }
+
+    for (int z = 0; z < 15; ++z) {
+        for (int y = 0; y < 25; ++y) {
+            std::vector<ConstructorDestructorTestCellPassive> cells(35);
+            grid.get(0, y, z, cells.data(), 35);
+
+            for (int x = 0; x < 35; ++x) {
+                int expected = 20000 + x + y * 35 + z * 35 * 25;
+                BOOST_TEST(cells[x].element.val == expected);
+            }
+        }
+    }
 }
 
 }

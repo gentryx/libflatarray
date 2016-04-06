@@ -19,6 +19,7 @@
 #include <libflatarray/detail/save_functor.hpp>
 #include <libflatarray/detail/set_byte_size_functor.hpp>
 #include <libflatarray/detail/set_instance_functor.hpp>
+#include <libflatarray/detail/staging_buffer.hpp>
 
 #include <stdexcept>
 
@@ -56,6 +57,8 @@ template<
 class soa_grid
 {
 public:
+    typedef detail::flat_array::staging_buffer<CELL_TYPE, USE_CUDA_FUNCTORS> staging_buffer_type;
+
     friend class TestAssignment1;
 
     explicit soa_grid(std::size_t dim_x = 0, std::size_t dim_y = 0, std::size_t dim_z = 0) :
@@ -150,25 +153,60 @@ public:
 
     void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE& cell)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(&cell, x, y, z, 1));
+        staging_buffer.resize(1);
+        staging_buffer.load(&cell);
+
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     staging_buffer.data(),
+                     x,
+                     y,
+                     z,
+                     1));
     }
 
     void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE *cells, std::size_t count)
     {
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(cells, x, y, z, count));
+        staging_buffer.resize(count);
+        staging_buffer.load(cells);
+
+        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     staging_buffer.data(),
+                     x,
+                     y,
+                     z,
+                     count));
     }
 
     CELL_TYPE get(std::size_t x, std::size_t y, std::size_t z) const
     {
         CELL_TYPE cell;
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(&cell, x, y, z, 1));
+        const_cast<staging_buffer_type&>(staging_buffer).resize(1);
+        const_cast<staging_buffer_type&>(staging_buffer).prep(&cell);
 
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     const_cast<staging_buffer_type&>(staging_buffer).data(),
+                     x,
+                     y,
+                     z,
+                     1));
+
+        staging_buffer.save(&cell);
         return cell;
     }
 
     void get(std::size_t x, std::size_t y, std::size_t z, CELL_TYPE *cells, std::size_t count) const
     {
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE>(cells, x, y, z, count));
+        const_cast<staging_buffer_type&>(staging_buffer).resize(count);
+        const_cast<staging_buffer_type&>(staging_buffer).prep(cells);
+
+        callback(detail::flat_array::get_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     const_cast<staging_buffer_type&>(staging_buffer).data(),
+                     x,
+                     y,
+                     z,
+                     count));
+
+        staging_buffer.save(cells);
     }
 
     void load(std::size_t x, std::size_t y, std::size_t z, const char *data, std::size_t count)
@@ -218,6 +256,7 @@ private:
     std::size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *data;
+    staging_buffer_type staging_buffer;
 
     template<typename FUNCTOR>
     void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type)

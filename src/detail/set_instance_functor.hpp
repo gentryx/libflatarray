@@ -75,7 +75,7 @@ void set_kernel(const CELL *source, char *target, long count, long x, long y, lo
     long index = accessor_type::gen_index(x + offset, y, z);
     accessor_type accessor(target, index);
 
-    // accessor << *source;
+    accessor << source[offset];
 }
 
 /**
@@ -96,7 +96,8 @@ public:
         y(y),
         z(z),
         count(count)
-    {}
+    {
+    }
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
