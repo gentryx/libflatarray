@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_CUDA_ALLOCATOR_HPP
 #define FLAT_ARRAY_CUDA_ALLOCATOR_HPP
 
+#ifdef __CUDACC__
+
 #ifdef __ICC
 // disabling this warning as implicit type conversion here as it's an intented feature for dim3
 #pragma warning push
@@ -47,5 +49,7 @@ public:
 };
 
 }
+
+#endif
 
 #endif

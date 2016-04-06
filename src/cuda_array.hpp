@@ -9,6 +9,9 @@
 #define FLAT_ARRAY_CUDA_ARRAY_HPP
 
 #include <libflatarray/cuda_allocator.hpp>
+
+#ifdef __CUDACC__
+
 #include <cuda.h>
 
 namespace LibFlatArray {
@@ -186,5 +189,7 @@ private:
 };
 
 }
+
+#endif
 
 #endif
