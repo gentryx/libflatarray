@@ -170,7 +170,7 @@ ADD_TEST(TestCUDAConstructionDestruction)
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
-                    ConstructorDestructorTestCellPassive cell;
+                    ConstructorDestructorTestCellPassive cell((x + 1) * (y + 1), true);
                     cell.element.val = x + y * 20 + z * 20 * 10;
                     buffer.set(x, y, z, cell);
 
@@ -195,6 +195,8 @@ ADD_TEST(TestCUDAConstructionDestruction)
                     int expected = x + y * 20 + z * 20 * 10 + 100000;
 
                     BOOST_TEST(cell.element.val == expected);
+                    BOOST_TEST(cell.temperature == 0);
+                    BOOST_TEST(cell.alive == false);
                 }
             }
         }
@@ -210,6 +212,8 @@ ADD_TEST(TestCUDAConstructionDestruction)
                     int expected = x + y * 20 + z * 20 * 10 + 1100000;
 
                     BOOST_TEST(cell.element.val == expected);
+                    BOOST_TEST(cell.temperature == 0);
+                    BOOST_TEST(cell.alive == false);
                 }
             }
         }
@@ -225,7 +229,7 @@ ADD_TEST(TestCUDAGetSetSingleElements)
     for (int z = 0; z < 8; ++z) {
         for (int y = 0; y < 13; ++y) {
             for (int x = 0; x < 40; ++x) {
-                ConstructorDestructorTestCellPassive cell;
+                ConstructorDestructorTestCellPassive cell((x + 2) * (y + 2), true);
                 cell.element.val = 10000 + x + y * 40 + z * 40 * 13;
                 grid.set(x, y, z, cell);
             }
@@ -239,6 +243,8 @@ ADD_TEST(TestCUDAGetSetSingleElements)
 
                 int expected = 10000 + x + y * 40 + z * 40 * 13;
                 BOOST_TEST(cell.element.val == expected);
+                BOOST_TEST(cell.temperature == ((x + 2) * (y + 2)));
+                BOOST_TEST(cell.alive       == true);
             }
         }
     }
@@ -252,6 +258,8 @@ ADD_TEST(TestCUDAGetSetMultipleElements)
         for (int y = 0; y < 25; ++y) {
             std::vector<ConstructorDestructorTestCellPassive> cells(35);
             for (int x = 0; x < 35; ++x) {
+                cells[x].alive = x % 2;
+                cells[x].temperature = x * y * z;
                 cells[x].element.val = 20000 + x + y * 35 + z * 35 * 25;
             }
 
@@ -266,10 +274,18 @@ ADD_TEST(TestCUDAGetSetMultipleElements)
 
             for (int x = 0; x < 35; ++x) {
                 int expected = 20000 + x + y * 35 + z * 35 * 25;
+
                 BOOST_TEST(cells[x].element.val == expected);
+                BOOST_TEST(cells[x].alive == (x % 2));
+                BOOST_TEST(cells[x].temperature == (x * y * z));
             }
         }
     }
+}
+
+ADD_TEST(TestCUDALoadSaveElements)
+{
+    
 }
 
 }
