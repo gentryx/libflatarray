@@ -179,6 +179,17 @@
         inline                                                          \
         void load(const char *source, std::size_t count)                \
         {                                                               \
+            load(source, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void load(                                                      \
+            const char *source,                                         \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride)                                         \
+        {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
                 CELL_TYPE,                                              \
@@ -188,6 +199,17 @@
         __host__ __device__                                             \
         inline                                                          \
         void save(char *target, std::size_t count) const                \
+        {                                                               \
+            save(target, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(                                                      \
+            char *target,                                               \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride) const                                   \
         {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
@@ -351,8 +373,19 @@
         inline                                                          \
         void save(char *target, std::size_t count) const                \
         {                                                               \
+            save(target, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(                                                      \
+            char *target,                                               \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride) const                                   \
+        {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -464,8 +497,19 @@
         inline                                                          \
         void load(const char *source, std::size_t count)                \
         {                                                               \
+            load(source, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void load(                                                      \
+            const char *source,                                         \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride)                                         \
+        {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN,                  \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -474,8 +518,19 @@
         inline                                                          \
         void save(char *target, std::size_t count) const                \
         {                                                               \
+            save(target, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(                                                      \
+            char *target,                                               \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride) const                                   \
+        {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
@@ -647,8 +702,19 @@
         inline                                                          \
         void save(char *target, std::size_t count) const                \
         {                                                               \
+            save(target, count, 0, count);                              \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        inline                                                          \
+        void save(                                                      \
+            char *target,                                               \
+            std::size_t count,                                          \
+            std::size_t offset,                                         \
+            std::size_t stride) const                                   \
+        {                                                               \
             BOOST_PP_SEQ_FOR_EACH(                                      \
-                LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT,                 \
+                LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
