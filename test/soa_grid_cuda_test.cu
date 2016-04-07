@@ -163,35 +163,35 @@ ADD_TEST(TestCUDAConstructionDestruction)
     char *data = 0;
     {
         // prep device memory with consecutive numbers:
-        soa_grid<ConstructorDestructorTestCellPassive, fake_cuda_allocator<char>, true> grid(20, 10, 5);
-        data = grid.get_data();
+        soa_grid<ConstructorDestructorTestCellPassive, fake_cuda_allocator<char>, true> device_grid(20, 10, 5);
+        data = device_grid.get_data();
 
-        soa_grid<ConstructorDestructorTestCellPassive> buffer(20, 10, 5);
+        soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
                     ConstructorDestructorTestCellPassive cell((x + 1) * (y + 1), true);
                     cell.element.val = x + y * 20 + z * 20 * 10;
-                    buffer.set(x, y, z, cell);
+                    host_grid.set(x, y, z, cell);
 
-                    cell = buffer.get(x, y, z);
+                    cell = host_grid.get(x, y, z);
                 }
             }
         }
-        cudaMemcpy(grid.get_data(), buffer.get_data(), grid.byte_size(), cudaMemcpyHostToDevice);
+        cudaMemcpy(device_grid.get_data(), host_grid.get_data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
 
     }
     {
         // ensure c-tor was run by checking increment on all elements:
-        soa_grid<ConstructorDestructorTestCellActive,  fake_cuda_allocator<char>, true> grid(20, 10, 5);
-        BOOST_TEST(data == grid.get_data());
+        soa_grid<ConstructorDestructorTestCellActive,  fake_cuda_allocator<char>, true> device_grid(20, 10, 5);
+        BOOST_TEST(data == device_grid.get_data());
 
-        soa_grid<ConstructorDestructorTestCellPassive> buffer(20, 10, 5);
-        cudaMemcpy(buffer.get_data(), grid.get_data(), grid.byte_size(), cudaMemcpyDeviceToHost);
+        soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
+        cudaMemcpy(host_grid.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
-                    ConstructorDestructorTestCellPassive cell = buffer.get(x, y, z);
+                    ConstructorDestructorTestCellPassive cell = host_grid.get(x, y, z);
                     int expected = x + y * 20 + z * 20 * 10 + 100000;
 
                     BOOST_TEST(cell.element.val == expected);
@@ -203,12 +203,12 @@ ADD_TEST(TestCUDAConstructionDestruction)
     }
     {
         // ensure d-tor was run by checking increment on all elements:
-        soa_grid<ConstructorDestructorTestCellPassive> buffer(20, 10, 5);
-        cudaMemcpy(buffer.get_data(), data, buffer.byte_size(), cudaMemcpyDeviceToHost);
+        soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
+        cudaMemcpy(host_grid.get_data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
-                    ConstructorDestructorTestCellPassive cell = buffer.get(x, y, z);
+                    ConstructorDestructorTestCellPassive cell = host_grid.get(x, y, z);
                     int expected = x + y * 20 + z * 20 * 10 + 1100000;
 
                     BOOST_TEST(cell.element.val == expected);
@@ -224,14 +224,14 @@ ADD_TEST(TestCUDAConstructionDestruction)
 
 ADD_TEST(TestCUDAGetSetSingleElements)
 {
-    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> grid(40, 13, 8);
+    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> device_grid(40, 13, 8);
 
     for (int z = 0; z < 8; ++z) {
         for (int y = 0; y < 13; ++y) {
             for (int x = 0; x < 40; ++x) {
                 ConstructorDestructorTestCellPassive cell((x + 2) * (y + 2), true);
                 cell.element.val = 10000 + x + y * 40 + z * 40 * 13;
-                grid.set(x, y, z, cell);
+                device_grid.set(x, y, z, cell);
             }
         }
     }
@@ -239,7 +239,7 @@ ADD_TEST(TestCUDAGetSetSingleElements)
     for (int z = 0; z < 8; ++z) {
         for (int y = 0; y < 13; ++y) {
             for (int x = 0; x < 40; ++x) {
-                ConstructorDestructorTestCellPassive cell = grid.get(x, y, z);
+                ConstructorDestructorTestCellPassive cell = device_grid.get(x, y, z);
 
                 int expected = 10000 + x + y * 40 + z * 40 * 13;
                 BOOST_TEST(cell.element.val == expected);
@@ -252,7 +252,7 @@ ADD_TEST(TestCUDAGetSetSingleElements)
 
 ADD_TEST(TestCUDAGetSetMultipleElements)
 {
-    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> grid(35, 25, 15);
+    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> device_grid(35, 25, 15);
 
     for (int z = 0; z < 15; ++z) {
         for (int y = 0; y < 25; ++y) {
@@ -263,14 +263,14 @@ ADD_TEST(TestCUDAGetSetMultipleElements)
                 cells[x].element.val = 20000 + x + y * 35 + z * 35 * 25;
             }
 
-            grid.set(0, y, z, cells.data(), 35);
+            device_grid.set(0, y, z, cells.data(), 35);
         }
     }
 
     for (int z = 0; z < 15; ++z) {
         for (int y = 0; y < 25; ++y) {
             std::vector<ConstructorDestructorTestCellPassive> cells(35);
-            grid.get(0, y, z, cells.data(), 35);
+            device_grid.get(0, y, z, cells.data(), 35);
 
             for (int x = 0; x < 35; ++x) {
                 int expected = 20000 + x + y * 35 + z * 35 * 25;
@@ -285,7 +285,6 @@ ADD_TEST(TestCUDAGetSetMultipleElements)
 
 ADD_TEST(TestCUDALoadSaveElements)
 {
-    // fixme: rename all grids to host/device_grid
     soa_grid<ConstructorDestructorTestCellPassive> host_grid(21, 10, 9);
     for (int z = 0; z < 9; ++z) {
         for (int y = 0; y < 10; ++y) {
@@ -302,10 +301,8 @@ ADD_TEST(TestCUDALoadSaveElements)
     std::vector<char> buffer(10 * (sizeof(int) + sizeof(double) + sizeof(bool)));
     host_grid.save(11, 9, 8, buffer.data(), 10);
 
-    // fixme: get rid of cuda_array here, buffering should be done on the device
-    cuda_array<char> array(buffer.data(), buffer.size());
     soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> device_grid(31, 20, 19);
-    device_grid.load(21, 19, 18, array.data(), 10);
+    device_grid.load(21, 19, 18, buffer.data(), 10);
 
     soa_grid<ConstructorDestructorTestCellPassive> host_grid2(31, 20, 19);
     cudaMemcpy(host_grid2.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
