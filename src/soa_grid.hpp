@@ -211,7 +211,13 @@ public:
 
     void load(std::size_t x, std::size_t y, std::size_t z, const char *data, std::size_t count)
     {
-        callback(detail::flat_array::load_functor<CELL_TYPE>(x, y, z, data, count));
+        callback(detail::flat_array::load_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     x,
+                     y,
+                     z,
+                     // fixme: needs staging bufffer here
+                     data,
+                     count));
     }
 
     void save(std::size_t x, std::size_t y, std::size_t z, char *data, std::size_t count) const

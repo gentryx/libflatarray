@@ -103,13 +103,13 @@ public:
 
 LIBFLATARRAY_REGISTER_SOA(ConstructorDestructorTestCellActive,
                           ((double)(temperature))
-                          ((bool)(alive))
-                          ((ActiveElement)(element)) )
+                          ((ActiveElement)(element))
+                          ((bool)(alive)) )
 
 LIBFLATARRAY_REGISTER_SOA(ConstructorDestructorTestCellPassive,
                           ((double)(temperature))
-                          ((bool)(alive))
-                          ((PassiveElement)(element)) )
+                          ((PassiveElement)(element))
+                          ((bool)(alive)) )
 
 namespace LibFlatArray {
 
@@ -285,9 +285,52 @@ ADD_TEST(TestCUDAGetSetMultipleElements)
 
 ADD_TEST(TestCUDALoadSaveElements)
 {
-    
+    // fixme: rename all grids to host/device_grid
+    soa_grid<ConstructorDestructorTestCellPassive> host_grid(21, 10, 9);
+    for (int z = 0; z < 9; ++z) {
+        for (int y = 0; y < 10; ++y) {
+            for (int x = 0; x < 21; ++x) {
+                ConstructorDestructorTestCellPassive cell;
+                cell.alive = ((x % 3) == 0);
+                cell.temperature = x * y * z * -1;
+                cell.element.val = 30000 + x + y * 21 + z * 21 * 10;
+                host_grid.set(x, y, z, cell);
+            }
+        }
+    }
+
+    std::vector<char> buffer(10 * (sizeof(int) + sizeof(double) + sizeof(bool)));
+    host_grid.save(11, 9, 8, buffer.data(), 10);
+
+    // fixme: get rid of cuda_array here, buffering should be done on the device
+    cuda_array<char> array(buffer.data(), buffer.size());
+    soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> device_grid(31, 20, 19);
+    device_grid.load(21, 19, 18, array.data(), 10);
+
+    soa_grid<ConstructorDestructorTestCellPassive> host_grid2(31, 20, 19);
+    cudaMemcpy(host_grid2.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
+
+    for (int i = 0; i < 10; ++i) {
+        ConstructorDestructorTestCellPassive cell = host_grid2.get(21 + i, 19, 18);
+
+        bool expectedAlive = (((i + 11) % 3) == 0);
+        double expectedTemperature = (11 + i) * 9 * 8 * -1;
+        int expectedVal = 30000 + (11 + i) + 9 * 21 + 8 * 21 * 10;
+
+        BOOST_TEST(cell.alive == expectedAlive);
+        BOOST_TEST(cell.temperature == expectedTemperature);
+        BOOST_TEST(cell.element.val == expectedVal);
+    }
+
+    cudaDeviceSynchronize();
+    cudaError_t error = cudaGetLastError();
+    if (error != cudaSuccess) {
+        std::cerr << "ERROR: " << cudaGetErrorString(error) << "\n";
+        throw std::runtime_error("CUDA error");
+    }
 }
 
+// fixme: need test with array member, too!
 }
 
 int main(int argc, char **argv)
