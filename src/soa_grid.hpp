@@ -226,7 +226,19 @@ public:
 
     void save(std::size_t x, std::size_t y, std::size_t z, char *data, std::size_t count) const
     {
-        callback(detail::flat_array::save_functor<CELL_TYPE>(x, y, z, data, count));
+        const_cast<char_staging_buffer_type&>(raw_staging_buffer).resize(
+            count *
+            aggregated_member_size<CELL_TYPE>::VALUE);
+        const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(data);
+
+        callback(detail::flat_array::save_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+                     x,
+                     y,
+                     z,
+                     const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
+                     count));
+
+        raw_staging_buffer.save(data);
     }
 
     std::size_t byte_size() const

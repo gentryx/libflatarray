@@ -298,12 +298,24 @@ ADD_TEST(TestCUDALoadSaveElements)
         }
     }
 
-    std::vector<char> buffer(10 * (sizeof(int) + sizeof(double) + sizeof(bool)));
+    std::vector<char> buffer(10 * aggregated_member_size<ConstructorDestructorTestCellPassive>::VALUE);
     host_grid.save(11, 9, 8, buffer.data(), 10);
 
     soa_grid<ConstructorDestructorTestCellPassive, cuda_allocator<char>, true> device_grid(31, 20, 19);
     device_grid.load(21, 19, 18, buffer.data(), 10);
 
+    for (int i = 0; i < 20; ++i) {
+        ConstructorDestructorTestCellPassive cell;
+        cell.alive = i % 4;
+        cell.temperature = 4711 + i;
+        cell.element.val = 100 * i;
+        device_grid.set(i + 1, 5, 6, cell);
+    }
+
+    buffer.resize(20 * aggregated_member_size<ConstructorDestructorTestCellPassive>::VALUE);
+    device_grid.save(1, 5, 6, buffer.data(), 20);
+
+    // very load:
     soa_grid<ConstructorDestructorTestCellPassive> host_grid2(31, 20, 19);
     cudaMemcpy(host_grid2.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
 
@@ -319,6 +331,22 @@ ADD_TEST(TestCUDALoadSaveElements)
         BOOST_TEST(cell.element.val == expectedVal);
     }
 
+    // verify save:
+    double *temperature = (double*)(buffer.data() +  0 * 20);
+    int *val            = (int*)   (buffer.data() +  8 * 20);
+    bool *alive         = (bool*)  (buffer.data() + 12 * 20);
+
+    for (int i = 0; i < 20; ++i) {
+        bool expectedAlive = i % 4;
+        double expectedTemperature = 4711 + i;
+        int expectedVal = i * 100;
+
+        BOOST_TEST(expectedAlive       == alive[i]);
+        BOOST_TEST(expectedTemperature == temperature[i]);
+        BOOST_TEST(expectedVal         == val[i]);
+    }
+
+    // sanity check:
     cudaDeviceSynchronize();
     cudaError_t error = cudaGetLastError();
     if (error != cudaSuccess) {
