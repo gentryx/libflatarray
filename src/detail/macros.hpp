@@ -168,7 +168,6 @@
         LIBFLATARRAY_COPY_SOA_MEMBER_OUT(      MEMBER_INDEX, CELL, MEMBER), \
         LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_OUT(MEMBER_INDEX, CELL, MEMBER))
 
-// fixme start
 #define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
         for (int i = offset; i < (offset + count); ++i) {               \
@@ -235,7 +234,6 @@
         MEMBER,                                                         \
         LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_OUT(      MEMBER_INDEX, CELL, MEMBER), \
         LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER))
-// ...fixme end
 
 #define LIBFLATARRAY_COPY_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER)        \
     {                                                                   \
