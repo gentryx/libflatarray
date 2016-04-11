@@ -608,12 +608,54 @@ ADD_TEST(TestCUDAArrayMembersConstructDestruct)
     }
 
     fake_cuda_allocator<char>().deallocate_all();
+}
 
-    // test set/get multiple elements:
-    // fixme
+ADD_TEST(TestCUDAArrayMembersLoadSave)
+{
+    soa_grid<CellWithPassiveArrayMember, cuda_allocator<char>, true> device_grid(45, 35, 25);
+    for (int z = 0; z < 25; ++z) {
+        for (int y = 0; y < 35; ++y) {
+            for (int x = 0; x < 45; ++x) {
+                CellWithPassiveArrayMember cell;
+                cell.i[0] = x;
+                cell.i[1] = y;
+                cell.i[2] = z;
+                cell.j = x * y * z;
+                cell.elements[0].val = 4711 + x * y;
+                cell.elements[1].val =  666 + y * z;
 
-    // test load/save
-    // fixme
+                device_grid.set(x, y, z, cell);
+            }
+        }
+    }
+
+    std::vector<char> buffer(aggregated_member_size<CellWithPassiveArrayMember>::VALUE * 33);
+    device_grid.save(12, 34, 24, buffer.data(), 33);
+
+    soa_grid<CellWithPassiveArrayMember, cuda_allocator<char>, true> device_grid2(35, 20, 5);
+    device_grid2.load(2, 19, 4, buffer.data(), 33);
+
+    for (int x = 0; x < 33; ++x) {
+        CellWithPassiveArrayMember cell = device_grid2.get(x + 2, 19, 4);
+
+        int expectedI0 = x + 12;
+        int expectedI1 = 34;
+        int expectedI2 = 24;
+
+        int expectedJ = (x + 12) * 34 * 24;
+
+        int expectedElements0 = 4711 + (x + 12) * 34;
+        int expectedElements1 =  666 + 34 * 24;
+
+        BOOST_TEST(cell.i[0] == expectedI0);
+        BOOST_TEST(cell.i[1] == expectedI1);
+        BOOST_TEST(cell.i[2] == expectedI2);
+
+        BOOST_TEST(cell.j == expectedJ);
+
+        BOOST_TEST(cell.elements[0].val == expectedElements0);
+        BOOST_TEST(cell.elements[1].val == expectedElements1);
+    }
 }
 
 }

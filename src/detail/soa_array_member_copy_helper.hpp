@@ -29,12 +29,17 @@ public:
             __host__
             __device__
             inline
-            void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
+            void operator()(
+                const MEMBER *source,
+                MEMBER *data,
+                const std::size_t count,
+                const std::size_t offset,
+                const std::size_t stride)
             {
-                copy_array_in<INDEX - 1, DUMMY>()(source, data, count);
+                copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
 
-                for (int i = 0; i < count; ++i) {
-                    data[SIZE * (INDEX - 1) + i] = source[count * (INDEX - 1) + i];
+                for (int i = offset; i < (offset + count); ++i) {
+                    data[SIZE * (INDEX - 1) + i] = source[stride * (INDEX - 1) + i];
                 }
             }
         };
@@ -46,7 +51,12 @@ public:
             __host__
             __device__
             inline
-            void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
+            void operator()(
+                const MEMBER *source,
+                MEMBER *data,
+                const std::size_t count,
+                const std::size_t offset,
+                const std::size_t stride)
             {}
         };
 
@@ -57,12 +67,17 @@ public:
             __host__
             __device__
             inline
-            void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
+            void operator()(
+                MEMBER *target,
+                const MEMBER *data,
+                const std::size_t count,
+                const std::size_t offset,
+                const std::size_t stride)
             {
-                copy_array_out<INDEX - 1, DUMMY>()(target, data, count);
+                copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
 
-                for (int i = 0; i < count; ++i) {
-                    target[count * (INDEX - 1) + i] = data[SIZE * (INDEX - 1) + i];
+                for (int i = offset; i < (offset + count); ++i) {
+                    target[stride * (INDEX - 1) + i] = data[SIZE * (INDEX - 1) + i];
                 }
             }
         };
@@ -74,7 +89,12 @@ public:
             __host__
             __device__
             inline
-            void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
+            void operator()(
+                MEMBER *target,
+                const MEMBER *data,
+                const std::size_t count,
+                const std::size_t offset,
+                const std::size_t stride)
             {}
         };
     };

@@ -188,11 +188,11 @@
                 (const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                  \
                     source +                                            \
                     detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
-                    stride) +                                           \
+                    stride),                                            \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]),             \
+                count,                                                  \
                 offset,                                                 \
-                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]) +            \
-                offset,                                                 \
-                count);                                                 \
+                stride);                                                \
     }
 
 #define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
@@ -222,11 +222,11 @@
                 (BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                        \
                     target +                                            \
                     detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
-                    stride) +                                           \
+                    stride),                                            \
+                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]),             \
+                count,                                                  \
                 offset,                                                 \
-                &(this->BOOST_PP_SEQ_ELEM(1, MEMBER)()[0]) +            \
-                offset,                                                 \
-                count);                                                 \
+                stride);                                                \
     }
 
 #define LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT(MEMBER_INDEX, CELL, MEMBER) \
