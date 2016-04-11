@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Andreas Schäfer
+ * Copyright 2015-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -26,14 +26,16 @@ public:
         class copy_array_in
         {
         public:
+            __host__
+            __device__
             inline
             void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
             {
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count);
-                std::copy(
-                    source + count * (INDEX - 1),
-                    source + count * (INDEX + 0),
-                    data + SIZE * (INDEX - 1));
+
+                for (int i = 0; i < count; ++i) {
+                    data[SIZE * (INDEX - 1) + i] = source[count * (INDEX - 1) + i];
+                }
             }
         };
 
@@ -41,6 +43,8 @@ public:
         class copy_array_in<0, DUMMY>
         {
         public:
+            __host__
+            __device__
             inline
             void operator()(const MEMBER *source, MEMBER *data, const std::size_t count)
             {}
@@ -50,14 +54,16 @@ public:
         class copy_array_out
         {
         public:
+            __host__
+            __device__
             inline
             void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
             {
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count);
-                std::copy(
-                    data + SIZE * (INDEX - 1),
-                    data + SIZE * (INDEX - 1) + count,
-                    target + count * (INDEX - 1));
+
+                for (int i = 0; i < count; ++i) {
+                    target[count * (INDEX - 1) + i] = data[SIZE * (INDEX - 1) + i];
+                }
             }
         };
 
@@ -65,6 +71,8 @@ public:
         class copy_array_out<0, DUMMY>
         {
         public:
+            __host__
+            __device__
             inline
             void operator()(MEMBER *target, const MEMBER *data, const std::size_t count)
             {}
@@ -83,11 +91,15 @@ public:
             class reference
             {
             public:
+                __host__
+                __device__
                 inline
                 explicit reference(char *data) :
                     data(data)
                 {}
 
+                __host__
+                __device__
                 inline
                 MEMBER& operator[](const std::size_t offset)
                 {
@@ -101,11 +113,15 @@ public:
             class const_reference
             {
             public:
+                __host__
+                __device__
                 inline
                 explicit const_reference(const char *data) :
                     data(data)
                 {}
 
+                __host__
+                __device__
                 inline
                 const MEMBER& operator[](const std::size_t offset)
                 {
@@ -128,6 +144,8 @@ public:
                     class copy_in
                     {
                     public:
+                        __host__
+                        __device__
                         inline
                         void operator()(const CELL& cell, MEMBER *data)
                         {
@@ -140,6 +158,8 @@ public:
                     class copy_in<0, DUMMY>
                     {
                     public:
+                        __host__
+                        __device__
                         inline
                         void operator()(const CELL& cell, MEMBER *data)
                         {}
@@ -149,6 +169,8 @@ public:
                     class copy_out
                     {
                     public:
+                        __host__
+                        __device__
                         inline
                         void operator()(CELL& cell, const MEMBER *data)
                         {
@@ -161,6 +183,8 @@ public:
                     class copy_out<0, DUMMY>
                     {
                     public:
+                        __host__
+                        __device__
                         inline
                         void operator()(CELL& cell, const MEMBER *data)
                         {}

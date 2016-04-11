@@ -173,6 +173,7 @@ private:
 
         at(0).copy_members(other[0], other.size());
         elements = other.size();
+        // fixme: add cuda test
     }
 };
 

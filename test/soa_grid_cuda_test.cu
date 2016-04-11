@@ -101,6 +101,42 @@ public:
     PassiveElement element;
 };
 
+class CellWithArrayMember
+{
+public:
+    __host__
+    __device__
+    inline
+    explicit CellWithArrayMember(int j = 0) :
+        j(j)
+    {
+        i[0] = j + 1;
+        i[1] = j + 2;
+        i[2] = j + 3;
+
+        x[0] = j + 0.4;
+        x[1] = j + 0.5;
+    }
+
+    __host__
+    __device__
+    inline
+    CellWithArrayMember(int newI[3], double newX[2], int j) :
+        j(j)
+    {
+        i[0] = newI[0];
+        i[1] = newI[1];
+        i[1] = newI[2];
+
+        x[0] = newX[0];
+        x[1] = newX[1];
+    }
+
+    int i[3];
+    int j;
+    double x[2];
+};
+
 LIBFLATARRAY_REGISTER_SOA(ConstructorDestructorTestCellActive,
                           ((double)(temperature))
                           ((ActiveElement)(element))
@@ -110,6 +146,11 @@ LIBFLATARRAY_REGISTER_SOA(ConstructorDestructorTestCellPassive,
                           ((double)(temperature))
                           ((PassiveElement)(element))
                           ((bool)(alive)) )
+
+LIBFLATARRAY_REGISTER_SOA(CellWithArrayMember,
+                          ((int)(i)(3))
+                          ((int)(j))
+                          ((double)(x)(2)) )
 
 namespace LibFlatArray {
 
@@ -355,7 +396,63 @@ ADD_TEST(TestCUDALoadSaveElements)
     }
 }
 
-// fixme: need test with array member, too!
+ADD_TEST(TestCUDAArrayMembers)
+{
+    // test set/get single elements:
+    soa_grid<CellWithArrayMember, cuda_allocator<char>, true> device_grid(12, 23, 34);
+
+    for (int z = 0; z < 34; ++z) {
+        for (int y = 0; y < 23; ++y) {
+            for (int x = 0; x < 12; ++x) {
+                CellWithArrayMember cell;
+                cell.i[0] = x;
+                cell.i[1] = y;
+                cell.i[2] = z;
+                cell.j    = x * y * z;
+                cell.x[0] = x + y + 0.1;
+                cell.x[1] = y + z + 0.2;
+
+                device_grid.set(x, y, z, cell);
+            }
+        }
+    }
+
+    for (int z = 0; z < 34; ++z) {
+        for (int y = 0; y < 23; ++y) {
+            for (int x = 0; x < 12; ++x) {
+                int expectedCellI0 = x;
+                int expectedCellI1 = y;
+                int expectedCellI2 = z;
+                int expectedCellJ  = x * y * z;
+                double expectedCellX0 = x + y + 0.1;
+                double expectedCellX1 = y + z + 0.2;
+
+                CellWithArrayMember cell = device_grid.get(x, y, z);
+
+                BOOST_TEST(expectedCellI0 == cell.i[0]);
+                BOOST_TEST(expectedCellI1 == cell.i[1]);
+                BOOST_TEST(expectedCellI2 == cell.i[2]);
+
+                BOOST_TEST(expectedCellJ  == cell.j);
+
+                BOOST_TEST(expectedCellX0 == cell.x[0]);
+                BOOST_TEST(expectedCellX1 == cell.x[1]);
+            }
+        }
+    }
+
+    // test construction/destruction of elements:
+    // fixme
+
+    // fixme
+
+    // test set/get multiple elements:
+    // fixme
+
+    // test load/save
+    // fixme
+}
+
 }
 
 int main(int argc, char **argv)
