@@ -47,7 +47,8 @@ public:
 
     template<int OTHER_SIZE>
     inline
-    soa_array(soa_array<CELL, OTHER_SIZE>& other)
+    __host__ __device__
+     soa_array(soa_array<CELL, OTHER_SIZE>& other)
     {
         construct_all_instances();
         copy_in(other);
@@ -56,6 +57,7 @@ public:
 
     template<int OTHER_SIZE>
     inline
+    __host__ __device__
     soa_array(const soa_array<CELL, OTHER_SIZE>& other)
     {
         construct_all_instances();
@@ -63,6 +65,7 @@ public:
     }
 
     inline
+    __host__ __device__
     ~soa_array()
     {
         for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
@@ -73,6 +76,7 @@ public:
 
     template<int OTHER_SIZE>
     inline
+    __host__ __device__
     soa_array& operator=(soa_array<CELL, OTHER_SIZE>& other)
     {
         copy_in(other);
@@ -81,6 +85,7 @@ public:
 
     template<int OTHER_SIZE>
     inline
+    __host__ __device__
     soa_array& operator=(const soa_array<CELL, OTHER_SIZE>& other)
     {
         copy_in(other);
@@ -115,14 +120,15 @@ public:
         return (*this)[index];
     }
 
-   inline
+    inline
     __host__ __device__
     void operator<<(const CELL& cell)
     {
+#ifndef __CUDA_ARCH__
         if (elements >= SIZE) {
             throw std::out_of_range("capacity exceeded");
         }
-
+#endif
         (*this)[elements] = cell;
         ++elements;
     }
@@ -156,6 +162,7 @@ private:
     char data[BYTE_SIZE];
 
     inline
+    __host__ __device__
     void construct_all_instances()
     {
         for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
@@ -165,6 +172,7 @@ private:
 
     template<int OTHER_SIZE>
     inline
+    __host__ __device__
     void copy_in(const soa_array<CELL, OTHER_SIZE>& other)
     {
         if (other.size() > SIZE) {
@@ -173,7 +181,6 @@ private:
 
         at(0).copy_members(other[0], other.size());
         elements = other.size();
-        // fixme: add cuda test
     }
 };
 
