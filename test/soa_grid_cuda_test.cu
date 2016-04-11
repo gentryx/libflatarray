@@ -490,6 +490,53 @@ ADD_TEST(TestCUDAArrayMembersGetSet)
     }
 }
 
+ADD_TEST(TestCUDAArrayMembersGetSetMultiple)
+{
+    // test set/get single elements:
+    soa_grid<CellWithArrayMember, cuda_allocator<char>, true> device_grid(40, 23, 34);
+
+    for (int z = 0; z < 34; ++z) {
+        for (int y = 0; y < 23; ++y) {
+            CellWithArrayMember cells[40];
+            for (int x = 0; x < 40; ++x) {
+                cells[x].i[0] = x;
+                cells[x].i[1] = y;
+                cells[x].i[2] = z;
+                cells[x].j    = x * y * z;
+                cells[x].x[0] = x + y + 0.1;
+                cells[x].x[1] = y + z + 0.2;
+            }
+
+            device_grid.set(0, y, z, cells, 40);
+        }
+    }
+
+    for (int z = 0; z < 34; ++z) {
+        for (int y = 0; y < 23; ++y) {
+            CellWithArrayMember cells[40];
+            device_grid.get(0, y, z, cells, 40);
+
+            for (int x = 0; x < 40; ++x) {
+                int expectedCellI0 = x;
+                int expectedCellI1 = y;
+                int expectedCellI2 = z;
+                int expectedCellJ  = x * y * z;
+                double expectedCellX0 = x + y + 0.1;
+                double expectedCellX1 = y + z + 0.2;
+
+                BOOST_TEST(expectedCellI0 == cells[x].i[0]);
+                BOOST_TEST(expectedCellI1 == cells[x].i[1]);
+                BOOST_TEST(expectedCellI2 == cells[x].i[2]);
+
+                BOOST_TEST(expectedCellJ  == cells[x].j);
+
+                BOOST_TEST(expectedCellX0 == cells[x].x[0]);
+                BOOST_TEST(expectedCellX1 == cells[x].x[1]);
+            }
+        }
+    }
+}
+
 ADD_TEST(TestCUDAArrayMembersConstructDestruct)
 {
     char *data = 0;
