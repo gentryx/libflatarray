@@ -137,6 +137,44 @@ public:
     double x[2];
 };
 
+class CellWithActiveArrayMember
+{
+public:
+    __host__
+    __device__
+    inline
+    explicit CellWithActiveArrayMember(int j = 0) :
+        j(j)
+    {
+        i[0] = j + 1;
+        i[1] = j + 2;
+        i[2] = j + 3;
+    }
+
+    int i[3];
+    int j;
+    ActiveElement elements[2];
+};
+
+class CellWithPassiveArrayMember
+{
+public:
+    __host__
+    __device__
+    inline
+    explicit CellWithPassiveArrayMember(int j = 0) :
+        j(j)
+    {
+        i[0] = j + 1;
+        i[1] = j + 2;
+        i[2] = j + 3;
+    }
+
+    int i[3];
+    int j;
+    PassiveElement elements[2];
+};
+
 LIBFLATARRAY_REGISTER_SOA(ConstructorDestructorTestCellActive,
                           ((double)(temperature))
                           ((ActiveElement)(element))
@@ -151,6 +189,16 @@ LIBFLATARRAY_REGISTER_SOA(CellWithArrayMember,
                           ((int)(i)(3))
                           ((int)(j))
                           ((double)(x)(2)) )
+
+LIBFLATARRAY_REGISTER_SOA(CellWithActiveArrayMember,
+                          ((int)(i)(3))
+                          ((int)(j))
+                          ((ActiveElement)(elements)(2)) )
+
+LIBFLATARRAY_REGISTER_SOA(CellWithPassiveArrayMember,
+                          ((int)(i)(3))
+                          ((int)(j))
+                          ((PassiveElement)(elements)(2)) )
 
 namespace LibFlatArray {
 
@@ -396,7 +444,7 @@ ADD_TEST(TestCUDALoadSaveElements)
     }
 }
 
-ADD_TEST(TestCUDAArrayMembers)
+ADD_TEST(TestCUDAArrayMembersGetSet)
 {
     // test set/get single elements:
     soa_grid<CellWithArrayMember, cuda_allocator<char>, true> device_grid(12, 23, 34);
@@ -440,11 +488,79 @@ ADD_TEST(TestCUDAArrayMembers)
             }
         }
     }
+}
 
-    // test construction/destruction of elements:
-    // fixme
+ADD_TEST(TestCUDAArrayMembersConstructDestruct)
+{
+    char *data = 0;
+    {
+        // prep device memory with consecutive numbers:
+        soa_grid<CellWithPassiveArrayMember, fake_cuda_allocator<char>, true> device_grid(8, 9, 13);
+        data = device_grid.get_data();
 
-    // fixme
+        soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
+        for (int z = 0; z < 13; ++z) {
+            for (int y = 0; y < 9; ++y) {
+                for (int x = 0; x < 8; ++x) {
+                    CellWithPassiveArrayMember cell((x + 1) * (y + 1));
+                    cell.elements[0].val = 40000 + x + y * 8 + z * 8 * 9;
+                    cell.elements[1].val = 50000 + x + y * 8 + z * 8 * 9;
+                    host_grid.set(x, y, z, cell);
+
+                    cell = host_grid.get(x, y, z);
+                }
+            }
+        }
+        cudaMemcpy(device_grid.get_data(), host_grid.get_data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
+
+    }
+    {
+        // ensure c-tor was run by checking increment on all elements:
+        soa_grid<CellWithActiveArrayMember,  fake_cuda_allocator<char>, true> device_grid(8, 9, 13);
+        BOOST_TEST(data == device_grid.get_data());
+
+        soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
+        cudaMemcpy(host_grid.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
+        for (int z = 0; z < 13; ++z) {
+            for (int y = 0; y < 9; ++y) {
+                for (int x = 0; x < 8; ++x) {
+                    CellWithPassiveArrayMember cell = host_grid.get(x, y, z);
+                    int expected0 = 40000 + x + y * 8 + z * 8 * 9 + 100000;
+                    int expected1 = 50000 + x + y * 8 + z * 8 * 9 + 100000;
+
+                    BOOST_TEST(cell.elements[0].val == expected0);
+                    BOOST_TEST(cell.elements[1].val == expected1);
+
+                    BOOST_TEST(cell.i[0] == 0);
+                    BOOST_TEST(cell.i[1] == 0);
+                    BOOST_TEST(cell.i[2] == 0);
+                }
+            }
+        }
+    }
+    {
+        // ensure d-tor was run by checking increment on all elements:
+        soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
+        cudaMemcpy(host_grid.get_data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
+        for (int z = 0; z < 13; ++z) {
+            for (int y = 0; y < 9; ++y) {
+                for (int x = 0; x < 8; ++x) {
+                    CellWithPassiveArrayMember cell = host_grid.get(x, y, z);
+                    int expected0 = 40000 + x + y * 8 + z * 8 * 9 + 1100000;
+                    int expected1 = 50000 + x + y * 8 + z * 8 * 9 + 1100000;
+
+                    BOOST_TEST(cell.elements[0].val == expected0);
+                    BOOST_TEST(cell.elements[1].val == expected1);
+
+                    BOOST_TEST(cell.i[0] == 0);
+                    BOOST_TEST(cell.i[1] == 0);
+                    BOOST_TEST(cell.i[2] == 0);
+                }
+            }
+        }
+    }
+
+    fake_cuda_allocator<char>().deallocate_all();
 
     // test set/get multiple elements:
     // fixme
