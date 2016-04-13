@@ -38,7 +38,7 @@ public:
             {
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
 
-                for (int i = offset; i < (offset + count); ++i) {
+                for (std::size_t i = offset; i < (offset + count); ++i) {
                     data[SIZE * (INDEX - 1) + i] = source[stride * (INDEX - 1) + i];
                 }
             }
@@ -76,7 +76,7 @@ public:
             {
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
 
-                for (int i = offset; i < (offset + count); ++i) {
+                for (std::size_t i = offset; i < (offset + count); ++i) {
                     target[stride * (INDEX - 1) + i] = data[SIZE * (INDEX - 1) + i];
                 }
             }
