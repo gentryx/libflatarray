@@ -61,7 +61,6 @@ private:
 #ifdef LIBFLATARRAY_WITH_CUDA
 #ifdef __CUDACC__
 
-// fixme: use std::size_t everywhere
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 __global__
 void set_kernel(const CELL *source, char *target, long count, long x, long y, long z)

@@ -61,11 +61,11 @@ private:
 
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 __global__
-void destroy_kernel(char *data, int dim_x, int dim_y, int dim_z)
+void destroy_kernel(char *data, long dim_x, long dim_y, long dim_z)
 {
-    int x = blockDim.x * blockIdx.x + threadIdx.x;
-    int y = blockDim.y * blockIdx.y + threadIdx.y;
-    int z = blockDim.z * blockIdx.z + threadIdx.z;
+    long x = blockDim.x * blockIdx.x + threadIdx.x;
+    long y = blockDim.y * blockIdx.y + threadIdx.y;
+    long z = blockDim.z * blockIdx.z + threadIdx.z;
 
     if (x >= dim_x) {
         return;
