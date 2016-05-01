@@ -213,6 +213,25 @@ public:
             };
         };
     };
+
+    /**
+     * This is a workaround as the plain for loop will segfault with
+     * g++ >= 4.9.0. It works with clang++ and icpc, though.
+     */
+    template<typename ELEMENT>
+    __host__
+    __device__
+    static void copy(const ELEMENT *source, ELEMENT *target, std::size_t count)
+    {
+#ifdef __CUDACC__
+        for (std::size_t i = 0; i < count; ++i) {
+            target[i] = source[i];
+        }
+#else
+        std::copy(source, source + count, target);
+#endif
+    }
+
 };
 
 

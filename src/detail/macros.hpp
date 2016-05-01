@@ -170,13 +170,13 @@
 
 #define LIBFLATARRAY_COPY_SOA_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
     {                                                                   \
-        for (std::size_t i = offset; i < (offset + count); ++i) {       \
-            (&this->BOOST_PP_SEQ_ELEM(1, MEMBER)())[i] =                \
+        LibFlatArray::detail::soa_array_member_copy_helper<0>::copy(    \
             ((const BOOST_PP_SEQ_ELEM(0, MEMBER)*)(                     \
                 source +                                                \
                 detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
-                stride))[i];                                            \
-        }                                                               \
+                stride)) + offset,                                      \
+            (&this->BOOST_PP_SEQ_ELEM(1, MEMBER)()) + offset,           \
+            count);                                                     \
     }
 
 #define LIBFLATARRAY_COPY_SOA_ARRAY_MEMBER_ARRAY_IN(MEMBER_INDEX, CELL, MEMBER) \
