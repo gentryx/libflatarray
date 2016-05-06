@@ -20,6 +20,7 @@
 #include <libflatarray/detail/save_functor.hpp>
 #include <libflatarray/detail/set_byte_size_functor.hpp>
 #include <libflatarray/detail/set_instance_functor.hpp>
+#include <libflatarray/detail/simple_streak.hpp>
 #include <libflatarray/detail/staging_buffer.hpp>
 
 #include <stdexcept>
@@ -211,34 +212,80 @@ public:
         cell_staging_buffer.save(cells);
     }
 
-    void load(std::size_t x, std::size_t y, std::size_t z, const char *data, std::size_t count)
+    void load(std::size_t x, std::size_t y, std::size_t z, const char *source, std::size_t count)
     {
-        raw_staging_buffer.resize(count * aggregated_member_size<CELL_TYPE>::VALUE);
-        raw_staging_buffer.load(data);
+        detail::flat_array::simple_streak iter[2] = {
+            detail::flat_array::simple_streak(x, y, z, count),
+            detail::flat_array::simple_streak()
+        };
 
-        callback(detail::flat_array::load_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
-                     x,
-                     y,
-                     z,
+        raw_staging_buffer.resize(count * aggregated_member_size<CELL_TYPE>::VALUE);
+        raw_staging_buffer.load(source);
+
+        callback(detail::flat_array::load_functor<CELL_TYPE, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
+                     iter,
+                     iter + 1,
                      raw_staging_buffer.data(),
                      count));
     }
 
-    void save(std::size_t x, std::size_t y, std::size_t z, char *data, std::size_t count) const
+    template<typename ITERATOR>
+    void load(
+        const ITERATOR& begin,
+        const ITERATOR& end,
+        const char *source,
+        std::size_t count)
+    {
+        raw_staging_buffer.resize(count * aggregated_member_size<CELL_TYPE>::VALUE);
+        raw_staging_buffer.load(source);
+
+        callback(detail::flat_array::load_functor<CELL_TYPE, ITERATOR, USE_CUDA_FUNCTORS>(
+                     begin,
+                     end,
+                     raw_staging_buffer.data(),
+                     count));
+    }
+
+    void save(std::size_t x, std::size_t y, std::size_t z, char *target, std::size_t count)
+    {
+        detail::flat_array::simple_streak iter[2] = {
+            detail::flat_array::simple_streak(x, y, z, count),
+            detail::flat_array::simple_streak()
+        };
+
+        const_cast<char_staging_buffer_type&>(raw_staging_buffer).resize(
+            count *
+            aggregated_member_size<CELL_TYPE>::VALUE);
+        const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(target);
+
+        callback(detail::flat_array::save_functor<CELL_TYPE, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
+                     iter,
+                     iter + 1,
+                     const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
+                     count));
+
+        raw_staging_buffer.save(target);
+    }
+
+    template<typename ITERATOR>
+    void save(
+        const ITERATOR& begin,
+        const ITERATOR& end,
+        char *target,
+        std::size_t count) const
     {
         const_cast<char_staging_buffer_type&>(raw_staging_buffer).resize(
             count *
             aggregated_member_size<CELL_TYPE>::VALUE);
-        const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(data);
+        const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(target);
 
-        callback(detail::flat_array::save_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
-                     x,
-                     y,
-                     z,
+        callback(detail::flat_array::save_functor<CELL_TYPE, ITERATOR, USE_CUDA_FUNCTORS>(
+                     begin,
+                     end,
                      const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
                      count));
 
-        raw_staging_buffer.save(data);
+        raw_staging_buffer.save(target);
     }
 
     std::size_t byte_size() const

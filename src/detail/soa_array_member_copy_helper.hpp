@@ -38,8 +38,8 @@ public:
             {
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
 
-                for (std::size_t i = offset; i < (offset + count); ++i) {
-                    data[SIZE * (INDEX - 1) + i] = source[stride * (INDEX - 1) + i];
+                for (std::size_t i = 0; i < count; ++i) {
+                    data[SIZE * (INDEX - 1) + i] = source[stride * (INDEX - 1) + offset + i];
                 }
             }
         };
@@ -76,8 +76,8 @@ public:
             {
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
 
-                for (std::size_t i = offset; i < (offset + count); ++i) {
-                    target[stride * (INDEX - 1) + i] = data[SIZE * (INDEX - 1) + i];
+                for (std::size_t i = 0; i < count; ++i) {
+                    target[stride * (INDEX - 1) + offset + i] = data[SIZE * (INDEX - 1) + i];
                 }
             }
         };
@@ -213,25 +213,6 @@ public:
             };
         };
     };
-
-    /**
-     * This is a workaround as the plain for loop will segfault with
-     * g++ >= 4.9.0. It works with clang++ and icpc, though.
-     */
-    template<typename ELEMENT>
-    __host__
-    __device__
-    static void copy(const ELEMENT *source, ELEMENT *target, std::size_t count)
-    {
-#ifdef __CUDACC__
-        for (std::size_t i = 0; i < count; ++i) {
-            target[i] = source[i];
-        }
-#else
-        std::copy(source, source + count, target);
-#endif
-    }
-
 };
 
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014, 2016 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,37 +17,42 @@ namespace flat_array {
 /**
  * Same as load_functor, but the other way around.
  */
-template<typename CELL, bool USE_CUDA_FUNCTORS = false>
+template<typename CELL, typename ITERATOR, bool USE_CUDA_FUNCTORS = false>
 class save_functor
 {
 public:
     save_functor(
-        std::size_t x,
-        std::size_t y,
-        std::size_t z,
+        const ITERATOR& start,
+        const ITERATOR& end,
         char *target,
         long count) :
+        start(start),
+        end(end),
         target(target),
-        count(count),
-        x(x),
-        y(y),
-        z(z)
+        count(count)
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        typedef soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor_type;
-        accessor.index = accessor_type::gen_index(x, y, z);
-        accessor.save(target, count);
+        std::size_t offset = 0;
+
+        for (ITERATOR i = start; i != end; ++i) {
+            accessor.index = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(
+                i->origin[0],
+                i->origin[1],
+                i->origin[2]);
+            accessor.save(target, i->length(), offset, count);
+
+            offset += i->length();
+        }
     }
 
 private:
+    ITERATOR start;
+    ITERATOR end;
     char *target;
     long count;
-    long x;
-    long y;
-    long z;
 };
 
 #ifdef LIBFLATARRAY_WITH_CUDA
@@ -55,65 +60,68 @@ private:
 
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 __global__
-void save_kernel(const char *source, char *target, long count, long x, long y, long z)
+void save_kernel(const char *source, char *target, long count, long stride, long x, long y, long z, long offset)
 {
-    long offset = blockDim.x * blockIdx.x + threadIdx.x;
-    if (offset >= count) {
+    long thread_index = blockDim.x * blockIdx.x + threadIdx.x;
+    if (thread_index >= count) {
         return;
     }
 
     typedef const_soa_accessor_light<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor_type;
 
-    long index = accessor_type::gen_index(x, y, z);
+    long index = accessor_type::gen_index(x, y, z) + thread_index;
     accessor_type accessor(source, index);
 
-    // data is assumed to be stored with stride "count":
-    accessor.save(target, 1, offset, count);
+    accessor.save(target, 1, offset + thread_index, stride);
 }
 
 /**
  * Specialization for CUDA
  */
-template<typename CELL>
-class save_functor<CELL, true>
+template<typename CELL, typename ITERATOR>
+class save_functor<CELL, ITERATOR, true>
 {
 public:
     save_functor(
-        std::size_t x,
-        std::size_t y,
-        std::size_t z,
+        const ITERATOR& start,
+        const ITERATOR& end,
         char *target,
         std::size_t count) :
+        start(start),
+        end(end),
         target(target),
-        count(count),
-        x(x),
-        y(y),
-        z(z)
-    {
-    }
+        count(count)
+    {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        dim3 grid_dim;
-        dim3 block_dim;
-        generate_launch_config()(&grid_dim, &block_dim, count, 1, 1);
+        std::size_t offset = 0;
 
-        save_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
-            accessor.get_data(),
-            target,
-            count,
-            x,
-            y,
-            z);
+        for (ITERATOR i = start; i != end; ++i) {
+            dim3 grid_dim;
+            dim3 block_dim;
+            generate_launch_config()(&grid_dim, &block_dim, i->length(), 1, 1);
+
+            save_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
+                accessor.get_data(),
+                target,
+                i->length(),
+                count,
+                i->origin[0],
+                i->origin[1],
+                i->origin[2],
+                offset);
+
+            offset += i->length();
+        }
     }
 
 private:
+    ITERATOR start;
+    ITERATOR end;
     char *target;
     std::size_t count;
-    std::size_t x;
-    std::size_t y;
-    std::size_t z;
 
 };
 
