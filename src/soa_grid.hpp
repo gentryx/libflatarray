@@ -212,7 +212,12 @@ public:
         cell_staging_buffer.save(cells);
     }
 
-    void load(std::size_t x, std::size_t y, std::size_t z, const char *source, std::size_t count)
+    void load(
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
+        const char *source,
+        std::size_t count)
     {
         detail::flat_array::simple_streak iter[2] = {
             detail::flat_array::simple_streak(x, y, z, count),
@@ -246,7 +251,12 @@ public:
                      count));
     }
 
-    void save(std::size_t x, std::size_t y, std::size_t z, char *target, std::size_t count)
+    void save(
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
+        char *target,
+        std::size_t count) const
     {
         detail::flat_array::simple_streak iter[2] = {
             detail::flat_array::simple_streak(x, y, z, count),
