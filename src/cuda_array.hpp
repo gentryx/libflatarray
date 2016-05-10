@@ -9,6 +9,7 @@
 #define FLAT_ARRAY_CUDA_ARRAY_HPP
 
 #include <libflatarray/cuda_allocator.hpp>
+#include <vector>
 
 #ifdef __CUDACC__
 
