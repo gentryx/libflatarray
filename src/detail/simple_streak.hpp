@@ -16,7 +16,7 @@ namespace flat_array {
 
     class simple_streak {
     public:
-        simple_streak(std::size_t x = 0, std::size_t y = 0, std::size_t z = 0, std::size_t count = 0) :
+        explicit simple_streak(std::size_t x = 0, std::size_t y = 0, std::size_t z = 0, std::size_t count = 0) :
             count(count)
         {
             origin[0] = x;
