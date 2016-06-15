@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,9 @@
 #define FLAT_ARRAY_TESTBED_EVALUATE_HPP
 
 #include <libflatarray/testbed/benchmark.hpp>
+#include <ctime>
+#include <iomanip>
+#include <unistd.h>
 
 namespace LibFlatArray {
 
@@ -32,10 +35,15 @@ public:
             return;
         }
 
-        boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-        std::stringstream buf;
-        buf << now;
-        std::string now_string = buf.str();
+        timeval t;
+        gettimeofday(&t, 0);
+        time_t secondsSinceEpoch = t.tv_sec;
+        tm timeSpec;
+        gmtime_r(&secondsSinceEpoch, &timeSpec);
+        char buf[1024];
+        strftime(buf, 1024, "%Y.%m.%d %H:%M:%S", &timeSpec);
+
+        std::string now_string = buf;
         now_string.resize(20);
 
         std::string device = benchmark.device();
