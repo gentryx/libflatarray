@@ -20,7 +20,7 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
-find_package(Boost preprocessor)
+find_package(Boost COMPONENTS preprocessor)
 # use bundled Boost if none is found
 if(NOT DEFINED Boost_INCLUDE_DIR)
   set(Boost_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lib/boost")
