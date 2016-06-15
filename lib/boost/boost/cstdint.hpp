@@ -376,10 +376,10 @@ namespace boost
     || defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__) \
     || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(sun)
 
-namespace boost {
-    using ::intptr_t;
-    using ::uintptr_t;
-}
+// namespace boost {
+//     using ::intptr_t;
+//     using ::uintptr_t;
+// }
 #define BOOST_HAS_INTPTR_T
 
 // Clang pretends to be GCC, so it'll match this condition
