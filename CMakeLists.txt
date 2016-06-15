@@ -20,7 +20,11 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
-find_package(Boost REQUIRED system)
+find_package(Boost preprocessor)
+# use bundled Boost if none is found
+if(NOT DEFINED Boost_INCLUDE_DIR)
+  set(Boost_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lib/boost")
+endif()
 
 find_package(CUDA)
 # Force the selection of the NVCC host compiler to circumvent the
