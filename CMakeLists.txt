@@ -26,6 +26,11 @@ if(NOT Boost_FOUND)
   set(Boost_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/boost")
   set(Boost_INCLUDE_DIRS "${Boost_INCLUDE_DIR}")
   mark_as_advanced(FORCE Boost_INCLUDE_DIR)
+
+  get_directory_property(lfa_has_parent PARENT_DIRECTORY)
+  if(lfa_has_parent)
+    set(USING_BUNDLED_BOOST 1 PARENT_SCOPE)
+  endif()
 endif()
 
 find_package(CUDA)
@@ -182,7 +187,13 @@ endforeach()
 
 install(
   FILES "${CMAKE_BINARY_DIR}/${PACKAGE_NAME}/config.h"
-    DESTINATION include/${PACKAGE_NAME})
+  DESTINATION include/${PACKAGE_NAME})
+
+if(USING_BUNDLED_BOOST)
+  install(
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/boost/boost"
+    DESTINATION include/)
+endif()
 
 # 3. BUILD DESCRIPTION
 if(NOT CMAKE_BUILD_TYPE)
