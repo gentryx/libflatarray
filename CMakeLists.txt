@@ -20,10 +20,12 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
-find_package(Boost COMPONENTS preprocessor)
+find_package(Boost)
 # use bundled Boost if none is found
-if(NOT DEFINED Boost_INCLUDE_DIRS)
-  set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/boost")
+if(NOT Boost_FOUND)
+  set(Boost_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/boost")
+  set(Boost_INCLUDE_DIRS "${Boost_INCLUDE_DIR}")
+  mark_as_advanced(FORCE Boost_INCLUDE_DIR)
 endif()
 
 find_package(CUDA)
