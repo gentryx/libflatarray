@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,7 +8,7 @@
 #ifndef FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 #define FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <sys/time.h>
 
 namespace LibFlatArray {
 
@@ -27,8 +27,10 @@ public:
 
     static double time()
     {
-        boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-        return now.time_of_day().total_microseconds() * 1e-6;
+        timeval t;
+        gettimeofday(&t, 0);
+
+        return t.tv_sec + t.tv_usec * 1.0e-6;
     }
 
 };

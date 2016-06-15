@@ -2,20 +2,23 @@
 #define LIBFLATARRAY_EXAMPLES_LBM_UTIL_H
 
 /**
- * Copyright 2013-2015 Andreas Schäfer
+ * Copyright 2013-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <iomanip>
 #include <iostream>
 #include <stdexcept>
+#include <sys/time.h>
 
 long long time_usec()
 {
-    boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-    return now.time_of_day().total_microseconds();
+        timeval t;
+        gettimeofday(&t, 0);
+
+        return (long long)(t.tv_sec) * 1000000 + t.tv_usec;
 }
 
 void check_cuda_error()
