@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +10,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
 #include <libflatarray/testbed/benchmark.hpp>
 
 namespace LibFlatArray {
@@ -30,15 +29,15 @@ public:
         char buffer[bufferSize];
 
         while (file.getline(&buffer[0], bufferSize)) {
-            std::vector<std::string> tokens = tokenize(buffer, ":");
-            std::vector<std::string> fields = tokenize(tokens[0], " \t");
+            std::vector<std::string> tokens = tokenize(buffer, ':');
+            std::vector<std::string> fields = tokenize(tokens[0], '\t');
 
             if ((fields.size() == 1) && (fields[0] == "cpu")) {
                 return tokens[1];
             }
 
-            if ((fields[0] == "model") && (fields[1] == "name")) {
-                tokens = tokenize(tokens[1], " \t");
+            if ((fields.size() == 1) && (fields[0] == "model name")) {
+                tokens = tokenize(tokens[1], ' ');
                 std::string buf = join(tokens, " ");
                 if (buf[buf.size() - 1] == 0) {
                     buf.resize(buf.size() - 1);
@@ -52,11 +51,38 @@ public:
     }
 
 private:
-    static std::vector<std::string> tokenize(const std::string& string, const std::string& delimiters)
+    static std::string trim(const std::string& string)
+    {
+        if (string.size() == 0) {
+            return string;
+        }
+
+        std::size_t start = 0;
+        while ((string[start] == ' ') && (start < string.size())) {
+            start += 1;
+        }
+
+        std::size_t end = string.size() - 1;
+        while ((string[end] == ' ') && (end > 1)) {
+            end -= 1;
+        }
+        if ((string[end] != ' ') && (end < string.size())) {
+            end += 1;
+        }
+
+        return std::string(string, start, end - start);
+    }
+
+    static std::vector<std::string> tokenize(const std::string& line, char delimiter = ';')
     {
         std::vector<std::string> ret;
-        boost::split(ret, string, boost::is_any_of(delimiters), boost::token_compress_on);
-        ret.erase(std::remove(ret.begin(), ret.end(), ""), ret.end());
+
+        std::stringstream buf(line);
+        std::string item;
+
+        while (std::getline(buf, item, delimiter)) {
+            ret.push_back(trim(item));
+        }
 
         return ret;
     }
