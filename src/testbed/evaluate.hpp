@@ -41,7 +41,7 @@ public:
         tm timeSpec;
         gmtime_r(&secondsSinceEpoch, &timeSpec);
         char buf[1024];
-        strftime(buf, 1024, "%Y.%m.%d %H:%M:%S", &timeSpec);
+        strftime(buf, 1024, "%Y.%b.%d %H:%M:%S", &timeSpec);
 
         std::string now_string = buf;
         std::string device = benchmark.device();
