@@ -44,8 +44,6 @@ public:
         strftime(buf, 1024, "%Y.%m.%d %H:%M:%S", &timeSpec);
 
         std::string now_string = buf;
-        now_string.resize(20);
-
         std::string device = benchmark.device();
 
         int hostname_length = 2048;
