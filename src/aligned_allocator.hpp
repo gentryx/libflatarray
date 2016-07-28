@@ -9,7 +9,6 @@
 #ifndef FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 #define FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 
-#include <cstddef>
 #include <memory>
 
 namespace LibFlatArray {
@@ -18,7 +17,7 @@ template<class T, std::size_t ALIGNMENT>
 class aligned_allocator
 {
 public:
-    typedef ptrdiff_t difference_type;
+    typedef std::ptrdiff_t difference_type;
     typedef T* pointer;
     typedef const T* const_pointer;
     typedef T& reference;
