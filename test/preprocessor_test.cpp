@@ -8,12 +8,15 @@
 #include <iostream>
 #include <libflatarray/preprocessor.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <vector>
 
 #include "test.hpp"
 
 #define LIST_A
 #define LIST_B (10)(20)(30)(40)(50)
 #define LIST_C (60)
+
+#define LAMBDA(INDEX, STANDARD_ARG, ITERATOR) vec[ITERATOR] = (INDEX + STANDARD_ARG + ITERATOR);
 
 ADD_TEST(TestSeqElem)
 {
@@ -35,7 +38,14 @@ ADD_TEST(TestSeqSize)
 
 ADD_TEST(TestSeqForEach)
 {
-    // fixme
+    std::vector<int> vec(60, 0);
+    LIBFLATARRAY_PP_SEQ_FOR_EACH(LAMBDA, 100, LIST_B);
+
+    BOOST_TEST(vec[10] == (0 + 10 + 100));
+    BOOST_TEST(vec[20] == (1 + 20 + 100));
+    BOOST_TEST(vec[30] == (2 + 30 + 100));
+    BOOST_TEST(vec[40] == (3 + 40 + 100));
+    BOOST_TEST(vec[50] == (4 + 50 + 100));
 }
 
 ADD_TEST(TestSeqDequeue)
