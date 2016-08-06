@@ -64,7 +64,7 @@
     {                                                                   \
     public:                                                             \
         static const std::size_t VALUE =                                \
-            BOOST_PP_SEQ_SIZE(CELL_MEMBERS);                            \
+            LIBFLATARRAY_SIZE(CELL_MEMBERS);                            \
     };                                                                  \
                                                                         \
     template<>                                                          \
