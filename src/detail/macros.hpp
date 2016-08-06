@@ -8,10 +8,6 @@
 #ifndef FLAT_ARRAY_DETAIL_MACROS_HPP
 #define FLAT_ARRAY_DETAIL_MACROS_HPP
 
-#include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/preprocessor/comparison/less.hpp>
-#include <boost/preprocessor/if.hpp>
-#include <boost/preprocessor/seq.hpp>
 #include <libflatarray/detail/generic_destruct.hpp>
 #include <libflatarray/detail/soa_array_member_copy_helper.hpp>
 #include <libflatarray/preprocessor.hpp>
