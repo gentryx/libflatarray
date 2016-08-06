@@ -34,11 +34,11 @@
     namespace detail {                                                  \
     namespace flat_array {                                              \
     template<>                                                          \
-    class offset<CELL_TYPE, r - 1>                                      \
+    class offset<CELL_TYPE, r + 1>                                      \
     {                                                                   \
     public:                                                             \
         static const std::size_t OFFSET =                               \
-            offset<CELL_TYPE, r - 2>::OFFSET +                          \
+            offset<CELL_TYPE, r + 0>::OFFSET +                          \
             sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                      \
             LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
                 MEMBER,                                                 \
@@ -49,7 +49,7 @@
         inline                                                          \
         int operator()(MEMBER_TYPE CELL_TYPE:: *member_ptr)             \
         {                                                               \
-            return offset<CELL_TYPE, r - 2>()(member_ptr);              \
+            return offset<CELL_TYPE, r + 0>()(member_ptr);              \
         }                                                               \
                                                                         \
         inline                                                          \
@@ -62,9 +62,9 @@
         {                                                               \
             if (member_ptr ==                                           \
                 &CELL_TYPE::LIBFLATARRAY_ELEM(1, MEMBER)) {             \
-                return offset<CELL_TYPE, r - 2>::OFFSET;                \
+                return offset<CELL_TYPE, r + 0>::OFFSET;                \
             } else {                                                    \
-                return offset<CELL_TYPE, r - 2>()(member_ptr);          \
+                return offset<CELL_TYPE, r + 0>()(member_ptr);          \
             }                                                           \
         }                                                               \
                                                                         \
@@ -72,7 +72,7 @@
         inline                                                          \
         int operator()(LIBFLATARRAY_ELEM(0, MEMBER) (CELL_TYPE:: *member_ptr)[ARITY]) \
         {                                                               \
-            return offset<CELL_TYPE, r - 2>()(member_ptr);              \
+            return offset<CELL_TYPE, r + 0>()(member_ptr);              \
         }                                                               \
     };                                                                  \
     }                                                                   \
@@ -90,7 +90,7 @@
             (DIM_PROD) * (                                              \
                 (sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                 \
                  LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, 0, ARRAY_INDEX))  + \
-                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>:: OFFSET) + \
+                detail::flat_array::offset<CELL, MEMBER_INDEX>:: OFFSET) + \
             INDEX_VAR * long(sizeof(LIBFLATARRAY_ELEM(0, MEMBER))) +    \
             INDEX     * long(sizeof(LIBFLATARRAY_ELEM(0, MEMBER))));    \
     }                                                                   \
@@ -175,7 +175,7 @@
             (&this->LIBFLATARRAY_ELEM(1, MEMBER)())[i] =                \
             ((const LIBFLATARRAY_ELEM(0, MEMBER)*)(                     \
                 source +                                                \
-                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                detail::flat_array::offset<CELL, MEMBER_INDEX>::OFFSET * \
                 stride))[offset + i];                                   \
         }                                                               \
     }
@@ -188,7 +188,7 @@
             template copy_array_in<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>()( \
                 (const LIBFLATARRAY_ELEM(0, MEMBER)*)(                  \
                     source +                                            \
-                    detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                    detail::flat_array::offset<CELL, MEMBER_INDEX>::OFFSET * \
                     stride),                                            \
                 &(this->LIBFLATARRAY_ELEM(1, MEMBER)()[0]),             \
                 count,                                                  \
@@ -208,7 +208,7 @@
         for (std::size_t i = 0; i < count; ++i) {                       \
             ((LIBFLATARRAY_ELEM(0, MEMBER)*)(                           \
                 target +                                                \
-                detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                detail::flat_array::offset<CELL, MEMBER_INDEX>::OFFSET * \
                 stride))[offset + i] =                                  \
             (&this->LIBFLATARRAY_ELEM(1, MEMBER)())[i];                 \
         }                                                               \
@@ -222,7 +222,7 @@
             template copy_array_out<LIBFLATARRAY_ARRAY_ARITY(MEMBER)>()( \
                 (LIBFLATARRAY_ELEM(0, MEMBER)*)(                        \
                     target +                                            \
-                    detail::flat_array::offset<CELL, MEMBER_INDEX - 2>::OFFSET * \
+                    detail::flat_array::offset<CELL, MEMBER_INDEX>::OFFSET * \
                     stride),                                            \
                 &(this->LIBFLATARRAY_ELEM(1, MEMBER)()[0]),             \
                 count,                                                  \

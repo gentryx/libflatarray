@@ -54,7 +54,7 @@
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
                                                                         \
-    BOOST_PP_SEQ_FOR_EACH(                                              \
+    LIBFLATARRAY_FOR_EACH(                                              \
         LIBFLATARRAY_DEFINE_FIELD_OFFSET,                               \
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
@@ -152,7 +152,7 @@
         inline                                                          \
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_IN,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -169,7 +169,7 @@
         inline                                                          \
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -190,7 +190,7 @@
             std::size_t offset,                                         \
             std::size_t stride)                                         \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -211,7 +211,7 @@
             std::size_t offset,                                         \
             std::size_t stride) const                                   \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -221,7 +221,7 @@
         inline                                                          \
         void construct_members()                                        \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -231,7 +231,7 @@
         inline                                                          \
         void destroy_members()                                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_DESTROY_SOA_GENERIC_MEMBER,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -242,7 +242,7 @@
         inline                                                          \
         void copy_members(const OTHER_ACCESSOR& other, std::size_t count) \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -272,12 +272,12 @@
                 INDEX * size_of_member;                                 \
         }                                                               \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_NORMAL,                     \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
@@ -363,7 +363,7 @@
         inline                                                          \
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -384,13 +384,13 @@
             std::size_t offset,                                         \
             std::size_t stride) const                                   \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_CONST,                      \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
@@ -470,7 +470,7 @@
         inline                                                          \
         void operator=(const CELL_TYPE& cell)                           \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_IN,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -487,7 +487,7 @@
         inline                                                          \
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -508,7 +508,7 @@
             std::size_t offset,                                         \
             std::size_t stride)                                         \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_IN,          \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -529,7 +529,7 @@
             std::size_t offset,                                         \
             std::size_t stride) const                                   \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -539,7 +539,7 @@
         inline                                                          \
         void construct_members()                                        \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_INIT_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -549,7 +549,7 @@
         inline                                                          \
         void destroy_members()                                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_DESTROY_SOA_GENERIC_MEMBER,                \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -560,7 +560,7 @@
         inline                                                          \
         void copy_members(const OTHER_ACCESSOR& other, std::size_t count) \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER,                   \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -590,12 +590,12 @@
                 INDEX  * size_of_member;                                \
         }                                                               \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_NORMAL,               \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_CONST,                \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
@@ -692,7 +692,7 @@
         inline                                                          \
         void operator>>(CELL_TYPE& cell) const                          \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_OUT,               \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
@@ -713,13 +713,13 @@
             std::size_t offset,                                         \
             std::size_t stride) const                                   \
         {                                                               \
-            BOOST_PP_SEQ_FOR_EACH(                                      \
+            LIBFLATARRAY_FOR_EACH(                                      \
                 LIBFLATARRAY_COPY_SOA_GENERIC_MEMBER_ARRAY_OUT,         \
                 CELL_TYPE,                                              \
                 CELL_MEMBERS);                                          \
         }                                                               \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_DECLARE_SOA_MEMBER_LIGHT_CONST,                \
             CELL_TYPE,                                                  \
             CELL_MEMBERS);                                              \
@@ -781,7 +781,7 @@
         char *data,                                                     \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_X,                                    \
             unused,                                                     \
             X_SIZES);                                                   \
@@ -797,7 +797,7 @@
         const char *data,                                               \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_X,                                    \
             unused,                                                     \
             X_SIZES);                                                   \
@@ -812,7 +812,7 @@
         char *data,                                                     \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_Y,                                    \
             unused,                                                     \
             Y_SIZES);                                                   \
@@ -827,7 +827,7 @@
         const char *data,                                               \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_Y,                                    \
             unused,                                                     \
             Y_SIZES);                                                   \
@@ -841,7 +841,7 @@
         char *data,                                                     \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_Z,                                    \
             unused,                                                     \
             Z_SIZES);                                                   \
@@ -855,7 +855,7 @@
         const char *data,                                               \
         FUNCTOR& functor) const                                         \
     {                                                                   \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_Z,                                    \
             unused,                                                     \
             Z_SIZES);                                                   \
@@ -879,7 +879,7 @@
         }                                                               \
         std::size_t max = std::max(dim_x, dim_z);                       \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
             unused,                                                     \
             SIZES);                                                     \
@@ -900,7 +900,7 @@
         }                                                               \
         std::size_t max = std::max(dim_x, dim_z);                       \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
             unused,                                                     \
             SIZES);                                                     \
@@ -921,7 +921,7 @@
     {                                                                   \
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_3D,                               \
             unused,                                                     \
             SIZES);                                                     \
@@ -939,7 +939,7 @@
     {                                                                   \
         std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
                                                                         \
-        BOOST_PP_SEQ_FOR_EACH(                                          \
+        LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_3D,                               \
             unused,                                                     \
             SIZES);                                                     \
