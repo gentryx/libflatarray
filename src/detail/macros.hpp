@@ -24,11 +24,13 @@
 
 // expands to A if MEMBER is scalar (e.g. double foo),
 // expands to B if MEMBER is an array member (e.g. double foo[4]).
-#define LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, A, B)    \
-    BOOST_PP_IF(BOOST_PP_LESS(BOOST_PP_SEQ_SIZE(MEMBER), 3), A, B)
+#define LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, A, B)                    \
+    LIBFLATARRAY_IF_SHORTER(MEMBER, 3, A, B)
 
 #define LIBFLATARRAY_ARRAY_ARITY(MEMBER)                                \
-    LIBFLATARRAY_ELEM(BOOST_PP_SUB(BOOST_PP_SEQ_SIZE(MEMBER), 1), MEMBER)
+    LIBFLATARRAY_ELEM(                                                  \
+        LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
+        MEMBER)
 
 #define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
     namespace detail {                                                  \
