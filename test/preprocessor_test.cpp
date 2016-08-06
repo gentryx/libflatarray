@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <libflatarray/preprocessor.hpp>
-#include <boost/detail/lightweight_test.hpp>
 #include <vector>
 
 #include "test.hpp"

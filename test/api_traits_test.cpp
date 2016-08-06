@@ -1,11 +1,10 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2016 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/detail/lightweight_test.hpp>
 #include <iostream>
 #include <vector>
 #include <libflatarray/api_traits.hpp>

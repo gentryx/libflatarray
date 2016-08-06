@@ -10,7 +10,6 @@
 #include <libflatarray/config.h>
 #include <libflatarray/aligned_allocator.hpp>
 #include <cmath>
-#include <boost/detail/lightweight_test.hpp>
 #include <iostream>
 #include <sstream>
 #include <libflatarray/macros.hpp>
