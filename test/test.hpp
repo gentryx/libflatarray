@@ -14,7 +14,6 @@ class Runner
 public:
     Runner()
     {
-        // std::cout << "Runner<" << typeid(TEST).name() << ">()\n";
         TEST()();
     }
 };
