@@ -2,7 +2,17 @@
 #define TEST_H
 
 #include <cmath>
+#include <iostream>
 #include <sstream>
+
+#ifndef BOOST_TEST
+#define BOOST_TEST(ARG) if (!(ARG)) { std::cerr << __FILE__ << "(" << __LINE__ << "): test '" << #ARG << "' failed in function '" << __PRETTY_FUNCTION__ << "'" << std::endl; }
+#endif
+
+
+#ifndef BOOST_TEST_EQ
+#define BOOST_TEST_EQ(A, B) BOOST_TEST((A) == (B))
+#endif
 
 // Runner and ADD_TEST are some convenience functions to simplify
 // definition of new tests. ADD_TEST will add scaffolding that causes
