@@ -9,8 +9,12 @@
 #ifndef FLAT_ARRAY_PREPROCESSOR_HPP
 #define FLAT_ARRAY_PREPROCESSOR_HPP
 
-#define LIBFLATARRAY_ELEM(i, seq) LIBFLATARRAY_ELEM_I(i, seq)
-#define LIBFLATARRAY_ELEM_I(i, seq) LIBFLATARRAY_ELEM_II(LIBFLATARRAY_ELEM_ ## i seq)
+/**
+ * Returns the element of LIST at position INDEX. Assumes 0-based
+ * addressing.
+ */
+#define LIBFLATARRAY_ELEM(i, LIST) LIBFLATARRAY_ELEM_I(i, LIST)
+#define LIBFLATARRAY_ELEM_I(i, LIST) LIBFLATARRAY_ELEM_II(LIBFLATARRAY_ELEM_ ## i LIST)
 #define LIBFLATARRAY_ELEM_II(im) LIBFLATARRAY_ELEM_III(im)
 #define LIBFLATARRAY_ELEM_III(x, _) x
 #define LIBFLATARRAY_ELEM_0(x) x, LIBFLATARRAY_PP_NIL
@@ -65,6 +69,12 @@
 #define LIBFLATARRAY_ELEM_49(_) LIBFLATARRAY_ELEM_48
 #define LIBFLATARRAY_ELEM_50(_) LIBFLATARRAY_ELEM_49
 
+/**
+ * Will instantiate MACRO for each element of LIST with three parameters:
+ * 1. an integer index, starting at 0,
+ * 2. PARAM
+ * 3. the element of LIST at the given index.
+ */
 #define LIBFLATARRAY_PP_FOR_EACH(MACRO, PARAM, LIST)
 
 #define LIBFLATARRAY_SIZE(LIST) LIBFLATARRAY_SIZE_I(LIBFLATARRAY_SIZE_0 LIST)
