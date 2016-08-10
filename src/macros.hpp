@@ -83,7 +83,7 @@
     class soa_accessor<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>  \
     {                                                                   \
     public:                                                             \
-        typedef CELL_TYPE MyCell;                                       \
+        typedef CELL_TYPE cell_type;                                    \
                                                                         \
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
@@ -305,7 +305,7 @@
         CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX>                 \
     {                                                                   \
     public:                                                             \
-        typedef CELL_TYPE MyCell;                                       \
+        typedef CELL_TYPE cell_type;                                    \
                                                                         \
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
@@ -411,7 +411,7 @@
     class soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
     {                                                                   \
     public:                                                             \
-        typedef CELL_TYPE MyCell;                                       \
+        typedef CELL_TYPE cell_type;                                    \
                                                                         \
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
@@ -633,7 +633,7 @@
     class const_soa_accessor_light<CELL_TYPE, MY_DIM_X, MY_DIM_Y, MY_DIM_Z, INDEX> \
     {                                                                   \
     public:                                                             \
-        typedef CELL_TYPE MyCell;                                       \
+        typedef CELL_TYPE cell_type;                                    \
                                                                         \
         static const long DIM_X = MY_DIM_X;                             \
         static const long DIM_Y = MY_DIM_Y;                             \
