@@ -112,7 +112,7 @@ endif()
 set(LFA_C_FLAGS_BACKUP    "${CMAKE_C_FLAGS}")
 set(LFA_CXX_FLAGS_BACKUP  "${CMAKE_CXX_FLAGS}")
 set(LFA_NVCC_FLAGS_BACKUP "${CUDA_NVCC_FLAGS}")
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   ${libflatarray_FLAGS} -std=c99")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=c99")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${libflatarray_FLAGS}")
 set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} ${libflatarray_FLAGS}")
 
