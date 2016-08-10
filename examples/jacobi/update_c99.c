@@ -8,6 +8,7 @@
  */
 void update_c99(double *data_new, const double *data_old, int dim_x, int dim_y, int dim_z)
 {
+    // cast types here to maintain a C++-compatible signature:
     double (* const restrict grid_old)[dim_y][dim_x] = (double (* const)[dim_y][dim_x])data_old;
     double (*       restrict grid_new)[dim_y][dim_x] = (double (*      )[dim_y][dim_x])data_new;
 
