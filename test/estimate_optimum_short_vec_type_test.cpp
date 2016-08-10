@@ -29,6 +29,13 @@ public:
     static const int DIM_PROD = 2000;
 };
 
+class fake_accessor2
+{
+public:
+    typedef fake_particle element_type;
+    static const int DIM_PROD = 20000000;
+};
+
 ADD_TEST(TestArity)
 {
     // expected arities are 2x of the vector-unit's bit width for some
@@ -73,6 +80,40 @@ ADD_TEST(TestArity)
 
     BOOST_TEST_EQ(expected_arity_for_double, actual_double);
     BOOST_TEST_EQ(expected_arity_for_float,  actual_float);
+};
+
+template<typename SHORT_VEC>
+class is_streaming_short_vec;
+
+template<typename CARGO, int ARITY>
+class is_streaming_short_vec<streaming_short_vec<CARGO, ARITY> >
+{
+public:
+    static const bool VALUE = true;
+};
+
+template<typename CARGO, int ARITY>
+class is_streaming_short_vec<short_vec<CARGO, ARITY> >
+{
+public:
+    static const bool VALUE = false;
+};
+
+ADD_TEST(TestStoreImplementation)
+{
+    // small problem size should yield normal stores:
+    typedef estimate_optimum_short_vec_type<double, fake_accessor>::VALUE selected_double_type;
+    typedef estimate_optimum_short_vec_type<float,  fake_accessor>::VALUE selected_float_type;
+
+    BOOST_TEST_EQ(is_streaming_short_vec<selected_double_type>::VALUE, false);
+    BOOST_TEST_EQ(is_streaming_short_vec<selected_float_type>::VALUE,  false);
+
+    // larger problem size should yield streaming stores:
+    typedef estimate_optimum_short_vec_type<double, fake_accessor2>::VALUE selected_double_type2;
+    typedef estimate_optimum_short_vec_type<float,  fake_accessor2>::VALUE selected_float_type2;
+
+    BOOST_TEST_EQ(is_streaming_short_vec<selected_double_type2>::VALUE, true);
+    BOOST_TEST_EQ(is_streaming_short_vec<selected_float_type2>::VALUE,  true);
 };
 
 }
