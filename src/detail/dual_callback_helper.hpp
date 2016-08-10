@@ -100,7 +100,7 @@ public:
     template<typename ACCESSOR>
     void operator()(ACCESSOR& accessor1) const
     {
-        ACCESSOR accessor2(other_grid->get_data());
+        ACCESSOR accessor2(other_grid->get_data(), 0);
 
         functor(accessor1, accessor2);
     }

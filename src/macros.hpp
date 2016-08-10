@@ -100,7 +100,7 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        explicit soa_accessor(char *data, const long index = 0) :       \
+        soa_accessor(char *data, const long index) :                    \
             data(data),                                                 \
             index(index)                                                \
         {}                                                              \

@@ -7,8 +7,8 @@ template<typename CELL, typename ACCESSOR1, typename ACCESSOR2>
 __global__
 void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
 {
-    ACCESSOR1 accessorOld(accessor1.get_data());
-    ACCESSOR2 accessorNew(accessor2.get_data());
+    ACCESSOR1 accessorOld(accessor1.get_data(), 0);
+    ACCESSOR2 accessorNew(accessor2.get_data(), 0);
 
     CELL::updateLine(
         accessorOld, &accessorOld.index,
