@@ -313,17 +313,17 @@ public:
         data = new_data;
     }
 
-    std::size_t get_dim_x()
+    std::size_t get_dim_x() const
     {
         return dim_x;
     }
 
-    std::size_t get_dim_y()
+    std::size_t get_dim_y() const
     {
         return dim_y;
     }
 
-    std::size_t get_dim_z()
+    std::size_t get_dim_z() const
     {
         return dim_z;
     }
