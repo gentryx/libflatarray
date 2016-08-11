@@ -33,7 +33,7 @@ public:
 
     template<typename INIT_TYPE>
     inline
-    streaming_short_vec(const INIT_TYPE val) : short_vec<INIT_TYPE, ARITY>(val)
+    streaming_short_vec(const INIT_TYPE val) : short_vec<CARGO, ARITY>(val)
     {}
 
     inline
