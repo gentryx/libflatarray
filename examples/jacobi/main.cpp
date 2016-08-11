@@ -115,14 +115,6 @@ public:
         temp(temp)
     {}
 
-    // fixme: write something sensible here
-    // fixme: goal: utilize non-temporal stores
-    template<typename NEIGHBORHOOD>
-    void update(const NEIGHBORHOOD& hood)
-    {
-        temp = 123;
-    }
-
 private:
     double temp;
 };
@@ -138,34 +130,51 @@ public:
         dim_z(dim_z)
     {}
 
+    template<typename SHORT_VEC, typename SOA_ACCESSOR_1, typename SOA_ACCESSOR_2>
+    void update(
+        std::size_t& x,
+        std::size_t end_x,
+        std::size_t y,
+        std::size_t z,
+        SOA_ACCESSOR_1& accessorOld,
+        SOA_ACCESSOR_2& accessorNew) const
+    {
+        accessorOld.index = SOA_ACCESSOR_1::gen_index(x, y, z);
+        accessorNew.index = SOA_ACCESSOR_2::gen_index(x, y, z);
+
+        SHORT_VEC buf;
+        SHORT_VEC factor = 1.0 / 6.0;
+
+        for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
+            using LibFlatArray::coord;
+            buf =  &accessorOld[coord< 0,  0, -1>()].temp();
+            buf += &accessorOld[coord< 0, -1,  0>()].temp();
+            buf += &accessorOld[coord<-1,  0,  0>()].temp();
+            buf += &accessorOld[coord< 1,  0,  0>()].temp();
+            buf += &accessorOld[coord< 0,  1,  0>()].temp();
+            buf += &accessorOld[coord< 0,  0,  1>()].temp();
+            buf *= factor;
+
+            &accessorNew.temp() << buf;
+
+            accessorNew += SHORT_VEC::ARITY;
+            accessorOld += SHORT_VEC::ARITY;
+        }
+
+    }
+
     template<typename SOA_ACCESSOR_1, typename SOA_ACCESSOR_2>
     void operator()(SOA_ACCESSOR_1 accessorOld, SOA_ACCESSOR_2 accessorNew) const
     {
+        typedef typename LibFlatArray::estimate_optimum_short_vec_type<double, SOA_ACCESSOR_1>::VALUE my_short_vec;
+
 #pragma omp parallel for schedule(static) firstprivate(accessorOld, accessorNew)
         for (std::size_t z = 1; z < (dim_z - 1); ++z) {
             for (std::size_t y = 1; y < (dim_y - 1); ++y) {
-                accessorOld.index = SOA_ACCESSOR_1::gen_index(0, y, z);
-                accessorNew.index = SOA_ACCESSOR_2::gen_index(0, y, z);
+                std::size_t x = 1;
+                std::size_t end_x = dim_x - 1;
 
-                typedef LibFlatArray::short_vec<double, 8> my_short_vec;
-                my_short_vec buf;
-                my_short_vec factor = 1.0 / 6.0;
-
-                for (std::size_t x = 0; x < (dim_x - 8); x += my_short_vec::ARITY) {
-                    using LibFlatArray::coord;
-                    buf =  &accessorOld[coord< 0,  0, -1>()].temp();
-                    buf += &accessorOld[coord< 0, -1,  0>()].temp();
-                    buf += &accessorOld[coord<-1,  0,  0>()].temp();
-                    buf += &accessorOld[coord< 1,  0,  0>()].temp();
-                    buf += &accessorOld[coord< 0,  1,  0>()].temp();
-                    buf += &accessorOld[coord< 0,  0,  1>()].temp();
-                    buf *= factor;
-
-                    buf.store_nt(&accessorNew.temp());
-
-                    accessorNew += my_short_vec::ARITY;
-                    accessorOld += my_short_vec::ARITY;
-                }
+                LIBFLATARRAY_LOOP_PEELER(my_short_vec, std::size_t, x, end_x, update, y, z, accessorOld, accessorNew);
             }
         }
     }
@@ -211,7 +220,7 @@ public:
 
         double delta = std::fabs(sum1 - sum2);
         if (delta > 0.1) {
-            // fixme: throw std::logic_error("consistency check failed");
+            throw std::logic_error("consistency check failed");
         }
         double time_start = time();
 
