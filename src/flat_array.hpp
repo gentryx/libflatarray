@@ -17,6 +17,7 @@
 #endif
 
 #include <libflatarray/coord.hpp>
+#include <libflatarray/estimate_optimum_short_vec_type.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/member_ptr_to_offset.hpp>
 #include <libflatarray/number_of_members.hpp>
