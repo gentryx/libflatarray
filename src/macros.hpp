@@ -964,9 +964,10 @@
                                  X, END_X, FUNCTION, ARGS...)           \
     {                                                                   \
         typedef SHORT_VEC_TYPE lfa_local_short_vec;                     \
-        typedef LibFlatArray::detail::flat_array::                      \
+        typedef typename LibFlatArray::detail::flat_array::             \
             sibling_short_vec_switch<SHORT_VEC_TYPE, 1>::VALUE          \
             lfa_local_scalar;                                           \
+                                                                        \
         COUNTER_TYPE remainder = (X) % (lfa_local_short_vec::ARITY);    \
         COUNTER_TYPE next_stop = remainder ?                            \
             (X) + (lfa_local_short_vec::ARITY) - remainder :            \
