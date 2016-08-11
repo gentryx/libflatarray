@@ -5,8 +5,10 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/short_vec.hpp>
+#include <libflatarray/streaming_short_vec.hpp>
 #include <vector>
 
 #include "test.hpp"
@@ -23,7 +25,7 @@ void scaler(int *i, int endX, double *data, double factor)
 
 ADD_TEST(TestLoopPeelerFunctionality)
 {
-    std::vector<double> foo;
+    std::vector<double, LibFlatArray::aligned_allocator<double, 64> > foo;
     for (int i = 0; i < 123; ++i) {
         foo.push_back(1000 + i);
     }
