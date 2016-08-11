@@ -12,6 +12,7 @@
 #include <libflatarray/number_of_members.hpp>
 #include <libflatarray/detail/macros.hpp>
 #include <libflatarray/detail/offset.hpp>
+#include <libflatarray/detail/sibling_short_vec_switch.hpp>
 
 /**
  * This macro is convenient when you need to return instances of the
@@ -950,19 +951,21 @@
 /**
  * CARGO: element type
  */
-#define LIBFLATARRAY_LOOP_PEELER(CARGO, ARITY, COUNTER_TYPE,            \
+#define LIBFLATARRAY_LOOP_PEELER(SHORT_VEC_TYPE, COUNTER_TYPE,          \
                                  X, END_X, FUNCTION, ARGS...)           \
     {                                                                   \
-        typedef LibFlatArray::short_vec<CARGO, (ARITY)> ShortVecType;   \
-        typedef LibFlatArray::short_vec<CARGO, 1>     ScalarType;       \
-        COUNTER_TYPE remainder = *(X) % (ARITY);                        \
+        typedef SHORT_VEC_TYPE lfa_local_short_vec;                     \
+        typedef LibFlatArray::detail::flat_array::                      \
+            sibling_short_vec_switch<SHORT_VEC_TYPE, 1>::VALUE          \
+            lfa_local_scalar;                                           \
+        COUNTER_TYPE remainder = *(X) % (lfa_local_short_vec::ARITY);   \
         COUNTER_TYPE next_stop = remainder ?                            \
-            *(X) + (ARITY) - remainder :                                \
+            *(X) + (lfa_local_short_vec::ARITY) - remainder :           \
             *(X);                                                       \
                                                                         \
-        FUNCTION<ScalarType  >(X, next_stop, ARGS);                     \
-        FUNCTION<ShortVecType>(X, (END_X),   ARGS);                     \
-        FUNCTION<ScalarType  >(X, (END_X),   ARGS);                     \
+        FUNCTION<lfa_local_scalar   >(X, next_stop, ARGS);              \
+        FUNCTION<lfa_local_short_vec>(X, (END_X),   ARGS);              \
+        FUNCTION<lfa_local_scalar   >(X, (END_X),   ARGS);              \
     }
 
 #endif
