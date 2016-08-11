@@ -44,6 +44,27 @@ ADD_TEST(TestLoopPeelerFunctionality)
     }
 }
 
+ADD_TEST(TestLoopPeelerInteroperabilityWithStreamingShortVecs)
+{
+    std::vector<double, LibFlatArray::aligned_allocator<double, 64> > foo;
+    for (int i = 0; i < 1234; ++i) {
+        foo.push_back(1000 + i);
+    }
+
+    int x = 13;
+    typedef LibFlatArray::streaming_short_vec<double, 8> short_vec_type;
+    LIBFLATARRAY_LOOP_PEELER(short_vec_type, int, &x, 1113, scaler, &foo[0], 2.5);
+
+    for (int i = 0; i < 1234; ++i) {
+        double expected = 1000 + i;
+        if ((i >= 13) && (i < 1113)) {
+            expected *= 2.5;
+        }
+
+        BOOST_TEST(expected == foo[i]);
+    }
+}
+
 int main(int argc, char **argv)
 {
     return 0;
