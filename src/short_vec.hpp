@@ -40,6 +40,41 @@ public:
 
 }
 
+#ifdef __CUDA_ARCH__
+// Only use scalar short_vec implementations on CUDA devices:
+#define LIBFLATARRAY_WIDEST_VECTOR_ISA SCALAR
+#else
+    // for IBM Blue Gene/Q's QPX, which is mutually exclusive to
+    // Intel/AMD's AVX/SSE or ARM's NEON ISAs:
+#  ifdef __VECTOR4DOUBLE__
+#  define LIBFLATARRAY_WIDEST_VECTOR_ISA __VECTOR4DOUBLE__
+#  endif
+
+    // Dito for ARM NEON:
+#  ifdef __ARM_NEON__
+#  define LIBFLATARRAY_WIDEST_VECTOR_ISA __ARM_NEON__
+#  endif
+
+    // Only the case of the IBM PC is complicated. No thanks to you,
+    // history!
+#  ifdef __AVX512F__
+#  define LIBFLATARRAY_WIDEST_VECTOR_ISA __AVX512F__
+#  else
+#    ifdef __AVX__
+#    define LIBFLATARRAY_WIDEST_VECTOR_ISA __AVX__
+#    else
+#      ifdef __SSE__
+#      define LIBFLATARRAY_WIDEST_VECTOR_ISA __SSE__
+#      else
+// fallback: scalar implementation always works and is still yields
+// code that's easy to vectorize for the compiler:
+#      define LIBFLATARRAY_WIDEST_VECTOR_ISA SCALAR
+#      endif
+#    endif
+#  endif
+
+#endif
+
 #include <sstream>
 
 #include <libflatarray/detail/short_vec_avx512_double_8.hpp>
