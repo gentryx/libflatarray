@@ -13,6 +13,7 @@ namespace LibFlatArray {
 
 class fake_particle
 {
+public:
     double pos_x;
     double pos_y;
     double pos_z;
