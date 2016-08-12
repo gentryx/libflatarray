@@ -45,7 +45,12 @@ public:
         const long planeSizeOld = ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y;
         const long planeSizeNew = ACCESSOR1::DIM_X * ACCESSOR2::DIM_Y;
 
+#ifdef __ICC
+#pragma unroll (10)
+#endif
+#ifdef __CUDA_ARCH__
 #pragma unroll 10
+#endif
         for (; global_z < endZ; ++global_z) {
 #define SQR(X) ((X)*(X))
             const long x = 0;
