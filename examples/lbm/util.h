@@ -12,6 +12,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <sys/time.h>
+#include <vector>
 
 long long time_usec()
 {
