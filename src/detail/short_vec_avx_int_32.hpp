@@ -41,7 +41,7 @@ class short_vec<int, 32>
 public:
     static const int ARITY = 32;
 
-    typedef short_vec_strategy::avx strategy;
+    typedef short_vec_strategy::avx2 strategy;
 
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
