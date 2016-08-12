@@ -5,7 +5,7 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <libflatarray/flat_array.hpp>
+#include <libflatarray/soa_grid.hpp>
 #include <map>
 
 #include "test.hpp"
