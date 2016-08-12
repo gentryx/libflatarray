@@ -9,7 +9,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_AVX512_DOUBLE_16_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_AVX512_DOUBLE_16_HPP
 
-#ifdef __AVX512F__
+#if LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_AVX512F
 
 #include <immintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
@@ -19,8 +19,6 @@
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
 #endif
-
-#ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
 
@@ -39,7 +37,7 @@ class short_vec<double, 16>
 public:
     static const int ARITY = 16;
 
-    typedef short_vec_strategy::avx512 strategy;
+    typedef short_vec_strategy::avx512f strategy;
 
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
@@ -238,7 +236,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
-#endif
 #endif
 
 #endif

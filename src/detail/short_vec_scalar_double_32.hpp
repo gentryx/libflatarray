@@ -8,8 +8,13 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_32_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_32_HPP
 
-#ifndef __AVX512F__
-#ifndef __MIC__
+#if (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SCALAR) ||          \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_ARM_NEON) ||        \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE) ||             \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE2) ||            \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE4_1) ||          \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_AVX) ||             \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_AVX2)
 
 #include <libflatarray/config.h>
 
@@ -734,7 +739,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
-#endif
 #endif
 
 #endif

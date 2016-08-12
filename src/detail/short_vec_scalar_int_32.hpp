@@ -15,8 +15,13 @@
 #include <initializer_list>
 #endif
 
-#ifndef __AVX512F__
-#ifndef __AVX2__
+#if (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SCALAR) ||          \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE) ||             \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE2) ||            \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE4_1) ||          \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_ARM_NEON) ||        \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_MIC) ||             \
+    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_QPX)
 
 namespace LibFlatArray {
 
@@ -735,7 +740,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
-#endif
 #endif
 
 #endif

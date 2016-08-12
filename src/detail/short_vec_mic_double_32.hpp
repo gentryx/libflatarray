@@ -9,7 +9,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_MIC_DOUBLE_32_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_MIC_DOUBLE_32_HPP
 
-#ifdef __MIC__
+#if LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_MIC
 
 #include <immintrin.h>
 #include <libflatarray/detail/sqrt_reference.hpp>
@@ -19,8 +19,6 @@
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
 #endif
-
-#ifndef __CUDA_ARCH__
 
 namespace LibFlatArray {
 
@@ -296,7 +294,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 
 }
 
-#endif
 #endif
 
 #endif
