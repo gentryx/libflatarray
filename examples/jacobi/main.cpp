@@ -168,7 +168,9 @@ public:
     {
         typedef typename LibFlatArray::estimate_optimum_short_vec_type<double, SOA_ACCESSOR_1>::VALUE my_short_vec;
 
+#ifdef _OPENMP
 #pragma omp parallel for schedule(static) firstprivate(accessorOld, accessorNew)
+#endif
         for (std::size_t z = 1; z < (dim_z - 1); ++z) {
             for (std::size_t y = 1; y < (dim_y - 1); ++y) {
                 std::size_t x = 1;
