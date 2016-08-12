@@ -1,4 +1,6 @@
+#ifdef __ICC
 #include <omp.h>
+#endif
 
 /**
  * Recommended reference for multi-dimensional array handling in C99
