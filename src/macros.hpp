@@ -962,9 +962,22 @@
  */
 #define LIBFLATARRAY_LOOP_PEELER(SHORT_VEC_TYPE, COUNTER_TYPE,          \
                                  X, END_X, FUNCTION, ARGS...)           \
+    LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
+        , SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS)
+
+/**
+ * Same as LIBFLATARRAY_LOOP_PEELER(), but for use in templates
+ */
+#define LIBFLATARRAY_LOOP_PEELER_TEMPLATE(SHORT_VEC_TYPE, COUNTER_TYPE, \
+                                          X, END_X, FUNCTION, ARGS...)  \
+    LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
+        typename, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS)
+
+#define LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                        \
+    TYPENAME, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS...) \
     {                                                                   \
         typedef SHORT_VEC_TYPE lfa_local_short_vec;                     \
-        typedef typename LibFlatArray::detail::flat_array::             \
+        typedef TYPENAME LibFlatArray::detail::flat_array::             \
             sibling_short_vec_switch<SHORT_VEC_TYPE, 1>::VALUE          \
             lfa_local_scalar;                                           \
                                                                         \

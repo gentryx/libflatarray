@@ -176,7 +176,7 @@ public:
                 std::size_t x = 1;
                 std::size_t end_x = dim_x - 1;
 
-                LIBFLATARRAY_LOOP_PEELER(my_short_vec, std::size_t, x, end_x, update, y, z, accessorOld, accessorNew);
+                LIBFLATARRAY_LOOP_PEELER_TEMPLATE(my_short_vec, std::size_t, x, end_x, update, y, z, accessorOld, accessorNew);
             }
         }
     }
