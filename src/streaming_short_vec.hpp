@@ -19,8 +19,9 @@ namespace LibFlatArray {
 #endif
 
 /**
- * fixme: supports only aligned stores
- * fixme: needs test
+ * Wraps functionality of short_vec, but replaces all stores by
+ * streaming (i.e. non-temporal) stores. Downside: all store addresses
+ * must be aligned.
  */
 template<typename CARGO, int ARITY>
 class streaming_short_vec : public short_vec<CARGO, ARITY>
@@ -39,14 +40,12 @@ public:
     inline
     void store(CARGO *data)
     {
-        std::cout << "hoho!\n";
         short_vec<CARGO, ARITY>::store_nt(data);
     }
 
     inline
     void store_aligned(CARGO *data)
     {
-        std::cout << "hihi!\n";
         short_vec<CARGO, ARITY>::store_nt(data);
     }
 };
