@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <libflatarray/flat_array.hpp>
 #include <libflatarray/testbed/cpu_benchmark.hpp>
 #include <libflatarray/testbed/evaluate.hpp>
