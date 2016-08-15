@@ -524,7 +524,7 @@ void testImplementationInt()
     {
         CARGO array[ARITY * 10];
         std::vector<int,   aligned_allocator<int,   64> > indices(ARITY);
-        std::vector<CARGO, aligned_allocator<CARGO, 64> >  actual[ARITY];
+        std::vector<CARGO, aligned_allocator<CARGO, 64> >  actual(ARITY);
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
@@ -570,6 +570,7 @@ void testImplementationInt()
                  245, 255, 265, 275, 285, 295, 305, 315 };
         actual1.data() << vec1;
         actual2.data() << vec2;
+
         for (int i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual1[i], expected[i]);
             BOOST_TEST_EQ(actual2[i], expected[i]);

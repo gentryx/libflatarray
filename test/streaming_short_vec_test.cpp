@@ -201,8 +201,8 @@ void testImplementationReal()
     // test gather
     {
         CARGO array[ARITY * 10];
-        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
-        CARGO actual[ARITY];
+        std::vector<int,   aligned_allocator<int,   64> > indices(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> >  actual(ARITY);
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
@@ -219,7 +219,7 @@ void testImplementationReal()
 
         ShortVec vec;
         vec.gather(array, &indices[0]);
-        actual << vec;
+        actual.data() << vec;
 
         for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
@@ -229,8 +229,8 @@ void testImplementationReal()
 #ifdef LIBFLATARRAY_WITH_CPP14
     // test gather via initializer_list
     {
-        CARGO actual1[ARITY];
-        CARGO actual2[ARITY];
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual1(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual2(ARITY);
         CARGO expected[ARITY];
         for (int i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) * 0.75;
@@ -246,8 +246,9 @@ void testImplementationReal()
                  60.0, 67.5, 75.0, 82.5, 90.0, 97.5, 105.0, 112.5,
                  120.0, 127.5, 135.0, 142.5, 150.0, 157.5, 165.0, 172.5,
                  180.0, 187.5, 195.0, 202.5, 210.0, 217.5, 225.0, 232.5 };
-        actual1 << vec1;
-        actual2 << vec2;
+        actual1.data() << vec1;
+        actual2.data() << vec2;
+
         for (int i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual1[i], expected[i], 0.001);
             TEST_REAL_ACCURACY(actual2[i], expected[i], 0.001);
