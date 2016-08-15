@@ -351,8 +351,8 @@ void testImplementationInt()
     typedef streaming_short_vec<CARGO, ARITY> ShortVec;
     const int numElements = ShortVec::ARITY * 10;
 
-    std::vector<CARGO> vec1(numElements);
-    std::vector<CARGO> vec2(numElements, 4711);
+    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
+    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
 
     // init vec1:
     for (int i = 0; i < numElements; ++i) {
