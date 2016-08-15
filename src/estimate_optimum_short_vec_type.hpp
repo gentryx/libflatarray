@@ -94,12 +94,12 @@ public:
     static const int BIT_WIDTH = 128;
 #      else
     static const int BIT_WIDTH = 64;
-  #    endif
+#      endif
 #    endif
+#  endif
 
     // rule of thumb: 2x loop unrolling for CPUs:
     static const int ARITY = 2 * BIT_WIDTH / sizeof(CARGO) / 8;
-#  endif
 #endif
 
     static const int STREAMING_FLAG =
