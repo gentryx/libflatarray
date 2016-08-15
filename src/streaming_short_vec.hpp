@@ -34,8 +34,19 @@ public:
 
     template<typename INIT_TYPE>
     inline
-    streaming_short_vec(const INIT_TYPE val) : short_vec<CARGO, ARITY>(val)
+    streaming_short_vec(const INIT_TYPE& val) : short_vec<CARGO, ARITY>(val)
     {}
+
+#ifdef LIBFLATARRAY_WITH_CPP14
+    inline
+    streaming_short_vec(const std::initializer_list<CARGO>& list)
+    {
+        const CARGO *ptr = static_cast<const CARGO *>(&(*list.begin()));
+        load(ptr);
+    }
+#endif
+
+    using short_vec<CARGO, ARITY>::load;
 
     inline
     void store(CARGO *data)
