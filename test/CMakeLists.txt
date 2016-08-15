@@ -10,6 +10,7 @@ add_executable(estimate_optimum_short_vec_type_test estimate_optimum_short_vec_t
 add_executable(macros_test                          macros_test.cpp)
 add_executable(preprocessor_test                    preprocessor_test.cpp)
 add_executable(short_vec_test                       short_vec_test.cpp short_vec_additional_test.cpp)
+add_executable(streaming_short_vec_test             streaming_short_vec_test.cpp)
 add_executable(soa_array_test                       soa_array_test.cpp)
 add_executable(soa_grid_test                        soa_grid_test.cpp)
 
@@ -25,6 +26,7 @@ add_custom_target(run_estimate_optimum_short_vec_type_test echo "running estimat
 add_custom_target(run_macros_test                          echo "running macros_test"                          && /bin/sh -c "${UNITEXEC} ./macros_test")
 add_custom_target(run_preprocessor_test                    echo "running preprocessor_test"                    && /bin/sh -c "${UNITEXEC} ./preprocessor_test")
 add_custom_target(run_short_vec_test                       echo "running short_vec_test"                       && /bin/sh -c "${UNITEXEC} ./short_vec_test")
+add_custom_target(run_streaming_short_vec_test             echo "running streaming_short_vec_test"             && /bin/sh -c "${UNITEXEC} ./streaming_short_vec_test")
 add_custom_target(run_soa_array_test                       echo "running soa_array_test"                       && /bin/sh -c "${UNITEXEC} ./soa_array_test")
 add_custom_target(run_soa_grid_test                        echo "running soa_grid_test"                        && /bin/sh -c "${UNITEXEC} ./soa_grid_test")
 
@@ -40,6 +42,7 @@ add_dependencies(check run_estimate_optimum_short_vec_type_test)
 add_dependencies(check run_macros_test)
 add_dependencies(check run_preprocessor_test)
 add_dependencies(check run_short_vec_test)
+add_dependencies(check run_streaming_short_vec_test)
 add_dependencies(check run_soa_array_test)
 add_dependencies(check run_soa_grid_test)
 
@@ -55,6 +58,7 @@ add_dependencies(run_estimate_optimum_short_vec_type_test estimate_optimum_short
 add_dependencies(run_macros_test                          macros_test)
 add_dependencies(run_preprocessor_test                    preprocessor_test)
 add_dependencies(run_short_vec_test                       short_vec_test)
+add_dependencies(run_streaming_short_vec_test             streaming_short_vec_test)
 add_dependencies(run_soa_array_test                       soa_array_test)
 add_dependencies(run_soa_grid_test                        soa_grid_test)
 
@@ -70,5 +74,6 @@ add_dependencies(tests estimate_optimum_short_vec_type_test)
 add_dependencies(tests macros_test)
 add_dependencies(tests preprocessor_test)
 add_dependencies(tests short_vec_test)
+add_dependencies(tests streaming_short_vec_test)
 add_dependencies(tests soa_array_test)
 add_dependencies(tests soa_grid_test)
