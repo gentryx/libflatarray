@@ -28,8 +28,8 @@ void testImplementationReal()
     typedef short_vec<CARGO, ARITY> ShortVec;
     int numElements = ShortVec::ARITY * 10;
 
-    std::vector<CARGO> vec1(numElements);
-    std::vector<CARGO> vec2(numElements, 4711);
+    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
+    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
 
     // init vec1:
     for (int i = 0; i < numElements; ++i) {
@@ -523,8 +523,8 @@ void testImplementationInt()
     // test gather
     {
         CARGO array[ARITY * 10];
-        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
-        CARGO actual[ARITY];
+        std::vector<int,   aligned_allocator<int,   64> > indices(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> >  actual[ARITY];
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
@@ -541,7 +541,7 @@ void testImplementationInt()
 
         ShortVec vec;
         vec.gather(array, &indices[0]);
-        actual << vec;
+        actual.data() << vec;
 
         for (int i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual[i], expected[i]);
@@ -551,8 +551,8 @@ void testImplementationInt()
 #ifdef LIBFLATARRAY_WITH_CPP14
     // test gather via initializer_list
     {
-        CARGO actual1[ARITY];
-        CARGO actual2[ARITY];
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual1(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual2(ARITY);
         CARGO expected[ARITY];
         for (int i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) + 5;
@@ -568,8 +568,8 @@ void testImplementationInt()
                  85, 95, 105, 115, 125, 135, 145, 155,
                  165, 175, 185, 195, 205, 215, 225, 235,
                  245, 255, 265, 275, 285, 295, 305, 315 };
-        actual1 << vec1;
-        actual2 << vec2;
+        actual1.data() << vec1;
+        actual2.data() << vec2;
         for (int i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual1[i], expected[i]);
             BOOST_TEST_EQ(actual2[i], expected[i]);
