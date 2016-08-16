@@ -643,6 +643,147 @@ private:
 
 #endif
 
+class JacobiD3Q7Gold : public JacobiD3Q7
+{
+public:
+    class UpdateFunctor
+    {
+    public:
+        UpdateFunctor(long dim_x, long dim_y, long dim_z) :
+            dim_x(dim_x),
+            dim_y(dim_y),
+            dim_z(dim_z)
+        {}
+
+        template<typename accessor_type1, typename accessor_type2>
+        void operator()(accessor_type1& accessor_old,
+                        accessor_type2& accessor_new) const
+        {
+            typedef typename LibFlatArray::estimate_optimum_short_vec_type<double, accessor_type1>::VALUE my_short_vec;
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(static) firstprivate(accessorOld, accessorNew)
+#endif
+            for (std::size_t z = 1; z < (dim_z - 1); ++z) {
+                for (std::size_t y = 1; y < (dim_y - 1); ++y) {
+                    std::size_t x = 1;
+                    std::size_t end_x = dim_x - 1;
+
+                    LIBFLATARRAY_LOOP_PEELER_TEMPLATE(
+                        my_short_vec,
+                        std::size_t,
+                        x,
+                        end_x,
+                        update_line,
+                        y,
+                        z,
+                        accessor_old,
+                        accessor_new);
+                }
+            }
+        }
+
+        template<typename SHORT_VEC, typename SOA_ACCESSOR_1, typename SOA_ACCESSOR_2>
+        void update_line(
+            std::size_t& x,
+            std::size_t end_x,
+            std::size_t y,
+            std::size_t z,
+            SOA_ACCESSOR_1& accessor_old,
+            SOA_ACCESSOR_2& accessor_new) const
+        {
+            accessor_old.index = SOA_ACCESSOR_1::gen_index(x, y, z);
+            accessor_new.index = SOA_ACCESSOR_2::gen_index(x, y, z);
+
+            SHORT_VEC buf;
+            SHORT_VEC factor = 1.0 / 6.0;
+
+            for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
+                using LibFlatArray::coord;
+                buf =  &accessor_old[coord< 0,  0, -1>()].temp();
+                buf += &accessor_old[coord< 0, -1,  0>()].temp();
+                buf += &accessor_old[coord<-1,  0,  0>()].temp();
+                buf += &accessor_old[coord< 1,  0,  0>()].temp();
+                buf += &accessor_old[coord< 0,  1,  0>()].temp();
+                buf += &accessor_old[coord< 0,  0,  1>()].temp();
+                buf *= factor;
+
+                &accessor_new.temp() << buf;
+
+                accessor_new += SHORT_VEC::ARITY;
+                accessor_old += SHORT_VEC::ARITY;
+            }
+
+        }
+
+    private:
+        std::size_t dim_x;
+        std::size_t dim_y;
+        std::size_t dim_z;
+    };
+
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        long dim_x = dim[0];
+        long dim_y = dim[1];
+        long dim_z = dim[2];
+        int maxT = 200000000 / dim_x / dim_y / dim_z;
+        maxT = std::max(16, maxT);
+
+        soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
+        soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
+
+        for (long z = 0; z < dim_z; ++z) {
+            for (long y = 0; y < dim_y; ++y) {
+                for (long x = 0; x < dim_x; ++x) {
+                    gridOld.set(x, y, z, JacobiCell(x + y + z));
+                    gridNew.set(x, y, z, JacobiCell(x + y + z));
+                }
+            }
+        }
+
+        double tStart = time();
+
+        UpdateFunctor functor(dim_x, dim_y, dim_z);
+        for (int t = 0; t < maxT; ++t) {
+            gridOld.callback(&gridNew, functor);
+            using std::swap;
+            swap(gridOld, gridNew);
+        }
+
+        double tEnd = time();
+
+        if (gridOld.get(20, 20, 20).temp ==
+            gridNew.get(10, 10, 10).temp) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
+
+        return glups(dim, maxT, tEnd - tStart);
+    }
+
+private:
+    void updateLine(double *gridOld, double *gridNew,
+                    const long xStart, const long y,       const long z,
+                    const long xEnd,   const long offsetY, const long offsetZ) const
+    {
+        for (long x = xStart; x < xEnd; ++x) {
+            gridNew[x + y * offsetY + z * offsetZ] =
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetZ] * WEIGHT_S +
+                gridOld[x + y * offsetY + z * offsetZ - 1 * offsetY] * WEIGHT_T +
+                gridOld[x + y * offsetY + z * offsetZ - 1          ] * WEIGHT_W +
+                gridOld[x + y * offsetY + z * offsetZ + 0          ] * WEIGHT_C +
+                gridOld[x + y * offsetY + z * offsetZ + 1          ] * WEIGHT_E +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetY] * WEIGHT_B +
+                gridOld[x + y * offsetY + z * offsetZ + 1 * offsetZ] * WEIGHT_N;
+        }
+    }
+};
+
 class Particle
 {
 public:
@@ -1659,6 +1800,10 @@ int main(int argc, char **argv)
         eval(JacobiD3Q7Silver(), *i);
     }
 #endif
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(JacobiD3Q7Gold(), *i);
+    }
 
     sizes.clear();
 
