@@ -104,7 +104,7 @@ public:
             generate_launch_config()(&grid_dim, &block_dim, i->length(), 1, 1);
 
             save_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
-                accessor.get_data(),
+                accessor.data(),
                 target,
                 i->length(),
                 count,

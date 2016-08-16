@@ -109,7 +109,7 @@ public:
 
         get_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
             target,
-            accessor.get_data(),
+            accessor.data(),
             count,
             x,
             y,

@@ -84,7 +84,7 @@
         LIBFLATARRAY_ELEM(1, MEMBER)() CONST                            \
     {                                                                   \
         return *(LIBFLATARRAY_ELEM(0, MEMBER)*)(                        \
-            data +                                                      \
+            my_data +                                                   \
             (DIM_PROD) * (                                              \
                 (sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                 \
                  LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, 0, ARRAY_INDEX))  + \

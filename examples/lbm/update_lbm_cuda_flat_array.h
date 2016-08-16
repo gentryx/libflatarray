@@ -21,8 +21,8 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, 256);
         // fixme: init grid?
 
-        char *dataA = gridA.get_data();
-        char *dataB = gridB.get_data();
+        char *dataA = gridA.data();
+        char *dataB = gridB.data();
 
         char *buf;
         cudaMalloc(reinterpret_cast<void**>(&buf), gridA.byte_size());
@@ -47,8 +47,8 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         long long t_end = time_usec();
         check_cuda_error();
 
-        cudaFree(gridA.get_data());
-        cudaFree(gridB.get_data());
+        cudaFree(gridA.data());
+        cudaFree(gridB.data());
 
         gridA.set_data(dataA);
         gridB.set_data(dataB);

@@ -345,7 +345,7 @@ ADD_TEST(TestNonTrivialMembers)
     {
         // fill memory with non-zero values...
         soa_array<Particle, 2000> array(1200);
-        std::fill(array.get_data(), array.get_data() + array.size(), char(1));
+        std::fill(array.data(), array.data() + array.size(), char(1));
     }
     int counter = DestructionCounterClass::countDestruct;
     {

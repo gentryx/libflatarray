@@ -252,7 +252,7 @@ ADD_TEST(TestCUDAConstructionDestruction)
     {
         // prep device memory with consecutive numbers:
         soa_grid<ConstructorDestructorTestCellPassive, fake_cuda_allocator<char>, true> device_grid(20, 10, 5);
-        data = device_grid.get_data();
+        data = device_grid.data();
 
         soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
         for (int z = 0; z < 5; ++z) {
@@ -266,16 +266,16 @@ ADD_TEST(TestCUDAConstructionDestruction)
                 }
             }
         }
-        cudaMemcpy(device_grid.get_data(), host_grid.get_data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
+        cudaMemcpy(device_grid.data(), host_grid.data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
 
     }
     {
         // ensure c-tor was run by checking increment on all elements:
         soa_grid<ConstructorDestructorTestCellActive,  fake_cuda_allocator<char>, true> device_grid(20, 10, 5);
-        BOOST_TEST(data == device_grid.get_data());
+        BOOST_TEST(data == device_grid.data());
 
         soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
-        cudaMemcpy(host_grid.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
+        cudaMemcpy(host_grid.data(), device_grid.data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
@@ -292,7 +292,7 @@ ADD_TEST(TestCUDAConstructionDestruction)
     {
         // ensure d-tor was run by checking increment on all elements:
         soa_grid<ConstructorDestructorTestCellPassive> host_grid(20, 10, 5);
-        cudaMemcpy(host_grid.get_data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
+        cudaMemcpy(host_grid.data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 5; ++z) {
             for (int y = 0; y < 10; ++y) {
                 for (int x = 0; x < 20; ++x) {
@@ -405,7 +405,7 @@ ADD_TEST(TestCUDALoadSaveElements)
 
     // very load:
     soa_grid<ConstructorDestructorTestCellPassive> host_grid2(31, 20, 19);
-    cudaMemcpy(host_grid2.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
+    cudaMemcpy(host_grid2.data(), device_grid.data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
 
     for (int i = 0; i < 10; ++i) {
         ConstructorDestructorTestCellPassive cell = host_grid2.get(21 + i, 19, 18);
@@ -542,7 +542,7 @@ ADD_TEST(TestCUDAArrayMembersConstructDestruct)
     {
         // prep device memory with consecutive numbers:
         soa_grid<CellWithPassiveArrayMember, fake_cuda_allocator<char>, true> device_grid(8, 9, 13);
-        data = device_grid.get_data();
+        data = device_grid.data();
 
         soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
         for (int z = 0; z < 13; ++z) {
@@ -557,16 +557,16 @@ ADD_TEST(TestCUDAArrayMembersConstructDestruct)
                 }
             }
         }
-        cudaMemcpy(device_grid.get_data(), host_grid.get_data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
+        cudaMemcpy(device_grid.data(), host_grid.data(), device_grid.byte_size(), cudaMemcpyHostToDevice);
 
     }
     {
         // ensure c-tor was run by checking increment on all elements:
         soa_grid<CellWithActiveArrayMember,  fake_cuda_allocator<char>, true> device_grid(8, 9, 13);
-        BOOST_TEST(data == device_grid.get_data());
+        BOOST_TEST(data == device_grid.data());
 
         soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
-        cudaMemcpy(host_grid.get_data(), device_grid.get_data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
+        cudaMemcpy(host_grid.data(), device_grid.data(), device_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 13; ++z) {
             for (int y = 0; y < 9; ++y) {
                 for (int x = 0; x < 8; ++x) {
@@ -587,7 +587,7 @@ ADD_TEST(TestCUDAArrayMembersConstructDestruct)
     {
         // ensure d-tor was run by checking increment on all elements:
         soa_grid<CellWithPassiveArrayMember> host_grid(8, 9, 13);
-        cudaMemcpy(host_grid.get_data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
+        cudaMemcpy(host_grid.data(), data, host_grid.byte_size(), cudaMemcpyDeviceToHost);
         for (int z = 0; z < 13; ++z) {
             for (int y = 0; y < 9; ++y) {
                 for (int x = 0; x < 8; ++x) {

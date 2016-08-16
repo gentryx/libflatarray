@@ -68,7 +68,7 @@ public:
         dim_x(0),
         dim_y(0),
         dim_z(0),
-        data(0)
+        my_data(0)
     {
         resize(dim_x, dim_y, dim_z);
     }
@@ -78,7 +78,7 @@ public:
         dim_y(other.dim_y),
         dim_z(other.dim_z),
         my_byte_size(other.byte_size()),
-        data(ALLOCATOR().allocate(other.byte_size()))
+        my_data(ALLOCATOR().allocate(other.byte_size()))
     {
         init();
         copy_in(other);
@@ -103,7 +103,7 @@ public:
         swap(dim_x, other.dim_x);
         swap(dim_x, other.dim_x);
         swap(my_byte_size, other.my_byte_size);
-        swap(data, other.data);
+        swap(my_data, other.my_data);
     }
 
     /**
@@ -124,20 +124,20 @@ public:
         dim_z = new_dim_z;
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
-        data = ALLOCATOR().allocate(byte_size());
+        my_data = ALLOCATOR().allocate(byte_size());
         init();
     }
 
     template<typename FUNCTOR>
     void callback(FUNCTOR functor)
     {
-        api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
+        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, dim_x, dim_y, dim_z);
     }
 
     template<typename FUNCTOR>
     void callback(FUNCTOR functor) const
     {
-        api_traits::select_sizes<CELL_TYPE>()(data, functor, dim_x, dim_y, dim_z);
+        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, dim_x, dim_y, dim_z);
     }
 
     template<typename FUNCTOR>
@@ -303,14 +303,14 @@ public:
         return my_byte_size;
     }
 
-    char *get_data()
+    char *data()
     {
-        return data;
+        return my_data;
     }
 
     void set_data(char *new_data)
     {
-        data = new_data;
+        my_data = new_data;
     }
 
     std::size_t get_dim_x() const
@@ -334,7 +334,7 @@ private:
     std::size_t dim_z;
     std::size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
-    char *data;
+    char *my_data;
     cell_staging_buffer_type cell_staging_buffer;
     char_staging_buffer_type raw_staging_buffer;
 
@@ -358,7 +358,7 @@ private:
             other_grid, functor);
 
         api_traits::select_sizes<CELL_TYPE>()(
-            data,
+            my_data,
             helper,
             dim_x,
             dim_y,
@@ -373,7 +373,7 @@ private:
             other_grid, functor);
 
         api_traits::select_sizes<CELL_TYPE>()(
-            data,
+            my_data,
             helper,
             dim_x,
             dim_y,
@@ -387,12 +387,12 @@ private:
 
     void destroy_and_deallocate()
     {
-        if (data == 0) {
+        if (my_data == 0) {
             return;
         }
 
         callback(detail::flat_array::destroy_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(dim_x, dim_y, dim_z));
-        ALLOCATOR().deallocate(data, byte_size());
+        ALLOCATOR().deallocate(my_data, byte_size());
     }
 
     void copy_in(const soa_grid& other)

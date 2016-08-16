@@ -638,18 +638,18 @@ ADD_TEST(TestAssignment1)
     soa_grid<HeatedGameOfLifeCell> gridOld(20, 30, 40);
     soa_grid<HeatedGameOfLifeCell> gridNew(70, 60, 50);
 
-    BOOST_TEST(gridOld.data != gridNew.data);
-    BOOST_TEST(gridOld.dim_x != gridNew.dim_x);
-    BOOST_TEST(gridOld.dim_y != gridNew.dim_y);
-    BOOST_TEST(gridOld.dim_z != gridNew.dim_z);
+    BOOST_TEST(gridOld.data() != gridNew.data());
+    BOOST_TEST(gridOld.dim_x  != gridNew.dim_x);
+    BOOST_TEST(gridOld.dim_y  != gridNew.dim_y);
+    BOOST_TEST(gridOld.dim_z  != gridNew.dim_z);
     BOOST_TEST(gridOld.my_byte_size != gridNew.my_byte_size);
 
     gridOld = gridNew;
 
-    BOOST_TEST(gridOld.data != gridNew.data);
-    BOOST_TEST(gridOld.dim_x == gridNew.dim_x);
-    BOOST_TEST(gridOld.dim_y == gridNew.dim_y);
-    BOOST_TEST(gridOld.dim_z == gridNew.dim_z);
+    BOOST_TEST(gridOld.data() != gridNew.data());
+    BOOST_TEST(gridOld.dim_x  == gridNew.dim_x);
+    BOOST_TEST(gridOld.dim_y  == gridNew.dim_y);
+    BOOST_TEST(gridOld.dim_z  == gridNew.dim_z);
     BOOST_TEST(gridOld.my_byte_size == gridNew.my_byte_size);
 }
 
@@ -1066,7 +1066,7 @@ ADD_TEST(TestNonTrivialMembers)
     {
         // fill memory with non-zero values...
         soa_grid<HeatedGameOfLifeCell> grid1(63, 63, 120);
-        std::fill(grid1.get_data(), grid1.get_data() + grid1.byte_size(), char(1));
+        std::fill(grid1.data(), grid1.data() + grid1.byte_size(), char(1));
     }
     int counter = DestructionCounterClass::count;
     {

@@ -101,8 +101,8 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor(char *data, const long index) :                    \
-            data(data),                                                 \
+        soa_accessor(char *my_data, const long index) :                 \
+            my_data(my_data),                                           \
             index(index)                                                \
         {}                                                              \
                                                                         \
@@ -136,7 +136,7 @@
             coord<X, Y, Z>)                                             \
         {                                                               \
             return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                data, index);                                           \
+                my_data, index);                                        \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -146,7 +146,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
-                data, index);                                           \
+                my_data, index);                                        \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -255,7 +255,7 @@
         MEMBER_TYPE& access_member()                                    \
         {                                                               \
             return *(MEMBER_TYPE*)(                                     \
-                data +                                                  \
+                my_data +                                               \
                 DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
                 index * sizeof(MEMBER_TYPE) +                           \
@@ -267,7 +267,7 @@
         char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
-                data +                                                  \
+                my_data +                                               \
                 DIM_PROD * offset +                                     \
                 index * size_of_member +                                \
                 INDEX * size_of_member;                                 \
@@ -284,19 +284,19 @@
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-        const char *get_data() const                                    \
+        const char *data() const                                        \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        char *get_data()                                                \
+        char *data()                                                    \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
     private:                                                            \
-        char *data;                                                     \
+        char *my_data;                                                  \
     public:                                                             \
         long index;                                                     \
     };                                                                  \
@@ -322,8 +322,8 @@
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        const_soa_accessor(const char *data, long index) :              \
-            data(data),                                                 \
+        const_soa_accessor(const char *my_data, long index) :           \
+            my_data(my_data),                                           \
             index(index)                                                \
         {}                                                              \
                                                                         \
@@ -357,7 +357,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                data, index);                                           \
+                my_data, index);                                        \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -397,13 +397,13 @@
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-        const char *get_data() const                                    \
+        const char *data() const                                        \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
     private:                                                            \
-        const char *data;                                               \
+        const char *my_data;                                            \
     public:                                                             \
         long index;                                                     \
     };                                                                  \
@@ -429,8 +429,8 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor_light(char *data, long& index) :                   \
-            data(data),                                                 \
+        soa_accessor_light(char *my_data, long& index) :                \
+            my_data(my_data),                                           \
             index(&index)                                               \
         {}                                                              \
                                                                         \
@@ -464,7 +464,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                data, *index);                                          \
+                my_data, *index);                                       \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -573,7 +573,7 @@
         MEMBER_TYPE& access_member()                                    \
         {                                                               \
             return *(MEMBER_TYPE*)(                                     \
-                data +                                                  \
+                my_data +                                               \
                 DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
                 *index * sizeof(MEMBER_TYPE) +                          \
@@ -585,7 +585,7 @@
         char *access_member(const long size_of_member, const long offset) \
         {                                                               \
             return                                                      \
-                data +                                                  \
+                my_data +                                               \
                 DIM_PROD * offset +                                     \
                 *index * size_of_member +                               \
                 INDEX  * size_of_member;                                \
@@ -602,15 +602,15 @@
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-        const char *get_data() const                                    \
+        const char *data() const                                        \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        char *get_data()                                                \
+        char *data()                                                    \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -626,7 +626,7 @@
         }                                                               \
                                                                         \
     private:                                                            \
-        char *data;                                                     \
+        char *my_data;                                                  \
         long *index;                                                    \
     };                                                                  \
                                                                         \
@@ -651,8 +651,8 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        const_soa_accessor_light(const char *data, long& index) :       \
-            data(data),                                                 \
+        const_soa_accessor_light(const char *my_data, long& index) :    \
+            my_data(my_data),                                           \
             index(&index)                                               \
         {}                                                              \
                                                                         \
@@ -686,7 +686,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
-                data, *index);                                          \
+                my_data, *index);                                       \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -726,13 +726,13 @@
             CELL_MEMBERS);                                              \
                                                                         \
         __host__ __device__                                             \
-        const char *get_data() const                                    \
+        const char *data() const                                        \
         {                                                               \
-            return data;                                                \
+            return my_data;                                             \
         }                                                               \
                                                                         \
     private:                                                            \
-        const char *data;                                               \
+        const char *my_data;                                            \
         long *index;                                                    \
     };                                                                  \
                                                                         \

@@ -40,7 +40,7 @@ public:
         elements(elements)
     {
         construct_all_instances();
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < int(elements); accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < int(elements); accessor += 1) {
             accessor << value;
         }
     }
@@ -68,7 +68,7 @@ public:
     __host__ __device__
     ~soa_array()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < MY_SIZE; accessor += 1) {
             accessor.destroy_members();
         }
 
@@ -96,14 +96,14 @@ public:
     __host__ __device__
     soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index)
     {
-        return soa_accessor<CELL, SIZE, 1, 1, 0>(data, index);
+        return soa_accessor<CELL, SIZE, 1, 1, 0>(my_data, index);
     }
 
     inline
     __host__ __device__
     const const_soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index) const
     {
-        return const_soa_accessor<CELL, SIZE, 1, 1, 0>(data, index);
+        return const_soa_accessor<CELL, SIZE, 1, 1, 0>(my_data, index);
     }
 
     inline
@@ -147,9 +147,9 @@ public:
         return elements;
     }
 
-    char *get_data()
+    char *data()
     {
-        return data;
+        return my_data;
     }
 
     std::size_t byte_size() const
@@ -159,13 +159,13 @@ public:
 
 private:
     std::size_t elements;
-    char data[BYTE_SIZE];
+    char my_data[BYTE_SIZE];
 
     inline
     __host__ __device__
     void construct_all_instances()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(data, 0); accessor.index < MY_SIZE; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < MY_SIZE; accessor += 1) {
             accessor.construct_members();
         }
     }

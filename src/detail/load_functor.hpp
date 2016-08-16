@@ -108,7 +108,7 @@ public:
 
             load_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
                 source,
-                accessor.get_data(),
+                accessor.data(),
                 i->length(),
                 count,
                 i->origin[0],

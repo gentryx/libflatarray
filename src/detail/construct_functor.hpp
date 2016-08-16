@@ -108,7 +108,7 @@ public:
         dim3 block_dim;
         generate_launch_config()(&grid_dim, &block_dim, dim_x, dim_y, dim_z);
 
-        construct_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(accessor.get_data(), dim_x, dim_y, dim_z);
+        construct_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(accessor.data(), dim_x, dim_y, dim_z);
     }
 
 private:
