@@ -137,47 +137,47 @@ public:
         std::size_t end_x,
         std::size_t y,
         std::size_t z,
-        SOA_ACCESSOR_1& accessorOld,
-        SOA_ACCESSOR_2& accessorNew) const
+        SOA_ACCESSOR_1& accessor_old,
+        SOA_ACCESSOR_2& accessor_new) const
     {
-        accessorOld.index = SOA_ACCESSOR_1::gen_index(x, y, z);
-        accessorNew.index = SOA_ACCESSOR_2::gen_index(x, y, z);
+        accessor_old.index = SOA_ACCESSOR_1::gen_index(x, y, z);
+        accessor_new.index = SOA_ACCESSOR_2::gen_index(x, y, z);
 
         SHORT_VEC buf;
         SHORT_VEC factor = 1.0 / 6.0;
 
         for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
             using LibFlatArray::coord;
-            buf =  &accessorOld[coord< 0,  0, -1>()].temp();
-            buf += &accessorOld[coord< 0, -1,  0>()].temp();
-            buf += &accessorOld[coord<-1,  0,  0>()].temp();
-            buf += &accessorOld[coord< 1,  0,  0>()].temp();
-            buf += &accessorOld[coord< 0,  1,  0>()].temp();
-            buf += &accessorOld[coord< 0,  0,  1>()].temp();
+            buf =  &accessor_old[coord< 0,  0, -1>()].temp();
+            buf += &accessor_old[coord< 0, -1,  0>()].temp();
+            buf += &accessor_old[coord<-1,  0,  0>()].temp();
+            buf += &accessor_old[coord< 1,  0,  0>()].temp();
+            buf += &accessor_old[coord< 0,  1,  0>()].temp();
+            buf += &accessor_old[coord< 0,  0,  1>()].temp();
             buf *= factor;
 
-            &accessorNew.temp() << buf;
+            &accessor_new.temp() << buf;
 
-            accessorNew += SHORT_VEC::ARITY;
-            accessorOld += SHORT_VEC::ARITY;
+            accessor_new += SHORT_VEC::ARITY;
+            accessor_old += SHORT_VEC::ARITY;
         }
 
     }
 
     template<typename SOA_ACCESSOR_1, typename SOA_ACCESSOR_2>
-    void operator()(SOA_ACCESSOR_1 accessorOld, SOA_ACCESSOR_2 accessorNew) const
+    void operator()(SOA_ACCESSOR_1 accessor_old, SOA_ACCESSOR_2 accessor_new) const
     {
         typedef typename LibFlatArray::estimate_optimum_short_vec_type<double, SOA_ACCESSOR_1>::VALUE my_short_vec;
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(static) firstprivate(accessorOld, accessorNew)
+#pragma omp parallel for schedule(static) firstprivate(accessor_old, accessor_new)
 #endif
         for (std::size_t z = 1; z < (dim_z - 1); ++z) {
             for (std::size_t y = 1; y < (dim_y - 1); ++y) {
                 std::size_t x = 1;
                 std::size_t end_x = dim_x - 1;
 
-                LIBFLATARRAY_LOOP_PEELER_TEMPLATE(my_short_vec, std::size_t, x, end_x, update, y, z, accessorOld, accessorNew);
+                LIBFLATARRAY_LOOP_PEELER_TEMPLATE(my_short_vec, std::size_t, x, end_x, update, y, z, accessor_old, accessor_new);
             }
         }
     }
