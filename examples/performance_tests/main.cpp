@@ -696,17 +696,21 @@ public:
             accessor_new.index = SOA_ACCESSOR_2::gen_index(x, y, z);
 
             SHORT_VEC buf;
-            SHORT_VEC factor = 1.0 / 6.0;
+            SHORT_VEC factorS = WEIGHT_S;
+            SHORT_VEC factorT = WEIGHT_T;
+            SHORT_VEC factorW = WEIGHT_W;
+            SHORT_VEC factorE = WEIGHT_E;
+            SHORT_VEC factorB = WEIGHT_B;
+            SHORT_VEC factorN = WEIGHT_N;
 
             for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
                 using LibFlatArray::coord;
-                buf =  &accessor_old[coord< 0,  0, -1>()].temp();
-                buf += &accessor_old[coord< 0, -1,  0>()].temp();
-                buf += &accessor_old[coord<-1,  0,  0>()].temp();
-                buf += &accessor_old[coord< 1,  0,  0>()].temp();
-                buf += &accessor_old[coord< 0,  1,  0>()].temp();
-                buf += &accessor_old[coord< 0,  0,  1>()].temp();
-                buf *= factor;
+                buf =  SHORT_VEC(&accessor_old[coord< 0,  0, -1>()].temp()) * factorS;
+                buf += SHORT_VEC(&accessor_old[coord< 0, -1,  0>()].temp()) * factorT;
+                buf += SHORT_VEC(&accessor_old[coord<-1,  0,  0>()].temp()) * factorW;
+                buf += SHORT_VEC(&accessor_old[coord< 1,  0,  0>()].temp()) * factorE;
+                buf += SHORT_VEC(&accessor_old[coord< 0,  1,  0>()].temp()) * factorB;
+                buf += SHORT_VEC(&accessor_old[coord< 0,  0,  1>()].temp()) * factorN;
 
                 &accessor_new.temp() << buf;
 
