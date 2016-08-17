@@ -41,13 +41,13 @@ public:
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
         typedef soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> accessor_type;
-        accessor.index = accessor_type::gen_index(x, y, z);
+        accessor.index() = accessor_type::gen_index(x, y, z);
         CELL *cursor = target;
 
         for (long i = 0; i < count; ++i) {
             accessor >> *cursor;
             ++cursor;
-            ++accessor.index;
+            ++accessor.index();
         }
     }
 

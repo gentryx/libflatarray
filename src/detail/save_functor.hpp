@@ -38,7 +38,7 @@ public:
         std::size_t offset = 0;
 
         for (ITERATOR i = start; i != end; ++i) {
-            accessor.index = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(
+            accessor.index() = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(
                 i->origin[0],
                 i->origin[1],
                 i->origin[2]);

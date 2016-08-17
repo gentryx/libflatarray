@@ -101,9 +101,9 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor(char *my_data, const long index) :                 \
+        soa_accessor(char *my_data, const long my_index) :              \
             my_data(my_data),                                           \
-            index(index)                                                \
+            my_index(my_index)                                          \
         {}                                                              \
                                                                         \
         inline                                                          \
@@ -119,14 +119,14 @@
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
         {                                                               \
-            index += offset;                                            \
+            my_index += offset;                                         \
         }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
         void operator++()                                               \
         {                                                               \
-            ++index;                                                    \
+            ++my_index;                                                 \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -136,7 +136,7 @@
             coord<X, Y, Z>)                                             \
         {                                                               \
             return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                my_data, index);                                        \
+                my_data, my_index);                                     \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -146,7 +146,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
-                my_data, index);                                        \
+                my_data, my_index);                                     \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -258,7 +258,7 @@
                 my_data +                                               \
                 DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
-                index * sizeof(MEMBER_TYPE) +                           \
+                my_index * sizeof(MEMBER_TYPE) +                        \
                 INDEX * sizeof(MEMBER_TYPE));                           \
         }                                                               \
                                                                         \
@@ -269,7 +269,7 @@
             return                                                      \
                 my_data +                                               \
                 DIM_PROD * offset +                                     \
-                index * size_of_member +                                \
+                my_index * size_of_member +                             \
                 INDEX * size_of_member;                                 \
         }                                                               \
                                                                         \
@@ -295,10 +295,21 @@
             return my_data;                                             \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        long& index()                                                   \
+        {                                                               \
+            return my_index;                                            \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        const long& index() const                                       \
+        {                                                               \
+            return my_index;                                            \
+        }                                                               \
+                                                                        \
     private:                                                            \
         char *my_data;                                                  \
-    public:                                                             \
-        long index;                                                     \
+        long my_index;                                                  \
     };                                                                  \
                                                                         \
     template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
@@ -322,9 +333,9 @@
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        const_soa_accessor(const char *my_data, long index) :           \
+        const_soa_accessor(const char *my_data, long my_index) :        \
             my_data(my_data),                                           \
-            index(index)                                                \
+            my_index(my_index)                                          \
         {}                                                              \
                                                                         \
         inline                                                          \
@@ -340,14 +351,14 @@
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
         {                                                               \
-            index += offset;                                            \
+            my_index += offset;                                         \
         }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
         void operator++()                                               \
         {                                                               \
-            ++index;                                                    \
+            ++my_index;                                                 \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -357,7 +368,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                my_data, index);                                        \
+                my_data, my_index);                                     \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -402,10 +413,21 @@
             return my_data;                                             \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        long& index()                                                   \
+        {                                                               \
+            return my_index;                                            \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        const long& index() const                                       \
+        {                                                               \
+            return my_index;                                            \
+        }                                                               \
+                                                                        \
     private:                                                            \
         const char *my_data;                                            \
-    public:                                                             \
-        long index;                                                     \
+        long my_index;                                                  \
     };                                                                  \
                                                                         \
     template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
@@ -429,9 +451,9 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        soa_accessor_light(char *my_data, long& index) :                \
+        soa_accessor_light(char *my_data, long& my_index) :             \
             my_data(my_data),                                           \
-            index(&index)                                               \
+            my_index(&my_index)                                         \
         {}                                                              \
                                                                         \
         inline                                                          \
@@ -447,14 +469,14 @@
         __host__ __device__                                             \
             void operator+=(const long offset)                          \
         {                                                               \
-            *index += offset;                                           \
+            *my_index += offset;                                        \
         }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
         void operator++()                                               \
         {                                                               \
-            ++*index;                                                   \
+            ++*my_index;                                                \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -464,7 +486,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>(  \
-                my_data, *index);                                       \
+                my_data, *my_index);                                    \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -576,7 +598,7 @@
                 my_data +                                               \
                 DIM_PROD *                                              \
                 detail::flat_array::offset<CELL_TYPE, OFFSET>::OFFSET + \
-                *index * sizeof(MEMBER_TYPE) +                          \
+                *my_index * sizeof(MEMBER_TYPE) +                       \
                 INDEX  * sizeof(MEMBER_TYPE));                          \
         }                                                               \
                                                                         \
@@ -587,7 +609,7 @@
             return                                                      \
                 my_data +                                               \
                 DIM_PROD * offset +                                     \
-                *index * size_of_member +                               \
+                *my_index * size_of_member +                            \
                 INDEX  * size_of_member;                                \
         }                                                               \
                                                                         \
@@ -614,20 +636,20 @@
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        const long *get_index() const                                   \
+        long& index()                                                   \
         {                                                               \
-            return index;                                               \
+            return *my_index;                                           \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
-        long *get_index()                                               \
+        const long& index() const                                       \
         {                                                               \
-            return index;                                               \
+            return *my_index;                                           \
         }                                                               \
                                                                         \
     private:                                                            \
         char *my_data;                                                  \
-        long *index;                                                    \
+        long *my_index;                                                 \
     };                                                                  \
                                                                         \
     template<long MY_DIM_X, long MY_DIM_Y, long MY_DIM_Z, long INDEX>   \
@@ -651,9 +673,9 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
-        const_soa_accessor_light(const char *my_data, long& index) :    \
+        const_soa_accessor_light(const char *my_data, long& my_index) : \
             my_data(my_data),                                           \
-            index(&index)                                               \
+            my_index(&my_index)                                         \
         {}                                                              \
                                                                         \
         inline                                                          \
@@ -669,14 +691,14 @@
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
         {                                                               \
-            *index += offset;                                           \
+            *my_index += offset;                                           \
         }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
         void operator++()                                               \
         {                                                               \
-            ++*index;                                                   \
+            ++*my_index;                                                   \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
@@ -686,7 +708,7 @@
             coord<X, Y, Z>) const                                       \
         {                                                               \
             return const_soa_accessor_light<CELL_TYPE, LIBFLATARRAY_PARAMS>( \
-                my_data, *index);                                       \
+                my_data, *my_index);                                    \
         }                                                               \
                                                                         \
         __host__ __device__                                             \
@@ -731,9 +753,21 @@
             return my_data;                                             \
         }                                                               \
                                                                         \
+        __host__ __device__                                             \
+        long& index()                                                   \
+        {                                                               \
+            return *my_index;                                           \
+        }                                                               \
+                                                                        \
+        __host__ __device__                                             \
+        const long& index() const                                       \
+        {                                                               \
+            return *my_index;                                           \
+        }                                                               \
+                                                                        \
     private:                                                            \
         const char *my_data;                                            \
-        long *index;                                                    \
+        long *my_index;                                                 \
     };                                                                  \
                                                                         \
     }                                                                   \

@@ -40,7 +40,7 @@ public:
     {
         for (std::size_t z = 0; z < dim_z; ++z) {
             for (std::size_t y = 0; y < dim_y; ++y) {
-                accessor.index = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(0, y, z);
+                accessor.index() = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(0, y, z);
 
                 for (std::size_t x = 0; x < dim_x; ++x) {
                     accessor.destroy_members();

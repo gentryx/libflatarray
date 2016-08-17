@@ -11,8 +11,8 @@ void update(ACCESSOR1 accessor1, ACCESSOR2 accessor2)
     ACCESSOR2 accessorNew(accessor2.data(), 0);
 
     CELL::updateLine(
-        accessorOld, &accessorOld.index,
-        accessorNew, &accessorNew.index, 2, 256 - 2);
+        accessorOld, &accessorOld.index(),
+        accessorNew, &accessorNew.index(), 2, 256 - 2);
 }
 
 template<typename CELL>

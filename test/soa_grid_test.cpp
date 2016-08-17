@@ -95,7 +95,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index = accessor.gen_index(x, y, z);
+                    accessor.index() = accessor.gen_index(x, y, z);
 
                     double actualA = accessor.template access_member<double, 0>();
                     bool actualB = accessor.template access_member<bool, 1>();
@@ -131,7 +131,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index = accessor.gen_index(x, y, z);
+                    accessor.index() = accessor.gen_index(x, y, z);
 
                     double actualA = *reinterpret_cast<double*>(accessor.access_member(8, 0));
                     bool actualB = *reinterpret_cast<bool*>(accessor.access_member(1, 8));
@@ -167,7 +167,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
+                    accessor.index() =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -214,8 +214,8 @@ public:
                         ACCESSOR1::DIM_X * ACCESSOR1::DIM_Y * z +
                         ACCESSOR1::DIM_X * y +
                         x;
-                    accessor1.index = index;
-                    accessor2.index = index;
+                    accessor1.index() = index;
+                    accessor2.index() = index;
                     accessor2.temperature() = accessor1.temperature();
                 }
             }
@@ -359,7 +359,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
+                    accessor.index() =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -392,7 +392,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
+                    accessor.index() =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -425,7 +425,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
+                    accessor.index() =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -458,7 +458,7 @@ public:
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
                 for (long x = 0; x < dim_x; ++x) {
-                    accessor.index =
+                    accessor.index() =
                         ACCESSOR::DIM_X * ACCESSOR::DIM_Y * z +
                         ACCESSOR::DIM_X * y +
                         x;
@@ -639,17 +639,17 @@ ADD_TEST(TestAssignment1)
     soa_grid<HeatedGameOfLifeCell> gridNew(70, 60, 50);
 
     BOOST_TEST(gridOld.data() != gridNew.data());
-    BOOST_TEST(gridOld.dim_x  != gridNew.dim_x);
-    BOOST_TEST(gridOld.dim_y  != gridNew.dim_y);
-    BOOST_TEST(gridOld.dim_z  != gridNew.dim_z);
+    BOOST_TEST(gridOld.dim_x()  != gridNew.dim_x());
+    BOOST_TEST(gridOld.dim_y()  != gridNew.dim_y());
+    BOOST_TEST(gridOld.dim_z()  != gridNew.dim_z());
     BOOST_TEST(gridOld.my_byte_size != gridNew.my_byte_size);
 
     gridOld = gridNew;
 
     BOOST_TEST(gridOld.data() != gridNew.data());
-    BOOST_TEST(gridOld.dim_x  == gridNew.dim_x);
-    BOOST_TEST(gridOld.dim_y  == gridNew.dim_y);
-    BOOST_TEST(gridOld.dim_z  == gridNew.dim_z);
+    BOOST_TEST(gridOld.dim_x()  == gridNew.dim_x());
+    BOOST_TEST(gridOld.dim_y()  == gridNew.dim_y());
+    BOOST_TEST(gridOld.dim_z()  == gridNew.dim_z());
     BOOST_TEST(gridOld.my_byte_size == gridNew.my_byte_size);
 }
 
@@ -672,13 +672,13 @@ ADD_TEST(TestAssignment2)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 20);
-    BOOST_TEST(grid1.get_dim_y() == 10);
-    BOOST_TEST(grid1.get_dim_z() ==  1);
+    BOOST_TEST(grid1.dim_x() == 20);
+    BOOST_TEST(grid1.dim_y() == 10);
+    BOOST_TEST(grid1.dim_z() ==  1);
 
-    BOOST_TEST(grid2.get_dim_x() == 20);
-    BOOST_TEST(grid2.get_dim_y() == 10);
-    BOOST_TEST(grid2.get_dim_z() ==  1);
+    BOOST_TEST(grid2.dim_x() == 20);
+    BOOST_TEST(grid2.dim_y() == 10);
+    BOOST_TEST(grid2.dim_z() ==  1);
 
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {
@@ -710,13 +710,13 @@ ADD_TEST(TestAssignment3)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 20);
-    BOOST_TEST(grid1.get_dim_y() == 10);
-    BOOST_TEST(grid1.get_dim_z() ==  1);
+    BOOST_TEST(grid1.dim_x() == 20);
+    BOOST_TEST(grid1.dim_y() == 10);
+    BOOST_TEST(grid1.dim_z() ==  1);
 
-    BOOST_TEST(grid2.get_dim_x() == 20);
-    BOOST_TEST(grid2.get_dim_y() == 10);
-    BOOST_TEST(grid2.get_dim_z() ==  1);
+    BOOST_TEST(grid2.dim_x() == 20);
+    BOOST_TEST(grid2.dim_y() == 10);
+    BOOST_TEST(grid2.dim_z() ==  1);
 
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {
@@ -752,13 +752,13 @@ ADD_TEST(TestAssignment4)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 100);
-    BOOST_TEST(grid1.get_dim_y() ==  50);
-    BOOST_TEST(grid1.get_dim_z() ==   1);
+    BOOST_TEST(grid1.dim_x() == 100);
+    BOOST_TEST(grid1.dim_y() ==  50);
+    BOOST_TEST(grid1.dim_z() ==   1);
 
-    BOOST_TEST(grid2.get_dim_x() == 100);
-    BOOST_TEST(grid2.get_dim_y() ==  50);
-    BOOST_TEST(grid2.get_dim_z() ==   1);
+    BOOST_TEST(grid2.dim_x() == 100);
+    BOOST_TEST(grid2.dim_y() ==  50);
+    BOOST_TEST(grid2.dim_z() ==   1);
 
     for (int y = 0; y < 50; ++y) {
         for (int x = 0; x < 100; ++x) {
@@ -1160,13 +1160,13 @@ ADD_TEST(TestCopyConstructor1)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 20);
-    BOOST_TEST(grid1.get_dim_y() == 10);
-    BOOST_TEST(grid1.get_dim_z() ==  1);
+    BOOST_TEST(grid1.dim_x() == 20);
+    BOOST_TEST(grid1.dim_y() == 10);
+    BOOST_TEST(grid1.dim_z() ==  1);
 
-    BOOST_TEST(grid2.get_dim_x() == 20);
-    BOOST_TEST(grid2.get_dim_y() == 10);
-    BOOST_TEST(grid2.get_dim_z() ==  1);
+    BOOST_TEST(grid2.dim_x() == 20);
+    BOOST_TEST(grid2.dim_y() == 10);
+    BOOST_TEST(grid2.dim_z() ==  1);
 
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {
@@ -1197,13 +1197,13 @@ ADD_TEST(TestCopyConstructor2)
         }
     }
 
-    BOOST_TEST(grid1.get_dim_x() == 20);
-    BOOST_TEST(grid1.get_dim_y() == 10);
-    BOOST_TEST(grid1.get_dim_z() ==  1);
+    BOOST_TEST(grid1.dim_x() == 20);
+    BOOST_TEST(grid1.dim_y() == 10);
+    BOOST_TEST(grid1.dim_z() ==  1);
 
-    BOOST_TEST(grid2.get_dim_x() == 20);
-    BOOST_TEST(grid2.get_dim_y() == 10);
-    BOOST_TEST(grid2.get_dim_z() ==  1);
+    BOOST_TEST(grid2.dim_x() == 20);
+    BOOST_TEST(grid2.dim_y() == 10);
+    BOOST_TEST(grid2.dim_z() ==  1);
 
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 20; ++x) {

@@ -40,7 +40,7 @@ public:
         elements(elements)
     {
         construct_all_instances();
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < int(elements); accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < int(elements); accessor += 1) {
             accessor << value;
         }
     }
@@ -68,7 +68,7 @@ public:
     __host__ __device__
     ~soa_array()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < MY_SIZE; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
             accessor.destroy_members();
         }
 
@@ -165,7 +165,7 @@ private:
     __host__ __device__
     void construct_all_instances()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index < MY_SIZE; accessor += 1) {
+        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
             accessor.construct_members();
         }
     }

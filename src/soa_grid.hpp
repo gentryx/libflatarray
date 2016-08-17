@@ -65,18 +65,18 @@ public:
     friend class TestAssignment1;
 
     explicit soa_grid(std::size_t dim_x = 0, std::size_t dim_y = 0, std::size_t dim_z = 0) :
-        dim_x(0),
-        dim_y(0),
-        dim_z(0),
+        my_dim_x(0),
+        my_dim_y(0),
+        my_dim_z(0),
         my_data(0)
     {
         resize(dim_x, dim_y, dim_z);
     }
 
     soa_grid(const soa_grid& other) :
-        dim_x(other.dim_x),
-        dim_y(other.dim_y),
-        dim_z(other.dim_z),
+        my_dim_x(other.my_dim_x),
+        my_dim_y(other.my_dim_y),
+        my_dim_z(other.my_dim_z),
         my_byte_size(other.byte_size()),
         my_data(ALLOCATOR().allocate(other.byte_size()))
     {
@@ -91,7 +91,7 @@ public:
 
     soa_grid& operator=(const soa_grid& other)
     {
-        resize(other.dim_x, other.dim_y, other.dim_z);
+        resize(other.my_dim_x, other.my_dim_y, other.my_dim_z);
         copy_in(other);
         return *this;
     }
@@ -99,29 +99,29 @@ public:
     void swap(soa_grid& other)
     {
         using std::swap;
-        swap(dim_x, other.dim_x);
-        swap(dim_x, other.dim_x);
-        swap(dim_x, other.dim_x);
+        swap(my_dim_x, other.my_dim_x);
+        swap(my_dim_x, other.my_dim_x);
+        swap(my_dim_x, other.my_dim_x);
         swap(my_byte_size, other.my_byte_size);
         swap(my_data, other.my_data);
     }
 
     /**
-     * Adapt size of allocated memory to dim_[x-z]
+     * Adapt size of allocated memory to my_dim_[x-z]
      */
     void resize(std::size_t new_dim_x, std::size_t new_dim_y, std::size_t new_dim_z)
     {
-        if ((dim_x == new_dim_x) &&
-            (dim_y == new_dim_y) &&
-            (dim_z == new_dim_z)) {
+        if ((my_dim_x == new_dim_x) &&
+            (my_dim_y == new_dim_y) &&
+            (my_dim_z == new_dim_z)) {
             return;
         }
 
         destroy_and_deallocate();
 
-        dim_x = new_dim_x;
-        dim_y = new_dim_y;
-        dim_z = new_dim_z;
+        my_dim_x = new_dim_x;
+        my_dim_y = new_dim_y;
+        my_dim_z = new_dim_z;
         // we need callback() to round up our grid size
         callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
         my_data = ALLOCATOR().allocate(byte_size());
@@ -131,13 +131,13 @@ public:
     template<typename FUNCTOR>
     void callback(FUNCTOR functor)
     {
-        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, dim_x, dim_y, dim_z);
+        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
     }
 
     template<typename FUNCTOR>
     void callback(FUNCTOR functor) const
     {
-        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, dim_x, dim_y, dim_z);
+        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
     }
 
     template<typename FUNCTOR>
@@ -313,25 +313,25 @@ public:
         my_data = new_data;
     }
 
-    std::size_t get_dim_x() const
+    std::size_t dim_x() const
     {
-        return dim_x;
+        return my_dim_x;
     }
 
-    std::size_t get_dim_y() const
+    std::size_t dim_y() const
     {
-        return dim_y;
+        return my_dim_y;
     }
 
-    std::size_t get_dim_z() const
+    std::size_t dim_z() const
     {
-        return dim_z;
+        return my_dim_z;
     }
 
 private:
-    std::size_t dim_x;
-    std::size_t dim_y;
-    std::size_t dim_z;
+    std::size_t my_dim_x;
+    std::size_t my_dim_y;
+    std::size_t my_dim_z;
     std::size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *my_data;
@@ -360,9 +360,9 @@ private:
         api_traits::select_sizes<CELL_TYPE>()(
             my_data,
             helper,
-            dim_x,
-            dim_y,
-            dim_z);
+            my_dim_x,
+            my_dim_y,
+            my_dim_z);
     }
 
     template<typename FUNCTOR>
@@ -375,14 +375,14 @@ private:
         api_traits::select_sizes<CELL_TYPE>()(
             my_data,
             helper,
-            dim_x,
-            dim_y,
-            dim_z);
+            my_dim_x,
+            my_dim_y,
+            my_dim_z);
     }
 
     void init()
     {
-        callback(detail::flat_array::construct_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(dim_x, dim_y, dim_z));
+        callback(detail::flat_array::construct_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
     }
 
     void destroy_and_deallocate()
@@ -391,18 +391,20 @@ private:
             return;
         }
 
-        callback(detail::flat_array::destroy_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(dim_x, dim_y, dim_z));
+        callback(detail::flat_array::destroy_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
         ALLOCATOR().deallocate(my_data, byte_size());
     }
 
     void copy_in(const soa_grid& other)
     {
-        other.callback(this, detail::flat_array::copy_functor<CELL_TYPE>(dim_x, dim_y, dim_z));
+        other.callback(this, detail::flat_array::copy_functor<CELL_TYPE>(my_dim_x, my_dim_y, my_dim_z));
     }
 
     void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const
     {
-        if ((dim_x != other_grid->dim_x) || (dim_y != other_grid->dim_y) || (dim_z != other_grid->dim_z)) {
+        if ((my_dim_x != other_grid->my_dim_x) ||
+            (my_dim_y != other_grid->my_dim_y) ||
+            (my_dim_z != other_grid->my_dim_z)) {
             throw std::invalid_argument("grid dimensions of both grids must match");
         }
     }

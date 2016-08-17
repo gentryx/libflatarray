@@ -336,8 +336,8 @@ public:
                     long indexStart = accessor1.gen_index(1,        y, z);
                     long indexEnd   = accessor1.gen_index(dim_x - 1, y, z);
 
-                    for (accessor1.index = indexStart, accessor2.index = indexStart;
-                         accessor1.index < indexEnd;
+                    for (accessor1.index() = indexStart, accessor2.index() = indexStart;
+                         accessor1.index() < indexEnd;
                          accessor1 += 1, accessor2 += 1) {
 
                         accessor2.temp() =
@@ -453,8 +453,8 @@ public:
                     long indexStart = accessor1.gen_index(1,         y, z);
                     long indexEnd   = accessor1.gen_index(dim_x - 1, y, z);
 
-                    accessor1.index = indexStart;
-                    accessor2.index = indexStart;
+                    accessor1.index() = indexStart;
+                    accessor2.index() = indexStart;
 
                     accessor2.temp() =
                         accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
@@ -465,12 +465,12 @@ public:
                         accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
                         accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
 
-                    accessor1.index += 1;
-                    accessor2.index += 1;
+                    accessor1.index() += 1;
+                    accessor2.index() += 1;
 
                     for (;
-                         accessor1.index < (indexEnd - 7);
-                         accessor1.index += 8, accessor2.index += 8) {
+                         accessor1.index() < (indexEnd - 7);
+                         accessor1.index() += 8, accessor2.index() += 8) {
 
                         // load south row:
                         __m128d bufA = _mm_load_pd(&accessor1[coord<0, 0, -1>()].temp() + 0);
@@ -557,8 +557,8 @@ public:
 
 
                     for (;
-                         accessor1.index < (indexEnd - 1);
-                         accessor1.index += 1, accessor2.index += 1) {
+                         accessor1.index() < (indexEnd - 1);
+                         accessor1.index() += 1, accessor2.index() += 1) {
                         accessor2.temp() =
                             accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
                             accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
@@ -692,8 +692,8 @@ public:
             SOA_ACCESSOR_1& accessor_old,
             SOA_ACCESSOR_2& accessor_new) const
         {
-            accessor_old.index = SOA_ACCESSOR_1::gen_index(x, y, z);
-            accessor_new.index = SOA_ACCESSOR_2::gen_index(x, y, z);
+            accessor_old.index() = SOA_ACCESSOR_1::gen_index(x, y, z);
+            accessor_new.index() = SOA_ACCESSOR_2::gen_index(x, y, z);
 
             SHORT_VEC buf;
             SHORT_VEC factorS = WEIGHT_S;
@@ -1310,7 +1310,7 @@ public:
             soa_accessor<Particle, 8192, 1, 1, 0> accessorA = particlesA[0];
             soa_accessor<Particle, 8192, 1, 1, 0> accessorB = particlesB[0];
 
-            for (; accessorA.index < numParticles; ++accessorA, ++accessorB ) {
+            for (; accessorA.index() < numParticles; ++accessorA, ++accessorB ) {
                 float posX = accessorA.posX();
                 float posY = accessorA.posY();
                 float posZ = accessorA.posZ();
@@ -1327,7 +1327,7 @@ public:
 
                 soa_accessor<Particle, 8192, 1, 1, 0> accessorA2 = particlesA[0];
 
-                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
+                for (accessorA2.index() = 0; accessorA2.index() < numParticles; ++accessorA2) {
                     float deltaX = posX - accessorA2.posX();
                     float deltaY = posY - accessorA2.posY();
                     float deltaZ = posZ - accessorA2.posZ();
@@ -1432,7 +1432,7 @@ public:
             soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index < (numParticles - 7); accessorA += 8, accessorB += 8) {
+            for (; accessorA.index() < (numParticles - 7); accessorA += 8, accessorB += 8) {
                 __m256 posX = _mm256_loadu_ps(&accessorA.posX());
                 __m256 posY = _mm256_loadu_ps(&accessorA.posY());
                 __m256 posZ = _mm256_loadu_ps(&accessorA.posZ());
@@ -1449,7 +1449,7 @@ public:
 
                 __m256 deltaT = _mm256_set1_ps(DELTA_T);
 
-                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
+                for (accessorA2.index() = 0; accessorA2.index() < numParticles; ++accessorA2) {
                     __m256 deltaX = _mm256_sub_ps(posX, _mm256_broadcast_ss(&accessorA2.posX()));
                     __m256 deltaY = _mm256_sub_ps(posY, _mm256_broadcast_ss(&accessorA2.posY()));
                     __m256 deltaZ = _mm256_sub_ps(posZ, _mm256_broadcast_ss(&accessorA2.posZ()));
@@ -1575,7 +1575,7 @@ public:
             soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
+            for (; accessorA.index() < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
                 REAL posX = &accessorA.posX();
                 REAL posY = &accessorA.posY();
                 REAL posZ = &accessorA.posZ();
@@ -1590,7 +1590,7 @@ public:
                 REAL accelerationY = 0.0;
                 REAL accelerationZ = 0.0;
 
-                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
+                for (accessorA2.index() = 0; accessorA2.index() < numParticles; ++accessorA2) {
                     REAL deltaX = posX - REAL(accessorA2.posX());
                     REAL deltaY = posY - REAL(accessorA2.posY());
                     REAL deltaZ = posZ - REAL(accessorA2.posZ());
@@ -1694,7 +1694,7 @@ public:
             soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
+            for (; accessorA.index() < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
                 REAL posX = &accessorA.pos()[0];
                 REAL posY = &accessorA.pos()[1];
                 REAL posZ = &accessorA.pos()[2];
@@ -1709,7 +1709,7 @@ public:
                 REAL accelerationY = 0.0;
                 REAL accelerationZ = 0.0;
 
-                for (accessorA2.index = 0; accessorA2.index < numParticles; ++accessorA2) {
+                for (accessorA2.index() = 0; accessorA2.index() < numParticles; ++accessorA2) {
                     REAL deltaX = posX - REAL(accessorA2.pos()[0]);
                     REAL deltaY = posY - REAL(accessorA2.pos()[1]);
                     REAL deltaZ = posZ - REAL(accessorA2.pos()[2]);

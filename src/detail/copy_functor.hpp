@@ -38,8 +38,8 @@ public:
     {
         for (std::size_t z = 0; z < dim_z; ++z) {
             for (std::size_t y = 0; y < dim_y; ++y) {
-                target_accessor.index = ACCESSOR1::gen_index(0, y, z);
-                source_accessor.index = target_accessor.index;
+                target_accessor.index() = ACCESSOR1::gen_index(0, y, z);
+                source_accessor.index() = target_accessor.index();
                 target_accessor.copy_members(source_accessor, dim_x);
             }
         }

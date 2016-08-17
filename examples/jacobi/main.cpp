@@ -140,8 +140,8 @@ public:
         SOA_ACCESSOR_1& accessor_old,
         SOA_ACCESSOR_2& accessor_new) const
     {
-        accessor_old.index = SOA_ACCESSOR_1::gen_index(x, y, z);
-        accessor_new.index = SOA_ACCESSOR_2::gen_index(x, y, z);
+        accessor_old.index() = SOA_ACCESSOR_1::gen_index(x, y, z);
+        accessor_new.index() = SOA_ACCESSOR_2::gen_index(x, y, z);
 
         SHORT_VEC buf;
         SHORT_VEC factor = 1.0 / 6.0;
@@ -244,9 +244,9 @@ public:
 private:
     void init(LibFlatArray::soa_grid<Cell> *grid)
     {
-        for (std::size_t z = 2; z < (grid->get_dim_z() - 2); ++z) {
-            for (std::size_t y = 2; y < (grid->get_dim_y() - 2); ++y) {
-                for (std::size_t x = 2; x < (grid->get_dim_x() - 2); ++x) {
+        for (std::size_t z = 2; z < (grid->dim_z() - 2); ++z) {
+            for (std::size_t y = 2; y < (grid->dim_y() - 2); ++y) {
+                for (std::size_t x = 2; x < (grid->dim_x() - 2); ++x) {
                     grid->set(x, y, z, Cell(1));
                 }
             }
@@ -257,9 +257,9 @@ private:
     {
         double sum = 0;
 
-        for (std::size_t z = 0; z < grid.get_dim_z(); ++z) {
-            for (std::size_t y = 0; y < grid.get_dim_y(); ++y) {
-                for (std::size_t x = 0; x < grid.get_dim_x(); ++x) {
+        for (std::size_t z = 0; z < grid.dim_z(); ++z) {
+            for (std::size_t y = 0; y < grid.dim_y(); ++y) {
+                for (std::size_t x = 0; x < grid.dim_x(); ++x) {
                     sum += grid.get(x, y, z).temp;
                 }
             }
