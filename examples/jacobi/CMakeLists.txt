@@ -1,5 +1,3 @@
-find_package(OpenMP)
-
 add_executable(jacobi main.cpp update_c99.c)
 
 if(OPENMP_FOUND)
