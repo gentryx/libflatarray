@@ -64,7 +64,8 @@ public:
         double time_end = time();
         double time_total = time_end - time_start;
 
-        double lattice_updates = num_cells * max_steps;
+        double active_cells = (dim[0] - 2) * (dim[1] - 2) * (dim[2] - 2);
+        double lattice_updates = active_cells * max_steps;
         double glups = lattice_updates * 1e-9 / time_total;
         return glups;
     }
@@ -208,7 +209,6 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        std::size_t num_cells = std::size_t(dim[0]) * dim[1] * dim[2];
         int max_steps = dim[3];
 
         LibFlatArray::soa_grid<Cell> grid_old(dim[0], dim[1], dim[2]);
@@ -236,7 +236,8 @@ public:
         double time_end = time();
         double time_total = time_end - time_start;
 
-        double lattice_updates = num_cells * max_steps;
+        double active_cells = (dim[0] - 2) * (dim[1] - 2) * (dim[2] - 2);
+        double lattice_updates = active_cells * max_steps;
         double glups = lattice_updates * 1e-9 / time_total;
         return glups;
     }
