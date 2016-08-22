@@ -10,36 +10,12 @@
 #define VERSION_TAG "SPHView01"
 #define uint32_t unsigned
 
-sim_state_t* alloc_state(int n)
-{
-    sim_state_t *state;
-    state = malloc(sizeof(sim_state_t));
-    state->n     = n;
-    state->rho   = malloc(n * sizeof(float));
-    state->pos_x = malloc(n * sizeof(float));
-    state->pos_y = malloc(n * sizeof(float));
-    state->vh_x  = malloc(n * sizeof(float));
-    state->vh_y  = malloc(n * sizeof(float));
-    state->v_x   = malloc(n * sizeof(float));
-    state->v_y   = malloc(n * sizeof(float));
-    state->a_x   = malloc(n * sizeof(float));
-    state->a_y   = malloc(n * sizeof(float));
-
-    return state;
-}
-
-void free_state(sim_state_t* s)
-{
-    /* fixme: nope, not doing that */
-}
-
-void compute_density(sim_state_t* s, sim_param_t* params)
+void compute_density(sim_state_t* s, float h)
 {
     int n = s->n;
     float* restrict rho = s->rho;
     const float* restrict pos_x = s->pos_x;
     const float* restrict pos_y = s->pos_y;
-    float h = params->h;
     float h2 = h*h;
     float h8 = ( h2*h2 )*( h2*h2 );
     float C = 4 * s->mass / M_PI / h8;
@@ -60,14 +36,14 @@ void compute_density(sim_state_t* s, sim_param_t* params)
     }
 }
 
-void compute_accel(sim_state_t* state, sim_param_t* params)
+void compute_accel(sim_state_t* state, sim_param_t params)
 {
     // Unpack basic parameters
-    const float h = params->h;
-    const float rho0 = params->rho0;
-    const float k = params->k;
-    const float mu = params->mu;
-    const float g = params->g;
+    const float h = params.h;
+    const float rho0 = params.rho0;
+    const float k = params.k;
+    const float mu = params.mu;
+    const float g = params.g;
     const float mass = state->mass;
     const float h2 = h*h;
     // Unpack system state
@@ -80,7 +56,7 @@ void compute_accel(sim_state_t* state, sim_param_t* params)
     float* restrict a_y = state->a_y;
     int n = state->n;
     // Compute density and color
-    compute_density(state, params);
+    compute_density(state, h);
     // Start with gravity and surface forces
     for (int i = 0; i < n; ++i) {
         a_x[i] = 0;
@@ -218,72 +194,6 @@ void leapfrog_start(sim_state_t* s, double dt)
     for (int i = 0; i < n; ++i) pos_x[i] += vh_x[i] * dt;
     for (int i = 0; i < n; ++i) pos_y[i] += vh_y[i] * dt;
     reflect_bc(s);
-}
-
-typedef int (*domain_fun_t)(float, float);
-int box_indicator(float x, float y)
-{
-    return (x < 0.5) && (y < 0.5);
-}
-int circ_indicator(float x, float y)
-{
-    float dx = (x-0.5);
-    float dy = (y-0.3);
-    float r2 = dx*dx + dy*dy;
-    return (r2 < 0.25*0.25);
-}
-
-sim_state_t* place_particles(sim_param_t* param,
-                             domain_fun_t indicatef)
-{
-    printf("  place_particlesA\n");
-    float h = param->h;
-    float hh = h/1.3;
-    // Count mesh points that fall in indicated region.
-    int count = 0;
-    for (float x = 0; x < 1; x += hh)
-        for (float y = 0; y < 1; y += hh)
-            count += indicatef(x,y);
-    printf("  place_particlesB, %i\n", count);
-    // Populate the particle data structure
-    sim_state_t* s = alloc_state(count);
-    printf("  place_particlesC\n");
-    int p = 0;
-    for (float x = 0; x < 1; x += hh) {
-        for (float y = 0; y < 1; y += hh) {
-            if (indicatef(x,y)) {
-                /* printf("    p: %i, x: %f, y: %f\n", p, x, y); */
-                s->pos_x[p] = x;
-                s->pos_y[p] = y;
-                s->v_x[p] = 0;
-                s->v_y[p] = 0;
-                ++p;
-            }
-        }
-    }
-    printf("  place_particlesD\n");
-    return s;
-}
-
-void normalize_mass(sim_state_t* s, sim_param_t* param)
-{
-    s->mass = 1;
-    compute_density(s, param);
-    float rho0 = param->rho0;
-    float rho2s = 0;
-    float rhos = 0;
-    for (int i = 0; i < s->n; ++i) {
-        rho2s += (s->rho[i])*(s->rho[i]);
-        rhos += s->rho[i];
-
-    }
-    s->mass *= ( rho0*rhos / rho2s );
-}
-sim_state_t* init_particles(sim_param_t* param)
-{
-    sim_state_t* s = place_particles(param, box_indicator);
-    normalize_mass(s, param);
-    return s;
 }
 
 void write_frame_data(int cycle, int n, float* pos_x, float* pos_y)
