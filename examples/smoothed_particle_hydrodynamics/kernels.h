@@ -2,15 +2,6 @@
 extern "C" {
 #endif
 
-    struct sim_param_t {
-        float h; /* Particle size */
-        float dt; /* Time step */
-        float rho0; /* Reference density */
-        float k; /* Bulk modulus */
-        float mu; /* Viscosity */
-        float g; /* Gravity strength */
-    };
-
     void compute_density(
         int n,
         float *rho,
@@ -29,7 +20,11 @@ extern "C" {
         float *a_x,
         float *a_y,
         float mass,
-        struct sim_param_t params);
+        float g,
+        float h,
+        float k,
+        float rho0,
+        float mu);
 
     void leapfrog(
         int n,

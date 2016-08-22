@@ -42,17 +42,21 @@ void compute_accel(
     float *restrict a_x,
     float *restrict a_y,
     float mass,
-    struct sim_param_t params)
+    float g,
+    float h,
+    float k,
+    float rho0,
+    float mu)
 {
-    const float h_squared = params.h * params.h;
+    const float h_squared = h * h;
     const float C_0 = mass / M_PI / (h_squared * h_squared);
-    const float C_p = 15 * params.k;
-    const float C_v = -40 * params.mu;
+    const float C_p = 15 * k;
+    const float C_v = -40 * mu;
 
     // gravity:
     for (int i = 0; i < n; ++i) {
         a_x[i] = 0;
-        a_y[i] = -params.g;
+        a_y[i] = -g;
     }
 
     // Now compute interaction forces
@@ -63,10 +67,10 @@ void compute_accel(
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
 
             if (dist_squared < h_squared) {
-                float q = sqrt(dist_squared) / params.h;
+                float q = sqrt(dist_squared) / h;
                 float u = 1 - q;
                 float w_0 = C_0 * u / rho[i] / rho[j];
-                float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * params.rho0) * u / q;
+                float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * rho0) * u / q;
                 float w_v = w_0 * C_v;
                 float delta_v_x = v_x[i] - v_y[j];
                 float delta_v_y = v_y[i] - v_y[j];
