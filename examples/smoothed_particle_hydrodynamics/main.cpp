@@ -12,8 +12,11 @@ int box_indicator(float x, float y)
 }
 
 void place_particles(
-    sim_state_t *state,
     int count,
+    float *pos_x,
+    float *pos_y,
+    float *v_x,
+    float *v_y,
     float hh)
 {
     int index = 0;
@@ -21,10 +24,10 @@ void place_particles(
     for (float x = 0; x < 1; x += hh) {
         for (float y = 0; y < 1; y += hh) {
             if (box_indicator(x,y)) {
-                state->pos_x[index] = x;
-                state->pos_y[index] = y;
-                state->v_x[index] = 0;
-                state->v_y[index] = 0;
+                pos_x[index] = x;
+                pos_y[index] = y;
+                v_x[index] = 0;
+                v_y[index] = 0;
                 ++index;
             }
         }
@@ -35,27 +38,27 @@ int count_particles(float hh)
 {
     int ret = 0;
 
-    for (float x = 0; x < 1; x += hh)
-        for (float y = 0; y < 1; y += hh)
+    for (float x = 0; x < 1; x += hh) {
+        for (float y = 0; y < 1; y += hh) {
             ret += box_indicator(x,y);
+        }
+    }
 
     return ret;
 }
 
-
-void normalize_mass(sim_state_t* s, sim_param_t params)
+void normalize_mass(float *mass, int n, float *rho, sim_param_t params)
 {
-    s->mass = 1;
-    compute_density(s->n, s->rho, s->pos_x, s->pos_y, params.h, s->mass);
     float rho0 = params.rho0;
-    float rho2s = 0;
-    float rhos = 0;
-    for (int i = 0; i < s->n; ++i) {
-        rho2s += (s->rho[i])*(s->rho[i]);
-        rhos += s->rho[i];
+    float rho_squared_sum = 0;
+    float rho_sum = 0;
 
+    for (int i = 0; i < n; ++i) {
+        rho_squared_sum += rho[i] * rho[i];
+        rho_sum += rho[i];
     }
-    s->mass *= ( rho0*rhos / rho2s );
+
+    *mass = *mass * rho0 * rho_sum / rho_squared_sum;
 }
 
 void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
@@ -86,7 +89,6 @@ int main(int argc, char** argv)
     float hh = params.h / 1.3;
     int count = count_particles(hh);
 
-    sim_state_t state;
     std::vector<float> rho_vec(count);
     std::vector<float> pos_x_vec(count);
     std::vector<float> pos_y_vec(count);
@@ -97,35 +99,38 @@ int main(int argc, char** argv)
     std::vector<float> a_x_vec(count);
     std::vector<float> a_y_vec(count);
 
-    state.n = count;
-    state.rho = rho_vec.data();
-    state.pos_x = pos_x_vec.data();
-    state.pos_y = pos_y_vec.data();
-    state.vh_x = vh_x_vec.data();
-    state.vh_y = vh_y_vec.data();
-    state.v_x = v_x_vec.data();
-    state.v_y = v_y_vec.data();
-    state.a_x = a_x_vec.data();
-    state.a_y = a_y_vec.data();
-
-    place_particles(&state, count, hh);
-    normalize_mass(&state, params);
+    place_particles(count, pos_x_vec.data(), pos_y_vec.data(), v_x_vec.data(), v_y_vec.data(), hh);
+    float mass = 1;
+    compute_density(count, rho_vec.data(), pos_x_vec.data(), pos_y_vec.data(), params.h, mass);
+    normalize_mass(&mass, count, rho_vec.data(), params);
 
     int num_steps = 20000;
     int io_period = 15;
 
     for (int t = 0; t < num_steps; ++t) {
         if ((t % io_period) == 0) {
-            dump_time_step(t, state.n, state.pos_x, state.pos_y);
+            dump_time_step(t, count, pos_x_vec.data(), pos_y_vec.data());
         }
 
-        compute_density(state.n, state.rho, state.pos_x, state.pos_y, params.h, state.mass);
-        compute_accel(state.n, state.rho, state.pos_x, state.pos_y, state.v_x, state.v_y, state.a_x, state.a_y, state.mass, params);
-        leapfrog(&state, params.dt);
-        reflect_bc(state.n, state.pos_x, state.pos_y, state.v_x, state.v_y, state.vh_x, state.vh_y);
+        compute_density(count, rho_vec.data(), pos_x_vec.data(), pos_y_vec.data(), params.h, mass);
+        compute_accel(count,   rho_vec.data(), pos_x_vec.data(), pos_y_vec.data(), v_x_vec.data(), v_y_vec.data(), a_x_vec.data(), a_y_vec.data(), mass, params);
+
+        leapfrog(
+            count,
+            pos_x_vec.data(),
+            pos_y_vec.data(),
+            v_x_vec.data(),
+            v_y_vec.data(),
+            vh_x_vec.data(),
+            vh_y_vec.data(),
+            a_x_vec.data(),
+            a_y_vec.data(),
+            params.dt);
+
+        reflect_bc(count, pos_x_vec.data(), pos_y_vec.data(), v_x_vec.data(), v_y_vec.data(), vh_x_vec.data(), vh_y_vec.data());
     }
 
-    dump_time_step(num_steps, state.n, state.pos_x, state.pos_y);
+    dump_time_step(num_steps, count, pos_x_vec.data(), pos_y_vec.data());
 
     return 0;
 }

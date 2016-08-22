@@ -6,7 +6,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, float mass)
+void compute_density(int n, float *restrict rho, float *restrict pos_x, float *restrict pos_y, float h, float mass)
 {
     float h_squared = h * h;
     float h_pow_8 = h_squared * h_squared * h_squared * h_squared;
@@ -42,22 +42,17 @@ void compute_accel(
     float *restrict a_x,
     float *restrict a_y,
     float mass,
-    sim_param_t params)
+    struct sim_param_t params)
 {
-    // Unpack basic parameters
-    const float h = params.h;
-    const float k = params.k;
-    const float g = params.g;
-
-    const float h_squared = h * h;
+    const float h_squared = params.h * params.h;
     const float C_0 = mass / M_PI / (h_squared * h_squared);
-    const float C_p = 15 * k;
+    const float C_p = 15 * params.k;
     const float C_v = -40 * params.mu;
 
     // gravity:
     for (int i = 0; i < n; ++i) {
         a_x[i] = 0;
-        a_y[i] = -g;
+        a_y[i] = -params.g;
     }
 
     // Now compute interaction forces
@@ -68,7 +63,7 @@ void compute_accel(
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
 
             if (dist_squared < h_squared) {
-                float q = sqrt(dist_squared) / h;
+                float q = sqrt(dist_squared) / params.h;
                 float u = 1 - q;
                 float w_0 = C_0 * u / rho[i] / rho[j];
                 float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * params.rho0) * u / q;
@@ -149,18 +144,18 @@ void reflect_bc(
     }
 }
 
-void leapfrog(sim_state_t* s, double dt)
+void leapfrog(
+    int n,
+    float *restrict pos_x,
+    float *restrict pos_y,
+    float *restrict v_x,
+    float *restrict v_y,
+    float *restrict vh_x,
+    float *restrict vh_y,
+    float *restrict a_x,
+    float *restrict a_y,
+    double dt)
 {
-    const float *restrict a_x = s->a_x;
-    const float *restrict a_y = s->a_y;
-    float *restrict vh_x = s->vh_x;
-    float *restrict vh_y = s->vh_y;
-    float *restrict v_x = s->v_x;
-    float *restrict v_y = s->v_y;
-    float *restrict pos_x = s->pos_x;
-    float *restrict pos_y = s->pos_y;
-    int n = s->n;
-
     for (int i = 0; i < n; ++i) {
         vh_x[i] += a_x[i] * dt;
         vh_y[i] += a_y[i] * dt;
