@@ -5,8 +5,6 @@
 #endif
 
 typedef struct sim_param_t {
-    int nframes; /* Number of frames */
-    int npframe; /* Steps per frame */
     float h; /* Particle size */
     float dt; /* Time step */
     float rho0; /* Reference density */
@@ -34,11 +32,9 @@ typedef struct sim_state_t {
 extern "C" {
 #endif
 
-    void write_frame_data(int cycle, int n, float* pos_x, float* pos_y);
+    void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, float mass);
     void compute_accel(sim_state_t* state, sim_param_t params);
-    void leapfrog_start(sim_state_t* s, double dt);
-    void leapfrog_step(sim_state_t* s, double dt);
-    void compute_density(sim_state_t* s, float h);
+    void leapfrog(sim_state_t* s, double dt);
 
 #ifdef __cplusplus
 }

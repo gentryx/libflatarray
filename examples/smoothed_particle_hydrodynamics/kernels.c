@@ -1,4 +1,3 @@
-#include <silo.h>
 #include <assert.h>
 
 #include "kernels.h"
@@ -10,18 +9,15 @@
 #define VERSION_TAG "SPHView01"
 #define uint32_t unsigned
 
-void compute_density(sim_state_t* s, float h)
+void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, float mass)
 {
-    int n = s->n;
-    float* restrict rho = s->rho;
-    const float* restrict pos_x = s->pos_x;
-    const float* restrict pos_y = s->pos_y;
     float h2 = h*h;
     float h8 = ( h2*h2 )*( h2*h2 );
-    float C = 4 * s->mass / M_PI / h8;
+    float C = 4 * mass / M_PI / h8;
     memset(rho, 0, n*sizeof(float));
+
     for (int i = 0; i < n; ++i) {
-        rho[i] += 4 * s->mass / M_PI / h2;
+        rho[i] += 4 * mass / M_PI / h2;
         for (int j = i+1; j < n; ++j) {
             float dx = pos_x[i] - pos_x[j];
             float dy = pos_y[i] - pos_y[j];
@@ -55,8 +51,9 @@ void compute_accel(sim_state_t* state, sim_param_t params)
     float* restrict a_x = state->a_x;
     float* restrict a_y = state->a_y;
     int n = state->n;
-    // Compute density and color
-    compute_density(state, h);
+
+    compute_density(n, rho, pos_x, pos_y, h, mass);
+
     // Start with gravity and surface forces
     for (int i = 0; i < n; ++i) {
         a_x[i] = 0;
@@ -122,8 +119,11 @@ static void damp_reflect(
     vh_which[0]  = -vh_which[0];
 
     // Damp the velocities
-    v_x[0] *= DAMP; vh_x[0] *= DAMP;
-    v_y[0] *= DAMP; vh_y[0] *= DAMP;
+    v_x[0] *= DAMP;
+    v_y[0] *= DAMP;
+
+    vh_x[0] *= DAMP;
+    vh_y[0] *= DAMP;
 }
 
 static void reflect_bc(sim_state_t* s)
@@ -156,7 +156,7 @@ static void reflect_bc(sim_state_t* s)
     }
 }
 
-void leapfrog_step(sim_state_t* s, double dt)
+void leapfrog(sim_state_t* s, double dt)
 {
     const float* restrict a_x = s->a_x;
     const float* restrict a_y = s->a_y;
@@ -174,39 +174,4 @@ void leapfrog_step(sim_state_t* s, double dt)
     for (int i = 0; i < n; ++i) pos_x[i] += vh_x[i] * dt;
     for (int i = 0; i < n; ++i) pos_y[i] += vh_y[i] * dt;
     reflect_bc(s);
-}
-
-void leapfrog_start(sim_state_t* s, double dt)
-{
-    const float* restrict a_x = s->a_x;
-    const float* restrict a_y = s->a_y;
-    float* restrict vh_x = s->vh_x;
-    float* restrict vh_y = s->vh_y;
-    float* restrict v_x = s->v_x;
-    float* restrict v_y = s->v_y;
-    float* restrict pos_x = s->pos_x;
-    float* restrict pos_y = s->pos_y;
-    int n = s->n;
-    for (int i = 0; i < n; ++i) vh_x[i] = v_x[i] + a_x[i] * dt / 2;
-    for (int i = 0; i < n; ++i) vh_y[i] = v_y[i] + a_y[i] * dt / 2;
-    for (int i = 0; i < n; ++i) v_x[i] += a_x[i] * dt;
-    for (int i = 0; i < n; ++i) v_y[i] += a_y[i] * dt;
-    for (int i = 0; i < n; ++i) pos_x[i] += vh_x[i] * dt;
-    for (int i = 0; i < n; ++i) pos_y[i] += vh_y[i] * dt;
-    reflect_bc(s);
-}
-
-void write_frame_data(int cycle, int n, float* pos_x, float* pos_y)
-{
-    DBfile *dbfile = NULL;
-    char filename[100];
-    sprintf(filename, "output%04d.silo", cycle);
-    dbfile = DBCreate(filename, DB_CLOBBER, DB_LOCAL,
-                      "simulation time step", DB_HDF5);
-
-    float *coords[] = {(float*)pos_x, (float*)pos_y};
-    DBPutPointmesh(dbfile, "pointmesh", 2, coords, n,
-                   DB_FLOAT, NULL);
-
-    DBClose(dbfile);
 }
