@@ -6,25 +6,25 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-#define VERSION_TAG "SPHView01"
-#define uint32_t unsigned
-
 void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, float mass)
 {
-    float h2 = h*h;
-    float h8 = ( h2*h2 )*( h2*h2 );
-    float C = 4 * mass / M_PI / h8;
-    memset(rho, 0, n*sizeof(float));
+    float h_squared = h * h;
+    float h_pow_8 = h_squared * h_squared * h_squared * h_squared;
+    float C = 4 * mass / M_PI / h_pow_8;
 
     for (int i = 0; i < n; ++i) {
-        rho[i] += 4 * mass / M_PI / h2;
-        for (int j = i+1; j < n; ++j) {
-            float dx = pos_x[i] - pos_x[j];
-            float dy = pos_y[i] - pos_y[j];
-            float r2 = dx * dx + dy * dy;
-            float z = h2 - r2;
-            if (z > 0) {
-                float rho_ij = C*z*z*z;
+        rho[i] = 4 * mass / M_PI / h_squared;
+    }
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            float delta_x = pos_x[i] - pos_x[j];
+            float delta_y = pos_y[i] - pos_y[j];
+            float dist_squared = delta_x * delta_x + delta_y * delta_y;
+            float overlap = h_squared - dist_squared;
+
+            if (overlap > 0) {
+                float rho_ij = C * overlap * overlap * overlap;
                 rho[i] += rho_ij;
                 rho[j] += rho_ij;
             }
@@ -36,12 +36,15 @@ void compute_accel(sim_state_t* state, sim_param_t params)
 {
     // Unpack basic parameters
     const float h = params.h;
-    const float rho0 = params.rho0;
     const float k = params.k;
-    const float mu = params.mu;
     const float g = params.g;
     const float mass = state->mass;
-    const float h2 = h*h;
+
+    const float h_squared = h * h;
+    const float C_0 = mass / M_PI / (h_squared * h_squared);
+    const float C_p = 15 * k;
+    const float C_v = -40 * params.mu;
+
     // Unpack system state
     const float* restrict rho = state->rho;
     const float* restrict pos_x = state->pos_x;
@@ -52,37 +55,31 @@ void compute_accel(sim_state_t* state, sim_param_t params)
     float* restrict a_y = state->a_y;
     int n = state->n;
 
-    compute_density(n, rho, pos_x, pos_y, h, mass);
-
-    // Start with gravity and surface forces
+    // gravity:
     for (int i = 0; i < n; ++i) {
         a_x[i] = 0;
         a_y[i] = -g;
     }
-    // Constants for interaction term
-    float C0 = mass / M_PI / ( (h2)*(h2) );
-    float Cp = 15*k;
-    float Cv = -40*mu;
+
     // Now compute interaction forces
     for (int i = 0; i < n; ++i) {
-        const float rhoi = rho[i];
         for (int j = i+1; j < n; ++j) {
-            float dx = pos_x[i]-pos_x[j];
-            float dy = pos_y[i]-pos_y[j];
-            float r2 = dx*dx + dy*dy;
-            if (r2 < h2) {
-                const float rhoj = rho[j];
-                float q = sqrt(r2) / h;
+            float delta_x = pos_x[i] - pos_x[j];
+            float delta_y = pos_y[i] - pos_y[j];
+            float dist_squared = delta_x * delta_x + delta_y * delta_y;
+
+            if (dist_squared < h_squared) {
+                float q = sqrt(dist_squared) / h;
                 float u = 1 - q;
-                float w0 = C0 * u / rhoi / rhoj;
-                float wp = w0 * Cp * (rhoi + rhoj - 2 * rho0) * u / q;
-                float wv = w0 * Cv;
-                float dvx = v_x[i] - v_y[j];
-                float dvy = v_y[i] - v_y[j];
-                a_x[i] += (wp * dx + wv * dvx);
-                a_y[i] += (wp * dy + wv * dvy);
-                a_x[j] -= (wp * dx + wv * dvx);
-                a_y[j] -= (wp * dy + wv * dvy);
+                float w_0 = C_0 * u / rho[i] / rho[j];
+                float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * params.rho0) * u / q;
+                float w_v = w_0 * C_v;
+                float delta_v_x = v_x[i] - v_y[j];
+                float delta_v_y = v_y[i] - v_y[j];
+                a_x[i] += (w_p * delta_x + w_v * delta_v_x);
+                a_y[i] += (w_p * delta_y + w_v * delta_v_y);
+                a_x[j] -= (w_p * delta_x + w_v * delta_v_x);
+                a_y[j] -= (w_p * delta_y + w_v * delta_v_y);
             }
         }
     }

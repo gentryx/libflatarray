@@ -119,6 +119,7 @@ int main(int argc, char** argv)
             dump_time_step(t, state.n, state.pos_x, state.pos_y);
         }
 
+        compute_density(state.n, state.rho, state.pos_x, state.pos_y, params.h, state.mass);
         compute_accel(&state, params);
         leapfrog(&state, params.dt);
     }
