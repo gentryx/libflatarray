@@ -34,13 +34,13 @@ void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, flo
 
 void compute_accel(
     int n,
-    float* restrict rho,
-    float* restrict pos_x,
-    float* restrict pos_y,
-    float* restrict v_x,
-    float* restrict v_y,
-    float* restrict a_x,
-    float* restrict a_y,
+    float *restrict rho,
+    float *restrict pos_x,
+    float *restrict pos_y,
+    float *restrict v_x,
+    float *restrict v_y,
+    float *restrict a_x,
+    float *restrict a_y,
     float mass,
     sim_param_t params)
 {
@@ -87,12 +87,12 @@ void compute_accel(
 void damp_reflect(
     int which,
     float barrier,
-    float* pos_x,
-    float* pos_y,
-    float* v_x,
-    float* v_y,
-    float* vh_x,
-    float* vh_y)
+    float *pos_x,
+    float *pos_y,
+    float *v_x,
+    float *v_y,
+    float *vh_x,
+    float *vh_y)
 {
     float *v_which   = (which == 0) ? v_x   : v_y;
     float *vh_which  = (which == 0) ? vh_x  : vh_y;
@@ -122,20 +122,21 @@ void damp_reflect(
     vh_y[0] *= DAMP;
 }
 
-void reflect_bc(sim_state_t* s)
+void reflect_bc(
+    int n,
+    float *restrict pos_x,
+    float *restrict pos_y,
+    float *restrict v_x,
+    float *restrict v_y,
+    float *restrict vh_x,
+    float *restrict vh_y)
 {
     // Boundaries of the computational domain
     const float XMIN = 0.0;
     const float XMAX = 1.0;
     const float YMIN = 0.0;
     const float YMAX = 1.0;
-    float* restrict vh_x = s->vh_x;
-    float* restrict vh_y = s->vh_y;
-    float* restrict v_x = s->v_x;
-    float* restrict v_y = s->v_y;
-    float* restrict pos_x = s->pos_x;
-    float* restrict pos_y = s->pos_y;
-    int n = s->n;
+
     for (int i = 0; i < n; ++i, pos_x += 1, pos_y += 1, v_x += 1, v_y +=1, vh_x += 1, vh_y += 1) {
         if (pos_x[0] < XMIN) damp_reflect(0, XMIN, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
         if (pos_x[0] > XMAX) damp_reflect(0, XMAX, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
@@ -154,19 +155,24 @@ void reflect_bc(sim_state_t* s)
 
 void leapfrog(sim_state_t* s, double dt)
 {
-    const float* restrict a_x = s->a_x;
-    const float* restrict a_y = s->a_y;
-    float* restrict vh_x = s->vh_x;
-    float* restrict vh_y = s->vh_y;
-    float* restrict v_x = s->v_x;
-    float* restrict v_y = s->v_y;
-    float* restrict pos_x = s->pos_x;
-    float* restrict pos_y = s->pos_y;
+    const float *restrict a_x = s->a_x;
+    const float *restrict a_y = s->a_y;
+    float *restrict vh_x = s->vh_x;
+    float *restrict vh_y = s->vh_y;
+    float *restrict v_x = s->v_x;
+    float *restrict v_y = s->v_y;
+    float *restrict pos_x = s->pos_x;
+    float *restrict pos_y = s->pos_y;
     int n = s->n;
-    for (int i = 0; i < n; ++i) vh_x[i] += a_x[i] * dt;
-    for (int i = 0; i < n; ++i) vh_y[i] += a_y[i] * dt;
-    for (int i = 0; i < n; ++i) v_x[i] = vh_x[i] + a_x[i] * dt / 2;
-    for (int i = 0; i < n; ++i) v_x[i] = vh_y[i] + a_y[i] * dt / 2;
-    for (int i = 0; i < n; ++i) pos_x[i] += vh_x[i] * dt;
-    for (int i = 0; i < n; ++i) pos_y[i] += vh_y[i] * dt;
+
+    for (int i = 0; i < n; ++i) {
+        vh_x[i] += a_x[i] * dt;
+        vh_y[i] += a_y[i] * dt;
+
+        v_x[i] = vh_x[i] + a_x[i] * dt / 2;
+        v_x[i] = vh_y[i] + a_y[i] * dt / 2;
+
+        pos_x[i] += vh_x[i] * dt;
+        pos_y[i] += vh_y[i] * dt;
+    }
 }
