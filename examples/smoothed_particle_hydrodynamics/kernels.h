@@ -32,8 +32,6 @@ extern "C" {
         float *pos_y,
         float *v_x,
         float *v_y,
-        float *vh_x,
-        float *vh_y,
         float *a_x,
         float *a_y,
         double dt);
@@ -43,9 +41,7 @@ extern "C" {
         float *pos_x,
         float *pos_y,
         float *v_x,
-        float *v_y,
-        float *vh_x,
-        float *vh_y);
+        float *v_y);
 
 #ifdef __cplusplus
 }

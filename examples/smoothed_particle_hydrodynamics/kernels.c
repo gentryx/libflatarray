@@ -89,12 +89,9 @@ void damp_reflect(
     float *pos_x,
     float *pos_y,
     float *v_x,
-    float *v_y,
-    float *vh_x,
-    float *vh_y)
+    float *v_y)
 {
     float *v_which   = (which == 0) ? v_x   : v_y;
-    float *vh_which  = (which == 0) ? vh_x  : vh_y;
     float *pos_which = (which == 0) ? pos_x : pos_y;
 
     // Coefficient of resitiution
@@ -111,14 +108,10 @@ void damp_reflect(
     // Reflect the position and velocity
     pos_which[0] = 2 * barrier - pos_which[0];
     v_which[0]   = -v_which[0];
-    vh_which[0]  = -vh_which[0];
 
     // Damp the velocities
     v_x[0] *= DAMP;
     v_y[0] *= DAMP;
-
-    vh_x[0] *= DAMP;
-    vh_y[0] *= DAMP;
 }
 
 void reflect_bc(
@@ -126,9 +119,7 @@ void reflect_bc(
     float *restrict pos_x,
     float *restrict pos_y,
     float *restrict v_x,
-    float *restrict v_y,
-    float *restrict vh_x,
-    float *restrict vh_y)
+    float *restrict v_y)
 {
     // Boundaries of the computational domain
     const float XMIN = 0.0;
@@ -136,14 +127,18 @@ void reflect_bc(
     const float YMIN = 0.0;
     const float YMAX = 1.0;
 
-    for (int i = 0; i < n; ++i, pos_x += 1, pos_y += 1, v_x += 1, v_y +=1, vh_x += 1, vh_y += 1) {
-        if (pos_x[0] < XMIN) damp_reflect(0, XMIN, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
-        if (pos_x[0] > XMAX) damp_reflect(0, XMAX, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
+    for (int i = 0; i < n; ++i, pos_x += 1, pos_y += 1, v_x += 1, v_y +=1) {
+        if (pos_x[0] < XMIN) {
+            damp_reflect(0, XMIN, pos_x, pos_y, v_x, v_y);
+        }
+        if (pos_x[0] > XMAX) {
+            damp_reflect(0, XMAX, pos_x, pos_y, v_x, v_y);
+        }
         if (pos_y[0] < YMIN) {
-            damp_reflect(1, YMIN, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
+            damp_reflect(1, YMIN, pos_x, pos_y, v_x, v_y);
         }
         if (pos_y[0] > YMAX) {
-            damp_reflect(1, YMAX, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
+            damp_reflect(1, YMAX, pos_x, pos_y, v_x, v_y);
         }
     }
 }
@@ -154,20 +149,15 @@ void leapfrog(
     float *restrict pos_y,
     float *restrict v_x,
     float *restrict v_y,
-    float *restrict vh_x,
-    float *restrict vh_y,
     float *restrict a_x,
     float *restrict a_y,
     double dt)
 {
     for (int i = 0; i < n; ++i) {
-        vh_x[i] += a_x[i] * dt;
-        vh_y[i] += a_y[i] * dt;
+        v_x[i] += a_x[i] * dt;
+        v_y[i] += a_y[i] * dt;
 
-        v_x[i] = vh_x[i] + a_x[i] * dt / 2;
-        v_y[i] = vh_y[i] + a_y[i] * dt / 2;
-
-        pos_x[i] += vh_x[i] * dt;
-        pos_y[i] += vh_y[i] * dt;
+        pos_x[i] += v_x[i] * dt;
+        pos_y[i] += v_y[i] * dt;
     }
 }

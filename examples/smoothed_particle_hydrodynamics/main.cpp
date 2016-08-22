@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 
     // time step length:
     float dt = 1e-4;
- // pitch: (size of particles)
+    // pitch: (size of particles)
     float h = 2e-2;
     // target density:
     float rho0 = 1000;
@@ -97,8 +97,6 @@ int main(int argc, char** argv)
     std::vector<float> rho(count);
     std::vector<float> pos_x(count);
     std::vector<float> pos_y(count);
-    std::vector<float> vh_x(count);
-    std::vector<float> vh_y(count);
     std::vector<float> v_x(count);
     std::vector<float> v_y(count);
     std::vector<float> a_x(count);
@@ -147,8 +145,6 @@ int main(int argc, char** argv)
             pos_y.data(),
             v_x.data(),
             v_y.data(),
-            vh_x.data(),
-            vh_y.data(),
             a_x.data(),
             a_y.data(),
             dt);
@@ -158,9 +154,7 @@ int main(int argc, char** argv)
             pos_x.data(),
             pos_y.data(),
             v_x.data(),
-            v_y.data(),
-            vh_x.data(),
-            vh_y.data());
+            v_y.data());
     }
 
     dump_time_step(num_steps, count, pos_x.data(), pos_y.data());
