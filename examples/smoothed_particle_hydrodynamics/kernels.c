@@ -142,13 +142,9 @@ void reflect_bc(
         if (pos_x[0] > XMAX) damp_reflect(0, XMAX, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
         if (pos_y[0] < YMIN) {
             damp_reflect(1, YMIN, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
-            if (pos_y[0] < YMIN)
-                pos_y[0] = YMIN;
         }
         if (pos_y[0] > YMAX) {
             damp_reflect(1, YMAX, pos_x, pos_y, v_x, v_y, vh_x, vh_y);
-            if (pos_y[0] > YMAX)
-                pos_y[0] = YMAX;
         }
     }
 }
