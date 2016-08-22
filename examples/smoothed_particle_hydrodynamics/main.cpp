@@ -8,7 +8,7 @@
 
 int box_indicator(float x, float y)
 {
-    return (x < 0.5) && (y < 0.5);
+    return (x < 0.25) && (y < 1.0);
 }
 
 void place_particles(
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     place_particles(&state, count, hh);
     normalize_mass(&state, params);
 
-    int num_steps = 6000;
+    int num_steps = 20000;
     int io_period = 15;
 
     for (int t = 0; t < num_steps; ++t) {
