@@ -46,7 +46,8 @@ extern "C" {
         float mass,
         sim_param_t params);
 
-    void leapfrog(sim_state_t* s, double dt);
+    void leapfrog(sim_state_t *s, double dt);
+    void reflect_bc(sim_state_t *s);
 
 #ifdef __cplusplus
 }

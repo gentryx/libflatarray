@@ -84,7 +84,7 @@ void compute_accel(
     }
 }
 
-static void damp_reflect(
+void damp_reflect(
     int which,
     float barrier,
     float* pos_x,
@@ -122,7 +122,7 @@ static void damp_reflect(
     vh_y[0] *= DAMP;
 }
 
-static void reflect_bc(sim_state_t* s)
+void reflect_bc(sim_state_t* s)
 {
     // Boundaries of the computational domain
     const float XMIN = 0.0;
@@ -169,5 +169,4 @@ void leapfrog(sim_state_t* s, double dt)
     for (int i = 0; i < n; ++i) v_x[i] = vh_y[i] + a_y[i] * dt / 2;
     for (int i = 0; i < n; ++i) pos_x[i] += vh_x[i] * dt;
     for (int i = 0; i < n; ++i) pos_y[i] += vh_y[i] * dt;
-    reflect_bc(s);
 }
