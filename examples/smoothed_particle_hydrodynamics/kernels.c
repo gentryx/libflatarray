@@ -32,28 +32,27 @@ void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, flo
     }
 }
 
-void compute_accel(sim_state_t* state, sim_param_t params)
+void compute_accel(
+    int n,
+    float* restrict rho,
+    float* restrict pos_x,
+    float* restrict pos_y,
+    float* restrict v_x,
+    float* restrict v_y,
+    float* restrict a_x,
+    float* restrict a_y,
+    float mass,
+    sim_param_t params)
 {
     // Unpack basic parameters
     const float h = params.h;
     const float k = params.k;
     const float g = params.g;
-    const float mass = state->mass;
 
     const float h_squared = h * h;
     const float C_0 = mass / M_PI / (h_squared * h_squared);
     const float C_p = 15 * k;
     const float C_v = -40 * params.mu;
-
-    // Unpack system state
-    const float* restrict rho = state->rho;
-    const float* restrict pos_x = state->pos_x;
-    const float* restrict pos_y = state->pos_y;
-    const float* restrict v_x = state->v_x;
-    const float* restrict v_y = state->v_y;
-    float* restrict a_x = state->a_x;
-    float* restrict a_y = state->a_y;
-    int n = state->n;
 
     // gravity:
     for (int i = 0; i < n; ++i) {

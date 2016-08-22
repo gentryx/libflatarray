@@ -120,7 +120,7 @@ int main(int argc, char** argv)
         }
 
         compute_density(state.n, state.rho, state.pos_x, state.pos_y, params.h, state.mass);
-        compute_accel(&state, params);
+        compute_accel(state.n, state.rho, state.pos_x, state.pos_y, state.v_x, state.v_y, state.a_x, state.a_y, state.mass, params);
         leapfrog(&state, params.dt);
     }
 

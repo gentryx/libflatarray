@@ -33,7 +33,19 @@ extern "C" {
 #endif
 
     void compute_density(int n, float *rho, float *pos_x, float *pos_y, float h, float mass);
-    void compute_accel(sim_state_t* state, sim_param_t params);
+
+    void compute_accel(
+        int n,
+        float *rho,
+        float *pos_x,
+        float *pos_y,
+        float *v_x,
+        float *v_y,
+        float *a_x,
+        float *a_y,
+        float mass,
+        sim_param_t params);
+
     void leapfrog(sim_state_t* s, double dt);
 
 #ifdef __cplusplus
