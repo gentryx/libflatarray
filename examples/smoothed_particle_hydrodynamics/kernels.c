@@ -170,7 +170,7 @@ void leapfrog(sim_state_t* s, double dt)
         vh_y[i] += a_y[i] * dt;
 
         v_x[i] = vh_x[i] + a_x[i] * dt / 2;
-        v_x[i] = vh_y[i] + a_y[i] * dt / 2;
+        v_y[i] = vh_y[i] + a_y[i] * dt / 2;
 
         pos_x[i] += vh_x[i] * dt;
         pos_y[i] += vh_y[i] * dt;
