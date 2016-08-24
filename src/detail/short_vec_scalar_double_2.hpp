@@ -131,6 +131,48 @@ public:
             val2 / other.val2);
     }
 
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 0xFFFFFFFFFFFFFFFF : 0)
+    inline
+    short_vec<double, 2> operator<(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <));
+    }
+
+    inline
+    short_vec<double, 2> operator<=(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <=));
+    }
+
+    inline
+    short_vec<double, 2> operator==(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, ==));
+    }
+
+    inline
+    short_vec<double, 2> operator>(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >));
+    }
+
+    inline
+    short_vec<double, 2> operator>=(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >=));
+    }
+#undef LFA_SHORTVEC_COMPARE_HELPER
+
     inline
     short_vec<double, 2> sqrt() const
     {

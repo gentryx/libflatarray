@@ -284,6 +284,118 @@ public:
             val16 / other.val16);
     }
 
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 0xFFFFFFFFFFFFFFFF : 0)
+    inline
+    short_vec<float, 16> operator<(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val5, other.val5, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val6, other.val6, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val7, other.val7, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val8, other.val8, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val9, other.val9, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val10, other.val10, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val11, other.val11, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val12, other.val12, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val13, other.val13, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val14, other.val14, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val15, other.val15, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val16, other.val16, <));
+    }
+
+    inline
+    short_vec<float, 16> operator<=(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val5, other.val5, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val6, other.val6, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val7, other.val7, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val8, other.val8, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val9, other.val9, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val10, other.val10, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val11, other.val11, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val12, other.val12, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val13, other.val13, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val14, other.val14, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val15, other.val15, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val16, other.val16, <=));
+    }
+
+    inline
+    short_vec<float, 16> operator==(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val5, other.val5, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val6, other.val6, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val7, other.val7, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val8, other.val8, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val9, other.val9, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val10, other.val10, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val11, other.val11, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val12, other.val12, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val13, other.val13, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val14, other.val14, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val15, other.val15, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val16, other.val16, ==));
+    }
+
+    inline
+    short_vec<float, 16> operator>(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val5, other.val5, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val6, other.val6, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val7, other.val7, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val8, other.val8, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val9, other.val9, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val10, other.val10, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val11, other.val11, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val12, other.val12, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val13, other.val13, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val14, other.val14, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val15, other.val15, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val16, other.val16, >));
+    }
+
+    inline
+    short_vec<float, 16> operator>=(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val5, other.val5, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val6, other.val6, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val7, other.val7, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val8, other.val8, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val9, other.val9, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val10, other.val10, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val11, other.val11, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val12, other.val12, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val13, other.val13, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val14, other.val14, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val15, other.val15, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val16, other.val16, >=));
+    }
+#undef LFA_SHORTVEC_COMPARE_HELPER
+
     inline
     short_vec<float, 16> sqrt() const
     {

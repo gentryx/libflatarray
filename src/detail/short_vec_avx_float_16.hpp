@@ -144,6 +144,46 @@ public:
     short_vec<float, 16> operator/(const sqrt_reference<float, 16>& other) const;
 
     inline
+    short_vec<float, 16> operator<(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            _mm256_cmp_ps(val1, other.val1, _CMP_LT_OS),
+            _mm256_cmp_ps(val2, other.val2, _CMP_LT_OS));
+    }
+
+    inline
+    short_vec<float, 16> operator<=(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            _mm256_cmp_ps(val1, other.val1, _CMP_LE_OS),
+            _mm256_cmp_ps(val2, other.val2, _CMP_LE_OS));
+    }
+
+    inline
+    short_vec<float, 16> operator==(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            _mm256_cmp_ps(val1, other.val1, _CMP_EQ_OQ),
+            _mm256_cmp_ps(val2, other.val2, _CMP_EQ_OQ));
+    }
+
+    inline
+    short_vec<float, 16> operator>(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            _mm256_cmp_ps(val1, other.val1, _CMP_GT_OS),
+            _mm256_cmp_ps(val2, other.val2, _CMP_GT_OS));
+    }
+
+    inline
+    short_vec<float, 16> operator>=(const short_vec<float, 16>& other) const
+    {
+        return short_vec<float, 16>(
+            _mm256_cmp_ps(val1, other.val1, _CMP_GE_OS),
+            _mm256_cmp_ps(val2, other.val2, _CMP_GE_OS));
+    }
+
+    inline
     short_vec<float, 16> sqrt() const
     {
         return short_vec<float, 16>(

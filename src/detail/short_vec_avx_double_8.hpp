@@ -132,6 +132,46 @@ public:
     }
 
     inline
+    short_vec<double, 8> operator<(const short_vec<double, 8>& other) const
+    {
+        return short_vec<double, 8>(
+            _mm256_cmp_pd(val1, other.val1, _CMP_LT_OS),
+            _mm256_cmp_pd(val2, other.val2, _CMP_LT_OS));
+    }
+
+    inline
+    short_vec<double, 8> operator<=(const short_vec<double, 8>& other) const
+    {
+        return short_vec<double, 8>(
+            _mm256_cmp_pd(val1, other.val1, _CMP_LE_OS),
+            _mm256_cmp_pd(val2, other.val2, _CMP_LE_OS));
+    }
+
+    inline
+    short_vec<double, 8> operator==(const short_vec<double, 8>& other) const
+    {
+        return short_vec<double, 8>(
+            _mm256_cmp_pd(val1, other.val1, _CMP_EQ_OQ),
+            _mm256_cmp_pd(val2, other.val2, _CMP_EQ_OQ));
+    }
+
+    inline
+    short_vec<double, 8> operator>(const short_vec<double, 8>& other) const
+    {
+        return short_vec<double, 8>(
+            _mm256_cmp_pd(val1, other.val1, _CMP_GT_OS),
+            _mm256_cmp_pd(val2, other.val2, _CMP_GT_OS));
+    }
+
+    inline
+    short_vec<double, 8> operator>=(const short_vec<double, 8>& other) const
+    {
+        return short_vec<double, 8>(
+            _mm256_cmp_pd(val1, other.val1, _CMP_GE_OS),
+            _mm256_cmp_pd(val2, other.val2, _CMP_GE_OS));
+    }
+
+    inline
     short_vec<double, 8> sqrt() const
     {
         return short_vec<double, 8>(

@@ -144,6 +144,41 @@ public:
     short_vec<float, 4> operator/(const sqrt_reference<float, 4>& other) const;
 
     inline
+    short_vec<float, 4> operator<(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            _mm_cmplt_ps(val1, other.val1));
+    }
+
+    inline
+    short_vec<float, 4> operator<=(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            _mm_cmple_ps(val1, other.val1));
+    }
+
+    inline
+    short_vec<float, 4> operator==(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            _mm_cmpeq_ps(val1, other.val1));
+    }
+
+    inline
+    short_vec<float, 4> operator>(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            _mm_cmpgt_ps(val1, other.val1));
+    }
+
+    inline
+    short_vec<float, 4> operator>=(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            _mm_cmpge_ps(val1, other.val1));
+    }
+
+    inline
     short_vec<float, 4> sqrt() const
     {
         return short_vec<float, 4>(

@@ -126,6 +126,41 @@ public:
     }
 
     inline
+    short_vec<double, 2> operator<(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            _mm_cmplt_pd(val1, other.val1));
+    }
+
+    inline
+    short_vec<double, 2> operator<=(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            _mm_cmple_pd(val1, other.val1));
+    }
+
+    inline
+    short_vec<double, 2> operator==(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            _mm_cmpeq_pd(val1, other.val1));
+    }
+
+    inline
+    short_vec<double, 2> operator>(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            _mm_cmpgt_pd(val1, other.val1));
+    }
+
+    inline
+    short_vec<double, 2> operator>=(const short_vec<double, 2>& other) const
+    {
+        return short_vec<double, 2>(
+            _mm_cmpge_pd(val1, other.val1));
+    }
+
+    inline
     short_vec<double, 2> sqrt() const
     {
         return short_vec<double, 2>(

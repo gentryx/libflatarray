@@ -154,6 +154,58 @@ public:
             val4  / other.val4);
     }
 
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 0xFFFFFFFFFFFFFFFF : 0)
+    inline
+    short_vec<float, 4> operator<(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <));
+    }
+
+    inline
+    short_vec<float, 4> operator<=(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <=),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <=));
+    }
+
+    inline
+    short_vec<float, 4> operator==(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, ==),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, ==));
+    }
+
+    inline
+    short_vec<float, 4> operator>(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >));
+    }
+
+    inline
+    short_vec<float, 4> operator>=(const short_vec<float, 4>& other) const
+    {
+        return short_vec<float, 4>(
+            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >=),
+            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >=));
+    }
+#undef LFA_SHORTVEC_COMPARE_HELPER
+
     inline
     short_vec<float, 4> sqrt() const
     {
