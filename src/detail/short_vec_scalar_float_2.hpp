@@ -67,7 +67,7 @@ public:
 #endif
 
     inline
-    operator bool() const
+    bool any() const
     {
         return
             val1 ||

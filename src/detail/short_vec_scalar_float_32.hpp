@@ -8,11 +8,7 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_FLOAT_32_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_FLOAT_32_HPP
 
-#if (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SCALAR) ||          \
-    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE) ||             \
-    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE2) ||            \
-    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SSE4_1) ||          \
-    (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_QPX)
+#if (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_SCALAR)
 
 #include <libflatarray/config.h>
 
@@ -164,7 +160,7 @@ public:
 #endif
 
     inline
-    operator bool() const
+    bool any() const
     {
         return
             val1 ||
