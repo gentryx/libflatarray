@@ -77,7 +77,7 @@ public:
 #endif
 
     inline
-    operator bool() const
+    bool any() const
     {
         __m128d buf1 = _mm_or_pd(_mm_or_pd(val1, val2),
                                 _mm_or_pd(val3, val4));

@@ -74,7 +74,7 @@ public:
 #endif
 
     inline
-    operator bool() const
+    bool any() const
     {
         __m128d buf = _mm_shuffle_pd(val1, val1, 1);
 

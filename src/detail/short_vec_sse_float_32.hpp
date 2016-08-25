@@ -96,7 +96,7 @@ public:
     short_vec(const sqrt_reference<float, 32>& other);
 
     inline
-    operator bool() const
+    bool any() const
     {
         __m128 buf1 = _mm_or_ps(
             _mm_or_ps(_mm_or_ps(val1, val2),
