@@ -79,6 +79,16 @@ public:
 #endif
 
     inline
+    operator bool() const
+    {
+        return
+            val1 ||
+            val2 ||
+            val3 ||
+            val4;
+    }
+
+    inline
     void operator-=(const short_vec<double, 4>& other)
     {
         val1  -= other.val1;
