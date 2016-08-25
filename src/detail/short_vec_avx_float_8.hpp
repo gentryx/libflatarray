@@ -76,6 +76,24 @@ public:
     short_vec(const sqrt_reference<float, 8>& other);
 
     inline
+    bool any() const
+    {
+        // merge both 128-bit lanes of AVX register:
+        __m128 buf0 = _mm_or_ps(
+            _mm256_extractf128_ps(val1, 0),
+            _mm256_extractf128_ps(val1, 1));
+        // shuffle upper 64-bit half down to first 64 bits so we can
+        // "or" both together:
+        __m128 buf1 = _mm_shuffle_ps(buf0, buf0, (3 << 2) | (2 << 0));
+        buf1 = _mm_or_ps(buf0, buf1);
+        // another shuffle to extract 2nd least significant float
+        // member and or it together with least significant float
+        // member:
+        __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
+        return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+    }
+
+    inline
     void operator-=(const short_vec<float, 8>& other)
     {
         val1 = _mm256_sub_ps(val1, other.val1);
