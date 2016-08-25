@@ -75,6 +75,15 @@ public:
 #endif
 
     inline
+    operator bool() const
+    {
+        __m128d buf1 = _mm_or_pd(val1, val2);
+        __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
+
+        return _mm_cvtsd_f64(buf1) | _mm_cvtsd_f64(buf2);
+    }
+
+    inline
     void operator-=(const short_vec<double, 4>& other)
     {
         val1 = _mm_sub_pd(val1, other.val1);

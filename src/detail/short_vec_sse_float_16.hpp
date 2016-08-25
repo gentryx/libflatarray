@@ -88,6 +88,17 @@ public:
     short_vec(const sqrt_reference<float, 16>& other);
 
     inline
+    operator bool() const
+    {
+        __m128 buf1 = _mm_or_ps(_mm_or_ps(val1, val2),
+                                _mm_or_ps(val3, val4));
+        __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
+        buf1 = _mm_or_ps(buf1, buf2);
+        buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
+        return _mm_cvtss_f32(buf1) | _mm_cvtss_f32(buf2);
+    }
+
+    inline
     void operator-=(const short_vec<float, 16>& other)
     {
         val1 = _mm_sub_ps(val1, other.val1);
