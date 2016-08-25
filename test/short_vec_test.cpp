@@ -372,6 +372,11 @@ void testImplementationReal()
                 }
             }
 
+            // test reduction to bool:
+            bool actual = v3.any();
+            bool expected = (test_value > 0);
+            BOOST_TEST_EQ(actual, expected);
+
             // test operator<=()
             v3 = (v1 <= v2);
             &array3[0] << v3;
@@ -396,6 +401,11 @@ void testImplementationReal()
                 }
             }
 
+            // test reduction to bool:
+            actual = v3.any();
+            expected = (test_value < ARITY);
+            BOOST_TEST_EQ(actual, expected);
+
             // test operator>()
             v3 = (v1 > v2);
             &array3[0] << v3;
@@ -419,6 +429,11 @@ void testImplementationReal()
                     BOOST_TEST(array3[i] == 0);
                 }
             }
+
+            // test reduction to bool, again:
+            actual = v3.any();
+            expected = (test_value < ARITY);
+            BOOST_TEST_EQ(actual, expected);
         }
     }
 }
@@ -776,6 +791,7 @@ void checkForStrategy(STRATEGY, STRATEGY)
 
 ADD_TEST(TestImplementationStrategyDouble)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(short_vec<double, 1>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
@@ -859,7 +875,15 @@ ADD_TEST(TestImplementationStrategyDouble)
 #ifdef __AVX512F__
 #define EXPECTED_TYPE short_vec_strategy::avx512
 #else
-#define EXPECTED_TYPE short_vec_strategy::scalar
+#  ifdef __AVX__
+#    define EXPECTED_TYPE short_vec_strategy::avx
+#  else
+#    ifdef __SSE__
+#      define EXPECTED_TYPE short_vec_strategy::sse
+#    else
+#      define EXPECTED_TYPE short_vec_strategy::scalar
+#    endif
+#  endif
 #endif
     checkForStrategy(short_vec<double, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
@@ -867,6 +891,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 
 ADD_TEST(TestImplementationStrategyFloat)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(short_vec<float, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(short_vec<float, 2>::strategy(), EXPECTED_TYPE());
@@ -951,6 +976,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 
 ADD_TEST(TestImplementationStrategyInt)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(short_vec<int, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(short_vec<int, 2>::strategy(), EXPECTED_TYPE());

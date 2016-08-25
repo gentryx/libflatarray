@@ -779,9 +779,17 @@ ADD_TEST(TestImplementationStrategyDouble)
 #endif
 
 #ifdef __AVX512F__
-#define EXPECTED_TYPE short_vec_strategy::avx512
+#  define EXPECTED_TYPE short_vec_strategy::avx512
 #else
-#define EXPECTED_TYPE short_vec_strategy::scalar
+#  ifdef __AVX__
+#    define EXPECTED_TYPE short_vec_strategy::avx
+#  else
+#    ifdef __SSE__
+#      define EXPECTED_TYPE short_vec_strategy::sse
+#    else
+#      define EXPECTED_TYPE short_vec_strategy::scalar
+#    endif
+#  endif
 #endif
     checkForStrategy(streaming_short_vec<double, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
