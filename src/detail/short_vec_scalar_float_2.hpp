@@ -134,7 +134,7 @@ public:
             val2 / other.val2);
     }
 
-#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 0xFFFFFFFFFFFFFFFF : 0)
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 1 : 0)
     inline
     short_vec<float, 2> operator<(const short_vec<float, 2>& other) const
     {
