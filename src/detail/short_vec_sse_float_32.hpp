@@ -58,7 +58,11 @@ public:
         val1(_mm_set1_ps(data)),
         val2(_mm_set1_ps(data)),
         val3(_mm_set1_ps(data)),
-        val4(_mm_set1_ps(data))
+        val4(_mm_set1_ps(data)),
+        val5(_mm_set1_ps(data)),
+        val6(_mm_set1_ps(data)),
+        val7(_mm_set1_ps(data)),
+        val8(_mm_set1_ps(data))
     {}
 
     inline
@@ -68,11 +72,15 @@ public:
     }
 
     inline
-    short_vec(const __m128& val1, const __m128& val2, const __m128& val3, const __m128& val4) :
+    short_vec(const __m128& val1, const __m128& val2, const __m128& val3, const __m128& val4, const __m128& val5, const __m128& val6, const __m128& val7, const __m128& val8) :
         val1(val1),
         val2(val2),
         val3(val3),
-        val4(val4)
+        val4(val4),
+        val5(val5),
+        val6(val6),
+        val7(val7),
+        val8(val8)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -90,8 +98,11 @@ public:
     inline
     operator bool() const
     {
-        __m128 buf1 = _mm_or_ps(_mm_or_ps(val1, val2),
-                                _mm_or_ps(val3, val4));
+        __m128 buf1 = _mm_or_ps(
+            _mm_or_ps(_mm_or_ps(val1, val2),
+                      _mm_or_ps(val3, val4)),
+            _mm_or_ps(_mm_or_ps(val5, val6),
+                      _mm_or_ps(val7, val8)));
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
         buf1 = _mm_or_ps(buf1, buf2);
         buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
@@ -105,6 +116,10 @@ public:
         val2 = _mm_sub_ps(val2, other.val2);
         val3 = _mm_sub_ps(val3, other.val3);
         val4 = _mm_sub_ps(val4, other.val4);
+        val5 = _mm_sub_ps(val5, other.val5);
+        val6 = _mm_sub_ps(val6, other.val6);
+        val7 = _mm_sub_ps(val7, other.val7);
+        val8 = _mm_sub_ps(val8, other.val8);
     }
 
     inline
@@ -114,7 +129,11 @@ public:
             _mm_sub_ps(val1, other.val1),
             _mm_sub_ps(val2, other.val2),
             _mm_sub_ps(val3, other.val3),
-            _mm_sub_ps(val4, other.val4));
+            _mm_sub_ps(val4, other.val4),
+            _mm_sub_ps(val5, other.val5),
+            _mm_sub_ps(val6, other.val6),
+            _mm_sub_ps(val7, other.val7),
+            _mm_sub_ps(val8, other.val8));
     }
 
     inline
@@ -124,6 +143,10 @@ public:
         val2 = _mm_add_ps(val2, other.val2);
         val3 = _mm_add_ps(val3, other.val3);
         val4 = _mm_add_ps(val4, other.val4);
+        val5 = _mm_add_ps(val5, other.val5);
+        val6 = _mm_add_ps(val6, other.val6);
+        val7 = _mm_add_ps(val7, other.val7);
+        val8 = _mm_add_ps(val8, other.val8);
     }
 
     inline
@@ -133,7 +156,11 @@ public:
             _mm_add_ps(val1, other.val1),
             _mm_add_ps(val2, other.val2),
             _mm_add_ps(val3, other.val3),
-            _mm_add_ps(val4, other.val4));
+            _mm_add_ps(val4, other.val4),
+            _mm_add_ps(val5, other.val5),
+            _mm_add_ps(val6, other.val6),
+            _mm_add_ps(val7, other.val7),
+            _mm_add_ps(val8, other.val8));
     }
 
     inline
@@ -143,6 +170,10 @@ public:
         val2 = _mm_mul_ps(val2, other.val2);
         val3 = _mm_mul_ps(val3, other.val3);
         val4 = _mm_mul_ps(val4, other.val4);
+        val5 = _mm_mul_ps(val5, other.val5);
+        val6 = _mm_mul_ps(val6, other.val6);
+        val7 = _mm_mul_ps(val7, other.val7);
+        val8 = _mm_mul_ps(val8, other.val8);
     }
 
     inline
@@ -152,7 +183,11 @@ public:
             _mm_mul_ps(val1, other.val1),
             _mm_mul_ps(val2, other.val2),
             _mm_mul_ps(val3, other.val3),
-            _mm_mul_ps(val4, other.val4));
+            _mm_mul_ps(val4, other.val4),
+            _mm_mul_ps(val5, other.val5),
+            _mm_mul_ps(val6, other.val6),
+            _mm_mul_ps(val7, other.val7),
+            _mm_mul_ps(val8, other.val8));
     }
 
     inline
@@ -174,7 +209,11 @@ public:
             _mm_div_ps(val1, other.val1),
             _mm_div_ps(val2, other.val2),
             _mm_div_ps(val3, other.val3),
-            _mm_div_ps(val4, other.val4));
+            _mm_div_ps(val4, other.val4),
+            _mm_div_ps(val5, other.val5),
+            _mm_div_ps(val6, other.val6),
+            _mm_div_ps(val7, other.val7),
+            _mm_div_ps(val8, other.val8));
     }
 
     inline
@@ -187,7 +226,11 @@ public:
             _mm_cmplt_ps(val1, other.val1),
             _mm_cmplt_ps(val2, other.val2),
             _mm_cmplt_ps(val3, other.val3),
-            _mm_cmplt_ps(val4, other.val4));
+            _mm_cmplt_ps(val4, other.val4),
+            _mm_cmplt_ps(val5, other.val5),
+            _mm_cmplt_ps(val6, other.val6),
+            _mm_cmplt_ps(val7, other.val7),
+            _mm_cmplt_ps(val8, other.val8));
     }
 
     inline
@@ -197,7 +240,11 @@ public:
             _mm_cmple_ps(val1, other.val1),
             _mm_cmple_ps(val2, other.val2),
             _mm_cmple_ps(val3, other.val3),
-            _mm_cmple_ps(val4, other.val4));
+            _mm_cmple_ps(val4, other.val4),
+            _mm_cmple_ps(val5, other.val5),
+            _mm_cmple_ps(val6, other.val6),
+            _mm_cmple_ps(val7, other.val7),
+            _mm_cmple_ps(val8, other.val8));
     }
 
     inline
@@ -207,7 +254,11 @@ public:
             _mm_cmpeq_ps(val1, other.val1),
             _mm_cmpeq_ps(val2, other.val2),
             _mm_cmpeq_ps(val3, other.val3),
-            _mm_cmpeq_ps(val4, other.val4));
+            _mm_cmpeq_ps(val4, other.val4),
+            _mm_cmpeq_ps(val5, other.val5),
+            _mm_cmpeq_ps(val6, other.val6),
+            _mm_cmpeq_ps(val7, other.val7),
+            _mm_cmpeq_ps(val8, other.val8));
     }
 
     inline
@@ -217,7 +268,11 @@ public:
             _mm_cmpgt_ps(val1, other.val1),
             _mm_cmpgt_ps(val2, other.val2),
             _mm_cmpgt_ps(val3, other.val3),
-            _mm_cmpgt_ps(val4, other.val4));
+            _mm_cmpgt_ps(val4, other.val4),
+            _mm_cmpgt_ps(val5, other.val5),
+            _mm_cmpgt_ps(val6, other.val6),
+            _mm_cmpgt_ps(val7, other.val7),
+            _mm_cmpgt_ps(val8, other.val8));
     }
 
     inline
@@ -227,7 +282,11 @@ public:
             _mm_cmpge_ps(val1, other.val1),
             _mm_cmpge_ps(val2, other.val2),
             _mm_cmpge_ps(val3, other.val3),
-            _mm_cmpge_ps(val4, other.val4));
+            _mm_cmpge_ps(val4, other.val4),
+            _mm_cmpge_ps(val5, other.val5),
+            _mm_cmpge_ps(val6, other.val6),
+            _mm_cmpge_ps(val7, other.val7),
+            _mm_cmpge_ps(val8, other.val8));
     }
 
     inline
@@ -237,7 +296,11 @@ public:
             _mm_sqrt_ps(val1),
             _mm_sqrt_ps(val2),
             _mm_sqrt_ps(val3),
-            _mm_sqrt_ps(val4));
+            _mm_sqrt_ps(val4),
+            _mm_sqrt_ps(val5),
+            _mm_sqrt_ps(val6),
+            _mm_sqrt_ps(val7),
+            _mm_sqrt_ps(val8));
     }
 
     inline
@@ -247,6 +310,10 @@ public:
         val2 = _mm_loadu_ps(data +  4);
         val3 = _mm_loadu_ps(data +  8);
         val4 = _mm_loadu_ps(data + 12);
+        val5 = _mm_loadu_ps(data + 16);
+        val6 = _mm_loadu_ps(data + 20);
+        val7 = _mm_loadu_ps(data + 24);
+        val8 = _mm_loadu_ps(data + 28);
     }
 
     inline
@@ -257,6 +324,10 @@ public:
         val2 = _mm_load_ps(data +  4);
         val3 = _mm_load_ps(data +  8);
         val4 = _mm_load_ps(data + 12);
+        val5 = _mm_load_ps(data + 16);
+        val6 = _mm_load_ps(data + 20);
+        val7 = _mm_load_ps(data + 24);
+        val8 = _mm_load_ps(data + 28);
     }
 
     inline
@@ -266,6 +337,10 @@ public:
         _mm_storeu_ps(data +  4, val2);
         _mm_storeu_ps(data +  8, val3);
         _mm_storeu_ps(data + 12, val4);
+        _mm_storeu_ps(data + 16, val5);
+        _mm_storeu_ps(data + 20, val6);
+        _mm_storeu_ps(data + 24, val7);
+        _mm_storeu_ps(data + 28, val8);
     }
 
     inline
@@ -276,6 +351,10 @@ public:
         _mm_store_ps(data +  4, val2);
         _mm_store_ps(data +  8, val3);
         _mm_store_ps(data + 12, val4);
+        _mm_store_ps(data + 16, val5);
+        _mm_store_ps(data + 20, val6);
+        _mm_store_ps(data + 24, val7);
+        _mm_store_ps(data + 28, val8);
     }
 
     inline
@@ -286,6 +365,10 @@ public:
         _mm_stream_ps(data +  4, val2);
         _mm_stream_ps(data +  8, val3);
         _mm_stream_ps(data + 12, val4);
+        _mm_stream_ps(data + 16, val5);
+        _mm_stream_ps(data + 20, val6);
+        _mm_stream_ps(data + 24, val7);
+        _mm_stream_ps(data + 28, val8);
     }
 
 #ifdef __SSE4_1__
@@ -296,18 +379,41 @@ public:
         SHORTVEC_INSERT_PS(val1, ptr, offsets[ 1], _MM_MK_INSERTPS_NDX(0,1,0));
         SHORTVEC_INSERT_PS(val1, ptr, offsets[ 2], _MM_MK_INSERTPS_NDX(0,2,0));
         SHORTVEC_INSERT_PS(val1, ptr, offsets[ 3], _MM_MK_INSERTPS_NDX(0,3,0));
+
         val2 = _mm_load_ss(ptr + offsets[4]);
         SHORTVEC_INSERT_PS(val2, ptr, offsets[ 5], _MM_MK_INSERTPS_NDX(0,1,0));
         SHORTVEC_INSERT_PS(val2, ptr, offsets[ 6], _MM_MK_INSERTPS_NDX(0,2,0));
         SHORTVEC_INSERT_PS(val2, ptr, offsets[ 7], _MM_MK_INSERTPS_NDX(0,3,0));
+
         val3 = _mm_load_ss(ptr + offsets[8]);
         SHORTVEC_INSERT_PS(val3, ptr, offsets[ 9], _MM_MK_INSERTPS_NDX(0,1,0));
         SHORTVEC_INSERT_PS(val3, ptr, offsets[10], _MM_MK_INSERTPS_NDX(0,2,0));
         SHORTVEC_INSERT_PS(val3, ptr, offsets[11], _MM_MK_INSERTPS_NDX(0,3,0));
+
         val4 = _mm_load_ss(ptr + offsets[12]);
         SHORTVEC_INSERT_PS(val4, ptr, offsets[13], _MM_MK_INSERTPS_NDX(0,1,0));
         SHORTVEC_INSERT_PS(val4, ptr, offsets[14], _MM_MK_INSERTPS_NDX(0,2,0));
         SHORTVEC_INSERT_PS(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
+
+        val5 = _mm_load_ss(ptr + offsets[16]);
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val1, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
+
+        val6 = _mm_load_ss(ptr + offsets[20]);
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val2, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
+
+        val7 = _mm_load_ss(ptr + offsets[24]);
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val3, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
+
+        val8 = _mm_load_ss(ptr + offsets[28]);
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val4, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline
@@ -322,6 +428,7 @@ public:
         ptr[offsets[1]] = r2.f;
         ptr[offsets[2]] = r3.f;
         ptr[offsets[3]] = r4.f;
+
         r1.i = _mm_extract_ps(val2, 0);
         r2.i = _mm_extract_ps(val2, 1);
         r3.i = _mm_extract_ps(val2, 2);
@@ -330,6 +437,7 @@ public:
         ptr[offsets[5]] = r2.f;
         ptr[offsets[6]] = r3.f;
         ptr[offsets[7]] = r4.f;
+
         r1.i = _mm_extract_ps(val3, 0);
         r2.i = _mm_extract_ps(val3, 1);
         r3.i = _mm_extract_ps(val3, 2);
@@ -338,6 +446,7 @@ public:
         ptr[offsets[ 9]] = r2.f;
         ptr[offsets[10]] = r3.f;
         ptr[offsets[11]] = r4.f;
+
         r1.i = _mm_extract_ps(val4, 0);
         r2.i = _mm_extract_ps(val4, 1);
         r3.i = _mm_extract_ps(val4, 2);
@@ -346,6 +455,42 @@ public:
         ptr[offsets[13]] = r2.f;
         ptr[offsets[14]] = r3.f;
         ptr[offsets[15]] = r4.f;
+
+        r1.i = _mm_extract_ps(val5, 0);
+        r2.i = _mm_extract_ps(val5, 1);
+        r3.i = _mm_extract_ps(val5, 2);
+        r4.i = _mm_extract_ps(val5, 3);
+        ptr[offsets[16]] = r1.f;
+        ptr[offsets[17]] = r2.f;
+        ptr[offsets[18]] = r3.f;
+        ptr[offsets[19]] = r4.f;
+
+        r1.i = _mm_extract_ps(val6, 0);
+        r2.i = _mm_extract_ps(val6, 1);
+        r3.i = _mm_extract_ps(val6, 2);
+        r4.i = _mm_extract_ps(val6, 3);
+        ptr[offsets[20]] = r1.f;
+        ptr[offsets[21]] = r2.f;
+        ptr[offsets[22]] = r3.f;
+        ptr[offsets[23]] = r4.f;
+
+        r1.i = _mm_extract_ps(val7, 0);
+        r2.i = _mm_extract_ps(val7, 1);
+        r3.i = _mm_extract_ps(val7, 2);
+        r4.i = _mm_extract_ps(val7, 3);
+        ptr[offsets[24]] = r1.f;
+        ptr[offsets[25]] = r2.f;
+        ptr[offsets[26]] = r3.f;
+        ptr[offsets[27]] = r4.f;
+
+        r1.i = _mm_extract_ps(val8, 0);
+        r2.i = _mm_extract_ps(val8, 1);
+        r3.i = _mm_extract_ps(val8, 2);
+        r4.i = _mm_extract_ps(val8, 3);
+        ptr[offsets[28]] = r1.f;
+        ptr[offsets[29]] = r2.f;
+        ptr[offsets[30]] = r3.f;
+        ptr[offsets[31]] = r4.f;
     }
 #else
     inline
@@ -359,6 +504,7 @@ public:
         f4   = _mm_load_ss(ptr + offsets[3]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val1 = _mm_unpacklo_ps(f1, f3);
+
         f1   = _mm_load_ss(ptr + offsets[4]);
         f2   = _mm_load_ss(ptr + offsets[6]);
         f1   = _mm_unpacklo_ps(f1, f2);
@@ -366,6 +512,7 @@ public:
         f4   = _mm_load_ss(ptr + offsets[7]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val2 = _mm_unpacklo_ps(f1, f3);
+
         f1   = _mm_load_ss(ptr + offsets[ 8]);
         f2   = _mm_load_ss(ptr + offsets[10]);
         f1   = _mm_unpacklo_ps(f1, f2);
@@ -373,6 +520,7 @@ public:
         f4   = _mm_load_ss(ptr + offsets[11]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val3 = _mm_unpacklo_ps(f1, f3);
+
         f1   = _mm_load_ss(ptr + offsets[12]);
         f2   = _mm_load_ss(ptr + offsets[14]);
         f1   = _mm_unpacklo_ps(f1, f2);
@@ -380,6 +528,39 @@ public:
         f4   = _mm_load_ss(ptr + offsets[15]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val4 = _mm_unpacklo_ps(f1, f3);
+
+        f1   = _mm_load_ss(ptr + offsets[16]);
+        f2   = _mm_load_ss(ptr + offsets[17]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[18]);
+        f4   = _mm_load_ss(ptr + offsets[19]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val5 = _mm_unpacklo_ps(f1, f3);
+
+        f1   = _mm_load_ss(ptr + offsets[20]);
+        f2   = _mm_load_ss(ptr + offsets[21]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[22]);
+        f4   = _mm_load_ss(ptr + offsets[23]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val6 = _mm_unpacklo_ps(f1, f3);
+
+        f1   = _mm_load_ss(ptr + offsets[24]);
+        f2   = _mm_load_ss(ptr + offsets[25]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[26]);
+        f4   = _mm_load_ss(ptr + offsets[27]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val7 = _mm_unpacklo_ps(f1, f3);
+
+        f1   = _mm_load_ss(ptr + offsets[28]);
+        f2   = _mm_load_ss(ptr + offsets[29]);
+        f1   = _mm_unpacklo_ps(f1, f2);
+        f3   = _mm_load_ss(ptr + offsets[30]);
+        f4   = _mm_load_ss(ptr + offsets[31]);
+        f3   = _mm_unpacklo_ps(f3, f4);
+        val8 = _mm_unpacklo_ps(f1, f3);
+
     }
 
     inline
@@ -393,6 +574,7 @@ public:
         _mm_store_ss(ptr + offsets[2], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[3], tmp);
+
         tmp = val2;
         _mm_store_ss(ptr + offsets[4], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
@@ -401,6 +583,7 @@ public:
         _mm_store_ss(ptr + offsets[6], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[7], tmp);
+
         tmp = val3;
         _mm_store_ss(ptr + offsets[8], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
@@ -409,6 +592,7 @@ public:
         _mm_store_ss(ptr + offsets[10], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[11], tmp);
+
         tmp = val4;
         _mm_store_ss(ptr + offsets[12], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
@@ -417,6 +601,42 @@ public:
         _mm_store_ss(ptr + offsets[14], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[15], tmp);
+
+        tmp = val5;
+        _mm_store_ss(ptr + offsets[16], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[17], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[18], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[19], tmp);
+
+        tmp = val6;
+        _mm_store_ss(ptr + offsets[20], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[21], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[22], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[23], tmp);
+
+        tmp = val7;
+        _mm_store_ss(ptr + offsets[24], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[25], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[26], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[27], tmp);
+
+        tmp = val8;
+        _mm_store_ss(ptr + offsets[28], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[29], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[30], tmp);
+        tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
+        _mm_store_ss(ptr + offsets[31], tmp);
    }
 #endif
 
@@ -425,6 +645,10 @@ private:
     __m128 val2;
     __m128 val3;
     __m128 val4;
+    __m128 val5;
+    __m128 val6;
+    __m128 val7;
+    __m128 val8;
 };
 
 inline
@@ -457,7 +681,11 @@ short_vec<float, 32>::short_vec(const sqrt_reference<float, 32>& other) :
     val1(_mm_sqrt_ps(other.vec.val1)),
     val2(_mm_sqrt_ps(other.vec.val2)),
     val3(_mm_sqrt_ps(other.vec.val3)),
-    val4(_mm_sqrt_ps(other.vec.val4))
+    val4(_mm_sqrt_ps(other.vec.val4)),
+    val5(_mm_sqrt_ps(other.vec.val5)),
+    val6(_mm_sqrt_ps(other.vec.val6)),
+    val7(_mm_sqrt_ps(other.vec.val7)),
+    val8(_mm_sqrt_ps(other.vec.val8))
 {}
 
 inline
@@ -467,6 +695,10 @@ void short_vec<float, 32>::operator/=(const sqrt_reference<float, 32>& other)
     val2 = _mm_mul_ps(val2, _mm_rsqrt_ps(other.vec.val2));
     val3 = _mm_mul_ps(val3, _mm_rsqrt_ps(other.vec.val3));
     val4 = _mm_mul_ps(val4, _mm_rsqrt_ps(other.vec.val4));
+    val5 = _mm_mul_ps(val5, _mm_rsqrt_ps(other.vec.val5));
+    val6 = _mm_mul_ps(val6, _mm_rsqrt_ps(other.vec.val6));
+    val7 = _mm_mul_ps(val7, _mm_rsqrt_ps(other.vec.val7));
+    val8 = _mm_mul_ps(val8, _mm_rsqrt_ps(other.vec.val8));
 }
 
 inline
@@ -476,7 +708,11 @@ short_vec<float, 32> short_vec<float, 32>::operator/(const sqrt_reference<float,
         _mm_mul_ps(val1, _mm_rsqrt_ps(other.vec.val1)),
         _mm_mul_ps(val2, _mm_rsqrt_ps(other.vec.val2)),
         _mm_mul_ps(val3, _mm_rsqrt_ps(other.vec.val3)),
-        _mm_mul_ps(val4, _mm_rsqrt_ps(other.vec.val4)));
+        _mm_mul_ps(val4, _mm_rsqrt_ps(other.vec.val4)),
+        _mm_mul_ps(val5, _mm_rsqrt_ps(other.vec.val5)),
+        _mm_mul_ps(val6, _mm_rsqrt_ps(other.vec.val6)),
+        _mm_mul_ps(val7, _mm_rsqrt_ps(other.vec.val7)),
+        _mm_mul_ps(val8, _mm_rsqrt_ps(other.vec.val8)));
 }
 
 inline
