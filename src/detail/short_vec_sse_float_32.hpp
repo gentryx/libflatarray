@@ -197,6 +197,10 @@ public:
         val2 = _mm_div_ps(val2, other.val2);
         val3 = _mm_div_ps(val3, other.val3);
         val4 = _mm_div_ps(val4, other.val4);
+        val5 = _mm_div_ps(val5, other.val5);
+        val6 = _mm_div_ps(val6, other.val6);
+        val7 = _mm_div_ps(val7, other.val7);
+        val8 = _mm_div_ps(val8, other.val8);
     }
 
     inline
