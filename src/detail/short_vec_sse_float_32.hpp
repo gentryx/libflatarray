@@ -72,7 +72,15 @@ public:
     }
 
     inline
-    short_vec(const __m128& val1, const __m128& val2, const __m128& val3, const __m128& val4, const __m128& val5, const __m128& val6, const __m128& val7, const __m128& val8) :
+    short_vec(
+        const __m128& val1,
+        const __m128& val2,
+        const __m128& val3,
+        const __m128& val4,
+        const __m128& val5,
+        const __m128& val6,
+        const __m128& val7,
+        const __m128& val8) :
         val1(val1),
         val2(val2),
         val3(val3),
@@ -106,7 +114,7 @@ public:
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
         buf1 = _mm_or_ps(buf1, buf2);
         buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
-        return _mm_cvtss_f32(buf1) | _mm_cvtss_f32(buf2);
+        return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
     }
 
     inline
@@ -197,6 +205,10 @@ public:
         val2 = _mm_div_ps(val2, other.val2);
         val3 = _mm_div_ps(val3, other.val3);
         val4 = _mm_div_ps(val4, other.val4);
+        val5 = _mm_div_ps(val5, other.val5);
+        val6 = _mm_div_ps(val6, other.val6);
+        val7 = _mm_div_ps(val7, other.val7);
+        val8 = _mm_div_ps(val8, other.val8);
     }
 
     inline
@@ -396,24 +408,24 @@ public:
         SHORTVEC_INSERT_PS(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val5 = _mm_load_ss(ptr + offsets[16]);
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val6 = _mm_load_ss(ptr + offsets[20]);
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val7 = _mm_load_ss(ptr + offsets[24]);
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val8 = _mm_load_ss(ptr + offsets[28]);
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline
@@ -730,6 +742,10 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
     const float *data2 = reinterpret_cast<const float *>(&vec.val2);
     const float *data3 = reinterpret_cast<const float *>(&vec.val3);
     const float *data4 = reinterpret_cast<const float *>(&vec.val4);
+    const float *data5 = reinterpret_cast<const float *>(&vec.val5);
+    const float *data6 = reinterpret_cast<const float *>(&vec.val6);
+    const float *data7 = reinterpret_cast<const float *>(&vec.val7);
+    const float *data8 = reinterpret_cast<const float *>(&vec.val8);
     __os << "["
          << data1[0] << ", " << data1[1]  << ", " << data1[2] << ", " << data1[3] << ", "
          << data2[0] << ", " << data2[1]  << ", " << data2[2] << ", " << data2[3] << ", "

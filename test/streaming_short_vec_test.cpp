@@ -698,6 +698,7 @@ void checkForStrategy(STRATEGY, STRATEGY)
 
 ADD_TEST(TestImplementationStrategyDouble)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(streaming_short_vec<double, 1>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
@@ -760,12 +761,16 @@ ADD_TEST(TestImplementationStrategyDouble)
 
 #ifdef __AVX__
 #  ifdef __AVX512F__
-#  define EXPECTED_TYPE short_vec_strategy::avx512
+#    define EXPECTED_TYPE short_vec_strategy::avx512
 #  else
-#  define EXPECTED_TYPE short_vec_strategy::avx
+#    define EXPECTED_TYPE short_vec_strategy::avx
 #  endif
 #else
-#define EXPECTED_TYPE short_vec_strategy::scalar
+#  ifdef __SSE__
+#    define EXPECTED_TYPE short_vec_strategy::sse
+#  else
+#    define EXPECTED_TYPE short_vec_strategy::scalar
+#  endif
 #endif
     checkForStrategy(streaming_short_vec<double, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
@@ -779,7 +784,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #endif
 
 #ifdef __AVX512F__
-#  define EXPECTED_TYPE short_vec_strategy::avx512
+#define EXPECTED_TYPE short_vec_strategy::avx512
 #else
 #  ifdef __AVX__
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -797,6 +802,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 
 ADD_TEST(TestImplementationStrategyFloat)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(streaming_short_vec<float, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(streaming_short_vec<float, 2>::strategy(), EXPECTED_TYPE());
@@ -842,12 +848,12 @@ checkForStrategy(streaming_short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #ifdef __SSE__
 #  ifdef __AVX__
 #    ifdef __AVX512F__
-#    define EXPECTED_TYPE short_vec_strategy::avx512
+#      define EXPECTED_TYPE short_vec_strategy::avx512
 #    else
-#    define EXPECTED_TYPE short_vec_strategy::avx
+#      define EXPECTED_TYPE short_vec_strategy::avx
 #    endif
 #  else
-#  define EXPECTED_TYPE short_vec_strategy::sse
+#    define EXPECTED_TYPE short_vec_strategy::sse
 #  endif
 #endif
 
@@ -866,9 +872,13 @@ checkForStrategy(streaming_short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 
 #ifdef __AVX__
 #  ifdef __AVX512F__
-#  define EXPECTED_TYPE short_vec_strategy::avx512
+#    define EXPECTED_TYPE short_vec_strategy::avx512
 #  else
-#  define EXPECTED_TYPE short_vec_strategy::avx
+#    define EXPECTED_TYPE short_vec_strategy::avx
+#  endif
+#else
+#  ifdef __SSE__
+#    define EXPECTED_TYPE short_vec_strategy::sse
 #  endif
 #endif
 
@@ -881,6 +891,7 @@ checkForStrategy(streaming_short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 
 ADD_TEST(TestImplementationStrategyInt)
 {
+    // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(streaming_short_vec<int, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(streaming_short_vec<int, 2>::strategy(), EXPECTED_TYPE());

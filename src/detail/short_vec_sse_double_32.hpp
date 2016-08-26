@@ -72,7 +72,23 @@ public:
     }
 
     inline
-    short_vec(const __m128d& val1, const __m128d& val2, const __m128d& val3, const __m128d& val4, const __m128d& val5, const __m128d& val6, const __m128d& val7, const __m128d& val8, const __m128d& val9, const __m128d& val10, const __m128d& val11, const __m128d& val12, const __m128d& val13, const __m128d& val14, const __m128d& val15, const __m128d& val16) :
+    short_vec(
+        const __m128d& val1,
+        const __m128d& val2,
+        const __m128d& val3,
+        const __m128d& val4,
+        const __m128d& val5,
+        const __m128d& val6,
+        const __m128d& val7,
+        const __m128d& val8,
+        const __m128d& val9,
+        const __m128d& val10,
+        const __m128d& val11,
+        const __m128d& val12,
+        const __m128d& val13,
+        const __m128d& val14,
+        const __m128d& val15,
+        const __m128d& val16) :
         val1(val1),
         val2(val2),
         val3(val3),
@@ -120,7 +136,7 @@ public:
                     _mm_or_pd(val15, val16))));
         __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
-        return _mm_cvtsd_f64(buf1) | _mm_cvtsd_f64(buf2);
+        return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
     }
 
     inline
