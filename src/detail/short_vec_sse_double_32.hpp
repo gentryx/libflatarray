@@ -136,7 +136,7 @@ public:
                     _mm_or_pd(val15, val16))));
         __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
-        return _mm_cvtsd_f64(buf1) | _mm_cvtsd_f64(buf2);
+        return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
     }
 
     inline
