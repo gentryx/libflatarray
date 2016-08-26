@@ -64,7 +64,15 @@ public:
     }
 
     inline
-    short_vec(const __m128d& val1, const __m128d& val2, const __m128d& val3, const __m128d& val4, const __m128d& val5, const __m128d& val6, const __m128d& val7, const __m128d& val8) :
+    short_vec(
+        const __m128d& val1,
+        const __m128d& val2,
+        const __m128d& val3,
+        const __m128d& val4,
+        const __m128d& val5,
+        const __m128d& val6,
+        const __m128d& val7,
+        const __m128d& val8) :
         val1(val1),
         val2(val2),
         val3(val3),
