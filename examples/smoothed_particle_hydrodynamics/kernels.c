@@ -61,7 +61,7 @@ void compute_accel(
 
     // Now compute interaction forces
     for (int i = 0; i < n; ++i) {
-        for (int j = i+1; j < n; ++j) {
+        for (int j = i + 1; j < n; ++j) {
             float delta_x = pos_x[i] - pos_x[j];
             float delta_y = pos_y[i] - pos_y[j];
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
@@ -74,6 +74,7 @@ void compute_accel(
                 float w_v = w_0 * C_v;
                 float delta_v_x = v_x[i] - v_y[j];
                 float delta_v_y = v_y[i] - v_y[j];
+
                 a_x[i] += (w_p * delta_x + w_v * delta_v_x);
                 a_y[i] += (w_p * delta_y + w_v * delta_v_y);
                 a_x[j] -= (w_p * delta_x + w_v * delta_v_x);
@@ -127,18 +128,18 @@ void reflect_bc(
     const float YMIN = 0.0;
     const float YMAX = 1.0;
 
-    for (int i = 0; i < n; ++i, pos_x += 1, pos_y += 1, v_x += 1, v_y +=1) {
+    for (int i = 0; i < n; ++i) {
         if (pos_x[0] < XMIN) {
-            damp_reflect(0, XMIN, pos_x, pos_y, v_x, v_y);
+            damp_reflect(0, XMIN, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
         if (pos_x[0] > XMAX) {
-            damp_reflect(0, XMAX, pos_x, pos_y, v_x, v_y);
+            damp_reflect(0, XMAX, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
         if (pos_y[0] < YMIN) {
-            damp_reflect(1, YMIN, pos_x, pos_y, v_x, v_y);
+            damp_reflect(1, YMIN, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
         if (pos_y[0] > YMAX) {
-            damp_reflect(1, YMAX, pos_x, pos_y, v_x, v_y);
+            damp_reflect(1, YMAX, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
     }
 }
