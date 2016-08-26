@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     float k = 1e3;
     // viscosity:
     float mu = 0.1;
-    // gravitational accelecation:
+    // gravitational acceleration:
     float g = 9.8;
 
     float hh = h / 1.3;
