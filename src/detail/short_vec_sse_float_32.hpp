@@ -742,6 +742,10 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
     const float *data2 = reinterpret_cast<const float *>(&vec.val2);
     const float *data3 = reinterpret_cast<const float *>(&vec.val3);
     const float *data4 = reinterpret_cast<const float *>(&vec.val4);
+    const float *data5 = reinterpret_cast<const float *>(&vec.val5);
+    const float *data6 = reinterpret_cast<const float *>(&vec.val6);
+    const float *data7 = reinterpret_cast<const float *>(&vec.val7);
+    const float *data8 = reinterpret_cast<const float *>(&vec.val8);
     __os << "["
          << data1[0] << ", " << data1[1]  << ", " << data1[2] << ", " << data1[3] << ", "
          << data2[0] << ", " << data2[1]  << ", " << data2[2] << ", " << data2[3] << ", "
