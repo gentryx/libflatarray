@@ -408,24 +408,24 @@ public:
         SHORTVEC_INSERT_PS(val4, ptr, offsets[15], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val5 = _mm_load_ss(ptr + offsets[16]);
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[17], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[18], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val5, ptr, offsets[19], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val6 = _mm_load_ss(ptr + offsets[20]);
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val2, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[21], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[22], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val6, ptr, offsets[23], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val7 = _mm_load_ss(ptr + offsets[24]);
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val3, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[25], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[26], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val7, ptr, offsets[27], _MM_MK_INSERTPS_NDX(0,3,0));
 
         val8 = _mm_load_ss(ptr + offsets[28]);
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val4, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[29], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[30], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val8, ptr, offsets[31], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline
