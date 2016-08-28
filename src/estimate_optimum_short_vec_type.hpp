@@ -93,7 +93,7 @@ public:
 #      ifdef __SSE__
     static const int BIT_WIDTH = 128;
 #      else
-    static const int BIT_WIDTH = sizeof(CARGO);
+    static const int BIT_WIDTH = sizeof(CARGO) * 8;
 #      endif
 #    endif
 #  endif
