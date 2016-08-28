@@ -542,33 +542,33 @@ public:
         val4 = _mm_unpacklo_ps(f1, f3);
 
         f1   = _mm_load_ss(ptr + offsets[16]);
-        f2   = _mm_load_ss(ptr + offsets[17]);
+        f2   = _mm_load_ss(ptr + offsets[18]);
         f1   = _mm_unpacklo_ps(f1, f2);
-        f3   = _mm_load_ss(ptr + offsets[18]);
+        f3   = _mm_load_ss(ptr + offsets[17]);
         f4   = _mm_load_ss(ptr + offsets[19]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val5 = _mm_unpacklo_ps(f1, f3);
 
         f1   = _mm_load_ss(ptr + offsets[20]);
-        f2   = _mm_load_ss(ptr + offsets[21]);
+        f2   = _mm_load_ss(ptr + offsets[22]);
         f1   = _mm_unpacklo_ps(f1, f2);
-        f3   = _mm_load_ss(ptr + offsets[22]);
+        f3   = _mm_load_ss(ptr + offsets[21]);
         f4   = _mm_load_ss(ptr + offsets[23]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val6 = _mm_unpacklo_ps(f1, f3);
 
         f1   = _mm_load_ss(ptr + offsets[24]);
-        f2   = _mm_load_ss(ptr + offsets[25]);
+        f2   = _mm_load_ss(ptr + offsets[26]);
         f1   = _mm_unpacklo_ps(f1, f2);
-        f3   = _mm_load_ss(ptr + offsets[26]);
+        f3   = _mm_load_ss(ptr + offsets[25]);
         f4   = _mm_load_ss(ptr + offsets[27]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val7 = _mm_unpacklo_ps(f1, f3);
 
         f1   = _mm_load_ss(ptr + offsets[28]);
-        f2   = _mm_load_ss(ptr + offsets[29]);
+        f2   = _mm_load_ss(ptr + offsets[30]);
         f1   = _mm_unpacklo_ps(f1, f2);
-        f3   = _mm_load_ss(ptr + offsets[30]);
+        f3   = _mm_load_ss(ptr + offsets[29]);
         f4   = _mm_load_ss(ptr + offsets[31]);
         f3   = _mm_unpacklo_ps(f3, f4);
         val8 = _mm_unpacklo_ps(f1, f3);
