@@ -121,7 +121,7 @@ public:
     inline
     short_vec<int, 32> operator+(const short_vec<int, 32>& other) const
     {
-        return short_vec<int, 16>(
+        return short_vec<int, 32>(
             _mm_add_epi32(val1, other.val1),
             _mm_add_epi32(val2, other.val2),
             _mm_add_epi32(val3, other.val3),

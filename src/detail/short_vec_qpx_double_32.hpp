@@ -137,7 +137,7 @@ public:
     inline
     short_vec<double, 32> operator+(const short_vec<double, 32>& other) const
     {
-        return short_vec<double, 16>(
+        return short_vec<double, 32>(
             vec_add(val1, other.val1),
             vec_add(val2, other.val2),
             vec_add(val3, other.val3),
@@ -369,7 +369,7 @@ public:
         ptr[offsets[29]] = vec_extract(val8, 1);
         ptr[offsets[30]] = vec_extract(val8, 2);
         ptr[offsets[31]] = vec_extract(val8, 3);
-}
+    }
 
 private:
     vector4double val1;
