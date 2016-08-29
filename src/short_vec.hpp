@@ -153,7 +153,7 @@ public:
 #include <libflatarray/detail/short_vec_sse_int_4.hpp>
 #include <libflatarray/detail/short_vec_sse_int_8.hpp>
 #include <libflatarray/detail/short_vec_sse_int_16.hpp>
-// fixme: #include <libflatarray/detail/short_vec_sse_int_32.hpp>
+#include <libflatarray/detail/short_vec_sse_int_32.hpp>
 
 #include <libflatarray/detail/short_vec_avx_int_8.hpp>
 #include <libflatarray/detail/short_vec_avx_int_16.hpp>
