@@ -711,7 +711,7 @@ short_vec<int, 32>::short_vec(const sqrt_reference<int, 32>& other) :
             _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val3)))),
     val4(
         _mm_cvtps_epi32(
-            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val4))))
+            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val4)))),
     val5(
         _mm_cvtps_epi32(
             _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val5)))),
