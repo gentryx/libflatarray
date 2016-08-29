@@ -60,7 +60,11 @@ public:
         val1(_mm_set1_epi32(data)),
         val2(_mm_set1_epi32(data)),
         val3(_mm_set1_epi32(data)),
-        val4(_mm_set1_epi32(data))
+        val4(_mm_set1_epi32(data)),
+        val5(_mm_set1_epi32(data)),
+        val6(_mm_set1_epi32(data)),
+        val7(_mm_set1_epi32(data)),
+        val8(_mm_set1_epi32(data))
     {}
 
     inline
@@ -70,12 +74,23 @@ public:
     }
 
     inline
-    short_vec(const __m128i& val1, const __m128i& val2,
-              const __m128i& val3, const __m128i& val4) :
+    short_vec(
+        const __m128i& val1,
+        const __m128i& val2,
+        const __m128i& val3,
+        const __m128i& val4,
+        const __m128i& val5,
+        const __m128i& val6,
+        const __m128i& val7,
+        const __m128i& val8) :
         val1(val1),
         val2(val2),
         val3(val3),
-        val4(val4)
+        val4(val4),
+        val5(val5),
+        val6(val6),
+        val7(val7),
+        val8(val8)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -97,6 +112,10 @@ public:
         val2 = _mm_sub_epi32(val2, other.val2);
         val3 = _mm_sub_epi32(val3, other.val3);
         val4 = _mm_sub_epi32(val4, other.val4);
+        val1 = _mm_sub_epi32(val5, other.val5);
+        val2 = _mm_sub_epi32(val6, other.val6);
+        val3 = _mm_sub_epi32(val7, other.val7);
+        val4 = _mm_sub_epi32(val8, other.val8);
     }
 
     inline
@@ -106,7 +125,11 @@ public:
             _mm_sub_epi32(val1, other.val1),
             _mm_sub_epi32(val2, other.val2),
             _mm_sub_epi32(val3, other.val3),
-            _mm_sub_epi32(val4, other.val4));
+            _mm_sub_epi32(val4, other.val4),
+            _mm_sub_epi32(val5, other.val5),
+            _mm_sub_epi32(val6, other.val6),
+            _mm_sub_epi32(val7, other.val7),
+            _mm_sub_epi32(val8, other.val8));
     }
 
     inline
@@ -116,6 +139,10 @@ public:
         val2 = _mm_add_epi32(val2, other.val2);
         val3 = _mm_add_epi32(val3, other.val3);
         val4 = _mm_add_epi32(val4, other.val4);
+        val5 = _mm_add_epi32(val5, other.val5);
+        val6 = _mm_add_epi32(val6, other.val6);
+        val7 = _mm_add_epi32(val7, other.val7);
+        val8 = _mm_add_epi32(val8, other.val8);
     }
 
     inline
@@ -125,7 +152,11 @@ public:
             _mm_add_epi32(val1, other.val1),
             _mm_add_epi32(val2, other.val2),
             _mm_add_epi32(val3, other.val3),
-            _mm_add_epi32(val4, other.val4));
+            _mm_add_epi32(val4, other.val4),
+            _mm_add_epi32(val5, other.val5),
+            _mm_add_epi32(val6, other.val6),
+            _mm_add_epi32(val7, other.val7),
+            _mm_add_epi32(val8, other.val8));
     }
 
 #ifdef __SSE4_1__
@@ -136,6 +167,10 @@ public:
         val2 = _mm_mullo_epi32(val2, other.val2);
         val3 = _mm_mullo_epi32(val3, other.val3);
         val4 = _mm_mullo_epi32(val4, other.val4);
+        val5 = _mm_mullo_epi32(val5, other.val5);
+        val6 = _mm_mullo_epi32(val6, other.val6);
+        val7 = _mm_mullo_epi32(val7, other.val7);
+        val8 = _mm_mullo_epi32(val8, other.val8);
     }
 
     inline
@@ -145,7 +180,11 @@ public:
             _mm_mullo_epi32(val1, other.val1),
             _mm_mullo_epi32(val2, other.val2),
             _mm_mullo_epi32(val3, other.val3),
-            _mm_mullo_epi32(val4, other.val4));
+            _mm_mullo_epi32(val4, other.val4),
+            _mm_mullo_epi32(val5, other.val5),
+            _mm_mullo_epi32(val6, other.val6),
+            _mm_mullo_epi32(val7, other.val7),
+            _mm_mullo_epi32(val8, other.val8));
     }
 #else
     inline
@@ -177,6 +216,34 @@ public:
         tmp2 = _mm_mul_epu32(_mm_srli_si128(val4, 4),
                              _mm_srli_si128(other.val4, 4));
         val4 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val5, other.val5);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val5, 4),
+                             _mm_srli_si128(other.val5, 4));
+        val5 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val6, other.val6);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val6, 4),
+                             _mm_srli_si128(other.val6, 4));
+        val6 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val7, other.val7);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val7, 4),
+                             _mm_srli_si128(other.val7, 4));
+        val7 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val8, other.val8);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val8, 4),
+                             _mm_srli_si128(other.val8, 4));
+        val8 = _mm_unpacklo_epi32(
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
     }
@@ -213,7 +280,43 @@ public:
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
 
-        return short_vec<int, 32>(result1, result2, result3, result4);
+        tmp1 = _mm_mul_epu32(val5, other.val1);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val5, 4),
+                                     _mm_srli_si128(other.val5, 4));
+        __m128i result5 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val6, other.val6);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val6, 4),
+                             _mm_srli_si128(other.val6, 4));
+        __m128i result6 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val7, other.val3);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val7, 4),
+                             _mm_srli_si128(other.val7, 4));
+        __m128i result7 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        tmp1 = _mm_mul_epu32(val8, other.val8);
+        tmp2 = _mm_mul_epu32(_mm_srli_si128(val8, 4),
+                             _mm_srli_si128(other.val4, 4));
+        __m128i result8 = _mm_unpacklo_epi32(
+            _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
+            _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
+
+        return short_vec<int, 32>(
+            result1,
+            result2,
+            result3,
+            result4,
+            result5,
+            result6,
+            result7,
+            result8);
     }
 #endif
 
