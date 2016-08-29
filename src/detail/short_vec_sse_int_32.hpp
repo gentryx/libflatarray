@@ -355,7 +355,7 @@ public:
             _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val3),
                                        _mm_cvtepi32_ps(other.val3))),
             _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val4),
-                                       _mm_cvtepi32_ps(other.val4)))),
+                                       _mm_cvtepi32_ps(other.val4))),
             _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val5),
                                        _mm_cvtepi32_ps(other.val5))),
             _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val6),
