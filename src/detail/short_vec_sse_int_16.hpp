@@ -481,10 +481,10 @@ void short_vec<int, 16>::operator/=(const sqrt_reference<int, 16>& other)
         _mm_mul_ps(_mm_cvtepi32_ps(val2),
                    _mm_rsqrt_ps(_mm_cvtepi32_ps(other.vec.val2))));
     val3 = _mm_cvtps_epi32(
-        _mm_mul_ps(_mm_cvtepi32_ps(val2),
+        _mm_mul_ps(_mm_cvtepi32_ps(val3),
                    _mm_rsqrt_ps(_mm_cvtepi32_ps(other.vec.val3))));
     val4 = _mm_cvtps_epi32(
-        _mm_mul_ps(_mm_cvtepi32_ps(val2),
+        _mm_mul_ps(_mm_cvtepi32_ps(val4),
                    _mm_rsqrt_ps(_mm_cvtepi32_ps(other.vec.val4))));
 }
 
