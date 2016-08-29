@@ -862,7 +862,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #ifdef __SSE__
 #  ifdef __AVX__
 #    ifdef __AVX512F__
-#    define EXPECTED_TYPE short_vec_strategy::avx512
+#    define EXPECTED_TYPE short_vec_strategy::avx512f
 #    else
 #    define EXPECTED_TYPE short_vec_strategy::avx
 #    endif
@@ -885,7 +885,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 
 #ifdef __AVX__
 #  ifdef __AVX512F__
-#    define EXPECTED_TYPE short_vec_strategy::avx512
+#    define EXPECTED_TYPE short_vec_strategy::avx512f
 #  else
 #    define EXPECTED_TYPE short_vec_strategy::avx
 #  endif
@@ -908,7 +908,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #endif
 
 #ifdef __AVX512F__
-#define EXPECTED_TYPE short_vec_strategy::avx512
+#define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX__
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -972,7 +972,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #ifdef __SSE__
 #  ifdef __AVX__
 #    ifdef __AVX512F__
-#      define EXPECTED_TYPE short_vec_strategy::avx512
+#      define EXPECTED_TYPE short_vec_strategy::avx512f
 #    else
 #      define EXPECTED_TYPE short_vec_strategy::avx
 #    endif
@@ -996,7 +996,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 
 #ifdef __AVX__
 #  ifdef __AVX512F__
-#    define EXPECTED_TYPE short_vec_strategy::avx512
+#    define EXPECTED_TYPE short_vec_strategy::avx512f
 #  else
 #    define EXPECTED_TYPE short_vec_strategy::avx
 #  endif
@@ -1042,7 +1042,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #undef EXPECTED_TYPE
 
 #ifdef __AVX512F__
-#define EXPECTED_TYPE short_vec_strategy::avx512
+#define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX2__
 #  define EXPECTED_TYPE short_vec_strategy::avx2
@@ -1058,7 +1058,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #undef EXPECTED_TYPE
 
 #ifdef __AVX512F__
-#define EXPECTED_TYPE short_vec_strategy::avx512
+#define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX2__
 #  define EXPECTED_TYPE short_vec_strategy::avx2

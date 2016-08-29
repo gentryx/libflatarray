@@ -58,7 +58,7 @@ ADD_TEST(TestArity)
     // history!
 #  ifdef __AVX512F__
     static const int expected_arity_for_double = 16;
-    static const int expected_arity_for_double = 32;
+    static const int expected_arity_for_float  = 32;
 #  else
 #    ifdef __AVX__
     static const int expected_arity_for_double = 8;
