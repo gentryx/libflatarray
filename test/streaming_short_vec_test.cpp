@@ -937,7 +937,11 @@ ADD_TEST(TestImplementationStrategyInt)
 #  ifdef __AVX2__
 #    define EXPECTED_TYPE short_vec_strategy::avx2
 #  else
-#    define EXPECTED_TYPE short_vec_strategy::scalar
+#    ifdef __SSE__
+#      define EXPECTED_TYPE short_vec_strategy::sse
+#    else
+#      define EXPECTED_TYPE short_vec_strategy::scalar
+#    endif
 #  endif
 #endif
     checkForStrategy(streaming_short_vec<int, 32>::strategy(), EXPECTED_TYPE());
