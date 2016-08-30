@@ -19,19 +19,40 @@ inline bool any(const short_vec<CARGO, ARITY>& vec)
     return vec.any();
 }
 
-inline bool any(unsigned i)
+inline bool any(unsigned mask)
 {
-    return i;
+    return mask;
 }
 
-inline bool any(unsigned short i)
+inline bool any(unsigned short mask)
 {
-    return i;
+    return mask;
 }
 
-inline bool any(unsigned char i)
+inline bool any(unsigned char mask)
 {
-    return i;
+    return mask;
+}
+
+template<typename CARGO, int ARITY >
+inline CARGO get(const short_vec<CARGO, ARITY>& vec, const int i)
+{
+    return vec.get(i);
+}
+
+inline bool get(unsigned mask, const int i)
+{
+    return (mask >> i) & 1;
+}
+
+inline bool get(unsigned short mask, const int i)
+{
+    return (mask >> i) & 1;
+}
+
+inline bool get(unsigned char mask, const int i)
+{
+    return (mask >> i) & 1;
 }
 
 class short_vec_strategy

@@ -365,7 +365,6 @@ void testImplementationReal()
         for (int test_value = 0; test_value <= ARITY; ++test_value) {
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY);
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY);
-            std::vector<CARGO, aligned_allocator<CARGO, 64> > array3(ARITY);
 
             for (int i = 0; i < ARITY; ++i) {
                 array1[i] = i;
@@ -374,84 +373,82 @@ void testImplementationReal()
 
             ShortVec v1(&array1[0]);
             ShortVec v2(&array2[0]);
-            ShortVec v3;
+            typename ShortVec::mask_type res;
 
             // test operator<()
-            v3 = (v1 < v2);
-            &array3[0] << v3;
+            res = (v1 < v2);
 
             for (int i = 0; i < ARITY; ++i) {
                 if (i < test_value) {
-                    BOOST_TEST(array3[i] != 0);
+                    BOOST_TEST(get(res, i) != 0);
                 } else {
-                    BOOST_TEST(array3[i] == 0);
+                    BOOST_TEST(get(res, i) == 0);
                 }
             }
 
             // test reduction to bool:
-            bool actual = any(v3);
+            bool actual = any(res);
             bool expected = (test_value > 0);
             BOOST_TEST_EQ(actual, expected);
 
             // test operator<=()
-            v3 = (v1 <= v2);
-            &array3[0] << v3;
+            res = (v1 <= v2);
 
             for (int i = 0; i < ARITY; ++i) {
                 if (i <= test_value) {
-                    BOOST_TEST(array3[i] != 0);
+                    BOOST_TEST(get(res, i) != 0);
                 } else {
-                    BOOST_TEST(array3[i] == 0);
+                    BOOST_TEST(get(res, i) == 0);
                 }
             }
 
             // test operator==()
-            v3 = (v1 == v2);
-            &array3[0] << v3;
+            res = (v1 == v2);
 
             for (int i = 0; i < ARITY; ++i) {
                 if (i == test_value) {
-                    BOOST_TEST(array3[i] != 0);
+                    BOOST_TEST(get(res, i) != 0);
                 } else {
-                    BOOST_TEST(array3[i] == 0);
+                    BOOST_TEST(get(res, i) == 0);
                 }
             }
 
             // test reduction to bool:
-            actual = any(v3);
+            actual = any(res);
             expected = (test_value < ARITY);
             BOOST_TEST_EQ(actual, expected);
 
             // test operator>()
-            v3 = (v1 > v2);
-            &array3[0] << v3;
+            res = (v1 > v2);
 
             for (int i = 0; i < ARITY; ++i) {
                 if (i > test_value) {
-                    BOOST_TEST(array3[i] != 0);
+                    BOOST_TEST(get(res, i) != 0);
                 } else {
-                    BOOST_TEST(array3[i] == 0);
+                    BOOST_TEST(get(res, i) == 0);
                 }
             }
 
             // test operator>=()
-            v3 = (v1 >= v2);
-            &array3[0] << v3;
+            res = (v1 >= v2);
 
             for (int i = 0; i < ARITY; ++i) {
                 if (i >= test_value) {
-                    BOOST_TEST(array3[i] != 0);
+                    BOOST_TEST(get(res, i) != 0);
                 } else {
-                    BOOST_TEST(array3[i] == 0);
+                    BOOST_TEST(get(res, i) == 0);
                 }
             }
 
             // test reduction to bool, again:
-            actual = any(v3);
+            actual = any(res);
             expected = (test_value < ARITY);
             BOOST_TEST_EQ(actual, expected);
         }
     }
+
+    // fixme: test get here and for streaming short vec
+    // fixme: all all tests for int, too
 }
 
 template<typename CARGO, int ARITY>
@@ -615,7 +612,7 @@ void testImplementationInt()
     // test "/= sqrt()"
     for (int i = 0; i < numElements; ++i) {
         vec1[i] = (i + 1) * (i + 1);
-        vec2[i] = (i + 1) * (i + 1) * 2;
+        vec2[i] = (i + 1) * (i + 1) * 3;
     }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
@@ -624,7 +621,7 @@ void testImplementationInt()
         &vec2[i] << w;
     }
     for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(2 * (i + 1), vec2[i]);
+        BOOST_TEST_EQ(3 * (i + 1), vec2[i]);
     }
 
     // test string conversion
