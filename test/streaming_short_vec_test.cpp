@@ -344,6 +344,99 @@ void testImplementationReal()
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
+
+    // test comparison
+    {
+        for (int test_value = 0; test_value <= ARITY; ++test_value) {
+            std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY);
+            std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY);
+            std::vector<CARGO, aligned_allocator<CARGO, 64> > array3(ARITY);
+
+            for (int i = 0; i < ARITY; ++i) {
+                array1[i] = i;
+                array2[i] = test_value;
+            }
+
+            ShortVec v1(&array1[0]);
+            ShortVec v2(&array2[0]);
+            ShortVec v3;
+
+            // test operator<()
+            v3 = (v1 < v2);
+            &array3[0] << v3;
+
+            for (int i = 0; i < ARITY; ++i) {
+                if (i < test_value) {
+                    BOOST_TEST(array3[i] != 0);
+                } else {
+                    BOOST_TEST(array3[i] == 0);
+                }
+            }
+
+            // test reduction to bool:
+            bool actual = any(v3);
+            bool expected = (test_value > 0);
+            BOOST_TEST_EQ(actual, expected);
+
+            // test operator<=()
+            v3 = (v1 <= v2);
+            &array3[0] << v3;
+
+            for (int i = 0; i < ARITY; ++i) {
+                if (i <= test_value) {
+                    BOOST_TEST(array3[i] != 0);
+                } else {
+                    BOOST_TEST(array3[i] == 0);
+                }
+            }
+
+            // test operator==()
+            v3 = (v1 == v2);
+            &array3[0] << v3;
+
+            for (int i = 0; i < ARITY; ++i) {
+                if (i == test_value) {
+                    BOOST_TEST(array3[i] != 0);
+                } else {
+                    BOOST_TEST(array3[i] == 0);
+                }
+            }
+
+            // test reduction to bool:
+            actual = any(v3);
+            expected = (test_value < ARITY);
+            BOOST_TEST_EQ(actual, expected);
+
+            // test operator>()
+            v3 = (v1 > v2);
+            &array3[0] << v3;
+
+            for (int i = 0; i < ARITY; ++i) {
+                if (i > test_value) {
+                    BOOST_TEST(array3[i] != 0);
+                } else {
+                    BOOST_TEST(array3[i] == 0);
+                }
+            }
+
+            // test operator>=()
+            v3 = (v1 >= v2);
+            &array3[0] << v3;
+
+            for (int i = 0; i < ARITY; ++i) {
+                if (i >= test_value) {
+                    BOOST_TEST(array3[i] != 0);
+                } else {
+                    BOOST_TEST(array3[i] == 0);
+                }
+            }
+
+            // test reduction to bool, again:
+            actual = any(v3);
+            expected = (test_value < ARITY);
+            BOOST_TEST_EQ(actual, expected);
+        }
+    }
 }
 
 template<typename CARGO, int ARITY>

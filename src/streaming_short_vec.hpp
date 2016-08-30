@@ -18,6 +18,15 @@ namespace LibFlatArray {
 #pragma warning (disable: 2304)
 #endif
 
+template<typename CARGO, int ARITY>
+class streaming_short_vec;
+
+template<typename CARGO, int ARITY >
+inline bool any(const streaming_short_vec<CARGO, ARITY>& vec)
+{
+    return vec.any();
+}
+
 /**
  * Wraps functionality of short_vec, but replaces all stores by
  * streaming (i.e. non-temporal) stores. Downside: all store addresses
