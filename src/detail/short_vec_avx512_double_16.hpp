@@ -133,7 +133,7 @@ public:
     }
 
     inline
-    mask_type operator<(const short_vec<double, 32>& other) const
+    mask_type operator<(const short_vec<double, 16>& other) const
     {
         return
             (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LT_OS) <<  0) +
@@ -141,7 +141,7 @@ public:
     }
 
     inline
-    mask_type operator<=(const short_vec<double, 32>& other) const
+    mask_type operator<=(const short_vec<double, 16>& other) const
     {
         return
             (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LE_OS) <<  0) +
@@ -149,7 +149,7 @@ public:
     }
 
     inline
-    mask_type operator==(const short_vec<double, 32>& other) const
+    mask_type operator==(const short_vec<double, 16>& other) const
     {
         return
             (_mm512_cmp_pd_mask(val1, other.val1, _CMP_EQ_OQ) <<  0) +
@@ -157,14 +157,15 @@ public:
     }
 
     inline
-    mask_type operator>(const short_vec<double, 32>& other) const
+    mask_type operator>(const short_vec<double, 16>& other) const
     {
         return
             (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GT_OS) <<  0) +
             (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GT_OS) <<  8);
+    }
 
     inline
-    mask_type operator>=(const short_vec<double, 32>& other) const
+    mask_type operator>=(const short_vec<double, 16>& other) const
     {
         return
             (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GE_OS) <<  0) +

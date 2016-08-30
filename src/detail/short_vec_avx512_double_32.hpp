@@ -190,6 +190,7 @@ public:
             (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GT_OS) <<  8) +
             (_mm512_cmp_pd_mask(val3, other.val3, _CMP_GT_OS) << 16) +
             (_mm512_cmp_pd_mask(val4, other.val4, _CMP_GT_OS) << 24);
+    }
 
     inline
     mask_type operator>=(const short_vec<double, 32>& other) const
