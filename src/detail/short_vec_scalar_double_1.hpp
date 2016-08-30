@@ -32,7 +32,7 @@ class short_vec<double, 1>
 {
 public:
     static const int ARITY = 1;
-
+    typedef unsigned char mask_type;
     typedef short_vec_strategy::scalar strategy;
 
     template<typename _CharT, typename _Traits>
@@ -118,40 +118,35 @@ public:
             val1 / other.val1);
     }
 
-#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 1 : 0)
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
     inline
-    short_vec<double, 1> operator<(const short_vec<double, 1>& other) const
+    mask_type operator<(const short_vec<double, 1>& other) const
     {
-        return short_vec<double, 1>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <));
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <);
     }
 
     inline
-    short_vec<double, 1> operator<=(const short_vec<double, 1>& other) const
+    mask_type operator<=(const short_vec<double, 1>& other) const
     {
-        return short_vec<double, 1>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=));
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=);
     }
 
     inline
-    short_vec<double, 1> operator==(const short_vec<double, 1>& other) const
+    mask_type operator==(const short_vec<double, 1>& other) const
     {
-        return short_vec<double, 1>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==));
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==);
     }
 
     inline
-    short_vec<double, 1> operator>(const short_vec<double, 1>& other) const
+    mask_type operator>(const short_vec<double, 1>& other) const
     {
-        return short_vec<double, 1>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >));
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >);
     }
 
     inline
-    short_vec<double, 1> operator>=(const short_vec<double, 1>& other) const
+    mask_type operator>=(const short_vec<double, 1>& other) const
     {
-        return short_vec<double, 1>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=));
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=);
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 

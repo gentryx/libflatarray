@@ -35,7 +35,7 @@ class short_vec<float, 4>
 {
 public:
     static const int ARITY = 4;
-
+    typedef unsigned char mask_type;
     typedef short_vec_strategy::scalar strategy;
 
     template<typename _CharT, typename _Traits>
@@ -164,55 +164,55 @@ public:
             val4  / other.val4);
     }
 
-#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) (((V1) OP (V2)) ? 1 : 0)
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
     inline
-    short_vec<float, 4> operator<(const short_vec<float, 4>& other) const
+    mask_type operator<(const short_vec<float, 32>& other) const
     {
-        return short_vec<float, 4>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <),
-            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <),
-            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <),
-            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <));
+        return
+            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <) <<  3);
     }
 
     inline
-    short_vec<float, 4> operator<=(const short_vec<float, 4>& other) const
+    mask_type operator<=(const short_vec<float, 32>& other) const
     {
-        return short_vec<float, 4>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=),
-            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, <=),
-            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, <=),
-            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, <=));
+        return
+            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <=) <<  3);
     }
 
     inline
-    short_vec<float, 4> operator==(const short_vec<float, 4>& other) const
+    mask_type operator==(const short_vec<float, 32>& other) const
     {
-        return short_vec<float, 4>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==),
-            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, ==),
-            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, ==),
-            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, ==));
+        return
+            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  ==) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  ==) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  ==) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  ==) <<  3);
     }
 
     inline
-    short_vec<float, 4> operator>(const short_vec<float, 4>& other) const
+    mask_type operator>(const short_vec<float, 32>& other) const
     {
-        return short_vec<float, 4>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >),
-            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >),
-            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >),
-            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >));
+        return
+            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >) <<  3);
     }
 
     inline
-    short_vec<float, 4> operator>=(const short_vec<float, 4>& other) const
+    mask_type operator>=(const short_vec<float, 32>& other) const
     {
-        return short_vec<float, 4>(
-            LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=),
-            LFA_SHORTVEC_COMPARE_HELPER(val2, other.val2, >=),
-            LFA_SHORTVEC_COMPARE_HELPER(val3, other.val3, >=),
-            LFA_SHORTVEC_COMPARE_HELPER(val4, other.val4, >=));
+        return
+            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >=) <<  3);
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
