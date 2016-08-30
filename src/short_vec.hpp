@@ -10,6 +10,27 @@
 
 namespace LibFlatArray {
 
+template<typename CARGO, int ARITY>
+class short_vec;
+
+template<CARGO, int ARITY >
+inline bool any(const short_vec<CARGO, ARITY> vec);
+
+inline bool any(unsigned i)
+{
+    return i;
+}
+
+inline bool any(unsigned short i)
+{
+    return i;
+}
+
+inline bool any(unsigned char i)
+{
+    return i;
+}
+
 class short_vec_strategy
 {
 public:

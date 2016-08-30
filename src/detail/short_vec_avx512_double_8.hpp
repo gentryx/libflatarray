@@ -36,6 +36,7 @@ class short_vec<double, 8>
 {
 public:
     static const int ARITY = 8;
+    typedef __mmask8 mask_type;
 
     typedef short_vec_strategy::avx512f strategy;
 
@@ -119,6 +120,40 @@ public:
     {
         return short_vec<double, 8>(
             _mm512_div_pd(val1, other.val1));
+    }
+
+    inline
+    mask_type operator<(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LT_OS) <<  0);
+    }
+
+    inline
+    mask_type operator<=(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LE_OS) <<  0);
+    }
+
+    inline
+    mask_type operator==(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_EQ_OQ) <<  0);
+    }
+
+    inline
+    mask_type operator>(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GT_OS) <<  0);
+
+    inline
+    mask_type operator>=(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GE_OS) <<  0);
     }
 
     inline

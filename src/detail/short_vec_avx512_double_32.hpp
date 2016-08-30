@@ -36,6 +36,7 @@ class short_vec<double, 32>
 {
 public:
     static const int ARITY = 32;
+    typedef unsigned mask_type;
 
     typedef short_vec_strategy::avx512f strategy;
 
@@ -149,6 +150,55 @@ public:
             _mm512_div_pd(val2, other.val2),
             _mm512_div_pd(val3, other.val3),
             _mm512_div_pd(val4, other.val4));
+    }
+
+    inline
+    mask_type operator<(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LT_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_LT_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_LT_OS) << 16) +
+            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_LT_OS) << 24);
+    }
+
+    inline
+    mask_type operator<=(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LE_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_LE_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_LE_OS) << 16) +
+            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_LE_OS) << 24);
+    }
+
+    inline
+    mask_type operator==(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_EQ_OQ) <<  0) +
+            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_EQ_OQ) <<  8) +
+            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_EQ_OQ) << 16) +
+            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_EQ_OQ) << 24);
+    }
+
+    inline
+    mask_type operator>(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GT_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GT_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_GT_OS) << 16) +
+            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_GT_OS) << 24);
+
+    inline
+    mask_type operator>=(const short_vec<double, 32>& other) const
+    {
+        return
+            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GE_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GE_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_GE_OS) << 16) +
+            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_GE_OS) << 24);
     }
 
     inline
