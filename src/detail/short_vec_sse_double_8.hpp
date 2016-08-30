@@ -37,7 +37,7 @@ class short_vec<double, 8>
 {
 public:
     static const int ARITY = 8;
-
+    typedef short_vec<double, 8> mask_type;
     typedef short_vec_strategy::sse strategy;
 
     template<typename _CharT, typename _Traits>
@@ -84,6 +84,34 @@ public:
         __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
         return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+    }
+
+    inline
+    double get(int i) const
+    {
+        __m128d buf;
+        if (i < 4) {
+            if (i < 2) {
+                buf = val1;
+            } else {
+                buf = val2;
+            }
+        } else {
+            if (i < 6) {
+                buf = val3;
+            } else {
+                buf = val4;
+            }
+        }
+
+        i &= 1;
+
+        if (i == 0) {
+            return _mm_cvtsd_f64(buf);
+        }
+
+        buf = _mm_shuffle_pd(buf, buf, 1);
+        return _mm_cvtsd_f64(buf);
     }
 
     inline

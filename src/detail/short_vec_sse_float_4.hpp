@@ -49,7 +49,7 @@ class short_vec<float, 4>
 {
 public:
     static const int ARITY = 4;
-
+    typedef short_vec<float, 4> mask_type;
     typedef short_vec_strategy::sse strategy;
 
     template<typename _CharT, typename _Traits>
@@ -92,6 +92,23 @@ public:
         buf1 = _mm_or_ps(val1, buf1);
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
         return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+    }
+
+    inline
+    float get(int i) const
+    {
+        // fixme: add assers for limits here
+        if (i == 3) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 3));
+        }
+        if (i == 2) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 2));
+        }
+        if (i == 1) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 1));
+        }
+
+        return _mm_cvtss_f32(val1);
     }
 
     inline

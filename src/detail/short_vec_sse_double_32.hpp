@@ -37,7 +37,7 @@ class short_vec<double, 32>
 {
 public:
     static const int ARITY = 32;
-
+    typedef short_vec<double, 32> mask_type;
     typedef short_vec_strategy::sse strategy;
 
     template<typename _CharT, typename _Traits>
@@ -137,6 +137,82 @@ public:
         __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
         return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+    }
+
+    inline
+    double get(int i) const
+    {
+        __m128d buf;
+        if (i < 16) {
+            if (i < 8) {
+                if (i < 4) {
+                    if (i < 2) {
+                        buf = val1;
+                    } else {
+                        buf = val2;
+                    }
+                } else {
+                    if (i < 6) {
+                        buf = val3;
+                    } else {
+                        buf = val4;
+                    }
+                }
+            } else {
+                if (i < 12) {
+                    if (i < 10) {
+                        buf = val5;
+                    } else {
+                        buf = val6;
+                    }
+                } else {
+                    if (i < 14) {
+                        buf = val7;
+                    } else {
+                        buf = val8;
+                    }
+                }
+            }
+        } else {
+            if (i < 24) {
+                if (i < 20) {
+                    if (i < 18) {
+                        buf = val9;
+                    } else {
+                        buf = val10;
+                    }
+                } else {
+                    if (i < 22) {
+                        buf = val11;
+                    } else {
+                        buf = val12;
+                    }
+                }
+            } else {
+                if (i < 28) {
+                    if (i < 26) {
+                        buf = val13;
+                    } else {
+                        buf = val14;
+                    }
+                } else {
+                    if (i < 30) {
+                        buf = val15;
+                    } else {
+                        buf = val16;
+                    }
+                }
+            }
+        }
+
+        i &= 1;
+
+        if (i == 0) {
+            return _mm_cvtsd_f64(buf);
+        }
+
+        buf = _mm_shuffle_pd(buf, buf, 1);
+        return _mm_cvtsd_f64(buf);
     }
 
     inline

@@ -45,7 +45,7 @@ class short_vec<float, 32>
 {
 public:
     static const int ARITY = 32;
-
+    typedef short_vec<float, 32> mask_type;
     typedef short_vec_strategy::sse strategy;
 
     template<typename _CharT, typename _Traits>
@@ -115,6 +115,55 @@ public:
         buf1 = _mm_or_ps(buf1, buf2);
         buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
         return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+    }
+
+    inline
+    float get(int i) const
+    {
+        __m128 buf;
+        if (i < 16) {
+            if (i < 8) {
+                if (i < 4) {
+                    buf = val1;
+                } else {
+                    buf = val2;
+                }
+            } else {
+                if (i < 12) {
+                    buf = val3;
+                } else {
+                    buf = val4;
+                }
+            }
+        } else {
+            if (i < 24) {
+                if (i < 20) {
+                    buf = val5;
+                } else {
+                    buf = val6;
+                }
+            } else {
+                if (i < 28) {
+                    buf = val7;
+                } else {
+                    buf = val8;
+                }
+            }
+        }
+
+        i &= 3;
+
+        if (i == 3) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf, buf, 3));
+        }
+        if (i == 2) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf, buf, 2));
+        }
+        if (i == 1) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf, buf, 1));
+        }
+
+        return _mm_cvtss_f32(buf);
     }
 
     inline

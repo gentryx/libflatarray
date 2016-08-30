@@ -36,7 +36,7 @@ class short_vec<double, 32>
 {
 public:
     static const int ARITY = 32;
-
+    typedef short_vec<double, 32> mask_type;
     typedef short_vec_strategy::avx strategy;
 
     template<typename _CharT, typename _Traits>
@@ -113,6 +113,59 @@ public:
         // another shuffle to extract the upper 64-bit half:
         buf1 = _mm_shuffle_pd(buf2, buf2, 1 << 0);
         return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+    }
+
+    inline
+    double get(int i) const
+    {
+        __m256d buf0;
+        if (i < 16) {
+            if (i < 8) {
+                if (i < 4) {
+                    buf0 = val1;
+                } else {
+                    buf0 = val2;
+                }
+            } else {
+                if (i < 12) {
+                    buf0 = val3;
+                } else {
+                    buf0 = val4;
+                }
+            }
+        } else {
+            if (i < 24) {
+                if (i < 20) {
+                    buf0 = val5;
+                } else {
+                    buf0 = val6;
+                }
+            } else {
+                if (i < 28) {
+                    buf0 = val7;
+                } else {
+                    buf0 = val8;
+                }
+            }
+        }
+
+        i &= 3;
+
+        __m128d buf1;
+        if (i < 2) {
+            buf1 = _mm256_extractf128_pd(buf0, 0);
+        } else {
+            buf1 = _mm256_extractf128_pd(buf0, 1);
+        }
+
+        i &= 1;
+
+        if (i == 0) {
+            return _mm_cvtsd_f64(buf1);
+        }
+
+        buf1 = _mm_shuffle_pd(buf1, buf1, 1);
+        return _mm_cvtsd_f64(buf1);
     }
 
     inline
