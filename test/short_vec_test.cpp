@@ -389,7 +389,7 @@ void testImplementationReal()
             }
 
             // test reduction to bool:
-            bool actual = v3.any();
+            bool actual = any(v3);
             bool expected = (test_value > 0);
             BOOST_TEST_EQ(actual, expected);
 
@@ -418,7 +418,7 @@ void testImplementationReal()
             }
 
             // test reduction to bool:
-            actual = v3.any();
+            actual = any(v3);
             expected = (test_value < ARITY);
             BOOST_TEST_EQ(actual, expected);
 
@@ -447,7 +447,7 @@ void testImplementationReal()
             }
 
             // test reduction to bool, again:
-            actual = v3.any();
+            actual = any(v3);
             expected = (test_value < ARITY);
             BOOST_TEST_EQ(actual, expected);
         }
