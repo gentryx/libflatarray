@@ -99,18 +99,18 @@ public:
     inline
     float get(int i) const
     {
-        __m128 buf1;
+        __m128 buf0;
         if (i < 8) {
             if (i < 4) {
-                buf1 =  _mm512_extractf32x4_ps(val1, 0);
+                buf0 =  _mm512_extractf32x4_ps(val1, 0);
             } else {
-                buf1 =  _mm512_extractf32x4_ps(val1, 1);
+                buf0 =  _mm512_extractf32x4_ps(val1, 1);
             }
         } else {
             if (i < 12)  {
-                buf1 =  _mm512_extractf32x4_ps(val1, 2);
+                buf0 =  _mm512_extractf32x4_ps(val1, 2);
             } else {
-                buf1 =  _mm512_extractf32x4_ps(val1, 3);
+                buf0 =  _mm512_extractf32x4_ps(val1, 3);
             }
         }
 
