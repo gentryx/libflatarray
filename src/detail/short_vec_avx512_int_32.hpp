@@ -260,7 +260,7 @@ void short_vec<int, 32>::operator/=(const sqrt_reference<int, 32>& other)
     val1 = _mm512_cvtps_epi32(
         _mm512_mul_ps(_mm512_cvtepi32_ps(val1),
                       _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val1))));
-    val1 = _mm512_cvtps_epi32(
+    val2 = _mm512_cvtps_epi32(
         _mm512_mul_ps(_mm512_cvtepi32_ps(val2),
                       _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val2))));
 }
