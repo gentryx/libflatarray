@@ -91,8 +91,20 @@ public:
     inline
     double get(int i) const
     {
-        // fixme: use this in all avx512 implementations
-        __m128d buf0 = _mm512_extractf64x2_pd(val1, (i >> 1));
+        __m128d buf0;
+        if (i < 4) {
+            if (i < 2) {
+                buf0 = _mm512_extractf64x2_pd(val1, 0);
+            } else {
+                buf0 = _mm512_extractf64x2_pd(val1, 1);
+            }
+        } else {
+            if (i < 6) {
+                buf0 = _mm512_extractf64x2_pd(val1, 2);
+            } else {
+                buf0 = _mm512_extractf64x2_pd(val1, 3);
+            }
+        }
 
         i &= 1;
 

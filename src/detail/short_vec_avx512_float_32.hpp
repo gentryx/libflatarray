@@ -110,7 +110,20 @@ public:
 
         i &= 15;
 
-        __m128 buf1 =  _mm512_extractf32x4_ps(buf0, (i >> 2));
+        __m128 buf1;
+        if (i < 8) {
+            if (i < 4) {
+                buf1 =  _mm512_extractf32x4_ps(buf0, 0);
+            } else {
+                buf1 =  _mm512_extractf32x4_ps(buf0, 1);
+            }
+        } else {
+            if (i < 12)  {
+                buf1 =  _mm512_extractf32x4_ps(buf0, 2);
+            } else {
+                buf1 =  _mm512_extractf32x4_ps(buf0, 3);
+            }
+        }
 
         i &= 3;
 

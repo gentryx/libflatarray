@@ -104,8 +104,20 @@ public:
 
         i &= 7;
 
-        // fixme: use this in all avx512 implementations
-        __m128d buf1 = _mm512_extractf64x2_pd(buf0, (i >> 1));
+        __m128d buf1;
+        if (i < 4) {
+            if (i < 2) {
+                buf1 = _mm512_extractf64x2_pd(buf0, 0);
+            } else {
+                buf1 = _mm512_extractf64x2_pd(buf0, 1);
+            }
+        } else {
+            if (i < 6) {
+                buf1 = _mm512_extractf64x2_pd(buf0, 2);
+            } else {
+                buf1 = _mm512_extractf64x2_pd(buf0, 3);
+            }
+        }
 
         i &= 1;
 
