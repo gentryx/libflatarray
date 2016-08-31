@@ -37,7 +37,6 @@ class short_vec<double, 8>
 public:
     static const int ARITY = 8;
     typedef __mmask8 mask_type;
-
     typedef short_vec_strategy::avx512f strategy;
 
     template<typename _CharT, typename _Traits>
@@ -69,6 +68,41 @@ public:
         load(ptr);
     }
 #endif
+
+    inline
+    bool any() const
+    {
+        __m128d buf0 = _mm_or_pd(
+            _mm_or_pd(
+                _mm512_extractf64x2_pd(val1, 0),
+                _mm512_extractf64x2_pd(val1, 1)),
+            _mm_or_pd(
+                _mm512_extractf64x2_pd(val1, 2),
+                _mm512_extractf64x2_pd(val1, 3)));
+        // shuffle upper 64-bit half down to first 64 bits so we can
+        // "or" both together:
+        __m128d buf1 = _mm_shuffle_pd(buf0, buf0, 1 << 0);
+        buf1 = _mm_or_pd(buf0, buf1);
+        // another shuffle to extract the upper 64-bit half:
+        buf0 = _mm_shuffle_pd(buf1, buf1, 1 << 0);
+        return _mm_cvtsd_f64(buf0) || _mm_cvtsd_f64(buf1);
+    }
+
+    inline
+    double get(int i) const
+    {
+        // fixme: use this in all avx512 implementations
+        __m128d buf0 = _mm512_extractf64x2_pd(val1, (i >> 1));
+
+        i &= 1;
+
+        if (i == 0) {
+            return _mm_cvtsd_f64(buf0);
+        }
+
+        buf0 = _mm_shuffle_pd(buf0, buf0, 1);
+        return _mm_cvtsd_f64(buf0);
+    }
 
     inline
     void operator-=(const short_vec<double, 8>& other)
