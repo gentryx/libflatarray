@@ -262,7 +262,7 @@ public:
             return val29;
         case 29:
             return val30;
-        case 30
+        case 30:
             return val31;
         default:
             return val32;

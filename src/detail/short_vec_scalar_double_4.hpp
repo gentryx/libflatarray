@@ -181,7 +181,7 @@ public:
 
 #define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
     inline
-    mask_type operator<(const short_vec<double, 32>& other) const
+    mask_type operator<(const short_vec<double, 4>& other) const
     {
         return
             (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <) <<  0) +
@@ -191,7 +191,7 @@ public:
     }
 
     inline
-    mask_type operator<=(const short_vec<double, 32>& other) const
+    mask_type operator<=(const short_vec<double, 4>& other) const
     {
         return
             (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <=) <<  0) +
@@ -201,7 +201,7 @@ public:
     }
 
     inline
-    mask_type operator==(const short_vec<double, 32>& other) const
+    mask_type operator==(const short_vec<double, 4>& other) const
     {
         return
             (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  ==) <<  0) +
@@ -211,7 +211,7 @@ public:
     }
 
     inline
-    mask_type operator>(const short_vec<double, 32>& other) const
+    mask_type operator>(const short_vec<double, 4>& other) const
     {
         return
             (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >) <<  0) +
@@ -221,7 +221,7 @@ public:
     }
 
     inline
-    mask_type operator>=(const short_vec<double, 32>& other) const
+    mask_type operator>=(const short_vec<double, 4>& other) const
     {
         return
             (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >=) <<  0) +
