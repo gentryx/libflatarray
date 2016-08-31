@@ -67,6 +67,12 @@ public:
     }
 
     inline
+    float get(const int i) const
+    {
+        return val1;
+    }
+
+    inline
     void operator-=(const short_vec<float, 1>& other)
     {
         val1 -= other.val1;

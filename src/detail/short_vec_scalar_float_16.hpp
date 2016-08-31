@@ -135,6 +135,45 @@ public:
     }
 
     inline
+    float get(const int i) const
+    {
+        switch (i) {
+        case 0:
+            return val1;
+        case 1:
+            return val2;
+        case 2:
+            return val3;
+        case 3:
+            return val4;
+        case 4:
+            return val5;
+        case 5:
+            return val6;
+        case 6:
+            return val7;
+        case 7:
+            return val8;
+        case 8:
+            return val9;
+        case 9:
+            return val10;
+        case 10:
+            return val11;
+        case 11:
+            return val12;
+        case 12:
+            return val13;
+        case 13:
+            return val14;
+        case 14:
+            return val15;
+        default:
+            return val16;
+        }
+    }
+
+    inline
     void operator-=(const short_vec<float, 16>& other)
     {
         val1  -= other.val1;

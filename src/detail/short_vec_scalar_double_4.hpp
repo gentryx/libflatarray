@@ -89,6 +89,21 @@ public:
     }
 
     inline
+    double get(const int i) const
+    {
+        switch (i) {
+        case 0:
+            return val1;
+        case 1:
+            return val2;
+        case 2:
+            return val3;
+        default:
+            return val4;
+        }
+    }
+
+    inline
     void operator-=(const short_vec<double, 4>& other)
     {
         val1  -= other.val1;

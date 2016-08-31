@@ -199,6 +199,77 @@ public:
     }
 
     inline
+    double get(const int i) const
+    {
+        switch (i) {
+        case 0:
+            return val1;
+        case 1:
+            return val2;
+        case 2:
+            return val3;
+        case 3:
+            return val4;
+        case 4:
+            return val5;
+        case 5:
+            return val6;
+        case 6:
+            return val7;
+        case 7:
+            return val8;
+        case 8:
+            return val9;
+        case 9:
+            return val10;
+        case 10:
+            return val11;
+        case 11:
+            return val12;
+        case 12:
+            return val13;
+        case 13:
+            return val14;
+        case 14:
+            return val15;
+        case 15:
+            return val16;
+        case 16:
+            return val17;
+        case 17:
+            return val18;
+        case 18:
+            return val19;
+        case 19:
+            return val20;
+        case 20:
+            return val21;
+        case 21:
+            return val22;
+        case 22:
+            return val23;
+        case 23:
+            return val24;
+        case 24:
+            return val25;
+        case 25:
+            return val26;
+        case 26:
+            return val27;
+        case 27:
+            return val28;
+        case 28:
+            return val29;
+        case 29:
+            return val30;
+        case 30
+            return val31;
+        default:
+            return val32;
+        }
+    }
+
+    inline
     void operator-=(const short_vec<double, 32>& other)
     {
         val1  -= other.val1;
