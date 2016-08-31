@@ -39,7 +39,7 @@ class short_vec<float, 32>
 {
 public:
     static const int ARITY = 32;
-
+    typedef unsigned mask_type;
     typedef short_vec_strategy::avx512f strategy;
 
     template<typename _CharT, typename _Traits>
@@ -75,6 +75,57 @@ public:
 
     inline
     short_vec(const sqrt_reference<float, 32>& other);
+
+    inline
+    bool any() const
+    {
+        __m512 buf0 = _mm512_or_ps(val1, val2);
+        __m128 buf1 = _mm_or_ps(
+            _mm_or_ps(
+                _mm512_extractf32x4_ps(buf0, 0),
+                _mm512_extractf32x4_ps(buf0, 1)),
+            _mm_or_ps(
+                _mm512_extractf32x4_ps(buf0, 2),
+                _mm512_extractf32x4_ps(buf0, 3)));
+        // shuffle upper 64-bit half down to first 64 bits so we can
+        // "or" both together:
+        __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
+        buf2 = _mm_or_ps(buf1, buf2);
+        // another shuffle to extract 2nd least significant float
+        // member and or it together with least significant float
+        // member:
+        buf1 = _mm_shuffle_ps(buf2, buf2, (1 << 0));
+        return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+    }
+
+    inline
+    float get(int i) const
+    {
+        __m512 buf0;
+        if (i < 16) {
+            buf0 = val1;
+        } else {
+            buf0 = val2;
+        }
+
+        i &= 15;
+
+        __m128 buf1 =  _mm512_extractf32x4_ps(buf0, (i >> 2));
+
+        i &= 3;
+
+        if (i == 3) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf1, buf1, 3));
+        }
+        if (i == 2) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf1, buf1, 2));
+        }
+        if (i == 1) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf1, buf1, 1));
+        }
+
+        return _mm_cvtss_f32(buf1);
+    }
 
     inline
     void operator-=(const short_vec<float, 32>& other)
@@ -141,6 +192,46 @@ public:
 
     inline
     short_vec<float, 32> operator/(const sqrt_reference<float, 32>& other) const;
+
+    inline
+    mask_type operator<(const short_vec<float, 32>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LT_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_LT_OS) << 16);
+    }
+
+    inline
+    mask_type operator<=(const short_vec<float, 32>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LE_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_LE_OS) << 16);
+    }
+
+    inline
+    mask_type operator==(const short_vec<float, 32>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_EQ_OQ) <<  0) +
+            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_EQ_OQ) << 16);
+    }
+
+    inline
+    mask_type operator>(const short_vec<float, 32>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GT_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_GT_OS) << 16);
+    }
+
+    inline
+    mask_type operator>=(const short_vec<float, 32>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GE_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_GE_OS) << 16);
+    }
 
     inline
     short_vec<float, 32> sqrt() const

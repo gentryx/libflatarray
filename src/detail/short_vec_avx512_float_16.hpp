@@ -39,7 +39,7 @@ class short_vec<float, 16>
 {
 public:
     static const int ARITY = 16;
-
+    typedef __mmask16 mask_type;
     typedef short_vec_strategy::avx512f strategy;
 
     template<typename _CharT, typename _Traits>
@@ -74,6 +74,47 @@ public:
 
     inline
     short_vec(const sqrt_reference<float, 16>& other);
+
+    inline
+    bool any() const
+    {
+        __m128 buf0 = _mm_or_ps(
+            _mm_or_ps(
+                _mm512_extractf32x4_ps(val1, 0),
+                _mm512_extractf32x4_ps(val1, 1)),
+            _mm_or_ps(
+                _mm512_extractf32x4_ps(val1, 2),
+                _mm512_extractf32x4_ps(val1, 3)));
+        // shuffle upper 64-bit half down to first 64 bits so we can
+        // "or" both together:
+        __m128 buf1 = _mm_shuffle_ps(buf0, buf0, (3 << 2) | (2 << 0));
+        buf1 = _mm_or_ps(buf0, buf1);
+        // another shuffle to extract 2nd least significant float
+        // member and or it together with least significant float
+        // member:
+        buf0 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
+        return _mm_cvtss_f32(buf0) || _mm_cvtss_f32(buf1);
+    }
+
+    inline
+    float get(int i) const
+    {
+        __m128 buf0 = _mm512_extractf32x4_ps(val1, (i >> 2));
+
+        i &= 3;
+
+        if (i == 3) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf0, buf0, 3));
+        }
+        if (i == 2) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf0, buf0, 2));
+        }
+        if (i == 1) {
+            return _mm_cvtss_f32(_mm_shuffle_ps(buf0, buf0, 1));
+        }
+
+        return _mm_cvtss_f32(buf0);
+    }
 
     inline
     void operator-=(const short_vec<float, 16>& other)
@@ -132,6 +173,41 @@ public:
 
     inline
     short_vec<float, 16> operator/(const sqrt_reference<float, 16>& other) const;
+
+    inline
+    mask_type operator<(const short_vec<float, 16>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LT_OS) <<  0);
+    }
+
+    inline
+    mask_type operator<=(const short_vec<float, 16>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LE_OS) <<  0);
+    }
+
+    inline
+    mask_type operator==(const short_vec<float, 16>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_EQ_OQ) <<  0);
+    }
+
+    inline
+    mask_type operator>(const short_vec<float, 16>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GT_OS) <<  0);
+    }
+
+    inline
+    mask_type operator>=(const short_vec<float, 16>& other) const
+    {
+        return
+            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GE_OS) <<  0);
+    }
 
     inline
     short_vec<float, 16> sqrt() const
