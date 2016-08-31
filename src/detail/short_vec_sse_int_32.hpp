@@ -282,7 +282,7 @@ public:
 
         tmp1 = _mm_mul_epu32(val5, other.val5);
         tmp2 = _mm_mul_epu32(_mm_srli_si128(val5, 4),
-                                     _mm_srli_si128(other.val5, 4));
+                             _mm_srli_si128(other.val5, 4));
         __m128i result5 = _mm_unpacklo_epi32(
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
