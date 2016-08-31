@@ -72,13 +72,6 @@ public:
 #endif
 
     inline
-    void operator-=(const short_vec<double, 8>& other)
-    {
-        val1 = _mm256_sub_pd(val1, other.val1);
-        val2 = _mm256_sub_pd(val2, other.val2);
-    }
-
-    inline
     bool any() const
     {
         __m256d buf0 = _mm256_or_pd(val1, val2);
@@ -122,6 +115,13 @@ public:
 
         buf1 = _mm_shuffle_pd(buf1, buf1, 1);
         return _mm_cvtsd_f64(buf1);
+    }
+
+    inline
+    void operator-=(const short_vec<double, 8>& other)
+    {
+        val1 = _mm256_sub_pd(val1, other.val1);
+        val2 = _mm256_sub_pd(val2, other.val2);
     }
 
     inline
