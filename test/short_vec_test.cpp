@@ -449,6 +449,20 @@ void testImplementationReal()
         }
     }
 
+    // test get
+    {
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
+
+        for (int i = 0; i < ARITY; ++i) {
+            array[i] = i + 0.123;
+        }
+        ShortVec v1;
+        v1.load_aligned(&array[0]);
+        for (int i = 0; i < ARITY; ++i) {
+            TEST_REAL_ACCURACY(array[i], get(v1, i), 0.001);
+        }
+    }
+
     // fixme: test get here and for streaming short vec
     // fixme: all all tests for int, too
 }
