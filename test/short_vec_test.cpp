@@ -22,10 +22,12 @@
 
 namespace LibFlatArray {
 
+#define SHORT_VEC_TEMPLATE short_vec
+
 template<typename CARGO, int ARITY>
 void testImplementationReal()
 {
-    typedef short_vec<CARGO, ARITY> ShortVec;
+    typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
     int numElements = ShortVec::ARITY * 10;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
@@ -454,7 +456,7 @@ void testImplementationReal()
 template<typename CARGO, int ARITY>
 void testImplementationInt()
 {
-    typedef short_vec<CARGO, ARITY> ShortVec;
+    typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
     const int numElements = ShortVec::ARITY * 10;
 
     std::vector<CARGO> vec1(numElements);
@@ -821,7 +823,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 {
     // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
-    checkForStrategy(short_vec<double, 1>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 1>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __SSE__
@@ -829,7 +831,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<double, 2>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __VECTOR4DOUBLE___
@@ -845,7 +847,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<double, 4>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __MIC__
@@ -869,7 +871,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<double, 8>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __MIC__
@@ -893,7 +895,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #    define EXPECTED_TYPE short_vec_strategy::scalar
 #  endif
 #endif
-    checkForStrategy(short_vec<double, 16>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __MIC__
@@ -917,7 +919,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #    endif
 #  endif
 #endif
-    checkForStrategy(short_vec<double, 32>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<double, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 }
 
@@ -925,8 +927,8 @@ ADD_TEST(TestImplementationStrategyFloat)
 {
     // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
-    checkForStrategy(short_vec<float, 1>::strategy(), EXPECTED_TYPE());
-    checkForStrategy(short_vec<float, 2>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 1>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __SSE__
@@ -936,7 +938,7 @@ ADD_TEST(TestImplementationStrategyFloat)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
+checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __SSE__
@@ -954,7 +956,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<float, 8>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __MIC__
@@ -979,7 +981,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<float, 16>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __MIC__
@@ -1004,7 +1006,7 @@ checkForStrategy(short_vec<float, 4>::strategy(), EXPECTED_TYPE());
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<float, 32>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 }
 
@@ -1012,8 +1014,8 @@ ADD_TEST(TestImplementationStrategyInt)
 {
     // fixme: doc!
 #define EXPECTED_TYPE short_vec_strategy::scalar
-    checkForStrategy(short_vec<int, 1>::strategy(), EXPECTED_TYPE());
-    checkForStrategy(short_vec<int, 2>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 1>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __SSE2__
@@ -1021,7 +1023,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-    checkForStrategy(short_vec<int, 4>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __AVX2__
@@ -1033,7 +1035,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #    define EXPECTED_TYPE short_vec_strategy::scalar
 #  endif
 #endif
-    checkForStrategy(short_vec<int, 8>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __AVX512F__
@@ -1049,7 +1051,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #    endif
 #  endif
 #endif
-    checkForStrategy(short_vec<int, 16>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
 #ifdef __AVX512F__
@@ -1065,7 +1067,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #    endif
 #  endif
 #endif
-    checkForStrategy(short_vec<int, 32>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<int, 32>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 }
 
