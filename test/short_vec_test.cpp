@@ -821,11 +821,12 @@ void checkForStrategy(STRATEGY, STRATEGY)
 
 ADD_TEST(TestImplementationStrategyDouble)
 {
-    // fixme: doc!
+    // 1x:
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(SHORT_VEC_TEMPLATE<double, 1>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 2x:
 #ifdef __SSE__
 #  define EXPECTED_TYPE short_vec_strategy::sse
 #else
@@ -834,10 +835,10 @@ ADD_TEST(TestImplementationStrategyDouble)
     checkForStrategy(SHORT_VEC_TEMPLATE<double, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 4x:
 #ifdef __VECTOR4DOUBLE___
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
-
 #ifdef __SSE__
 #  ifdef __AVX__
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -850,14 +851,13 @@ ADD_TEST(TestImplementationStrategyDouble)
     checkForStrategy(SHORT_VEC_TEMPLATE<double, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 8x:
 #ifdef __MIC__
 #  define EXPECTED_TYPE short_vec_strategy::mic
 #endif
-
 #ifdef __VECTOR4DOUBLE___
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
-
 #ifdef __SSE__
 #  ifdef __AVX__
 #    ifdef __AVX512F__
@@ -874,14 +874,13 @@ ADD_TEST(TestImplementationStrategyDouble)
     checkForStrategy(SHORT_VEC_TEMPLATE<double, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 16x:
 #ifdef __MIC__
 #  define EXPECTED_TYPE short_vec_strategy::mic
 #endif
-
 #ifdef __VECTOR4DOUBLE___
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
-
 #ifdef __AVX__
 #  ifdef __AVX512F__
 #    define EXPECTED_TYPE short_vec_strategy::avx512f
@@ -898,14 +897,13 @@ ADD_TEST(TestImplementationStrategyDouble)
     checkForStrategy(SHORT_VEC_TEMPLATE<double, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 32x:
 #ifdef __MIC__
 #  define EXPECTED_TYPE short_vec_strategy::mic
 #endif
-
 #ifdef __VECTOR4DOUBLE___
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
-
 #ifdef __AVX512F__
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
@@ -925,12 +923,13 @@ ADD_TEST(TestImplementationStrategyDouble)
 
 ADD_TEST(TestImplementationStrategyFloat)
 {
-    // fixme: doc!
+    // 1x, 2x:
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(SHORT_VEC_TEMPLATE<float, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(SHORT_VEC_TEMPLATE<float, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 4x:
 #ifdef __SSE__
 #  define EXPECTED_TYPE short_vec_strategy::sse
 #elif __ARM_NEON__
@@ -938,9 +937,10 @@ ADD_TEST(TestImplementationStrategyFloat)
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
-checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
+    checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 8x:
 #ifdef __SSE__
 #  ifdef __AVX__
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -948,24 +948,22 @@ checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 #    define EXPECTED_TYPE short_vec_strategy::sse
 #  endif
 #endif
-
 #ifdef __ARM_NEON__
 #  define EXPECTED_TYPE short_vec_strategy::neon
 #endif
-
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
     checkForStrategy(SHORT_VEC_TEMPLATE<float, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 16x:
 #ifdef __MIC__
 #  define EXPECTED_TYPE short_vec_strategy::mic
 #endif
 #ifdef __ARM_NEON__
 #  define EXPECTED_TYPE short_vec_strategy::neon
 #endif
-
 #ifdef __SSE__
 #  ifdef __AVX__
 #    ifdef __AVX512F__
@@ -977,20 +975,19 @@ checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 #    define EXPECTED_TYPE short_vec_strategy::sse
 #  endif
 #endif
-
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
     checkForStrategy(SHORT_VEC_TEMPLATE<float, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 32x:
 #ifdef __MIC__
 #  define EXPECTED_TYPE short_vec_strategy::mic
 #endif
 #ifdef __ARM_NEON__
 #  define EXPECTED_TYPE short_vec_strategy::neon
 #endif
-
 #ifdef __AVX__
 #  ifdef __AVX512F__
 #    define EXPECTED_TYPE short_vec_strategy::avx512f
@@ -1002,7 +999,6 @@ checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 #    define EXPECTED_TYPE short_vec_strategy::sse
 #  endif
 #endif
-
 #ifndef EXPECTED_TYPE
 #  define EXPECTED_TYPE short_vec_strategy::scalar
 #endif
@@ -1012,12 +1008,13 @@ checkForStrategy(SHORT_VEC_TEMPLATE<float, 4>::strategy(), EXPECTED_TYPE());
 
 ADD_TEST(TestImplementationStrategyInt)
 {
-    // fixme: doc!
+    // 1x, 2x:
 #define EXPECTED_TYPE short_vec_strategy::scalar
     checkForStrategy(SHORT_VEC_TEMPLATE<int, 1>::strategy(), EXPECTED_TYPE());
     checkForStrategy(SHORT_VEC_TEMPLATE<int, 2>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 4x:
 #ifdef __SSE2__
 #  define EXPECTED_TYPE short_vec_strategy::sse
 #else
@@ -1026,6 +1023,7 @@ ADD_TEST(TestImplementationStrategyInt)
     checkForStrategy(SHORT_VEC_TEMPLATE<int, 4>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 8x:
 #ifdef __AVX2__
 #  define EXPECTED_TYPE short_vec_strategy::avx2
 #else
@@ -1038,6 +1036,7 @@ ADD_TEST(TestImplementationStrategyInt)
     checkForStrategy(SHORT_VEC_TEMPLATE<int, 8>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 16x:
 #ifdef __AVX512F__
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
@@ -1054,6 +1053,7 @@ ADD_TEST(TestImplementationStrategyInt)
     checkForStrategy(SHORT_VEC_TEMPLATE<int, 16>::strategy(), EXPECTED_TYPE());
 #undef EXPECTED_TYPE
 
+    // 32x:
 #ifdef __AVX512F__
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
