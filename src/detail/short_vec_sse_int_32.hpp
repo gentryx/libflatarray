@@ -112,10 +112,10 @@ public:
         val2 = _mm_sub_epi32(val2, other.val2);
         val3 = _mm_sub_epi32(val3, other.val3);
         val4 = _mm_sub_epi32(val4, other.val4);
-        val1 = _mm_sub_epi32(val5, other.val5);
-        val2 = _mm_sub_epi32(val6, other.val6);
-        val3 = _mm_sub_epi32(val7, other.val7);
-        val4 = _mm_sub_epi32(val8, other.val8);
+        val5 = _mm_sub_epi32(val5, other.val5);
+        val6 = _mm_sub_epi32(val6, other.val6);
+        val7 = _mm_sub_epi32(val7, other.val7);
+        val8 = _mm_sub_epi32(val8, other.val8);
     }
 
     inline
@@ -280,7 +280,7 @@ public:
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
 
-        tmp1 = _mm_mul_epu32(val5, other.val1);
+        tmp1 = _mm_mul_epu32(val5, other.val5);
         tmp2 = _mm_mul_epu32(_mm_srli_si128(val5, 4),
                                      _mm_srli_si128(other.val5, 4));
         __m128i result5 = _mm_unpacklo_epi32(
@@ -294,7 +294,7 @@ public:
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
 
-        tmp1 = _mm_mul_epu32(val7, other.val3);
+        tmp1 = _mm_mul_epu32(val7, other.val7);
         tmp2 = _mm_mul_epu32(_mm_srli_si128(val7, 4),
                              _mm_srli_si128(other.val7, 4));
         __m128i result7 = _mm_unpacklo_epi32(
@@ -303,7 +303,7 @@ public:
 
         tmp1 = _mm_mul_epu32(val8, other.val8);
         tmp2 = _mm_mul_epu32(_mm_srli_si128(val8, 4),
-                             _mm_srli_si128(other.val4, 4));
+                             _mm_srli_si128(other.val8, 4));
         __m128i result8 = _mm_unpacklo_epi32(
             _mm_shuffle_epi32(tmp1, _MM_SHUFFLE(0,0,2,0)),
             _mm_shuffle_epi32(tmp2, _MM_SHUFFLE(0,0,2,0)));
