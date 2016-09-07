@@ -130,16 +130,16 @@ void reflect_bc(
     const float YMAX = 1.0;
 
     for (int i = 0; i < n; ++i) {
-        if (pos_x[0] < XMIN) {
+        if (pos_x[i] < XMIN) {
             damp_reflect(0, XMIN, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
-        if (pos_x[0] > XMAX) {
+        if (pos_x[i] > XMAX) {
             damp_reflect(0, XMAX, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
-        if (pos_y[0] < YMIN) {
+        if (pos_y[i] < YMIN) {
             damp_reflect(1, YMIN, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
-        if (pos_y[0] > YMAX) {
+        if (pos_y[i] > YMAX) {
             damp_reflect(1, YMAX, pos_x + i, pos_y + i, v_x + i, v_y + i);
         }
     }
