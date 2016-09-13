@@ -22,9 +22,6 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY, bool INCREASE_PRECISION = 1>
-class short_vec;
-
 template<>
 class short_vec<float, 32>
 {
@@ -172,8 +169,9 @@ public:
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        if (INCREASE_PRECISION)
-            iterations = 2;
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        iterations = 2;
+#endif
         for (int i = 0; i < iterations; ++i)
         {
             reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
@@ -220,8 +218,9 @@ public:
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        if (INCREASE_PRECISION)
-            iterations = 2;
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        iterations = 2;
+#endif
         for (int i = 0; i < iterations; ++i)
         {
             reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
@@ -308,8 +307,9 @@ public:
         // converges to (1/√d) if x0 is the result of VRSQRTE applied to d.
         //
         // Note: The precision did not improve after 2 iterations.
-        if (INCREASE_PRECISION)
-            iterations = 2;
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        iterations = 2;
+#endif
         for (i = 0; i < iterations; i++) {
           x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
           x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);

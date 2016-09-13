@@ -22,9 +22,6 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY, bool INCREASE_PRECISION = 1>
-class short_vec;
-
 template<>
 class short_vec<float, 8>
 {
@@ -130,11 +127,10 @@ public:
         // one refinement (instead of the two used here).  Be sure to test!
         reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
         reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        if (INCREASE_PRECISION)
-        {
-            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        }
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+#endif
 
         // and finally, compute a/b = a*(1/b)
         val1 = vmulq_f32(val1, reciprocal1);
@@ -159,11 +155,10 @@ public:
         // one refinement (instead of the two used here).  Be sure to test!
         reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
         reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        if (INCREASE_PRECISION)
-        {
-            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-        }
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
+#endif
 
         // and finally, compute a/b = a*(1/b)
         float32x4_t result1 = vmulq_f32(val1, reciprocal1);
@@ -201,11 +196,10 @@ public:
         // Note: The precision did not improve after 2 iterations.
         x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
         x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
-        if (INCREASE_PRECISION)
-        {
-          x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
-          x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
-        }
+#ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
+        x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+        x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
+#endif
         // sqrt(s) = s * 1/sqrt(s)
         float32x4_t result1 = vmulq_f32(val1, x1);
         float32x4_t result2 = vmulq_f32(val2, x2);
