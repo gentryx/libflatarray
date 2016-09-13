@@ -3,6 +3,7 @@
 #include <silo.h>
 #include <stdlib.h>
 #include <vector>
+#include <libflatarray/flat_array.hpp>
 
 #include "kernels.h"
 
@@ -74,6 +75,147 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
 
     DBClose(dbfile);
 }
+
+template<typename SOA_ACCESSOR>
+void compute_density_lfa(int n, SOA_ACCESSOR& particles, float h, float mass)
+{
+    typedef typename LibFlatArray::estimate_optimum_short_vec_type<float, SOA_ACCESSOR>::VALUE FLOAT;
+    SOA_ACCESSOR particles_i = particles;
+    SOA_ACCESSOR particles_j = particles;
+
+    FLOAT h_squared = h * h;
+    FLOAT h_pow_8 = h_squared * h_squared * h_squared * h_squared;
+    FLOAT C = 4 * mass / M_PI / h_pow_8;
+
+    for (int i = 0; i < n; i += FLOAT::ARITY, particles += FLOAT::ARITY) {
+        &particles.rho() = 4 * mass / M_PI / h_squared;
+    }
+
+    for (int i = 0; i < n; ++i, ++particles_i) {
+        FLOAT pos_x_i = particles_i.pos_x();
+        FLOAT pos_y_i = particles_i.pos_y();
+
+        // fixme: loop peeling required
+        for (int j = i + 1; j < n; j += FLOAT::ARITY, particles_j += FLOAT::ARITY) {
+            FLOAT delta_x = pos_x_i - &particles_j.pos_x();
+            FLOAT delta_y = pos_y_i - &particles_j.pos_y();
+            FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
+            FLOAT overlap = h_squared - dist_squared;
+
+            if (any(overlap > 0)) {
+                for (int e = 0; e < FLOAT::ARITY; ++e) {
+                    float rho_ij = C * overlap[e] * overlap[e] * overlap[e];
+                    (&particles.rho())[i] += rho_ij;
+                    (&particles.rho())[j] += rho_ij;
+                }
+            }
+        }
+    }
+}
+
+template<typename SOA_ACCESSOR>
+void compute_accel_fla(
+    int n,
+    SOA_ACCESSOR& particles,
+    float mass,
+    float g,
+    float h,
+    float k,
+    float rho0,
+    float mu)
+{
+    typedef typename LibFlatArray::estimate_optimum_short_vec_type<float, SOA_ACCESSOR>::VALUE FLOAT;
+
+    const float h_squared = h * h;
+    const FLOAT C_0 = mass / M_PI / (h_squared * h_squared);
+    const FLOAT C_p = 15 * k;
+    const FLOAT C_v = -40 * mu;
+
+    // gravity:
+    for (particles.index() = 0; particles.index() < n; particles += FLOAT::ARITY) {
+        &particles.a_x() = FLOAT(0);
+        &particles.a_y() = FLOAT(-g);
+    }
+    particles.index() = 0;
+
+    float dist_squared_buf[FLOAT::ARITY];
+    int i_buf[FLOAT::ARITY];
+    int j_buf[FLOAT::ARITY];
+    int buf_index = 0;
+
+    SOA_ACCESSOR particles_i = particles;
+    SOA_ACCESSOR particles_j = particles;
+
+    // Now compute interaction forces
+    for (int i = 0; i < n; ++i, particles_i += 1) {
+        // fixme: loop peeling required
+        for (int j = i + 1; j < n; ++j) {
+            FLOAT delta_x = particles_i.pos_x() - particles_j.pos_x();
+            FLOAT delta_y = particles_i.pos_y() - particles_j.pos_y();
+            FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
+
+            if (any(dist_squared < FLOAT(h_squared))) {
+                for (int e = 0; e < FLOAT::ARITY; ++e) {
+                    if (dist_squared.get(e) < h_squared) {
+                        dist_squared_buf[buf_index] = dist_squared.get(e);
+                        i_buf[buf_index] = i;
+                        j_buf[buf_index] = j;
+                        ++buf_index;
+                    }
+
+                    if (buf_index == FLOAT::ARITY) {
+                        FLOAT rho_i;
+                        FLOAT rho_j;
+                        particles.index() = 0;
+                        rho_i.gather(&particles.rho(), i_buf);
+                        rho_j.gather(&particles.rho(), j_buf);
+
+                        FLOAT q = sqrt(FLOAT(*dist_squared)) / h;
+                        FLOAT u = 1 - q;
+                        FLOAT w_0 = C_0 * u / rho_i / rho_j;
+                        FLOAT w_p = w_0 * C_p * (rho_i + rho_j - 2 * rho0) * u / q;
+                        FLOAT w_v = w_0 * C_v;
+                        FLOAT v_i;
+                        FLOAT v_j;
+                        v_i.gather(&particles.v_x(), i_buf);
+                        v_j.gather(&particles.v_x(), j_buf);
+                        FLOAT delta_v_x = v_i - v_j;
+                        v_i.gather(&particles.v_y(), i_buf);
+                        v_j.gather(&particles.v_y(), j_buf);
+                        FLOAT delta_v_y = v_i - v_j;
+
+                        // scatter store
+                        FLOAT a_x = (w_p * delta_x + w_v * delta_v_x);
+                        FLOAT a_y = (w_p * delta_y + w_v * delta_v_y);
+
+                        for (int f = 0; f < FLOAT::ARITY; ++f) {
+                            particles.index() = i_buf[f];
+                            particles.a_x() += a_x[f];
+                            particles.a_y() += a_y[f];
+                            particles.a_x() -= a_x[f];
+                            particles.a_y() -= a_y[f];
+                            particles.index() = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+class Particle
+{
+public:
+    float rho;
+    float pos_x;
+    float pos_y;
+    float v_x;
+    float v_y;
+    float a_x;
+    float a_y;
+};
+
+LIBFLATARRAY_REGISTER_SOA(Particle, ((float)(rho))((float)(pos_x))((float)(pos_y))((float)(v_x))((float)(v_y))((float)(a_x))((float)(a_y)))
 
 int main(int argc, char** argv)
 {
