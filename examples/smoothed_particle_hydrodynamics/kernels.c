@@ -73,7 +73,7 @@ void compute_accel(
                 float w_0 = C_0 * u / rho[i] / rho[j];
                 float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * rho0) * u / q;
                 float w_v = w_0 * C_v;
-                float delta_v_x = v_x[i] - v_y[j];
+                float delta_v_x = v_x[i] - v_x[j];
                 float delta_v_y = v_y[i] - v_y[j];
 
                 a_x[i] += (w_p * delta_x + w_v * delta_v_x);
