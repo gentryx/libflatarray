@@ -112,40 +112,42 @@ public:
 // for IBM Blue Gene/Q's QPX, which is mutually exclusive to
 // Intel/AMD's AVX/SSE or ARM's NEON ISAs:
 #  ifdef __VECTOR4DOUBLE__
-#  define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_QPX
+#    define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_QPX
 #  endif
 
 // Dito for ARM NEON:
 #  ifdef __ARM_NEON__
-#  define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_ARM_NEON
+#    define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_ARM_NEON
 #  endif
 
+#  ifndef LIBFLATARRAY_WIDEST_VECTOR_ISA
 // Only the case of the IBM PC is complicated. No thanks to you,
 // history!
-#  ifdef __MIC__
-#  define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_MIC
-#  else
-#    ifdef __AVX512F__
-#    define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX512F
+#    ifdef __MIC__
+#      define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_MIC
 #    else
-#      ifdef __AVX2__
-#      define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX2
+#      ifdef __AVX512F__
+#        define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX512F
 #      else
-#        ifdef __AVX__
-#        define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX
+#        ifdef __AVX2__
+#          define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX2
 #        else
-#          ifdef __SSE4_1__
-#          define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE4_1
+#          ifdef __AVX__
+#            define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX
 #          else
-#            ifdef __SSE2__
-#            define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE2
+#            ifdef __SSE4_1__
+#              define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE4_1
 #            else
-#              ifdef __SSE__
-#              define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE
+#              ifdef __SSE2__
+#                define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE2
 #              else
+#                ifdef __SSE__
+#                  define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SSE
+#                else
 // fallback: scalar implementation always works and is still yields
 // code that's easy to vectorize for the compiler:
-#              define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SCALAR
+#                  define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_SCALAR
+#                endif
 #              endif
 #            endif
 #          endif
