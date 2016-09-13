@@ -115,8 +115,8 @@ public:
         reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
         reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
- #endif
- 
+#endif
+
         // and finally, compute a/b = a*(1/b)
         val1 = vmulq_f32(val1, reciprocal1);
     }
@@ -214,15 +214,15 @@ public:
         // the mapping between Q registers and D registers
 
         // stnp is for arm 64 (armv8)
-        #if __LP64__
-            register float32x4_t val2 asm ("q0");
-            val2 = val1;
-            asm("stnp d0, d1, %[store]"
-                :[store] "=m" (data)
+#if __LP64__
+        register float32x4_t val2 asm ("q0");
+        val2 = val1;
+        asm("stnp d0, d1, %[store]"
+            :[store] "=m" (data)
             );
-        #else
-            store(data);
-        #endif
+#else
+        store(data);
+#endif
     }
 
     // dummy approach. NEON only supports loading in fixed interleaving

@@ -32,8 +32,8 @@ public:
 
     template<typename _CharT, typename _Traits>
     friend std::basic_ostream<_CharT, _Traits>& operator<<(
-            std::basic_ostream<_CharT, _Traits>& __os,
-            const short_vec<float, 8>& vec);
+        std::basic_ostream<_CharT, _Traits>& __os,
+        const short_vec<float, 8>& vec);
 
     inline
     short_vec(const float data = 0) :
@@ -185,9 +185,9 @@ public:
         const uint32x4_t div_by_zero2 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x2));
         // zero out the positive infinity results
         x1 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero1),
-                                            vreinterpretq_u32_f32(x1)));
+                                             vreinterpretq_u32_f32(x1)));
         x2 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero2),
-                                            vreinterpretq_u32_f32(x2)));
+                                             vreinterpretq_u32_f32(x2)));
         // from arm documentation
         // The Newton-Raphson iteration:
         //     x[n+1] = x[n] * (3 - d * (x[n] * x[n])) / 2)
@@ -238,27 +238,27 @@ public:
     inline
     void store_nt(float *data) const
     {
-        // in arm only stnp support non-temporal hint, thus need to
+        // in ARM only stnp support non-temporal hint, thus need to
         // break into two registers. (use helper val2)
         // see if it can get optimized by compiler
 
         // the mapping between Q registers and D registers
 
-        // stnp is for arm 64 (armv8)
-        #if __LP64__
-            register float32x4_t tmp1 asm ("q0");
-            tmp1 = val1;
-            register float32x4_t tmp2 asm ("q1");
-            tmp2 = val2;
-            asm("stnp d0, d1, %[store]"
-                :[store] "=m" (data)
+        // stnp is for ARM 64 (armv8)
+#if __LP64__
+        register float32x4_t tmp1 asm ("q0");
+        tmp1 = val1;
+        register float32x4_t tmp2 asm ("q1");
+        tmp2 = val2;
+        asm("stnp d0, d1, %[store]"
+            :[store] "=m" (data)
             );
-            asm("stnp d2, d3, %[store]"
-                :[store] "=m" (data + 4)
+        asm("stnp d2, d3, %[store]"
+            :[store] "=m" (data + 4)
             );
-        #else
-            store(data);
-        #endif
+#else
+        store(data);
+#endif
     }
 
     // dummy approach. NEON only supports loading in fixed interleaving

@@ -172,8 +172,7 @@ public:
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
         iterations = 2;
 #endif
-        for (int i = 0; i < iterations; ++i)
-        {
+        for (int i = 0; i < iterations; ++i) {
             reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
             reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
             reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
@@ -221,8 +220,7 @@ public:
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
         iterations = 2;
 #endif
-        for (int i = 0; i < iterations; ++i)
-        {
+        for (int i = 0; i < iterations; ++i) {
             reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
             reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
             reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
@@ -251,8 +249,8 @@ public:
             result5,
             result6,
             result7,
-            result8
-            );
+            result8);
+
         return ret;
     }
 
@@ -286,21 +284,21 @@ public:
         const uint32x4_t div_by_zero8 = vceqq_u32(vec_p_inf, vreinterpretq_u32_f32(x8));
         // zero out the positive infinity results
         x1 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero1),
-                                            vreinterpretq_u32_f32(x1)));
+                                             vreinterpretq_u32_f32(x1)));
         x2 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero2),
-                                            vreinterpretq_u32_f32(x2)));
+                                             vreinterpretq_u32_f32(x2)));
         x3 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero3),
-                                            vreinterpretq_u32_f32(x3)));
+                                             vreinterpretq_u32_f32(x3)));
         x4 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero4),
-                                            vreinterpretq_u32_f32(x4)));
+                                             vreinterpretq_u32_f32(x4)));
         x5 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero5),
-                                            vreinterpretq_u32_f32(x5)));
+                                             vreinterpretq_u32_f32(x5)));
         x6 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero6),
-                                            vreinterpretq_u32_f32(x6)));
+                                             vreinterpretq_u32_f32(x6)));
         x7 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero7),
-                                            vreinterpretq_u32_f32(x7)));
+                                             vreinterpretq_u32_f32(x7)));
         x8 = vreinterpretq_f32_u32(vandq_u32(vmvnq_u32(div_by_zero8),
-                                            vreinterpretq_u32_f32(x8)));
+                                             vreinterpretq_u32_f32(x8)));
         // from arm documentation
         // The Newton-Raphson iteration:
         //     x[n+1] = x[n] * (3 - d * (x[n] * x[n])) / 2)
@@ -310,15 +308,15 @@ public:
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
         iterations = 2;
 #endif
-        for (i = 0; i < iterations; i++) {
-          x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
-          x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
-          x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val3), x3);
-          x4 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x4, x4), val4), x4);
-          x5 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x5, x5), val5), x5);
-          x6 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x6, x6), val6), x6);
-          x7 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x7, x7), val7), x7);
-          x8 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x8, x8), val8), x8);
+        for (i = 0; i < iterations; ++i) {
+            x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+            x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
+            x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val3), x3);
+            x4 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x4, x4), val4), x4);
+            x5 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x5, x5), val5), x5);
+            x6 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x6, x6), val6), x6);
+            x7 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x7, x7), val7), x7);
+            x8 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x8, x8), val8), x8);
         }
         // sqrt(s) = s * 1/sqrt(s)
         float32x4_t result1 = vmulq_f32(val1, x1);
@@ -386,34 +384,34 @@ public:
         // the mapping between Q registers and D registers
 
         // stnp is for arm 64 (armv32)
-        #if __LP64__
-            register float32x4_t tmp1 asm ("q0");
-            tmp1 = val1;
-            register float32x4_t tmp2 asm ("q1");
-            tmp2 = val2;
-            register float32x4_t tmp3 asm ("q2");
-            tmp3 = val3;
-            register float32x4_t tmp4 asm ("q3");
-            tmp4 = val4;
-            register float32x4_t tmp5 asm ("q4");
-            tmp5 = val5;
-            register float32x4_t tmp6 asm ("q5");
-            tmp6 = val6;
-            register float32x4_t tmp7 asm ("q6");
-            tmp7 = val7;
-            register float32x4_t tmp8 asm ("q7");
-            tmp8 = val8;
-            asm("stnp d0, d1, %[store]" :[store] "=m" (data));
-            asm("stnp d2, d3, %[store]" :[store] "=m" (data + 4));
-            asm("stnp d4, d5, %[store]" :[store] "=m" (data + 8));
-            asm("stnp d6, d7, %[store]" :[store] "=m" (data + 12));
-            asm("stnp d7, d8, %[store]" :[store] "=m" (data + 16));
-            asm("stnp d8, d9, %[store]" :[store] "=m" (data + 20));
-            asm("stnp d9, d10, %[store]" :[store] "=m" (data + 24));
-            asm("stnp d10, d11, %[store]" :[store] "=m" (data + 28));
-        #else
-            store(data);
-        #endif
+#if __LP64__
+        register float32x4_t tmp1 asm ("q0");
+        tmp1 = val1;
+        register float32x4_t tmp2 asm ("q1");
+        tmp2 = val2;
+        register float32x4_t tmp3 asm ("q2");
+        tmp3 = val3;
+        register float32x4_t tmp4 asm ("q3");
+        tmp4 = val4;
+        register float32x4_t tmp5 asm ("q4");
+        tmp5 = val5;
+        register float32x4_t tmp6 asm ("q5");
+        tmp6 = val6;
+        register float32x4_t tmp7 asm ("q6");
+        tmp7 = val7;
+        register float32x4_t tmp8 asm ("q7");
+        tmp8 = val8;
+        asm("stnp d0,  d1,  %[store]" :[store] "=m" (data + 0));
+        asm("stnp d2,  d3,  %[store]" :[store] "=m" (data + 4));
+        asm("stnp d4,  d5,  %[store]" :[store] "=m" (data + 8));
+        asm("stnp d6,  d7,  %[store]" :[store] "=m" (data + 12));
+        asm("stnp d7,  d8,  %[store]" :[store] "=m" (data + 16));
+        asm("stnp d8,  d9,  %[store]" :[store] "=m" (data + 20));
+        asm("stnp d9,  d10, %[store]" :[store] "=m" (data + 24));
+        asm("stnp d10, d11, %[store]" :[store] "=m" (data + 28));
+#else
+        store(data);
+#endif
     }
 
     // dummy approach. NEON only supports loading in fixed interleaving
