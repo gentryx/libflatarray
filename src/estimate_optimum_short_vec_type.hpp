@@ -84,16 +84,18 @@ public:
 
     // Only the case of the IBM PC is complicated. No thanks to you,
     // history!
-#  ifdef __AVX512F__
+#  if !defined(__CUDA_ARCH__) && !defined(__ARM_NEON__) && !defined(__MIC__)
+#    ifdef __AVX512F__
     static const int BIT_WIDTH = 512;
-#  else
-#    ifdef __AVX__
-    static const int BIT_WIDTH = 256;
 #    else
-#      ifdef __SSE__
-    static const int BIT_WIDTH = 128;
+#      ifdef __AVX__
+    static const int BIT_WIDTH = 256;
 #      else
+#        ifdef __SSE__
+    static const int BIT_WIDTH = 128;
+#        else
     static const int BIT_WIDTH = sizeof(CARGO) * 8;
+#        endif
 #      endif
 #    endif
 #  endif
