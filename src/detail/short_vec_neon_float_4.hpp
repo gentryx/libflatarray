@@ -27,7 +27,7 @@ class short_vec<float, 4>
 {
 public:
     static const int ARITY = 4;
-
+    typedef uint32x4_t mask_type;
     typedef short_vec_strategy::neon strategy;
 
     template<typename _CharT, typename _Traits>
@@ -146,6 +146,36 @@ public:
 
         short_vec<float, 4> ret(result);
         return ret;
+    }
+
+    inline
+    uint32x4_t operator<(const short_vec<float, 4>& other) const
+    {
+        return vcltq_f32(val1, other.val1);
+    }
+
+    inline
+    uint32x4_t operator<=(const short_vec<float, 4>& other) const
+    {
+        return vcaleq_f32(val1, other.val1);
+    }
+
+    inline
+    uint32x4_t operator==(const short_vec<float, 4>& other) const
+    {
+        return  vcltq_f32(val1, other.val1);
+    }
+
+    inline
+    uint32x4_t operator>(const short_vec<float, 4>& other) const
+    {
+        return vcgtq_f32(val1, other.val1);
+    }
+
+    inline
+    uint32x4_t operator>=(const short_vec<float, 4>& other) const
+    {
+        return vcgeq_f32(val1, other.val1);
     }
 
     // Copyright (c) 2011, The WebRTC project authors. All rights reserved.
