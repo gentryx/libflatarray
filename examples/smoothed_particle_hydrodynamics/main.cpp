@@ -117,7 +117,7 @@ void compute_density_lfa_vectorized_2(int start, int end, SOA_ACCESSOR& particle
 }
 
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& particles, float h, float mass)
+void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> particles, float h, float mass)
 {
     typedef LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> soa_accessor;
     typedef typename LibFlatArray::estimate_optimum_short_vec_type<float, soa_accessor>::VALUE FLOAT;
@@ -129,16 +129,15 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
     float h_pow_8 = h_squared * h_squared * h_squared * h_squared;
     float C = 4 * mass / M_PI / h_pow_8;
 
+    soa_accessor particles_i(particles.data(), 0);
     soa_accessor particles_j(particles.data(), 0);
 
-    // for (int i = 0; i < n; ++i, ++particles) {
-    for (int i = 0; i < n; ++i) {
-        particles.index() = i;
-        float pos_x_i = particles.pos_x();
-        float pos_y_i = particles.pos_y();
+    for (particles_i.index() = 0; particles_i.index() < n; ++particles_i) {
+        float pos_x_i = particles_i.pos_x();
+        float pos_y_i = particles_i.pos_y();
 
-        // LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_density_lfa_vectorized_2, particles, particles_j, h, mass, pos_x_i, pos_y_i);
-        for (particles_j.index() = i + 1; particles_j.index() < n; ++particles_j) {
+        // LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_density_lfa_vectorized_2, particles_i, particles_j, h, mass, pos_x_i, pos_y_i);
+        for (particles_j.index() = particles_i.index() + 1; particles_j.index() < n; ++particles_j) {
             float delta_x = pos_x_i - particles_j.pos_x();
             float delta_y = pos_y_i - particles_j.pos_y();
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
@@ -146,12 +145,10 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
 
             if (overlap > 0) {
                 float rho_ij = C * overlap * overlap * overlap;
-                particles.index() = i;
-                particles.rho()   += rho_ij;
+                particles_i.rho() += rho_ij;
                 particles_j.rho() += rho_ij;
             }
         }
-        particles.index() = 0;
     }
 }
 
