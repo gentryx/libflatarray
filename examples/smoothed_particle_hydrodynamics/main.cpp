@@ -128,24 +128,29 @@ void compute_density_lfa(int n, SOA_ACCESSOR& particles, float h, float mass)
     float h_pow_8 = h_squared * h_squared * h_squared * h_squared;
     float C = 4 * mass / M_PI / h_pow_8;
 
+    SOA_ACCESSOR particles_j = particles;
+
     for (int i = 0; i < n; ++i) {
+    // for (int i = 0; i < n; ++i, ++particles) {
+        float pos_x_i = (&particles.pos_x())[i];
+        float pos_y_i = (&particles.pos_y())[i];
         // float pos_x_i = particles.pos_x();
         // float pos_y_i = particles.pos_y();
 
-        // SOA_ACCESSOR particles_j = particles;
-        // particles_j.index() = i + 1;
+        particles_j.index() = i + 1;
         // LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_density_lfa_vectorized_2, particles, particles_j, h, mass, pos_x_i, pos_y_i);
 
-        for (int j = i + 1; j < n; ++j) {
-            float delta_x = (&particles.pos_x())[i] - (&particles.pos_x())[j];
-            float delta_y = (&particles.pos_y())[i] - (&particles.pos_y())[j];
+        for (int j = i + 1; j < n; ++j, ++particles_j) {
+            float delta_x = pos_x_i - particles_j.pos_x();
+            float delta_y = pos_y_i - particles_j.pos_y();
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
             float overlap = h_squared - dist_squared;
 
             if (overlap > 0) {
                 float rho_ij = C * overlap * overlap * overlap;
                 (&particles.rho())[i] += rho_ij;
-                (&particles.rho())[j] += rho_ij;
+                // particles.rho()   += rho_ij;
+                particles_j.rho() += rho_ij;
             }
         }
     }
