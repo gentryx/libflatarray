@@ -691,14 +691,14 @@
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
         {                                                               \
-            *my_index += offset;                                           \
+            *my_index += offset;                                        \
         }                                                               \
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
         void operator++()                                               \
         {                                                               \
-            ++*my_index;                                                   \
+            ++*my_index;                                                \
         }                                                               \
                                                                         \
         template<long X, long Y, long Z>                                \
