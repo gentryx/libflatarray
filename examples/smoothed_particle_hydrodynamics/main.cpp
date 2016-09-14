@@ -89,7 +89,7 @@ void compute_density_lfa_vectorized_1(int start, int end, SOA_ACCESSOR& particle
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_2(int start, int end, SOA_ACCESSOR& particles, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i)
+void compute_density_lfa_vectorized_2(int start, int end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i)
 {
     // std::cout << "  B start: " << start << ", end: " << end << "\n";
     float h_squared = h * h;
@@ -108,7 +108,7 @@ void compute_density_lfa_vectorized_2(int start, int end, SOA_ACCESSOR& particle
                 float o = get(overlap, e);
                 if (o > 0) {
                     float rho_ij = C * o * o * o;
-                    particles.rho()   += rho_ij;
+                    particles_i.rho() += rho_ij;
                     particles_j.rho() += rho_ij;
                 }
             }
@@ -136,8 +136,9 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
         float pos_x_i = particles_i.pos_x();
         float pos_y_i = particles_i.pos_y();
 
-        // LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_density_lfa_vectorized_2, particles_i, particles_j, h, mass, pos_x_i, pos_y_i);
-        for (particles_j.index() = particles_i.index() + 1; particles_j.index() < n; ++particles_j) {
+        particles_j.index() = particles_i.index() + 1;
+        // LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_i.index() + 1, n, compute_density_lfa_vectorized_2, particles_i, particles_j, h, mass, pos_x_i, pos_y_i);
+        for (; particles_j.index() < n; ++particles_j) {
             float delta_x = pos_x_i - particles_j.pos_x();
             float delta_y = pos_y_i - particles_j.pos_y();
             float dist_squared = delta_x * delta_x + delta_y * delta_y;
@@ -381,7 +382,7 @@ public:
         compute_density(count, &particles.rho(), &particles.pos_x(), &particles.pos_y(), h, mass);
         normalize_mass(&mass, count, &particles.rho(), rho0);
 
-        int num_steps = 20;
+        int num_steps = 20000;
         int io_period = 15;
 
         for (int t = 0; t < num_steps; ++t) {
