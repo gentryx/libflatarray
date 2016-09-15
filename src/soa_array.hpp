@@ -141,8 +141,10 @@ public:
         elements = 0;
     }
 
+    // fixme: add capacity
     // fixme: add back
     // fixme: add pop
+    // fixme: add begin()/end()
 
     inline
     __host__ __device__
