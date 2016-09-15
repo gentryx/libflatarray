@@ -208,22 +208,33 @@ void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles
     }
 }
 
-template<typename SOA_ACCESSOR, typename SOA_ARRAY>
+template<int ARITY, typename SOA_ACCESSOR, typename SOA_ARRAY>
 void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, const float h, const float rho0, const float C_0, const float C_p, const float C_v)
 {
-    for (int f = 0; f < interaction_buf.size(); ++f) {
-        float q = sqrt(interaction_buf[f].dist_squared()) / h;
-        float u = 1 - q;
-        float w_0 = C_0 * u / interaction_buf[f].rho_i() / interaction_buf[f].rho_j();
-        float w_p = w_0 * C_p * (interaction_buf[f].rho_i() + interaction_buf[f].rho_j() - 2 * rho0) * u / q;
-        float w_v = w_0 * C_v;
-        float delta_v_x = interaction_buf[f].v_x_i() - interaction_buf[f].v_x_j();
-        float delta_v_y = interaction_buf[f].v_y_i() - interaction_buf[f].v_y_j();
+    typedef LibFlatArray::short_vec<float, ARITY> FLOAT;
+    for (int f = 0; f < (int(interaction_buf.size()) - FLOAT::ARITY + 1); f += FLOAT::ARITY) {
+        // fixme: enable this code:  FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared())) / h;
+        FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared()));
+        q /= h;
 
-        (&particles.a_x())[interaction_buf[f].i()] += (w_p * interaction_buf[f].delta_x() + w_v * delta_v_x);
-        (&particles.a_y())[interaction_buf[f].i()] += (w_p * interaction_buf[f].delta_y() + w_v * delta_v_y);
-        (&particles.a_x())[interaction_buf[f].j()] -= (w_p * interaction_buf[f].delta_x() + w_v * delta_v_x);
-        (&particles.a_y())[interaction_buf[f].j()] -= (w_p * interaction_buf[f].delta_y() + w_v * delta_v_y);
+        FLOAT u = FLOAT(1) - q;
+        FLOAT w_0 = FLOAT(C_0) * u / &interaction_buf[f].rho_i() / &interaction_buf[f].rho_j();
+        FLOAT w_p = w_0 * FLOAT(C_p) * (FLOAT(&interaction_buf[f].rho_i()) + FLOAT(&interaction_buf[f].rho_j()) - 2 * rho0) * u / q;
+        FLOAT w_v = w_0 * FLOAT(C_v);
+        FLOAT delta_v_x = FLOAT(&interaction_buf[f].v_x_i()) - &interaction_buf[f].v_x_j();
+        FLOAT delta_v_y = FLOAT(&interaction_buf[f].v_y_i()) - &interaction_buf[f].v_y_j();
+
+        FLOAT add_x = w_p * FLOAT(&interaction_buf[f].delta_x()) + w_v * delta_v_x;
+        FLOAT add_y = w_p * FLOAT(&interaction_buf[f].delta_y()) + w_v * delta_v_y;
+        // scalar store to avoid simultaneous overwrites:
+        for (int i = 0; i < FLOAT::ARITY; ++i) {
+            float add_x_scalar = get(add_x, i);
+            float add_y_scalar = get(add_y, i);
+            (&particles.a_x())[interaction_buf[f + i].i()] += add_x_scalar;
+            (&particles.a_y())[interaction_buf[f + i].i()] += add_y_scalar;
+            (&particles.a_x())[interaction_buf[f + i].j()] -= add_x_scalar;
+            (&particles.a_y())[interaction_buf[f + i].j()] -= add_y_scalar;
+        }
     }
     interaction_buf.clear();
 }
@@ -259,7 +270,7 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
                 }
                 // fixme: needs additional sweep after vector loop
                 if (interaction_buf.size() == SOA_ARRAY::SIZE) {
-                    handle_interactions(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
+                    handle_interactions<SOA_ARRAY::SIZE>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
                 }
                 ++particles_j;
             }
@@ -291,6 +302,8 @@ void compute_accel_lfa(
     LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_accel_lfa_vectorized_1, particles, g);
 
     typedef LibFlatArray::soa_array<InteractionBuffer, FLOAT::ARITY> soa_array;
+    // typedef LibFlatArray::soa_array<InteractionBuffer, 16> soa_array;
+    // std::cout << "buf: " << soa_array::SIZE << "\n";
     soa_array interaction_buf;
 
     SOA_ACCESSOR particles_i = particles;
@@ -300,8 +313,8 @@ void compute_accel_lfa(
     for (particles_i.index() = 0; particles_i.index() < n; ++particles_i) {
         particles_j.index() = particles_i.index() + 1;
         LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_accel_lfa_vectorized_2, particles, particles_i, particles_j, h, rho0, h_squared, C_0, C_p, C_v, interaction_buf);
-        handle_interactions(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
     }
+    handle_interactions<1>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
 }
 
 class Particle
@@ -360,7 +373,7 @@ int main_c(int argc, char** argv)
     normalize_mass(&mass, count, rho.data(), rho0);
 
     int num_steps = 20000;
-    int io_period = 15;
+    int io_period = 20000;
 
     for (int t = 0; t < num_steps; ++t) {
         if ((t % io_period) == 0) {
