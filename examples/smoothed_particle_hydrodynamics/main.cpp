@@ -7,6 +7,61 @@
 
 #include "kernels.h"
 
+class InteractionBuffer
+{
+public:
+    inline
+    explicit InteractionBuffer(
+        float rho_i = 0,
+        float v_x_i = 0,
+        float v_y_i = 0,
+        float rho_j = 0,
+        float v_x_j = 0,
+        float v_y_j = 0,
+        float delta_x = 0,
+        float delta_y = 0,
+        float dist_squared = 0,
+        int i = 0,
+        int j = 0) :
+        rho_i(rho_i),
+        v_x_i(v_x_i),
+        v_y_i(v_y_i),
+        rho_j(rho_j),
+        v_x_j(v_x_j),
+        v_y_j(v_y_j),
+        delta_x(delta_x),
+        delta_y(delta_y),
+        dist_squared(dist_squared),
+        i(i),
+        j(j)
+    {}
+
+    float rho_i;
+    float v_x_i;
+    float v_y_i;
+    float rho_j;
+    float v_x_j;
+    float v_y_j;
+    float delta_x;
+    float delta_y;
+    float dist_squared;
+    int i;
+    int j;
+};
+LIBFLATARRAY_REGISTER_SOA(
+    InteractionBuffer,
+    ((float)(rho_i))
+    ((float)(v_x_i))
+    ((float)(v_y_i))
+    ((float)(rho_j))
+    ((float)(v_x_j))
+    ((float)(v_y_j))
+    ((float)(delta_x))
+    ((float)(delta_y))
+    ((float)(dist_squared))
+    ((int)(i))
+    ((int)(j)))
+
 int box_indicator(float x, float y)
 {
     return (x < 0.25) && (y < 1.0);
@@ -153,24 +208,11 @@ void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles
     }
 }
 
-template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const FLOAT h_squared, const float C_0, const float C_p, const float C_v)
+template<typename FLOAT, typename SOA_ACCESSOR, typename SOA_ARRAY>
+void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const FLOAT h_squared, const float C_0, const float C_p, const float C_v, SOA_ARRAY& interaction_buf)
 {
     FLOAT pos_x_i = particles_i.pos_x();
     FLOAT pos_y_i = particles_i.pos_y();
-
-    float rho_i_buf[FLOAT::ARITY];
-    float v_x_i_buf[FLOAT::ARITY];
-    float v_y_i_buf[FLOAT::ARITY];
-
-    float rho_j_buf[FLOAT::ARITY];
-    float v_x_j_buf[FLOAT::ARITY];
-    float v_y_j_buf[FLOAT::ARITY];
-
-    float delta_x_buf[FLOAT::ARITY];
-    float delta_y_buf[FLOAT::ARITY];
-    float dist_squared_buf[FLOAT::ARITY];
-    int buf_index = 0;
 
     for (; particles_j.index() < (end - FLOAT::ARITY + 1); particles_j += FLOAT::ARITY) {
         FLOAT delta_x = pos_x_i - &particles_j.pos_x();
@@ -180,31 +222,35 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
         if (LibFlatArray::any(dist_squared < h_squared)) {
             for (int e = 0; e < FLOAT::ARITY; ++e) {
                 if (get(dist_squared, e) < get(h_squared, e)) {
-                    rho_i_buf[buf_index] = particles_i.rho();
-                    v_x_i_buf[buf_index] = particles_i.v_x();
-                    v_y_i_buf[buf_index] = particles_i.v_y();
+                    interaction_buf << InteractionBuffer(
+                        particles_i.rho(),
+                        particles_i.v_x(),
+                        particles_i.v_y(),
 
-                    rho_j_buf[buf_index] = particles_j.rho();
-                    v_x_j_buf[buf_index] = particles_j.v_x();
-                    v_y_j_buf[buf_index] = particles_j.v_y();
+                        particles_j.rho(),
+                        particles_j.v_x(),
+                        particles_j.v_y(),
 
-                    delta_x_buf[buf_index] = get(delta_x, e);
-                    delta_y_buf[buf_index] = get(delta_y, e);
-                    dist_squared_buf[buf_index] = get(dist_squared, e);
+                        get(delta_x, e),
+                        get(delta_y, e),
+                        get(dist_squared, e),
+                        particles_i.index(),
+                        particles_j.index());
                 }
                 if (get(dist_squared, e) < get(h_squared, e)) {
-                    float q = sqrt(dist_squared_buf[buf_index]) / h;
+                    float q = sqrt(interaction_buf[0].dist_squared()) / h;
                     float u = 1 - q;
-                    float w_0 = C_0 * u / rho_i_buf[buf_index] / rho_j_buf[buf_index];
-                    float w_p = w_0 * C_p * (rho_i_buf[buf_index] + rho_j_buf[buf_index] - 2 * rho0) * u / q;
+                    float w_0 = C_0 * u / interaction_buf[0].rho_i() / interaction_buf[0].rho_j();
+                    float w_p = w_0 * C_p * (interaction_buf[0].rho_i() + interaction_buf[0].rho_j() - 2 * rho0) * u / q;
                     float w_v = w_0 * C_v;
-                    float delta_v_x = v_x_i_buf[buf_index] - v_x_j_buf[buf_index];
-                    float delta_v_y = v_y_i_buf[buf_index] - v_y_j_buf[buf_index];
+                    float delta_v_x = interaction_buf[0].v_x_i() - interaction_buf[0].v_x_j();
+                    float delta_v_y = interaction_buf[0].v_y_i() - interaction_buf[0].v_y_j();
 
-                    particles_i.a_x() += (w_p * delta_x_buf[buf_index] + w_v * delta_v_x);
-                    particles_i.a_y() += (w_p * delta_y_buf[buf_index] + w_v * delta_v_y);
-                    particles_j.a_x() -= (w_p * delta_x_buf[buf_index] + w_v * delta_v_x);
-                    particles_j.a_y() -= (w_p * delta_y_buf[buf_index] + w_v * delta_v_y);
+                    particles_i.a_x() += (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
+                    particles_i.a_y() += (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
+                    particles_j.a_x() -= (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
+                    particles_j.a_y() -= (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
+                    interaction_buf.clear();
                 }
                 ++particles_j;
             }
@@ -235,14 +281,16 @@ void compute_accel_lfa(
     // gravity:
     LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_accel_lfa_vectorized_1, particles, g);
 
+    typedef LibFlatArray::soa_array<InteractionBuffer, FLOAT::ARITY> soa_array;
+    soa_array interaction_buffer;
+
+    SOA_ACCESSOR particles_i = particles;
+    SOA_ACCESSOR particles_j = particles;
+
     // Now compute interaction forces
-
-    for (int i = 0; i < n; ++i) {
-        SOA_ACCESSOR particles_j = particles;
-        particles_j.index() = i + 1;
-        LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_accel_lfa_vectorized_2, particles, particles_j, h, rho0, h_squared, C_0, C_p, C_v);
-
-        ++particles;
+    for (particles_i.index() = 0; particles_i.index() < n; ++particles_i) {
+        particles_j.index() = particles_i.index() + 1;
+        LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_accel_lfa_vectorized_2, particles, particles_i, particles_j, h, rho0, h_squared, C_0, C_p, C_v, interaction_buffer);
     }
 }
 
@@ -267,7 +315,8 @@ public:
     float a_y;
 };
 
-LIBFLATARRAY_REGISTER_SOA(Particle, ((float)(rho))((float)(pos_x))((float)(pos_y))((float)(v_x))((float)(v_y))((float)(a_x))((float)(a_y)))
+LIBFLATARRAY_REGISTER_SOA(Particle, ((float)(rho))((float)(pos_x))((float)(pos_y))((float)(v_x))((float)(v_y))((float)(a_x))((float)(a_y)));
+
 
 int main_c(int argc, char** argv)
 {
