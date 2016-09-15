@@ -154,26 +154,38 @@ void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const float h_squared, const float C_0, const float C_p, const float C_v)
+void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const FLOAT h_squared, const float C_0, const float C_p, const float C_v)
 {
-    for (; particles_j.index() < end; ++particles_j) {
-        float delta_x = particles_i.pos_x() - particles_j.pos_x();
-        float delta_y = particles_i.pos_y() - particles_j.pos_y();
-        float dist_squared = delta_x * delta_x + delta_y * delta_y;
+    FLOAT pos_x_i = particles_i.pos_x();
+    FLOAT pos_y_i = particles_i.pos_y();
 
-        if (dist_squared < h_squared) {
-            float q = sqrt(dist_squared) / h;
-            float u = 1 - q;
-            float w_0 = C_0 * u / particles_i.rho() / particles_j.rho();
-            float w_p = w_0 * C_p * (particles_i.rho() + particles_j.rho() - 2 * rho0) * u / q;
-            float w_v = w_0 * C_v;
-            float delta_v_x = particles_i.v_x() - particles_j.v_x();
-            float delta_v_y = particles_i.v_y() - particles_j.v_y();
+    for (; particles_j.index() < (end - FLOAT::ARITY + 1); particles_j += FLOAT::ARITY) {
+        FLOAT delta_x = pos_x_i - &particles_j.pos_x();
+        FLOAT delta_y = pos_y_i - &particles_j.pos_y();
+        FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
 
-            particles_i.a_x() += (w_p * delta_x + w_v * delta_v_x);
-            particles_i.a_y() += (w_p * delta_y + w_v * delta_v_y);
-            particles_j.a_x() -= (w_p * delta_x + w_v * delta_v_x);
-            particles_j.a_y() -= (w_p * delta_y + w_v * delta_v_y);
+        if (LibFlatArray::any(dist_squared < h_squared)) {
+            for (int e = 0; e < FLOAT::ARITY; ++e) {
+                float my_delta_x = get(delta_x, e);
+                float my_delta_y = get(delta_y, e);
+
+                if (get(dist_squared, e) < get(h_squared, e)) {
+                    float q = sqrt(get(dist_squared, e)) / h;
+                    float u = 1 - q;
+                    float w_0 = C_0 * u / particles_i.rho() / particles_j.rho();
+                    float w_p = w_0 * C_p * (particles_i.rho() + particles_j.rho() - 2 * rho0) * u / q;
+                    float w_v = w_0 * C_v;
+                    float delta_v_x = particles_i.v_x() - particles_j.v_x();
+                    float delta_v_y = particles_i.v_y() - particles_j.v_y();
+
+                    particles_i.a_x() += (w_p * my_delta_x + w_v * delta_v_x);
+                    particles_i.a_y() += (w_p * my_delta_y + w_v * delta_v_y);
+                    particles_j.a_x() -= (w_p * my_delta_x + w_v * delta_v_x);
+                    particles_j.a_y() -= (w_p * my_delta_y + w_v * delta_v_y);
+                }
+                ++particles_j;
+            }
+            particles_j.index() -= FLOAT::ARITY;
         }
     }
 }
