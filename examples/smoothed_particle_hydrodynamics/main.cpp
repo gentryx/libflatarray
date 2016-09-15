@@ -7,6 +7,8 @@
 
 #include "kernels.h"
 
+#define PI float(M_PI)
+
 class InteractionBuffer
 {
 public:
@@ -134,12 +136,11 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
 template<typename FLOAT, typename SOA_ACCESSOR>
 void compute_density_lfa_vectorized_1(long /* unused */, long end, SOA_ACCESSOR& particles, float h, float mass)
 {
-    // std::cout << "A start: " << start << ", end: " << end << "\n";
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
 
     for (; particles.index() < (end - FLOAT::ARITY + 1); particles += FLOAT::ARITY) {
-        &particles.rho() << FLOAT(4 * mass / M_PI) / h_squared_vec;
+        &particles.rho() << 4.0f * mass / PI / h_squared_vec;
     }
 }
 
@@ -150,8 +151,8 @@ void compute_density_lfa_vectorized_2(long /* unused */, long end, SOA_ACCESSOR&
     FLOAT h_squared_vec(h_squared);
 
     for (; particles_j.index() < (end - FLOAT::ARITY + 1);) {
-        FLOAT delta_x = pos_x_i - FLOAT(&particles_j.pos_x());
-        FLOAT delta_y = pos_y_i - FLOAT(&particles_j.pos_y());
+        FLOAT delta_x = pos_x_i - &particles_j.pos_x();
+        FLOAT delta_y = pos_y_i - &particles_j.pos_y();
         FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
         FLOAT overlap = h_squared_vec - dist_squared;
 
@@ -199,12 +200,9 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
 template<typename FLOAT, typename SOA_ACCESSOR>
 void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles, float g)
 {
-    FLOAT zero(0.0);
-    FLOAT minus_g(-g);
-
     for (; particles.index() < end; particles += FLOAT::ARITY) {
-        &particles.a_x() << zero;
-        &particles.a_y() << minus_g;
+        &particles.a_x() << FLOAT(0.0f);
+        &particles.a_y() << FLOAT(-g);
     }
 }
 
@@ -249,7 +247,7 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
         FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
 
         if (LibFlatArray::any(dist_squared < h_squared)) {
-            for (int e = 0; e < FLOAT::ARITY; ++e) {
+            for (int e = 0; e < FLOAT::ARITY; ++e, ++particles_j) {
                 if (get(dist_squared, e) < get(h_squared, e)) {
                     interaction_buf << InteractionBuffer(
                         particles_i.rho(),
@@ -266,13 +264,11 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
                         particles_i.index(),
                         particles_j.index());
                 }
-                // fixme: needs additional sweep after vector loop
                 if (interaction_buf.size() == SOA_ARRAY::SIZE) {
                     handle_interactions<SOA_ARRAY::SIZE>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
                 }
-                ++particles_j;
             }
-            particles_j.index() -= FLOAT::ARITY;
+            particles_j += -FLOAT::ARITY;
         }
     }
 }
