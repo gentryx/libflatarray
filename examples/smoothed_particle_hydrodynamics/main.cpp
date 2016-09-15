@@ -77,24 +77,24 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_1(long start, long end, SOA_ACCESSOR& particles, float h, float mass)
+void compute_density_lfa_vectorized_1(long /* unused */, long end, SOA_ACCESSOR& particles, float h, float mass)
 {
     // std::cout << "A start: " << start << ", end: " << end << "\n";
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
 
-    for (particles.index() = start; particles.index() < (end - FLOAT::ARITY + 1); particles += FLOAT::ARITY) {
+    for (; particles.index() < (end - FLOAT::ARITY + 1); particles += FLOAT::ARITY) {
         &particles.rho() << FLOAT(4 * mass / M_PI) / h_squared_vec;
     }
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
+void compute_density_lfa_vectorized_2(long /* unused */, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
 {
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
 
-    for (particles_j.index() = start; particles_j.index() < (end - FLOAT::ARITY + 1);) {
+    for (; particles_j.index() < (end - FLOAT::ARITY + 1);) {
         FLOAT delta_x = pos_x_i - FLOAT(&particles_j.pos_x());
         FLOAT delta_y = pos_y_i - FLOAT(&particles_j.pos_y());
         FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
