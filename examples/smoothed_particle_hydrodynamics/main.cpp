@@ -246,10 +246,10 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
                     float delta_v_x = interaction_buf[0].v_x_i() - interaction_buf[0].v_x_j();
                     float delta_v_y = interaction_buf[0].v_y_i() - interaction_buf[0].v_y_j();
 
-                    particles_i.a_x() += (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
-                    particles_i.a_y() += (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
-                    particles_j.a_x() -= (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
-                    particles_j.a_y() -= (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
+                    (&particles.a_x())[interaction_buf[0].i()] += (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
+                    (&particles.a_y())[interaction_buf[0].i()] += (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
+                    (&particles.a_x())[interaction_buf[0].j()] -= (w_p * interaction_buf[0].delta_x() + w_v * delta_v_x);
+                    (&particles.a_y())[interaction_buf[0].j()] -= (w_p * interaction_buf[0].delta_y() + w_v * delta_v_y);
                     interaction_buf.clear();
                 }
                 ++particles_j;
