@@ -77,7 +77,7 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_1(int start, int end, SOA_ACCESSOR& particles, float h, float mass)
+void compute_density_lfa_vectorized_1(long start, long end, SOA_ACCESSOR& particles, float h, float mass)
 {
     // std::cout << "A start: " << start << ", end: " << end << "\n";
     float h_squared = h * h;
@@ -89,7 +89,7 @@ void compute_density_lfa_vectorized_1(int start, int end, SOA_ACCESSOR& particle
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_2(int start, int end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
+void compute_density_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
 {
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
@@ -141,10 +141,22 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
     }
 }
 
+template<typename FLOAT, typename SOA_ACCESSOR>
+void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles, float g)
+{
+    FLOAT zero(0.0);
+    FLOAT minus_g(-g);
+
+    for (; particles.index() < end; particles += FLOAT::ARITY) {
+        &particles.a_x() << zero;
+        &particles.a_y() << minus_g;
+    }
+}
+
 template<typename SOA_ACCESSOR>
 void compute_accel_lfa(
     int n,
-    SOA_ACCESSOR& particles,
+    SOA_ACCESSOR particles,
     float mass,
     float g,
     float h,
@@ -153,6 +165,62 @@ void compute_accel_lfa(
     float mu)
 {
     typedef typename LibFlatArray::estimate_optimum_short_vec_type<float, SOA_ACCESSOR>::VALUE FLOAT;
+
+    const float h_squared = h * h;
+    const float C_0 = mass / M_PI / (h_squared * h_squared);
+    const float C_p = 15 * k;
+    const float C_v = -40 * mu;
+
+    float *a_x = &particles.a_x();
+    float *a_y = &particles.a_y();
+    float *v_x = &particles.v_x();
+    float *v_y = &particles.v_y();
+    float *pos_x = &particles.pos_x();
+    float *pos_y = &particles.pos_y();
+    float *rho = &particles.rho();
+
+    // gravity:
+    LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_accel_lfa_vectorized_1, particles, g);
+
+    // Now compute interaction forces
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            float delta_x = pos_x[i] - pos_x[j];
+            float delta_y = pos_y[i] - pos_y[j];
+            float dist_squared = delta_x * delta_x + delta_y * delta_y;
+
+            if (dist_squared < h_squared) {
+                float q = sqrt(dist_squared) / h;
+                float u = 1 - q;
+                float w_0 = C_0 * u / rho[i] / rho[j];
+                float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * rho0) * u / q;
+                float w_v = w_0 * C_v;
+                float delta_v_x = v_x[i] - v_x[j];
+                float delta_v_y = v_y[i] - v_y[j];
+
+                a_x[i] += (w_p * delta_x + w_v * delta_v_x);
+                a_y[i] += (w_p * delta_y + w_v * delta_v_y);
+                a_x[j] -= (w_p * delta_x + w_v * delta_v_x);
+                a_y[j] -= (w_p * delta_y + w_v * delta_v_y);
+            }
+        }
+    }
+
+    // compute_accel(
+    //     n,
+    //     &particles.rho(),
+    //     &particles.pos_x(),
+    //     &particles.pos_y(),
+    //     &particles.v_x(),
+    //     &particles.v_y(),
+    //     &particles.a_x(),
+    //     &particles.a_y(),
+    //     mass,
+    //     g,
+    //     h,
+    //     k,
+    //     rho0,
+    //     mu);
 
     // const float h_squared = h * h;
     // const FLOAT C_0 = mass / M_PI / (h_squared * h_squared);
@@ -384,15 +452,9 @@ public:
                 h,
                 mass);
 
-            compute_accel(
+            compute_accel_lfa(
                 count,
-                &particles.rho(),
-                &particles.pos_x(),
-                &particles.pos_y(),
-                &particles.v_x(),
-                &particles.v_y(),
-                &particles.a_x(),
-                &particles.a_y(),
+                particles,
                 mass,
                 g,
                 h,
