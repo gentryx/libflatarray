@@ -213,14 +213,12 @@ void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, co
 {
     typedef LibFlatArray::short_vec<float, ARITY> FLOAT;
     for (int f = 0; f < (int(interaction_buf.size()) - FLOAT::ARITY + 1); f += FLOAT::ARITY) {
-        // fixme: enable this code:  FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared())) / h;
-        FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared()));
-        q /= h;
+        FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared())) / h;
 
-        FLOAT u = FLOAT(1) - q;
-        FLOAT w_0 = FLOAT(C_0) * u / &interaction_buf[f].rho_i() / &interaction_buf[f].rho_j();
-        FLOAT w_p = w_0 * FLOAT(C_p) * (FLOAT(&interaction_buf[f].rho_i()) + FLOAT(&interaction_buf[f].rho_j()) - 2 * rho0) * u / q;
-        FLOAT w_v = w_0 * FLOAT(C_v);
+        FLOAT u = 1.0f - q;
+        FLOAT w_0 = u * C_0 / &interaction_buf[f].rho_i() / &interaction_buf[f].rho_j();
+        FLOAT w_p = w_0 * C_p * (FLOAT(&interaction_buf[f].rho_i()) + &interaction_buf[f].rho_j() - 2 * rho0) * u / q;
+        FLOAT w_v = w_0 * C_v;
         FLOAT delta_v_x = FLOAT(&interaction_buf[f].v_x_i()) - &interaction_buf[f].v_x_j();
         FLOAT delta_v_y = FLOAT(&interaction_buf[f].v_y_i()) - &interaction_buf[f].v_y_j();
 
