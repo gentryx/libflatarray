@@ -153,6 +153,32 @@ void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles
     }
 }
 
+template<typename FLOAT, typename SOA_ACCESSOR>
+void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const float h_squared, const float C_0, const float C_p, const float C_v)
+{
+    for (; particles_j.index() < end; ++particles_j) {
+        float delta_x = particles_i.pos_x() - particles_j.pos_x();
+        float delta_y = particles_i.pos_y() - particles_j.pos_y();
+        float dist_squared = delta_x * delta_x + delta_y * delta_y;
+
+        if (dist_squared < h_squared) {
+            float q = sqrt(dist_squared) / h;
+            float u = 1 - q;
+            float w_0 = C_0 * u / particles_i.rho() / particles_j.rho();
+            float w_p = w_0 * C_p * (particles_i.rho() + particles_j.rho() - 2 * rho0) * u / q;
+            float w_v = w_0 * C_v;
+            float delta_v_x = particles_i.v_x() - particles_j.v_x();
+            float delta_v_y = particles_i.v_y() - particles_j.v_y();
+
+            particles_i.a_x() += (w_p * delta_x + w_v * delta_v_x);
+            particles_i.a_y() += (w_p * delta_y + w_v * delta_v_y);
+            particles_j.a_x() -= (w_p * delta_x + w_v * delta_v_x);
+            particles_j.a_y() -= (w_p * delta_y + w_v * delta_v_y);
+        }
+    }
+}
+
+
 template<typename SOA_ACCESSOR>
 void compute_accel_lfa(
     int n,
@@ -171,39 +197,18 @@ void compute_accel_lfa(
     const float C_p = 15 * k;
     const float C_v = -40 * mu;
 
-    float *a_x = &particles.a_x();
-    float *a_y = &particles.a_y();
-    float *v_x = &particles.v_x();
-    float *v_y = &particles.v_y();
-    float *pos_x = &particles.pos_x();
-    float *pos_y = &particles.pos_y();
-    float *rho = &particles.rho();
-
     // gravity:
     LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_accel_lfa_vectorized_1, particles, g);
 
     // Now compute interaction forces
     for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {
-            float delta_x = pos_x[i] - pos_x[j];
-            float delta_y = pos_y[i] - pos_y[j];
-            float dist_squared = delta_x * delta_x + delta_y * delta_y;
+        SOA_ACCESSOR particles_j = particles;
+        particles_j.index() = i + 1;
+        LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_accel_lfa_vectorized_2, particles, particles_j, h, rho0, h_squared, C_0, C_p, C_v);
+        // for (int j = i + 1; j < n; ++j) {
+        // }
 
-            if (dist_squared < h_squared) {
-                float q = sqrt(dist_squared) / h;
-                float u = 1 - q;
-                float w_0 = C_0 * u / rho[i] / rho[j];
-                float w_p = w_0 * C_p * (rho[i] + rho[j] - 2 * rho0) * u / q;
-                float w_v = w_0 * C_v;
-                float delta_v_x = v_x[i] - v_x[j];
-                float delta_v_y = v_y[i] - v_y[j];
-
-                a_x[i] += (w_p * delta_x + w_v * delta_v_x);
-                a_y[i] += (w_p * delta_y + w_v * delta_v_y);
-                a_x[j] -= (w_p * delta_x + w_v * delta_v_x);
-                a_y[j] -= (w_p * delta_y + w_v * delta_v_y);
-            }
-        }
+        ++particles;
     }
 
     // compute_accel(
