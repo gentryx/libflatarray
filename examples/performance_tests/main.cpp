@@ -703,7 +703,7 @@ public:
             SHORT_VEC factorB = WEIGHT_B;
             SHORT_VEC factorN = WEIGHT_N;
 
-            for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
+            for (; x < end_x; x += SHORT_VEC::ARITY) {
                 using LibFlatArray::coord;
                 buf =  SHORT_VEC(&accessor_old[coord< 0,  0, -1>()].temp()) * factorS;
                 buf += SHORT_VEC(&accessor_old[coord< 0, -1,  0>()].temp()) * factorT;
@@ -1575,7 +1575,7 @@ public:
             soa_accessor<Particle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<Particle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index() < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
+            for (; accessorA.index() < numParticles; accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
                 REAL posX = &accessorA.posX();
                 REAL posY = &accessorA.posY();
                 REAL posZ = &accessorA.posZ();
@@ -1694,7 +1694,7 @@ public:
             soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorB = particlesB[0];
             soa_accessor<ArrayParticle, DIM, 1, 1, 0> accessorA2 = particlesA[0];
 
-            for (; accessorA.index() < (numParticles - REAL::ARITY + 1); accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
+            for (; accessorA.index() < numParticles; accessorA += REAL::ARITY, accessorB += REAL::ARITY) {
                 REAL posX = &accessorA.pos()[0];
                 REAL posY = &accessorA.pos()[1];
                 REAL posZ = &accessorA.pos()[2];

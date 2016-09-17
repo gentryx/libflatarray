@@ -152,7 +152,7 @@ public:
 
         SHORT_VEC buf;
 
-        for (; x < (end_x - SHORT_VEC::ARITY + 1); x += SHORT_VEC::ARITY) {
+        for (; x < end_x; x += SHORT_VEC::ARITY) {
             using LibFlatArray::coord;
             buf =  SHORT_VEC(&accessor_old[coord< 0, -2, -2>()].temp()) * weight_22;
             buf += SHORT_VEC(&accessor_old[coord< 0, -1, -2>()].temp()) * weight_12;

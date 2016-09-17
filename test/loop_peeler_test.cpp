@@ -16,7 +16,7 @@
 template<typename SHORT_VEC>
 void scaler(int& i, int endX, double *data, double factor)
 {
-    for (; i < endX - (SHORT_VEC::ARITY - 1); i += SHORT_VEC::ARITY) {
+    for (; i < endX; i += SHORT_VEC::ARITY) {
         SHORT_VEC vec(data + i);
         vec *= factor;
         (data + i) << vec;
@@ -75,7 +75,7 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
 
     LibFlatArray::loop_peeler<LibFlatArray::short_vec<double, 8> >(&i, end, [&foo](auto my_float, int *i, int end) {
             typedef decltype(my_float) FLOAT;
-            for (; *i < (end - FLOAT::ARITY + 1); *i += FLOAT::ARITY) {
+            for (; *i < end; *i += FLOAT::ARITY) {
                 &foo[*i] << FLOAT(1.0);
             }
         });

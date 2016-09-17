@@ -48,9 +48,11 @@
         COUNTER_TYPE next_stop = remainder ?                            \
             (X) + (lfa_local_short_vec::ARITY) - remainder :            \
             (X);                                                        \
+        COUNTER_TYPE last_stop = (END_X) -                              \
+            (END_X) % (lfa_local_short_vec::ARITY);                     \
                                                                         \
         FUNCTION<lfa_local_scalar   >(X, next_stop, ARGS);              \
-        FUNCTION<lfa_local_short_vec>(X, (END_X),   ARGS);              \
+        FUNCTION<lfa_local_short_vec>(X, last_stop, ARGS);              \
         FUNCTION<lfa_local_scalar   >(X, (END_X),   ARGS);              \
     }
 
