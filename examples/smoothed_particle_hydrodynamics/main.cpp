@@ -134,17 +134,6 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
 }
 
 template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_1(long /* unused */, long end, SOA_ACCESSOR& particles, float h, float mass)
-{
-    float h_squared = h * h;
-    FLOAT h_squared_vec(h_squared);
-
-    for (; particles.index() < end; particles += FLOAT::ARITY) {
-        &particles.rho() << 4.0f * mass / PI / h_squared_vec;
-    }
-}
-
-template<typename FLOAT, typename SOA_ACCESSOR>
 void compute_density_lfa_vectorized_2(long /* unused */, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
 {
     float h_squared = h * h;
@@ -178,7 +167,16 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
     typedef LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> soa_accessor;
     typedef typename LibFlatArray::estimate_optimum_short_vec_type<float, soa_accessor>::VALUE FLOAT;
 
-    LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_density_lfa_vectorized_1, particles, h, mass);
+    LibFlatArray::loop_peeler<FLOAT>(&particles.index(), n, [&particles, h, mass](auto my_float, long *i, long end) {
+            typedef decltype(my_float) FLOAT;
+            float h_squared = h * h;
+            FLOAT h_squared_vec(h_squared);
+
+            for (; particles.index() < end; particles += FLOAT::ARITY) {
+                &particles.rho() << 4.0f * mass / PI / h_squared_vec;
+            }
+        });
+
     particles.index() = 0;
 
     float h_squared = h * h;
