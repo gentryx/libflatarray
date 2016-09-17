@@ -133,34 +133,6 @@ void dump_time_step(int cycle, int n, float* pos_x, float* pos_y)
     DBClose(dbfile);
 }
 
-template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_density_lfa_vectorized_2(long /* unused */, long end, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, float h, float mass, FLOAT pos_x_i, FLOAT pos_y_i, float C)
-{
-    float h_squared = h * h;
-    FLOAT h_squared_vec(h_squared);
-
-    for (; particles_j.index() < end;) {
-        FLOAT delta_x = pos_x_i - &particles_j.pos_x();
-        FLOAT delta_y = pos_y_i - &particles_j.pos_y();
-        FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
-        FLOAT overlap = h_squared_vec - dist_squared;
-
-        if (LibFlatArray::any(overlap > FLOAT(0.0))) {
-            for (int e = 0; e < FLOAT::ARITY; ++e) {
-                float o = get(overlap, e);
-                if (o > 0) {
-                    float rho_ij = C * o * o * o;
-                    particles_i.rho() += rho_ij;
-                    particles_j.rho() += rho_ij;
-                }
-                ++particles_j;
-            }
-        } else {
-            particles_j += FLOAT::ARITY;
-        }
-    }
-}
-
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> particles, float h, float mass)
 {
@@ -191,7 +163,37 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
         float pos_y_i = particles_i.pos_y();
 
         particles_j.index() = particles_i.index() + 1;
-        LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_density_lfa_vectorized_2, particles_i, particles_j, h, mass, pos_x_i, pos_y_i, C);
+
+        LibFlatArray::loop_peeler<FLOAT>(
+            &particles_j.index(), n,
+            [&particles_i, &particles_j, h, mass, pos_x_i, pos_y_i, C]
+            (auto my_float, long *x, int end)
+            {
+                typedef decltype(my_float) FLOAT;
+                float h_squared = h * h;
+                FLOAT h_squared_vec(h_squared);
+
+                for (; particles_j.index() < end;) {
+                    FLOAT delta_x = FLOAT(pos_x_i) - &particles_j.pos_x();
+                    FLOAT delta_y = FLOAT(pos_y_i) - &particles_j.pos_y();
+                    FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
+                    FLOAT overlap = h_squared_vec - dist_squared;
+
+                    if (LibFlatArray::any(overlap > FLOAT(0.0))) {
+                        for (int e = 0; e < FLOAT::ARITY; ++e) {
+                            float o = get(overlap, e);
+                            if (o > 0) {
+                                float rho_ij = C * o * o * o;
+                                particles_i.rho() += rho_ij;
+                                particles_j.rho() += rho_ij;
+                            }
+                            ++particles_j;
+                        }
+                    } else {
+                        particles_j += FLOAT::ARITY;
+                    }
+                }
+            });
     }
 }
 
@@ -210,8 +212,8 @@ void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, co
         FLOAT delta_v_x = FLOAT(&interaction_buf[f].v_x_i()) - &interaction_buf[f].v_x_j();
         FLOAT delta_v_y = FLOAT(&interaction_buf[f].v_y_i()) - &interaction_buf[f].v_y_j();
 
-        FLOAT add_x = w_p * FLOAT(&interaction_buf[f].delta_x()) + w_v * delta_v_x;
-        FLOAT add_y = w_p * FLOAT(&interaction_buf[f].delta_y()) + w_v * delta_v_y;
+        FLOAT add_x = w_p * &interaction_buf[f].delta_x() + w_v * delta_v_x;
+        FLOAT add_y = w_p * &interaction_buf[f].delta_y() + w_v * delta_v_y;
         // scalar store to avoid simultaneous overwrites:
         for (int i = 0; i < FLOAT::ARITY; ++i) {
             float add_x_scalar = get(add_x, i);
