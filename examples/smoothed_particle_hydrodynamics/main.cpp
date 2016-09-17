@@ -197,7 +197,6 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
     }
 }
 
-// fixme: use template lambdas instead of functions
 template<int ARITY, typename SOA_ACCESSOR, typename SOA_ARRAY>
 void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, const float h, const float rho0, const float C_0, const float C_p, const float C_v)
 {
@@ -226,45 +225,6 @@ void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, co
     }
     interaction_buf.clear();
 }
-
-template<typename FLOAT, typename SOA_ACCESSOR, typename SOA_ARRAY>
-void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particles, SOA_ACCESSOR& particles_i, SOA_ACCESSOR& particles_j, const float h, const float rho0, const FLOAT h_squared, const float C_0, const float C_p, const float C_v, SOA_ARRAY& interaction_buf)
-{
-    FLOAT pos_x_i = particles_i.pos_x();
-    FLOAT pos_y_i = particles_i.pos_y();
-
-    for (; particles_j.index() < end; particles_j += FLOAT::ARITY) {
-        FLOAT delta_x = pos_x_i - &particles_j.pos_x();
-        FLOAT delta_y = pos_y_i - &particles_j.pos_y();
-        FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
-
-        if (LibFlatArray::any(dist_squared < h_squared)) {
-            for (int e = 0; e < FLOAT::ARITY; ++e, ++particles_j) {
-                if (get(dist_squared, e) < get(h_squared, e)) {
-                    interaction_buf << InteractionBuffer(
-                        particles_i.rho(),
-                        particles_i.v_x(),
-                        particles_i.v_y(),
-
-                        particles_j.rho(),
-                        particles_j.v_x(),
-                        particles_j.v_y(),
-
-                        get(delta_x, e),
-                        get(delta_y, e),
-                        get(dist_squared, e),
-                        particles_i.index(),
-                        particles_j.index());
-                }
-                if (interaction_buf.size() == SOA_ARRAY::SIZE) {
-                    handle_interactions<SOA_ARRAY::SIZE>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
-                }
-            }
-            particles_j += -FLOAT::ARITY;
-        }
-    }
-}
-
 
 template<typename SOA_ACCESSOR>
 void compute_accel_lfa(
@@ -310,7 +270,47 @@ void compute_accel_lfa(
     // Now compute interaction forces
     for (particles_i.index() = 0; particles_i.index() < n; ++particles_i) {
         particles_j.index() = particles_i.index() + 1;
-        LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles_j.index(), n, compute_accel_lfa_vectorized_2, particles, particles_i, particles_j, h, rho0, h_squared, C_0, C_p, C_v, interaction_buf);
+
+        LibFlatArray::loop_peeler<FLOAT>(
+            &particles_j.index(), n,
+            [&particles, &particles_i, &particles_j, h, rho0, h_squared, C_0, C_p, C_v, &interaction_buf]
+            (auto my_float, long *x, long end) {
+
+                typedef decltype(my_float) FLOAT;
+                FLOAT pos_x_i = particles_i.pos_x();
+                FLOAT pos_y_i = particles_i.pos_y();
+
+                for (; particles_j.index() < end; particles_j += FLOAT::ARITY) {
+                    FLOAT delta_x = pos_x_i - &particles_j.pos_x();
+                    FLOAT delta_y = pos_y_i - &particles_j.pos_y();
+                    FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
+
+                    if (LibFlatArray::any(dist_squared < FLOAT(h_squared))) {
+                        for (int e = 0; e < FLOAT::ARITY; ++e, ++particles_j) {
+                            if (get(dist_squared, e) < h_squared) {
+                                interaction_buf << InteractionBuffer(
+                                    particles_i.rho(),
+                                    particles_i.v_x(),
+                                    particles_i.v_y(),
+
+                                    particles_j.rho(),
+                                    particles_j.v_x(),
+                                    particles_j.v_y(),
+
+                                    get(delta_x, e),
+                                    get(delta_y, e),
+                                    get(dist_squared, e),
+                                    particles_i.index(),
+                                    particles_j.index());
+                            }
+                            if (interaction_buf.size() == soa_array::SIZE) {
+                                handle_interactions<soa_array::SIZE>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
+                            }
+                        }
+                        particles_j += -FLOAT::ARITY;
+                    }
+                }
+            });
     }
     handle_interactions<1>(particles, interaction_buf, h, rho0, C_0, C_p, C_v);
 }
