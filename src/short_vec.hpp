@@ -21,6 +21,13 @@ inline short_vec<CARGO, ARITY> operator-(CARGO a, const short_vec<CARGO, ARITY>&
     return short_vec<CARGO, ARITY>(a) - b;
 }
 
+// fixme: needs test
+template<typename CARGO, int ARITY>
+inline short_vec<CARGO, ARITY> operator/(CARGO a, const short_vec<CARGO, ARITY>& b)
+{
+    return short_vec<CARGO, ARITY>(a) / b;
+}
+
 template<typename CARGO, int ARITY >
 inline bool any(const short_vec<CARGO, ARITY>& vec)
 {
