@@ -60,19 +60,19 @@
 
 namespace LibFlatArray {
 
-template<typename SHORT_VEC_TYPE, typename COUNTER_TYPE, typename LAMBDA>
-void loop_peeler(COUNTER_TYPE *counter, const COUNTER_TYPE& end, const LAMBDA& lambda)
+template<typename SHORT_VEC_TYPE, typename COUNTER_TYPE1, typename COUNTER_TYPE2, typename LAMBDA>
+void loop_peeler(COUNTER_TYPE1 *counter, const COUNTER_TYPE2& end, const LAMBDA& lambda)
 {
     typedef SHORT_VEC_TYPE lfa_local_short_vec;
     typedef typename detail::flat_array::
         sibling_short_vec_switch<SHORT_VEC_TYPE, 1>::VALUE
         lfa_local_scalar;
 
-    COUNTER_TYPE remainder = (*counter) % (lfa_local_short_vec::ARITY);
-    COUNTER_TYPE next_stop = remainder ?
+    COUNTER_TYPE2 remainder = (*counter) % (lfa_local_short_vec::ARITY);
+    COUNTER_TYPE2 next_stop = remainder ?
         (*counter) + (lfa_local_short_vec::ARITY) - remainder :
         (*counter);
-    COUNTER_TYPE last_stop = end - end % (lfa_local_short_vec::ARITY);
+    COUNTER_TYPE2 last_stop = end - end % (lfa_local_short_vec::ARITY);
 
     lambda(lfa_local_scalar(),    counter, next_stop);
     lambda(lfa_local_short_vec(), counter, last_stop);
