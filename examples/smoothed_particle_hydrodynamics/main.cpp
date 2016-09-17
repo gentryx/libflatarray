@@ -139,7 +139,7 @@ void compute_density_lfa_vectorized_1(long /* unused */, long end, SOA_ACCESSOR&
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
 
-    for (; particles.index() < (end - FLOAT::ARITY + 1); particles += FLOAT::ARITY) {
+    for (; particles.index() < end; particles += FLOAT::ARITY) {
         &particles.rho() << 4.0f * mass / PI / h_squared_vec;
     }
 }
@@ -150,7 +150,7 @@ void compute_density_lfa_vectorized_2(long /* unused */, long end, SOA_ACCESSOR&
     float h_squared = h * h;
     FLOAT h_squared_vec(h_squared);
 
-    for (; particles_j.index() < (end - FLOAT::ARITY + 1);) {
+    for (; particles_j.index() < end;) {
         FLOAT delta_x = pos_x_i - &particles_j.pos_x();
         FLOAT delta_y = pos_y_i - &particles_j.pos_y();
         FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
@@ -197,20 +197,12 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
     }
 }
 
-template<typename FLOAT, typename SOA_ACCESSOR>
-void compute_accel_lfa_vectorized_1(long start, long end, SOA_ACCESSOR particles, float g)
-{
-    for (; particles.index() < end; particles += FLOAT::ARITY) {
-        &particles.a_x() << FLOAT(0.0f);
-        &particles.a_y() << FLOAT(-g);
-    }
-}
-
+// fixme: use template lambdas instead of functions
 template<int ARITY, typename SOA_ACCESSOR, typename SOA_ARRAY>
 void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, const float h, const float rho0, const float C_0, const float C_p, const float C_v)
 {
     typedef LibFlatArray::short_vec<float, ARITY> FLOAT;
-    for (int f = 0; f < (int(interaction_buf.size()) - FLOAT::ARITY + 1); f += FLOAT::ARITY) {
+    for (std::size_t f = 0; f < interaction_buf.size(); f += FLOAT::ARITY) {
         FLOAT q = sqrt(FLOAT(&interaction_buf[f].dist_squared())) / h;
 
         FLOAT u = 1.0f - q;
@@ -241,7 +233,7 @@ void compute_accel_lfa_vectorized_2(long start, long end, SOA_ACCESSOR& particle
     FLOAT pos_x_i = particles_i.pos_x();
     FLOAT pos_y_i = particles_i.pos_y();
 
-    for (; particles_j.index() < (end - FLOAT::ARITY + 1); particles_j += FLOAT::ARITY) {
+    for (; particles_j.index() < end; particles_j += FLOAT::ARITY) {
         FLOAT delta_x = pos_x_i - &particles_j.pos_x();
         FLOAT delta_y = pos_y_i - &particles_j.pos_y();
         FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
@@ -293,7 +285,19 @@ void compute_accel_lfa(
     const float C_v = -40 * mu;
 
     // gravity:
-    LIBFLATARRAY_LOOP_PEELER_TEMPLATE(FLOAT, long, particles.index(), n, compute_accel_lfa_vectorized_1, particles, g);
+    LibFlatArray::loop_peeler<FLOAT>(
+        &particles.index(), long(n),
+        [&particles, g](auto float_var, long *x, long end) {
+
+            typedef decltype(float_var) FLOAT;
+
+            for (; particles.index() < end; particles += FLOAT::ARITY) {
+                &particles.a_x() << FLOAT(0.0f);
+                &particles.a_y() << FLOAT(-g);
+            }
+        });
+
+    particles.index() = 0;
 
     typedef LibFlatArray::soa_array<InteractionBuffer, FLOAT::ARITY> soa_array;
     // typedef LibFlatArray::soa_array<InteractionBuffer, 16> soa_array;
