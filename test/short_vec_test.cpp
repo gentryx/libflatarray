@@ -463,7 +463,6 @@ void testImplementationReal()
         }
     }
 
-    // fixme: test get here and for streaming short vec
     // fixme: all all tests for int, too
 }
 
