@@ -53,13 +53,14 @@ namespace LibFlatArray {
  * manage data transfer to/from the device.
  */
 template<
-    typename CELL_TYPE,
+    typename T,
     typename ALLOCATOR = aligned_allocator<char, 4096>,
     bool USE_CUDA_FUNCTORS = false>
 class soa_grid
 {
 public:
-    typedef detail::flat_array::staging_buffer<CELL_TYPE, USE_CUDA_FUNCTORS> cell_staging_buffer_type;
+    typedef T value_type;
+    typedef detail::flat_array::staging_buffer<value_type, USE_CUDA_FUNCTORS> cell_staging_buffer_type;
     typedef detail::flat_array::staging_buffer<char,      USE_CUDA_FUNCTORS> char_staging_buffer_type;
 
     friend class TestAssignment1;
@@ -123,7 +124,7 @@ public:
         my_dim_y = new_dim_y;
         my_dim_z = new_dim_z;
         // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<CELL_TYPE>(&my_byte_size));
+        callback(detail::flat_array::set_byte_size_functor<value_type>(&my_byte_size));
         my_data = ALLOCATOR().allocate(byte_size());
         init();
     }
@@ -131,35 +132,35 @@ public:
     template<typename FUNCTOR>
     void callback(FUNCTOR functor)
     {
-        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
+        api_traits::select_sizes<value_type>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
     }
 
     template<typename FUNCTOR>
     void callback(FUNCTOR functor) const
     {
-        api_traits::select_sizes<CELL_TYPE>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
+        api_traits::select_sizes<value_type>()(my_data, functor, my_dim_x, my_dim_y, my_dim_z);
     }
 
     template<typename FUNCTOR>
-    void callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor)
+    void callback(soa_grid<value_type> *other_grid, const FUNCTOR& functor)
     {
-        typedef typename api_traits::select_asymmetric_dual_callback<CELL_TYPE>::value value;
+        typedef typename api_traits::select_asymmetric_dual_callback<value_type>::value value;
         dual_callback(other_grid, functor, value());
     }
 
     template<typename FUNCTOR>
-    void callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor) const
+    void callback(soa_grid<value_type> *other_grid, const FUNCTOR& functor) const
     {
-        typedef typename api_traits::select_asymmetric_dual_callback<CELL_TYPE>::value value;
+        typedef typename api_traits::select_asymmetric_dual_callback<value_type>::value value;
         dual_callback(other_grid, functor, value());
     }
 
-    void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE& cell)
+    void set(std::size_t x, std::size_t y, std::size_t z, const value_type& cell)
     {
         cell_staging_buffer.resize(1);
         cell_staging_buffer.load(&cell);
 
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::set_instance_functor<value_type, USE_CUDA_FUNCTORS>(
                      cell_staging_buffer.data(),
                      x,
                      y,
@@ -167,12 +168,12 @@ public:
                      1));
     }
 
-    void set(std::size_t x, std::size_t y, std::size_t z, const CELL_TYPE *cells, std::size_t count)
+    void set(std::size_t x, std::size_t y, std::size_t z, const value_type *cells, std::size_t count)
     {
         cell_staging_buffer.resize(count);
         cell_staging_buffer.load(cells);
 
-        callback(detail::flat_array::set_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::set_instance_functor<value_type, USE_CUDA_FUNCTORS>(
                      cell_staging_buffer.data(),
                      x,
                      y,
@@ -180,13 +181,13 @@ public:
                      count));
     }
 
-    CELL_TYPE get(std::size_t x, std::size_t y, std::size_t z) const
+    value_type get(std::size_t x, std::size_t y, std::size_t z) const
     {
-        CELL_TYPE cell;
+        value_type cell;
         const_cast<cell_staging_buffer_type&>(cell_staging_buffer).resize(1);
         const_cast<cell_staging_buffer_type&>(cell_staging_buffer).prep(&cell);
 
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::get_instance_functor<value_type, USE_CUDA_FUNCTORS>(
                      const_cast<cell_staging_buffer_type&>(cell_staging_buffer).data(),
                      x,
                      y,
@@ -197,12 +198,12 @@ public:
         return cell;
     }
 
-    void get(std::size_t x, std::size_t y, std::size_t z, CELL_TYPE *cells, std::size_t count) const
+    void get(std::size_t x, std::size_t y, std::size_t z, value_type *cells, std::size_t count) const
     {
         const_cast<cell_staging_buffer_type&>(cell_staging_buffer).resize(count);
         const_cast<cell_staging_buffer_type&>(cell_staging_buffer).prep(cells);
 
-        callback(detail::flat_array::get_instance_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::get_instance_functor<value_type, USE_CUDA_FUNCTORS>(
                      const_cast<cell_staging_buffer_type&>(cell_staging_buffer).data(),
                      x,
                      y,
@@ -224,10 +225,10 @@ public:
             detail::flat_array::simple_streak()
         };
 
-        raw_staging_buffer.resize(count * aggregated_member_size<CELL_TYPE>::VALUE);
+        raw_staging_buffer.resize(count * aggregated_member_size<value_type>::VALUE);
         raw_staging_buffer.load(source);
 
-        callback(detail::flat_array::load_functor<CELL_TYPE, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::load_functor<value_type, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
                      iter,
                      iter + 1,
                      raw_staging_buffer.data(),
@@ -241,10 +242,10 @@ public:
         const char *source,
         std::size_t count)
     {
-        raw_staging_buffer.resize(count * aggregated_member_size<CELL_TYPE>::VALUE);
+        raw_staging_buffer.resize(count * aggregated_member_size<value_type>::VALUE);
         raw_staging_buffer.load(source);
 
-        callback(detail::flat_array::load_functor<CELL_TYPE, ITERATOR, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::load_functor<value_type, ITERATOR, USE_CUDA_FUNCTORS>(
                      begin,
                      end,
                      raw_staging_buffer.data(),
@@ -265,10 +266,10 @@ public:
 
         const_cast<char_staging_buffer_type&>(raw_staging_buffer).resize(
             count *
-            aggregated_member_size<CELL_TYPE>::VALUE);
+            aggregated_member_size<value_type>::VALUE);
         const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(target);
 
-        callback(detail::flat_array::save_functor<CELL_TYPE, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::save_functor<value_type, detail::flat_array::simple_streak*, USE_CUDA_FUNCTORS>(
                      iter,
                      iter + 1,
                      const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
@@ -286,10 +287,10 @@ public:
     {
         const_cast<char_staging_buffer_type&>(raw_staging_buffer).resize(
             count *
-            aggregated_member_size<CELL_TYPE>::VALUE);
+            aggregated_member_size<value_type>::VALUE);
         const_cast<char_staging_buffer_type&>(raw_staging_buffer).prep(target);
 
-        callback(detail::flat_array::save_functor<CELL_TYPE, ITERATOR, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::save_functor<value_type, ITERATOR, USE_CUDA_FUNCTORS>(
                      begin,
                      end,
                      const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
@@ -339,25 +340,25 @@ private:
     char_staging_buffer_type raw_staging_buffer;
 
     template<typename FUNCTOR>
-    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type)
+    void dual_callback(soa_grid<value_type> *other_grid, const FUNCTOR& functor, api_traits::true_type)
     {
         detail::flat_array::dual_callback_helper()(this, other_grid, functor);
     }
 
     template<typename FUNCTOR>
-    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::true_type) const
+    void dual_callback(soa_grid<value_type> *other_grid, const FUNCTOR& functor, api_traits::true_type) const
     {
         detail::flat_array::dual_callback_helper()(this, other_grid, functor);
     }
 
     template<typename FUNCTOR>
-    void dual_callback(soa_grid<CELL_TYPE> *other_grid, FUNCTOR& functor, api_traits::false_type) const
+    void dual_callback(soa_grid<value_type> *other_grid, FUNCTOR& functor, api_traits::false_type) const
     {
         assert_same_grid_sizes(other_grid);
-        detail::flat_array::dual_callback_helper_symmetric<soa_grid<CELL_TYPE>, FUNCTOR> helper(
+        detail::flat_array::dual_callback_helper_symmetric<soa_grid<value_type>, FUNCTOR> helper(
             other_grid, functor);
 
-        api_traits::select_sizes<CELL_TYPE>()(
+        api_traits::select_sizes<value_type>()(
             my_data,
             helper,
             my_dim_x,
@@ -366,13 +367,13 @@ private:
     }
 
     template<typename FUNCTOR>
-    void dual_callback(soa_grid<CELL_TYPE> *other_grid, const FUNCTOR& functor, api_traits::false_type) const
+    void dual_callback(soa_grid<value_type> *other_grid, const FUNCTOR& functor, api_traits::false_type) const
     {
         assert_same_grid_sizes(other_grid);
-        detail::flat_array::const_dual_callback_helper_symmetric<soa_grid<CELL_TYPE>, FUNCTOR> helper(
+        detail::flat_array::const_dual_callback_helper_symmetric<soa_grid<value_type>, FUNCTOR> helper(
             other_grid, functor);
 
-        api_traits::select_sizes<CELL_TYPE>()(
+        api_traits::select_sizes<value_type>()(
             my_data,
             helper,
             my_dim_x,
@@ -382,7 +383,7 @@ private:
 
     void init()
     {
-        callback(detail::flat_array::construct_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
+        callback(detail::flat_array::construct_functor<value_type, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
     }
 
     void destroy_and_deallocate()
@@ -391,16 +392,16 @@ private:
             return;
         }
 
-        callback(detail::flat_array::destroy_functor<CELL_TYPE, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
+        callback(detail::flat_array::destroy_functor<value_type, USE_CUDA_FUNCTORS>(my_dim_x, my_dim_y, my_dim_z));
         ALLOCATOR().deallocate(my_data, byte_size());
     }
 
     void copy_in(const soa_grid& other)
     {
-        other.callback(this, detail::flat_array::copy_functor<CELL_TYPE>(my_dim_x, my_dim_y, my_dim_z));
+        other.callback(this, detail::flat_array::copy_functor<value_type>(my_dim_x, my_dim_y, my_dim_z));
     }
 
-    void assert_same_grid_sizes(const soa_grid<CELL_TYPE> *other_grid) const
+    void assert_same_grid_sizes(const soa_grid<value_type> *other_grid) const
     {
         if ((my_dim_x != other_grid->my_dim_x) ||
             (my_dim_y != other_grid->my_dim_y) ||
@@ -410,8 +411,8 @@ private:
     }
 };
 
-template<typename CELL_TYPE>
-void swap(soa_grid<CELL_TYPE>& a, soa_grid<CELL_TYPE>& b)
+template<typename value_type>
+void swap(soa_grid<value_type>& a, soa_grid<value_type>& b)
 {
     a.swap(b);
 }

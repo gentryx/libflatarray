@@ -26,22 +26,22 @@ namespace LibFlatArray {
  * semantics (i.e. it doesn't use pointers). The last two properties
  * simplify (and accelerate) handling with MPI and CUDA.
  */
-template<typename CELL, int MY_SIZE>
+template<typename T, int MY_SIZE>
 class soa_array
 {
 public:
-    typedef CELL Cell;
-    typedef soa_accessor<CELL, MY_SIZE, 1, 1, 0> iterator;
+    typedef T value_type;
+    typedef soa_accessor<value_type, MY_SIZE, 1, 1, 0> iterator;
     static const std::size_t SIZE = MY_SIZE;
-    static const std::size_t BYTE_SIZE = aggregated_member_size<CELL>::VALUE * SIZE;
+    static const std::size_t BYTE_SIZE = aggregated_member_size<value_type>::VALUE * SIZE;
 
     inline
     __host__ __device__
-    explicit soa_array(std::size_t elements = 0, const CELL& value = CELL()) :
+    explicit soa_array(std::size_t elements = 0, const value_type& value = value_type()) :
         elements(elements)
     {
         construct_all_instances();
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < int(elements); accessor += 1) {
+        for (soa_accessor<value_type, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < int(elements); accessor += 1) {
             accessor << value;
         }
     }
@@ -49,7 +49,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-     soa_array(soa_array<CELL, OTHER_SIZE>& other)
+     soa_array(soa_array<value_type, OTHER_SIZE>& other)
     {
         construct_all_instances();
         copy_in(other);
@@ -59,7 +59,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-    soa_array(const soa_array<CELL, OTHER_SIZE>& other)
+    soa_array(const soa_array<value_type, OTHER_SIZE>& other)
     {
         construct_all_instances();
         copy_in(other);
@@ -69,7 +69,7 @@ public:
     __host__ __device__
     ~soa_array()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
+        for (soa_accessor<value_type, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
             accessor.destroy_members();
         }
 
@@ -78,7 +78,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-    soa_array& operator=(soa_array<CELL, OTHER_SIZE>& other)
+    soa_array& operator=(soa_array<value_type, OTHER_SIZE>& other)
     {
         copy_in(other);
         return *this;
@@ -87,7 +87,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-    soa_array& operator=(const soa_array<CELL, OTHER_SIZE>& other)
+    soa_array& operator=(const soa_array<value_type, OTHER_SIZE>& other)
     {
         copy_in(other);
         return *this;
@@ -95,35 +95,35 @@ public:
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index)
+    soa_accessor<value_type, SIZE, 1, 1, 0> operator[](const int index)
     {
-        return soa_accessor<CELL, SIZE, 1, 1, 0>(my_data, index);
+        return soa_accessor<value_type, SIZE, 1, 1, 0>(my_data, index);
     }
 
     inline
     __host__ __device__
-    const const_soa_accessor<CELL, SIZE, 1, 1, 0> operator[](const int index) const
+    const const_soa_accessor<value_type, SIZE, 1, 1, 0> operator[](const int index) const
     {
-        return const_soa_accessor<CELL, SIZE, 1, 1, 0>(my_data, index);
+        return const_soa_accessor<value_type, SIZE, 1, 1, 0>(my_data, index);
     }
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> at(const int index)
-    {
-        return (*this)[index];
-    }
-
-    inline
-    __host__ __device__
-    const_soa_accessor<CELL, SIZE, 1, 1, 0> at(const int index) const
+    soa_accessor<value_type, SIZE, 1, 1, 0> at(const int index)
     {
         return (*this)[index];
     }
 
     inline
     __host__ __device__
-    soa_array<CELL, SIZE>& operator<<(const CELL& cell)
+    const_soa_accessor<value_type, SIZE, 1, 1, 0> at(const int index) const
+    {
+        return (*this)[index];
+    }
+
+    inline
+    __host__ __device__
+    soa_array<value_type, SIZE>& operator<<(const value_type& cell)
     {
 #ifndef __CUDA_ARCH__
         if (elements >= SIZE) {
@@ -152,21 +152,21 @@ public:
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> back()
+    soa_accessor<value_type, SIZE, 1, 1, 0> back()
     {
         return at(elements - 1);
     }
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> begin()
+    soa_accessor<value_type, SIZE, 1, 1, 0> begin()
     {
         return at(0);
     }
 
     inline
     __host__ __device__
-    soa_accessor<CELL, SIZE, 1, 1, 0> end()
+    soa_accessor<value_type, SIZE, 1, 1, 0> end()
     {
         return at(elements);
     }
@@ -186,7 +186,7 @@ public:
 
     inline
     __host__ __device__
-    void push_back(const CELL& cell)
+    void push_back(const value_type& cell)
     {
         *this << cell;
     }
@@ -205,7 +205,7 @@ public:
 
     std::size_t byte_size() const
     {
-        return elements * aggregated_member_size<CELL>::VALUE;
+        return elements * aggregated_member_size<value_type>::VALUE;
     }
 
 private:
@@ -216,7 +216,7 @@ private:
     __host__ __device__
     void construct_all_instances()
     {
-        for (soa_accessor<CELL, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
+        for (soa_accessor<value_type, SIZE, 1, 1, 0> accessor(my_data, 0); accessor.index() < MY_SIZE; accessor += 1) {
             accessor.construct_members();
         }
     }
@@ -224,7 +224,7 @@ private:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-    void copy_in(const soa_array<CELL, OTHER_SIZE>& other)
+    void copy_in(const soa_array<value_type, OTHER_SIZE>& other)
     {
         if (other.size() > SIZE) {
             throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
