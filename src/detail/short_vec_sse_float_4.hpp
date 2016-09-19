@@ -97,7 +97,6 @@ public:
     inline
     float get(int i) const
     {
-        // fixme: add assers for limits here
         if (i == 3) {
             return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 3));
         }
