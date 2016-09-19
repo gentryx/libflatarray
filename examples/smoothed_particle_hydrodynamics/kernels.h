@@ -1,3 +1,6 @@
+#ifndef LIBFLATARRAY_EXAMPLES_SMOOTHED_PARTICLE_HYDRODYNAMICS_KERNELS_H
+#define LIBFLATARRAY_EXAMPLES_SMOOTHED_PARTICLE_HYDRODYNAMICS_KERNELS_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,4 +48,7 @@ extern "C" {
 
 #ifdef __cplusplus
 }
+#endif
+
+
 #endif
