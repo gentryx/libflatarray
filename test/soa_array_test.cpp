@@ -533,15 +533,15 @@ ADD_TEST(TestBackAndPopBack)
 ADD_TEST(TestBeginEnd)
 {
     soa_array<Particle, 22> array;
-    // BOOST_TEST_EQ(array.begin(), array.end());
+    BOOST_TEST_EQ(array.begin(), array.end());
 
     array << Particle( 1,  2,  3,  4,  5,  6,  7,  8);
     array << Particle(11, 12, 13, 14, 15, 16, 17, 18);
     BOOST_TEST_EQ(2, array.size());
 
     soa_array<Particle, 22>::iterator i = array.begin();
-    // BOOST_TEST(i == array.begin());
-    // BOOST_TEST(i != array.end());
+    BOOST_TEST(i == array.begin());
+    BOOST_TEST(i != array.end());
 
     BOOST_TEST_EQ(i.posX(),   1);
     BOOST_TEST_EQ(i.posY(),   2);
@@ -553,8 +553,8 @@ ADD_TEST(TestBeginEnd)
     BOOST_TEST_EQ(i.mass(),   8);
 
     ++i;
-    // BOOST_TEST(i != array.begin());
-    // BOOST_TEST(i != array.end());
+    BOOST_TEST(i != array.begin());
+    BOOST_TEST(i != array.end());
 
     BOOST_TEST_EQ(i.posX(),   11);
     BOOST_TEST_EQ(i.posY(),   12);
@@ -565,9 +565,9 @@ ADD_TEST(TestBeginEnd)
     BOOST_TEST_EQ(i.charge(), 17);
     BOOST_TEST_EQ(i.mass(),   18);
 
-    // ++i;
-    // BOOST_TEST(i != array.begin());
-    // BOOST_TEST(i == array.end());
+    ++i;
+    BOOST_TEST(i != array.begin());
+    BOOST_TEST(i == array.end());
 }
 
 }

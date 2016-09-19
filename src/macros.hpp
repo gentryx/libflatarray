@@ -115,6 +115,24 @@
             return ret;                                                 \
         }                                                               \
                                                                         \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator==(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return                                                      \
+                (my_data == other.my_data) &&                           \
+                (my_index == other.my_index);                           \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator!=(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return !(*this == other);                                   \
+        }                                                               \
+                                                                        \
         inline                                                          \
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
@@ -347,6 +365,24 @@
             return ret;                                                 \
         }                                                               \
                                                                         \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator==(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return                                                      \
+                (my_data == other.my_data) &&                           \
+                (my_index == other.my_index);                           \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator!=(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return !(*this == other);                                   \
+        }                                                               \
+                                                                        \
         inline                                                          \
         __host__ __device__                                             \
         void operator+=(const long offset)                              \
@@ -463,6 +499,24 @@
             CELL_TYPE ret;                                              \
             *this >> ret;                                               \
             return ret;                                                 \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator==(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return                                                      \
+                (my_data == other.my_data) &&                           \
+                (my_index == other.my_index);                           \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator!=(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return !(*this == other);                                   \
         }                                                               \
                                                                         \
         inline                                                          \
@@ -685,6 +739,24 @@
             CELL_TYPE ret;                                              \
             *this >> ret;                                               \
             return ret;                                                 \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator==(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return                                                      \
+                (my_data == other.my_data) &&                           \
+                (my_index == other.my_index);                           \
+        }                                                               \
+                                                                        \
+        template<typename SOA_ACCESSOR>                                 \
+        inline                                                          \
+        __host__ __device__                                             \
+        bool operator!=(const SOA_ACCESSOR& other) const                \
+        {                                                               \
+            return !(*this == other);                                   \
         }                                                               \
                                                                         \
         inline                                                          \
