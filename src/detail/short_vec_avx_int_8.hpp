@@ -130,8 +130,9 @@ public:
     short_vec<int, 8> operator/(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
-            _mm256_cvtps_epi32(_mm256_div_ps(_mm256_cvtepi32_ps(val1),
-                                             _mm256_cvtepi32_ps(other.val1))));
+            _mm256_cvttps_epi32(_mm256_div_ps(
+                                    _mm256_cvtepi32_ps(val1),
+                                    _mm256_cvtepi32_ps(other.val1))));
     }
 
     inline

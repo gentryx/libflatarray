@@ -348,22 +348,30 @@ public:
     short_vec<int, 32> operator/(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val1),
-                                       _mm_cvtepi32_ps(other.val1))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val2),
-                                       _mm_cvtepi32_ps(other.val2))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val3),
-                                       _mm_cvtepi32_ps(other.val3))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val4),
-                                       _mm_cvtepi32_ps(other.val4))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val5),
-                                       _mm_cvtepi32_ps(other.val5))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val6),
-                                       _mm_cvtepi32_ps(other.val6))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val7),
-                                       _mm_cvtepi32_ps(other.val7))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val8),
-                                       _mm_cvtepi32_ps(other.val8))));
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val1),
+                                 _mm_cvtepi32_ps(other.val1))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val2),
+                                 _mm_cvtepi32_ps(other.val2))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val3),
+                                 _mm_cvtepi32_ps(other.val3))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val4),
+                                 _mm_cvtepi32_ps(other.val4))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val5),
+                                 _mm_cvtepi32_ps(other.val5))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val6),
+                                 _mm_cvtepi32_ps(other.val6))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val7),
+                                 _mm_cvtepi32_ps(other.val7))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val8),
+                                 _mm_cvtepi32_ps(other.val8))));
     }
 
     inline

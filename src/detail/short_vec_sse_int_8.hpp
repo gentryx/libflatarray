@@ -175,10 +175,10 @@ public:
     inline
     void operator/=(const short_vec<int, 8>& other)
     {
-        val1 = _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val1),
-                                          _mm_cvtepi32_ps(other.val1)));
-        val2 = _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val2),
-                                          _mm_cvtepi32_ps(other.val2)));
+        val1 = _mm_cvttps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val1),
+                                           _mm_cvtepi32_ps(other.val1)));
+        val2 = _mm_cvttps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val2),
+                                           _mm_cvtepi32_ps(other.val2)));
     }
 
     inline
@@ -188,10 +188,12 @@ public:
     short_vec<int, 8> operator/(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val1),
-                                       _mm_cvtepi32_ps(other.val1))),
-            _mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(val2),
-                                       _mm_cvtepi32_ps(other.val2))));
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val1),
+                                 _mm_cvtepi32_ps(other.val1))),
+            _mm_cvttps_epi32(_mm_div_ps(
+                                 _mm_cvtepi32_ps(val2),
+                                 _mm_cvtepi32_ps(other.val2))));
     }
 
     inline
@@ -365,10 +367,10 @@ inline
 short_vec<int, 8> short_vec<int, 8>::operator/(const sqrt_reference<int, 8>& other) const
 {
     return short_vec<int, 8>(
-        _mm_cvtps_epi32(
+        _mm_cvttps_epi32(
             _mm_mul_ps(_mm_cvtepi32_ps(val1),
                        _mm_rsqrt_ps(_mm_cvtepi32_ps(other.vec.val1)))),
-        _mm_cvtps_epi32(
+        _mm_cvttps_epi32(
             _mm_mul_ps(_mm_cvtepi32_ps(val2),
                        _mm_rsqrt_ps(_mm_cvtepi32_ps(other.vec.val2)))));
 }
