@@ -513,11 +513,27 @@ void testImplementationReal()
         v1.load_aligned(&array[0]);
         ShortVec v2;
 
+        // test +
+        v2 = CARGO(10) + v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 + (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
         // test -
         v2 = CARGO(10) - v1;
         for (int i = 0; i < ARITY; ++i) {
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 - (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
+        // v2 *
+        v2 = CARGO(10) * v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 * (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
         }
 
