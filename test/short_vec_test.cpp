@@ -199,7 +199,7 @@ void testImplementationReal()
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
     }
 
-    // test "sqrt() /"
+    // test "sqrt() /" with short_vec
     for (int i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
         vec2[i] = (i + 2);
@@ -210,7 +210,20 @@ void testImplementationReal()
         &vec1[i] << w;
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.3);
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
+    }
+
+    // test "sqrt() /" with scalar
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / 3.0f;
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2) / 3.0, vec1[i], 0.001);
     }
 
     // test string conversion
@@ -653,7 +666,7 @@ void testImplementationInt()
         BOOST_TEST_EQ(3 * (i + 1), vec2[i]);
     }
 
-    // test "sqrt() /"
+    // test "sqrt() /" with shortvec
     for (int i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
         vec2[i] = (i + 2);
@@ -664,7 +677,20 @@ void testImplementationInt()
         &vec1[i] << w;
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.3);
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
+    }
+
+    // test "sqrt() /" with scalar
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / 3;
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2) / 3, vec1[i], 0.001);
     }
 
     // test string conversion

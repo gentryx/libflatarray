@@ -19,7 +19,6 @@ short_vec<CARGO, ARITY> operator/(const sqrt_reference<CARGO, ARITY>& a, const s
     return short_vec<CARGO, ARITY>(a) / b;
 }
 
-// fixme: needs test
 template<typename CARGO, int ARITY>
 inline short_vec<CARGO, ARITY> operator/(const sqrt_reference<CARGO, ARITY>& a, const CARGO b)
 {
