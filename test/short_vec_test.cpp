@@ -28,7 +28,7 @@ template<typename CARGO, int ARITY>
 void testImplementationReal()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    int numElements = ShortVec::ARITY * 10;
+    int numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
@@ -197,6 +197,20 @@ void testImplementationReal()
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
+    }
+
+    // test "sqrt() /"
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
+        vec2[i] = (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.3);
     }
 
     // test string conversion
@@ -470,7 +484,7 @@ template<typename CARGO, int ARITY>
 void testImplementationInt()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    const int numElements = ShortVec::ARITY * 10;
+    const int numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO> vec1(numElements);
     std::vector<CARGO> vec2(numElements, 4711);
@@ -637,6 +651,20 @@ void testImplementationInt()
     }
     for (int i = 0; i < numElements; ++i) {
         BOOST_TEST_EQ(3 * (i + 1), vec2[i]);
+    }
+
+    // test "sqrt() /"
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
+        vec2[i] = (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.3);
     }
 
     // test string conversion

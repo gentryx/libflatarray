@@ -13,7 +13,6 @@ namespace LibFlatArray {
 template<typename CARGO, int ARITY>
 class sqrt_reference;
 
-// fixme: needs test
 template<typename CARGO, int ARITY>
 short_vec<CARGO, ARITY> operator/(const sqrt_reference<CARGO, ARITY>& a, const short_vec<CARGO, ARITY>& b)
 {
