@@ -70,7 +70,20 @@ void testImplementationReal()
         TEST_REAL((i + 0.2), vec2[i]);
     }
 
-    // tests +=
+    // test +
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = &vec2[i];
+        &vec2[i] << (v + w);
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL((2 * i + 0.3), vec2[i]);
+    }
+
+    // test +=
+    for (int i = 0; i < numElements; ++i) {
+        vec2[i] = i + 0.2;
+    }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
@@ -539,7 +552,20 @@ void testImplementationInt()
         BOOST_TEST_EQ((i + 1), vec2[i]);
     }
 
-    // tests +=
+    // test +
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = &vec2[i];
+        &vec2[i] << (v + w);
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL((2 * i + 1), vec2[i]);
+    }
+
+    // test +=
+    for (int i = 0; i < numElements; ++i) {
+        vec2[i] = i + 1;
+    }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];

@@ -13,6 +13,8 @@ namespace LibFlatArray {
 template<typename CARGO, int ARITY>
 class short_vec;
 
+// fixme: sync (streaming_)short_vec tests
+
 // fixme: needs test
 // fixme: add/test corresponding operators
 template<typename CARGO, int ARITY>
