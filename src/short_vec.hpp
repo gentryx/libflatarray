@@ -14,16 +14,14 @@ template<typename CARGO, int ARITY>
 class short_vec;
 
 // fixme: sync (streaming_)short_vec tests
-
-// fixme: needs test
 // fixme: add/test corresponding operators
+
 template<typename CARGO, int ARITY>
 inline short_vec<CARGO, ARITY> operator-(CARGO a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) - b;
 }
 
-// fixme: needs test
 template<typename CARGO, int ARITY>
 inline short_vec<CARGO, ARITY> operator/(CARGO a, const short_vec<CARGO, ARITY>& b)
 {

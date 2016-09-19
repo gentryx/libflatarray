@@ -503,6 +503,33 @@ void testImplementationReal()
         }
     }
 
+    // test operators with scalars on left side:
+    {
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
+        for (int i = 0; i < ARITY; ++i) {
+            array[i] = i + 0.123;
+        }
+        ShortVec v1;
+        v1.load_aligned(&array[0]);
+        ShortVec v2;
+
+        // test -
+        v2 = CARGO(10) - v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 - (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
+        // test /
+        v2 = CARGO(10) / v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 / (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+    }
+
     // fixme: add all tests for int, too
 }
 
