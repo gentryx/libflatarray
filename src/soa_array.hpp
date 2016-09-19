@@ -133,7 +133,6 @@ public:
         ++elements;
     }
 
-    // fixme: needs test
     inline
     __host__ __device__
     void clear()
@@ -141,7 +140,13 @@ public:
         elements = 0;
     }
 
-    // fixme: add capacity
+    inline
+    __host__ __device__
+    std::size_t capacity() const
+    {
+        return SIZE;
+    }
+
     // fixme: add back
     // fixme: add pop
     // fixme: add begin()/end()

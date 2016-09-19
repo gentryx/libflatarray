@@ -477,6 +477,27 @@ ADD_TEST(TestCopyConstructor2)
     }
 }
 
+ADD_TEST(TestClear)
+{
+    soa_array<Particle, 31> array(10);
+    BOOST_TEST_EQ(10, array.size());
+
+    array.clear();
+    BOOST_TEST_EQ(0, array.size());
+
+    array << Particle();
+    BOOST_TEST_EQ(1, array.size());
+}
+
+ADD_TEST(TestCapacity)
+{
+    soa_array<Particle, 33> array(13);
+    BOOST_TEST_EQ(33, array.capacity());
+
+    array.clear();
+    BOOST_TEST_EQ(33, array.capacity());
+}
+
 }
 
 int main(int argc, char **argv)
