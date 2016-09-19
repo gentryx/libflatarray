@@ -232,11 +232,11 @@ void testImplementationReal()
     }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
-        ShortVec w = sqrt(v) / 3.0f;
+        ShortVec w = sqrt(v) / CARGO(3);
         &vec1[i] << w;
     }
     for (int i = 0; i < numElements; ++i) {
-        TEST_REAL_ACCURACY((i + 2) / 3.0, vec1[i], 0.001);
+        TEST_REAL_ACCURACY((i + 2) / CARGO(3), vec1[i], 0.001);
     }
 
     // test string conversion

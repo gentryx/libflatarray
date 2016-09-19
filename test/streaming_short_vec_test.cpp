@@ -28,7 +28,7 @@ template<typename CARGO, int ARITY>
 void testImplementationReal()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    int numElements = ShortVec::ARITY * 10;
+    int numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
@@ -70,7 +70,20 @@ void testImplementationReal()
         TEST_REAL((i + 0.2), vec2[i]);
     }
 
-    // tests +=
+    // test +
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = &vec2[i];
+        &vec2[i] << (v + w);
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL((2 * i + 0.3), vec2[i]);
+    }
+
+    // test +=
+    for (int i = 0; i < numElements; ++i) {
+        vec2[i] = i + 0.2;
+    }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
@@ -197,6 +210,33 @@ void testImplementationReal()
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
+    }
+
+    // test "sqrt() /" with shortvec
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
+        vec2[i] = (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
+    }
+
+    // test "sqrt() /" with scalar
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / CARGO(3);
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2) / CARGO(3), vec1[i], 0.001);
     }
 
     // test string conversion
@@ -463,13 +503,56 @@ void testImplementationReal()
             TEST_REAL_ACCURACY(array[i], get(v1, i), 0.001);
         }
     }
+
+    // test operators with scalars on left side:
+    {
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
+        for (int i = 0; i < ARITY; ++i) {
+            array[i] = i + 0.123;
+        }
+        ShortVec v1;
+        v1.load_aligned(&array[0]);
+        ShortVec v2;
+
+        // test +
+        v2 = CARGO(10) + v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 + (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
+        // test -
+        v2 = CARGO(10) - v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 - (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
+        // v2 *
+        v2 = CARGO(10) * v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 * (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+
+        // test /
+        v2 = CARGO(10) / v1;
+        for (int i = 0; i < ARITY; ++i) {
+            CARGO actual = get(v2, i);
+            CARGO expected = 10.0 / (i + 0.123);
+            TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+    }
 }
 
 template<typename CARGO, int ARITY>
 void testImplementationInt()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    const int numElements = ShortVec::ARITY * 10;
+    const int numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
@@ -511,7 +594,20 @@ void testImplementationInt()
         BOOST_TEST_EQ((i + 1), vec2[i]);
     }
 
-    // tests +=
+    // test +
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = &vec2[i];
+        &vec2[i] << (v + w);
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL((2 * i + 1), vec2[i]);
+    }
+
+    // test +=
+    for (int i = 0; i < numElements; ++i) {
+        vec2[i] = i + 1;
+    }
     for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
@@ -636,6 +732,33 @@ void testImplementationInt()
     }
     for (int i = 0; i < numElements; ++i) {
         BOOST_TEST_EQ(3 * (i + 1), vec2[i]);
+    }
+
+    // test "sqrt() /" with shortvec
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
+        vec2[i] = (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
+    }
+
+    // test "sqrt() /" with scalar
+    for (int i = 0; i < numElements; ++i) {
+        vec1[i] = (i + 2) * (i + 2);
+    }
+    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        ShortVec w = sqrt(v) / 3;
+        &vec1[i] << w;
+    }
+    for (int i = 0; i < numElements; ++i) {
+        TEST_REAL_ACCURACY((i + 2) / 3, vec1[i], 0.001);
     }
 
     // test string conversion
