@@ -31,6 +31,7 @@ class soa_array
 {
 public:
     typedef CELL Cell;
+    typedef soa_accessor<CELL, MY_SIZE, 1, 1, 0> iterator;
     static const std::size_t SIZE = MY_SIZE;
     static const std::size_t BYTE_SIZE = aggregated_member_size<CELL>::VALUE * SIZE;
 
@@ -122,7 +123,7 @@ public:
 
     inline
     __host__ __device__
-    void operator<<(const CELL& cell)
+    soa_array<CELL, SIZE>& operator<<(const CELL& cell)
     {
 #ifndef __CUDA_ARCH__
         if (elements >= SIZE) {
@@ -131,6 +132,8 @@ public:
 #endif
         (*this)[elements] = cell;
         ++elements;
+
+        return *this;
     }
 
     inline
@@ -147,9 +150,39 @@ public:
         return SIZE;
     }
 
-    // fixme: add back
-    // fixme: add pop
-    // fixme: add begin()/end()
+    inline
+    __host__ __device__
+    soa_accessor<CELL, SIZE, 1, 1, 0> back()
+    {
+        return at(elements - 1);
+    }
+
+    inline
+    __host__ __device__
+    soa_accessor<CELL, SIZE, 1, 1, 0> begin()
+    {
+        return at(0);
+    }
+
+    inline
+    __host__ __device__
+    soa_accessor<CELL, SIZE, 1, 1, 0> end()
+    {
+        return at(elements);
+    }
+
+    inline
+    __host__ __device__
+    void pop_back()
+    {
+#ifndef __CUDA_ARCH__
+        if (elements == 0) {
+            throw std::out_of_range("soa_array is already empty");
+        }
+#endif
+
+        --elements;
+    }
 
     inline
     __host__ __device__

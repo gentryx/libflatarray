@@ -498,6 +498,78 @@ ADD_TEST(TestCapacity)
     BOOST_TEST_EQ(33, array.capacity());
 }
 
+ADD_TEST(TestBackAndPopBack)
+{
+    soa_array<Particle, 22> array;
+    array << Particle( 1,  2,  3,  4,  5,  6,  7,  8);
+    array << Particle(11, 12, 13, 14, 15, 16, 17, 18);
+    BOOST_TEST_EQ(2, array.size());
+
+    BOOST_TEST_EQ(array.back().posX(),   11);
+    BOOST_TEST_EQ(array.back().posY(),   12);
+    BOOST_TEST_EQ(array.back().posZ(),   13);
+    BOOST_TEST_EQ(array.back().velX(),   14);
+    BOOST_TEST_EQ(array.back().velY(),   15);
+    BOOST_TEST_EQ(array.back().velZ(),   16);
+    BOOST_TEST_EQ(array.back().charge(), 17);
+    BOOST_TEST_EQ(array.back().mass(),   18);
+
+    array.pop_back();
+    BOOST_TEST_EQ(1, array.size());
+
+    BOOST_TEST_EQ(array.back().posX(),   1);
+    BOOST_TEST_EQ(array.back().posY(),   2);
+    BOOST_TEST_EQ(array.back().posZ(),   3);
+    BOOST_TEST_EQ(array.back().velX(),   4);
+    BOOST_TEST_EQ(array.back().velY(),   5);
+    BOOST_TEST_EQ(array.back().velZ(),   6);
+    BOOST_TEST_EQ(array.back().charge(), 7);
+    BOOST_TEST_EQ(array.back().mass(),   8);
+
+    array.pop_back();
+    BOOST_TEST_EQ(0, array.size());
+}
+
+ADD_TEST(TestBeginEnd)
+{
+    soa_array<Particle, 22> array;
+    // BOOST_TEST_EQ(array.begin(), array.end());
+
+    array << Particle( 1,  2,  3,  4,  5,  6,  7,  8);
+    array << Particle(11, 12, 13, 14, 15, 16, 17, 18);
+    BOOST_TEST_EQ(2, array.size());
+
+    soa_array<Particle, 22>::iterator i = array.begin();
+    // BOOST_TEST(i == array.begin());
+    // BOOST_TEST(i != array.end());
+
+    BOOST_TEST_EQ(i.posX(),   1);
+    BOOST_TEST_EQ(i.posY(),   2);
+    BOOST_TEST_EQ(i.posZ(),   3);
+    BOOST_TEST_EQ(i.velX(),   4);
+    BOOST_TEST_EQ(i.velY(),   5);
+    BOOST_TEST_EQ(i.velZ(),   6);
+    BOOST_TEST_EQ(i.charge(), 7);
+    BOOST_TEST_EQ(i.mass(),   8);
+
+    ++i;
+    // BOOST_TEST(i != array.begin());
+    // BOOST_TEST(i != array.end());
+
+    BOOST_TEST_EQ(i.posX(),   11);
+    BOOST_TEST_EQ(i.posY(),   12);
+    BOOST_TEST_EQ(i.posZ(),   13);
+    BOOST_TEST_EQ(i.velX(),   14);
+    BOOST_TEST_EQ(i.velY(),   15);
+    BOOST_TEST_EQ(i.velZ(),   16);
+    BOOST_TEST_EQ(i.charge(), 17);
+    BOOST_TEST_EQ(i.mass(),   18);
+
+    // ++i;
+    // BOOST_TEST(i != array.begin());
+    // BOOST_TEST(i == array.end());
+}
+
 }
 
 int main(int argc, char **argv)
