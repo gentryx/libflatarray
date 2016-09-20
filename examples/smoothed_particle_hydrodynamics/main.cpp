@@ -8,8 +8,6 @@
 #include "kernels.h"
 #include "kernels.hpp"
 
-#define PI float(M_PI)
-
 class InteractionBuffer
 {
 public:

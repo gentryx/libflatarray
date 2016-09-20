@@ -1,6 +1,8 @@
 #ifndef LIBFLATARRAY_EXAMPLES_SMOOTHED_PARTICLE_HYDRODYNAMICS_KERNELS_HPP
 #define LIBFLATARRAY_EXAMPLES_SMOOTHED_PARTICLE_HYDRODYNAMICS_KERNELS_HPP
 
+#define PI float(M_PI)
+
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> particles, float h, float mass)
 {
