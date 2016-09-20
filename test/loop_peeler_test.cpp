@@ -66,6 +66,7 @@ ADD_TEST(TestLoopPeelerInteroperabilityWithStreamingShortVecs)
 }
 
 #ifdef LIBFLATARRAY_WITH_CPP14
+#ifndef LIBFLATARRAY_WITH_CUDA
 
 ADD_TEST(TestCpp14StyleLoopPeeler)
 {
@@ -91,6 +92,7 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
     }
 }
 
+#endif
 #endif
 
 int main(int argc, char **argv)
