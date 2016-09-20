@@ -3,6 +3,61 @@
 
 #define PI float(M_PI)
 
+class InteractionBuffer
+{
+public:
+    inline
+    explicit InteractionBuffer(
+        float rho_i = 0,
+        float v_x_i = 0,
+        float v_y_i = 0,
+        float rho_j = 0,
+        float v_x_j = 0,
+        float v_y_j = 0,
+        float delta_x = 0,
+        float delta_y = 0,
+        float dist_squared = 0,
+        int i = 0,
+        int j = 0) :
+        rho_i(rho_i),
+        v_x_i(v_x_i),
+        v_y_i(v_y_i),
+        rho_j(rho_j),
+        v_x_j(v_x_j),
+        v_y_j(v_y_j),
+        delta_x(delta_x),
+        delta_y(delta_y),
+        dist_squared(dist_squared),
+        i(i),
+        j(j)
+    {}
+
+    float rho_i;
+    float v_x_i;
+    float v_y_i;
+    float rho_j;
+    float v_x_j;
+    float v_y_j;
+    float delta_x;
+    float delta_y;
+    float dist_squared;
+    int i;
+    int j;
+};
+LIBFLATARRAY_REGISTER_SOA(
+    InteractionBuffer,
+    ((float)(rho_i))
+    ((float)(v_x_i))
+    ((float)(v_y_i))
+    ((float)(rho_j))
+    ((float)(v_x_j))
+    ((float)(v_y_j))
+    ((float)(delta_x))
+    ((float)(delta_y))
+    ((float)(dist_squared))
+    ((int)(i))
+    ((int)(j)))
+
 template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX> particles, float h, float mass)
 {
