@@ -1035,7 +1035,7 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 2D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = std::max(dim_x, dim_z);                       \
+        std::size_t max = std::max(dim_x, dim_y);                       \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
@@ -1056,7 +1056,7 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 2D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = std::max(dim_x, dim_z);                       \
+        std::size_t max = std::max(dim_x, dim_y);                       \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
