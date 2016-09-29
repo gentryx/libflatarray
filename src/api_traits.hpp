@@ -44,6 +44,17 @@ public:
      */
 
     /**
+     * Means that the code will be used with 1D grids only -- makes
+     * sense mostly for use with unstructured grids.
+     */
+    class has_default_1d_sizes
+    {
+    public:
+        LIBFLATARRAY_CUSTOM_SIZES_1D_UNIFORM(
+            (32)(64)(128)(192)(256)(512)(544)(1056)(2080)(4128)(8224)(16416)(32800)(65568)(131104)(262176)(524320)(1048608)(2097184)(4194336)(8388640)(16777248)(33554464)(67108896)(134217760)(268435488)(536870944)(1073741856))
+    };
+
+    /**
      * Means that the code will be used with rectangular 2D grids
      * only, the z-dimension will be tied at 1.
      */

@@ -970,6 +970,57 @@
         throw std::out_of_range("grid dimension Z too large");          \
     }
 
+#define LIBFLATARRAY_CUSTOM_SIZES_1D_UNIFORM(SIZES)                     \
+    typedef void has_sizes;                                             \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        char *data,                                                     \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        if (dim_y != 1) {                                               \
+            throw std::out_of_range("expected 1D grid, but y != 1");    \
+        }                                                               \
+        if (dim_z != 1) {                                               \
+            throw std::out_of_range("expected 1D grid, but z != 1");    \
+        }                                                               \
+        std::size_t max = dim_x;                                        \
+                                                                        \
+        LIBFLATARRAY_FOR_EACH(                                          \
+            LIBFLATARRAY_CASE_DIM_MAX_1D,                               \
+            unused,                                                     \
+            SIZES);                                                     \
+                                                                        \
+        throw std::out_of_range("max grid dimension too large");        \
+    }                                                                   \
+                                                                        \
+    template<typename CELL, typename FUNCTOR>                           \
+    void select_size(                                                   \
+        const char *data,                                               \
+        FUNCTOR& functor,                                               \
+        const std::size_t dim_x = 1,                                    \
+        const std::size_t dim_y = 1,                                    \
+        const std::size_t dim_z = 1)                                    \
+    {                                                                   \
+        if (dim_y != 1) {                                               \
+            throw std::out_of_range("expected 1D grid, but y != 1");    \
+        }                                                               \
+        if (dim_z != 1) {                                               \
+            throw std::out_of_range("expected 1D grid, but z != 1");    \
+        }                                                               \
+        std::size_t max = std::max(dim_x, dim_z);                       \
+                                                                        \
+        LIBFLATARRAY_FOR_EACH(                                          \
+            LIBFLATARRAY_CASE_DIM_MAX_1D,                               \
+            unused,                                                     \
+            SIZES);                                                     \
+                                                                        \
+        throw std::out_of_range("max grid dimension too large");        \
+    }
+
 #define LIBFLATARRAY_CUSTOM_SIZES_2D_UNIFORM(SIZES)                     \
     typedef void has_sizes;                                             \
                                                                         \

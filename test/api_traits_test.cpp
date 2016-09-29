@@ -23,10 +23,45 @@ public:
     double memberC;
 };
 
+class CellDefault1DSizes
+{
+public:
+    class API : public api_traits::has_default_1d_sizes
+    {};
+
+    double memberA;
+    double memberB;
+    double memberC;
+};
+
+// only 1D uniform test, non-uniform would be identical
+
+class CellDefault2DSizesUniform
+{
+public:
+    class API : public api_traits::has_default_2d_sizes_uniform
+    {};
+
+    double memberA;
+    double memberB;
+    double memberC;
+};
+
 class CellDefault2DSizes
 {
 public:
     class API : public api_traits::has_default_2d_sizes
+    {};
+
+    double memberA;
+    double memberB;
+    double memberC;
+};
+
+class CellDefault3DSizesUniform
+{
+public:
+    class API : public api_traits::has_default_3d_sizes_uniform
     {};
 
     double memberA;
@@ -77,11 +112,14 @@ public:
     double memberC;
 };
 
-LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,       ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes,     ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes,     ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
-LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault1DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,           ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform,    ((double)(memberA))((double)(memberB))((double)(memberC)))
 
 class TestFunctor
 {
@@ -163,6 +201,151 @@ ADD_TEST(TestSelectSizesDefault)
     expected.clear();
 }
 
+ADD_TEST(TestSelectSizesDefault1D)
+{
+    char data[1024 * 1024];
+    std::vector<long> actual;
+    std::vector<long> expected;
+    TestFunctor functor(&actual);
+    typedef api_traits::select_sizes<CellDefault1DSizes> selector;
+
+    selector()(data, functor, 10, 1, 1);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 30, 1, 1);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 32, 1, 1);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 1, 1);
+    expected.push_back(64);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 65, 1, 1);
+    expected.push_back(128);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 33, 1, 1);
+    expected.push_back(64);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 66, 1);
+    expected.push_back(128);
+    expected.push_back(1);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+}
+
+ADD_TEST(TestSelectSizesDefault2DUniform)
+{
+    char data[1024 * 1024];
+    std::vector<long> actual;
+    std::vector<long> expected;
+    TestFunctor functor(&actual);
+    typedef api_traits::select_sizes<CellDefault2DSizesUniform> selector;
+
+    selector()(data, functor, 10, 20, 1);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 30, 30, 1);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 32, 32, 1);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 32, 1);
+    expected.push_back(64);
+    expected.push_back(64);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 65, 32, 1);
+    expected.push_back(128);
+    expected.push_back(128);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 32, 33, 1);
+    expected.push_back(64);
+    expected.push_back(64);
+    expected.push_back(1);
+    expected.push_back(0);
+    std::cout << "actual: " << actual[0] << ", " << actual[1] << ", " << actual[2] << ", " << actual[3] <<  ". " << actual.size() << "\n";
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 66, 66, 1);
+    expected.push_back(128);
+    expected.push_back(128);
+    expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+}
+
 ADD_TEST(TestSelectSizesDefault2D)
 {
     char data[1024 * 1024];
@@ -203,7 +386,6 @@ ADD_TEST(TestSelectSizesDefault2D)
     expected.push_back(32);
     expected.push_back(1);
     expected.push_back(0);
-    std::cout << actual[0] << ", " << actual[1] << ", " << actual[2] << "\n";
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
@@ -230,6 +412,69 @@ ADD_TEST(TestSelectSizesDefault2D)
     expected.push_back(128);
     expected.push_back(128);
     expected.push_back(1);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+}
+
+ADD_TEST(TestSelectSizesDefault3DUniform)
+{
+    char data[1024 * 1024];
+    std::vector<long> actual;
+    std::vector<long> expected;
+    TestFunctor functor(&actual);
+    typedef api_traits::select_sizes<CellDefault3DSizesUniform> selector;
+
+    selector()(data, functor, 10, 20, 30);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 30, 30, 30);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 32, 32, 32);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(32);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 32, 32);
+    expected.push_back(64);
+    expected.push_back(64);
+    expected.push_back(64);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 250, 32);
+    expected.push_back(256);
+    expected.push_back(256);
+    expected.push_back(256);
+    expected.push_back(0);
+    BOOST_TEST(actual == expected);
+    actual.clear();
+    expected.clear();
+
+    selector()(data, functor, 40, 250, 70);
+    expected.push_back(256);
+    expected.push_back(256);
+    expected.push_back(256);
     expected.push_back(0);
     BOOST_TEST(actual == expected);
     actual.clear();

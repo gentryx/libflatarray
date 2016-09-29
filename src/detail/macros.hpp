@@ -338,4 +338,12 @@
         return;                                                         \
     }
 
+#define LIBFLATARRAY_CASE_DIM_MAX_1D(SIZE_INDEX, UNUSED, SIZE)          \
+    if (max <= SIZE) {                                                  \
+        LibFlatArray::soa_accessor<CELL, SIZE, 1, 1, 0>  accessor(      \
+            data, 0);                                                   \
+        functor(accessor);                                              \
+        return;                                                         \
+    }
+
 #endif
