@@ -188,7 +188,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(WITH_CUDA)
-  set(CUDA_NVCC_FLAGS "--gpu-architecture=compute_35")
+  if (${CUDA_VERSION} VERSION_LESS 8.0)
+    set(CUDA_NVCC_FLAGS "--gpu-architecture=compute_20")
+  else()
+    set(CUDA_NVCC_FLAGS "--gpu-architecture=compute_35")
+  endif()
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
