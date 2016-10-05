@@ -49,7 +49,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-     soa_array(soa_array<value_type, OTHER_SIZE>& other)
+    explicit soa_array(soa_array<value_type, OTHER_SIZE>& other)
     {
         construct_all_instances();
         copy_in(other);
@@ -59,7 +59,7 @@ public:
     template<int OTHER_SIZE>
     inline
     __host__ __device__
-    soa_array(const soa_array<value_type, OTHER_SIZE>& other)
+    explicit soa_array(const soa_array<value_type, OTHER_SIZE>& other)
     {
         construct_all_instances();
         copy_in(other);
