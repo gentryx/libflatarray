@@ -260,6 +260,14 @@ private:
     }
 };
 
+template<typename value_type, int size>
+void swap(soa_array<value_type, size>& a, soa_array<value_type, size>& b)
+{
+    using std::swap;
+    swap(a.elements, b.elements);
+    swap(a.my_data,  b.my_data);
+}
+
 }
 
 #endif
