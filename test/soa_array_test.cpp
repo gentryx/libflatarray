@@ -570,6 +570,78 @@ ADD_TEST(TestBeginEnd)
     BOOST_TEST(i == array.end());
 }
 
+ADD_TEST(TestLoadFromSoAAccessor)
+{
+    soa_array<Particle, 20> particles;
+    soa_array<Particle, 13> buffer;
+
+    buffer << Particle(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
+           << Particle(1.0, 1.1, 1.2, 1.3, 1.4, 1.5)
+           << Particle(2.0, 2.1, 2.2, 2.3, 2.4, 2.5)
+           << Particle(3.0, 3.1, 3.2, 3.3, 3.4, 3.5)
+           << Particle(4.0, 4.1, 4.2, 4.3, 4.4, 4.5)
+           << Particle(5.0, 5.1, 5.2, 5.3, 5.4, 5.5)
+           << Particle(6.0, 6.1, 6.2, 6.3, 6.4, 6.5);
+
+    particles.load(buffer[5], 2);
+    BOOST_TEST_EQ(2, particles.size());
+
+    BOOST_TEST_EQ(5.0f, particles[0].posX());
+    BOOST_TEST_EQ(5.1f, particles[0].posY());
+    BOOST_TEST_EQ(5.2f, particles[0].posZ());
+    BOOST_TEST_EQ(5.3f, particles[0].velX());
+    BOOST_TEST_EQ(5.4f, particles[0].velY());
+    BOOST_TEST_EQ(5.5f, particles[0].velZ());
+
+    BOOST_TEST_EQ(6.0f, particles[1].posX());
+    BOOST_TEST_EQ(6.1f, particles[1].posY());
+    BOOST_TEST_EQ(6.2f, particles[1].posZ());
+    BOOST_TEST_EQ(6.3f, particles[1].velX());
+    BOOST_TEST_EQ(6.4f, particles[1].velY());
+    BOOST_TEST_EQ(6.5f, particles[1].velZ());
+
+    particles.load(buffer[0], 2);
+    BOOST_TEST_EQ(4, particles.size());
+
+    BOOST_TEST_EQ(0.0f, particles[2].posX());
+    BOOST_TEST_EQ(0.1f, particles[2].posY());
+    BOOST_TEST_EQ(0.2f, particles[2].posZ());
+    BOOST_TEST_EQ(0.3f, particles[2].velX());
+    BOOST_TEST_EQ(0.4f, particles[2].velY());
+    BOOST_TEST_EQ(0.5f, particles[2].velZ());
+
+    BOOST_TEST_EQ(1.0f, particles[3].posX());
+    BOOST_TEST_EQ(1.1f, particles[3].posY());
+    BOOST_TEST_EQ(1.2f, particles[3].posZ());
+    BOOST_TEST_EQ(1.3f, particles[3].velX());
+    BOOST_TEST_EQ(1.4f, particles[3].velY());
+    BOOST_TEST_EQ(1.5f, particles[3].velZ());
+
+    particles.load(buffer[2], 3, 2);
+    BOOST_TEST_EQ(5, particles.size());
+
+    BOOST_TEST_EQ(2.0f, particles[2].posX());
+    BOOST_TEST_EQ(2.1f, particles[2].posY());
+    BOOST_TEST_EQ(2.2f, particles[2].posZ());
+    BOOST_TEST_EQ(2.3f, particles[2].velX());
+    BOOST_TEST_EQ(2.4f, particles[2].velY());
+    BOOST_TEST_EQ(2.5f, particles[2].velZ());
+
+    BOOST_TEST_EQ(3.0f, particles[3].posX());
+    BOOST_TEST_EQ(3.1f, particles[3].posY());
+    BOOST_TEST_EQ(3.2f, particles[3].posZ());
+    BOOST_TEST_EQ(3.3f, particles[3].velX());
+    BOOST_TEST_EQ(3.4f, particles[3].velY());
+    BOOST_TEST_EQ(3.5f, particles[3].velZ());
+
+    BOOST_TEST_EQ(4.0f, particles[4].posX());
+    BOOST_TEST_EQ(4.1f, particles[4].posY());
+    BOOST_TEST_EQ(4.2f, particles[4].posZ());
+    BOOST_TEST_EQ(4.3f, particles[4].velX());
+    BOOST_TEST_EQ(4.4f, particles[4].velY());
+    BOOST_TEST_EQ(4.5f, particles[4].velZ());
+}
+
 }
 
 int main(int argc, char **argv)

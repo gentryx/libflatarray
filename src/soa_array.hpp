@@ -30,6 +30,9 @@ template<typename T, int MY_SIZE>
 class soa_array
 {
 public:
+    template<typename T2, int MY_SIZE2>
+    friend void swap(soa_array<T2, MY_SIZE2>& a, soa_array<T2, MY_SIZE2>& b);
+
     typedef T value_type;
     typedef soa_accessor<value_type, MY_SIZE, 1, 1, 0> iterator;
     static const std::size_t SIZE = MY_SIZE;
@@ -136,6 +139,28 @@ public:
         return *this;
     }
 
+    template<long OTHER_SIZE>
+    inline
+    __host__ __device__
+    void load(const soa_accessor<value_type, OTHER_SIZE, 1, 1, 0>& accessor, std::size_t num)
+    {
+        load(accessor, num, elements);
+    }
+
+    template<long OTHER_SIZE>
+    inline
+    __host__ __device__
+    void load(const soa_accessor<value_type, OTHER_SIZE, 1, 1, 0>& accessor, std::size_t num, std::size_t offset)
+    {
+        std::size_t new_elements = std::max(elements, num + offset);
+        if (new_elements > SIZE) {
+            throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
+        }
+
+        at(offset).load(accessor.data(), num, accessor.index(), OTHER_SIZE);
+        elements = new_elements;
+    }
+
     inline
     __host__ __device__
     void clear()
@@ -234,15 +259,6 @@ private:
         elements = other.size();
     }
 };
-
-// fixme: needs test
-template<typename value_type, int size>
-void swap(soa_array<value_type, size>& a, soa_array<value_type, size>& b)
-{
-    using std::swap;
-    swap(a.elements, b.elements);
-    swap(a.my_data,  b.my_data);
-}
 
 }
 
