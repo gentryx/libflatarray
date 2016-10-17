@@ -163,17 +163,17 @@ install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   DESTINATION "${ConfigPackageLocation}")
 
-file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libflatarray/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME})
 endforeach()
 
-file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/detail/*.hpp")
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libflatarray/detail/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME}/detail)
 endforeach()
 
-file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/testbed/*.hpp")
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libflatarray/testbed/*.hpp")
 foreach(i ${HEADERS})
   install(FILES ${i} DESTINATION include/${PACKAGE_NAME}/testbed)
 endforeach()
@@ -195,7 +195,7 @@ if(WITH_CUDA)
   endif()
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})
 
 add_custom_target(check echo "Tests passed.")
