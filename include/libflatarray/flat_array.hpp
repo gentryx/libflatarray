@@ -27,5 +27,6 @@
 #include <libflatarray/soa_accessor.hpp>
 #include <libflatarray/soa_array.hpp>
 #include <libflatarray/soa_grid.hpp>
+#include <libflatarray/soa_vector.hpp>
 
 #endif
