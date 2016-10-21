@@ -22,6 +22,16 @@ Further information:
   - source repository: https://bitbucket.org/gentryx/libflatarray
   - contributors:      see file "AUTHORS"
 
+DEPENDENCIES
+============
+
+- C++ compiler (min. C++98, tested with GCC's g++, Clang's clang++,
+  and Intel's icpc)
+
+- CMake (min. 2.8.10)
+
+- build tool supported by CMake (e.g. make, ninja)
+
 BUILDING
 ========
 
