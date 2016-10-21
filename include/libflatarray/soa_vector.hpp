@@ -74,6 +74,13 @@ public:
 
     inline
     __host__ __device__
+    std::size_t capacity() const
+    {
+        return grid.dim_x();
+    }
+
+    inline
+    __host__ __device__
     void clear()
     {
         count = 0;
@@ -85,11 +92,8 @@ private:
 
     // fixme: retrieval of multiple elements
     // fixme: emplace
-    // fixme: at()
-    // fixme: operator[]
     // fixme: resize
     // fixme: reserve
-    // fixme: size
     // fixme: begin
     // fixme: end
     // fixme: push_back

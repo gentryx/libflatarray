@@ -42,6 +42,9 @@ ADD_TEST(TestConstructor)
     BOOST_TEST_EQ(vec1.size(),  0);
     BOOST_TEST_EQ(vec2.size(), 20);
 
+    BOOST_TEST(vec1.capacity() < vec2.capacity());
+    BOOST_TEST_EQ(vec2.capacity(), 20);
+
     vec1 = vec2;
     BOOST_TEST_EQ(vec1.size(), 20);
     BOOST_TEST_EQ(vec2.size(), 20);
