@@ -24,18 +24,31 @@ template<typename CELL>
 class set_byte_size_functor
 {
 public:
-    explicit set_byte_size_functor(std::size_t *byte_size) :
-        byte_size(byte_size)
+    explicit set_byte_size_functor(
+        std::size_t *byte_size,
+        std::size_t *extent_x,
+        std::size_t *extent_y,
+        std::size_t *extent_z) :
+        byte_size(byte_size),
+        extent_x(extent_x),
+        extent_y(extent_y),
+        extent_z(extent_z)
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
         *byte_size = aggregated_member_size<CELL>::VALUE * DIM_X * DIM_Y * DIM_Z;
+        *extent_x = DIM_X;
+        *extent_y = DIM_Y;
+        *extent_z = DIM_Z;
     }
 
 private:
     std::size_t *byte_size;
+    std::size_t *extent_x;
+    std::size_t *extent_y;
+    std::size_t *extent_z;
 };
 
 }

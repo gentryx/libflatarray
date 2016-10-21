@@ -124,7 +124,11 @@ public:
         my_dim_y = new_dim_y;
         my_dim_z = new_dim_z;
         // we need callback() to round up our grid size
-        callback(detail::flat_array::set_byte_size_functor<value_type>(&my_byte_size));
+        callback(detail::flat_array::set_byte_size_functor<value_type>(
+                     &my_byte_size,
+                     &my_extent_x,
+                     &my_extent_y,
+                     &my_extent_z));
         my_data = ALLOCATOR().allocate(byte_size());
         init();
     }
@@ -345,10 +349,28 @@ public:
         return my_dim_z;
     }
 
+    std::size_t extent_x() const
+    {
+        return my_extent_x;
+    }
+
+    std::size_t extent_y() const
+    {
+        return my_extent_y;
+    }
+
+    std::size_t extent_z() const
+    {
+        return my_extent_z;
+    }
+
 private:
     std::size_t my_dim_x;
     std::size_t my_dim_y;
     std::size_t my_dim_z;
+    std::size_t my_extent_x;
+    std::size_t my_extent_y;
+    std::size_t my_extent_z;
     std::size_t my_byte_size;
     // We can't use std::vector here since the code needs to work with CUDA, too.
     char *my_data;

@@ -1171,6 +1171,10 @@ ADD_TEST(TestCopyConstructor1)
     BOOST_TEST(grid1.dim_y() == 10);
     BOOST_TEST(grid1.dim_z() ==  1);
 
+    BOOST_TEST_EQ(grid1.extent_x(), 32);
+    BOOST_TEST_EQ(grid1.extent_y(), 32);
+    BOOST_TEST_EQ(grid1.extent_z(),  1);
+
     BOOST_TEST(grid2.dim_x() == 20);
     BOOST_TEST(grid2.dim_y() == 10);
     BOOST_TEST(grid2.dim_z() ==  1);
