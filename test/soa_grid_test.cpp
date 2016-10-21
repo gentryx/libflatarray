@@ -38,7 +38,10 @@ public:
     bool alive;
 };
 
-LIBFLATARRAY_REGISTER_SOA(HeatedGameOfLifeCell, ((double)(temperature))((bool)(alive)))
+LIBFLATARRAY_REGISTER_SOA(
+    HeatedGameOfLifeCell,
+    ((double)(temperature))
+    ((bool)(alive)))
 
 class CellWithMultipleMembersOfSameType
 {
@@ -57,7 +60,11 @@ private:
     double memberC;
 };
 
-LIBFLATARRAY_REGISTER_SOA(CellWithMultipleMembersOfSameType, ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(
+    CellWithMultipleMembersOfSameType,
+    ((double)(memberA))
+    ((double)(memberB))
+    ((double)(memberC)))
 
 class CellWithArrayMember
 {
@@ -69,7 +76,7 @@ public:
 
 LIBFLATARRAY_REGISTER_SOA(
     CellWithArrayMember,
-    ((double)(temp)(40)) )
+    ((double)(temp)(40)))
 
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
