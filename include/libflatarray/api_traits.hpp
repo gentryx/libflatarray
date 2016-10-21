@@ -129,13 +129,35 @@ public:
             const std::size_t dim_y = 1,
             const std::size_t dim_z = 1)
         {
-            has_default_3d_sizes_uniform api;
-            api.template select_size<CELL>(
-                data,
-                functor,
-                dim_x,
-                dim_y,
-                dim_z);
+            if ((dim_y > 1) && (dim_z > 1)) {
+                has_default_3d_sizes_uniform api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
+                return;
+            }
+
+            if (dim_y > 1) {
+                has_default_2d_sizes_uniform api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
+                return;
+            }
+
+            has_default_1d_sizes api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
         }
 
         template<typename FUNCTOR>
@@ -146,13 +168,35 @@ public:
             const std::size_t dim_y = 1,
             const std::size_t dim_z = 1)
         {
-            has_default_3d_sizes_uniform api;
-            api.template select_size<CELL>(
-                data,
-                functor,
-                dim_x,
-                dim_y,
-                dim_z);
+            if ((dim_y > 1) && (dim_z > 1)) {
+                has_default_3d_sizes_uniform api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
+                return;
+            }
+
+            if (dim_y > 1) {
+                has_default_2d_sizes_uniform api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
+                return;
+            }
+
+            has_default_1d_sizes api;
+                api.template select_size<CELL>(
+                    data,
+                    functor,
+                    dim_x,
+                    dim_y,
+                    dim_z);
         }
     };
 

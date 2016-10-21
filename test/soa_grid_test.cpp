@@ -1215,6 +1215,21 @@ ADD_TEST(TestCopyConstructor2)
     }
 }
 
+ADD_TEST(TestDefaultSizesFor1D2D3D)
+{
+    // should require approx. 1 GB RAM:
+    soa_grid<HeatedGameOfLifeCell> grid3D(500, 500, 500);
+
+    // should require approx. 1 GB RAM, but would fail if allocated as
+    // 3D grid (in that case memory requirement would be 9 TB).
+    soa_grid<HeatedGameOfLifeCell> grid2D(10000, 10000, 1);
+
+    // should require approx. 1 GB RAM, but would fail if allocated as
+    // 2D grid (in that case memory requirement would be 80 PB). Worse
+    // for 3D.
+    soa_grid<HeatedGameOfLifeCell> grid1D(100000000, 1, 1);
+}
+
 }
 
 int main(int argc, char **argv)
