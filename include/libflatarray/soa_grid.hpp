@@ -160,7 +160,7 @@ public:
         cell_staging_buffer.resize(1);
         cell_staging_buffer.load(&cell);
 
-        callback(detail::flat_array::set_instance_functor<value_type, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::set_instance_functor<value_type, 1, USE_CUDA_FUNCTORS>(
                      cell_staging_buffer.data(),
                      x,
                      y,
@@ -173,7 +173,7 @@ public:
         cell_staging_buffer.resize(count);
         cell_staging_buffer.load(cells);
 
-        callback(detail::flat_array::set_instance_functor<value_type, USE_CUDA_FUNCTORS>(
+        callback(detail::flat_array::set_instance_functor<value_type, 1, USE_CUDA_FUNCTORS>(
                      cell_staging_buffer.data(),
                      x,
                      y,
@@ -211,6 +211,22 @@ public:
                      count));
 
         cell_staging_buffer.save(cells);
+    }
+
+    /**
+     * Like set(), but will copy the same cell to all count target cells.
+     */
+    void broadcast(std::size_t x, std::size_t y, std::size_t z, const value_type& cell, std::size_t count)
+    {
+        cell_staging_buffer.resize(1);
+        cell_staging_buffer.load(&cell);
+
+        callback(detail::flat_array::set_instance_functor<value_type, 0, USE_CUDA_FUNCTORS>(
+                     cell_staging_buffer.data(),
+                     x,
+                     y,
+                     z,
+                     count));
     }
 
     void load(

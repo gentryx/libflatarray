@@ -1222,6 +1222,26 @@ ADD_TEST(TestCopyConstructor2)
     }
 }
 
+ADD_TEST(TestBroadcast)
+{
+    soa_grid<HeatedGameOfLifeCell> grid(20, 10, 1);
+    HeatedGameOfLifeCell hotCell(200);
+
+    grid.broadcast(5, 7, 0, hotCell, 10);
+
+    for (int y = 0; y < 10; ++y) {
+        for (int x = 0; x < 20; ++x) {
+            HeatedGameOfLifeCell actual = grid.get(x, y, 0);
+            HeatedGameOfLifeCell expected(0, false);
+            if ((y == 7) && (x >= 5) && (x < 15)) {
+                expected.temperature = 200;
+            }
+
+            BOOST_TEST_EQ(actual, expected);
+        }
+    }
+}
+
 ADD_TEST(TestDefaultSizesFor1D2D3D)
 {
     // should require approx. 1 GB RAM:

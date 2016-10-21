@@ -20,7 +20,7 @@ namespace flat_array {
  * This helper class uses an accessor to push an object's members into
  * the SoA storage.
  */
-template<typename CELL, bool USE_CUDA_FUNCTORS = false>
+template<typename CELL, long SOURCE_STRIDE, bool USE_CUDA_FUNCTORS = false>
 class set_instance_functor
 {
 public:
@@ -45,7 +45,7 @@ public:
 
         for (std::size_t i = 0; i < count; ++i) {
             accessor << *cursor;
-            ++cursor;
+            cursor += SOURCE_STRIDE;
             ++accessor.index();
         }
     }
@@ -61,11 +61,11 @@ private:
 #ifdef LIBFLATARRAY_WITH_CUDA
 #ifdef __CUDACC__
 
-template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
+template<typename CELL, long SOURCE_STRIDE, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
 __global__
 void set_kernel(const CELL *source, char *target, long count, long x, long y, long z)
 {
-    long offset = blockDim.x * blockIdx.x + threadIdx.x;
+    long offset = (blockDim.x * blockIdx.x + threadIdx.x) * SOURCE_STRIDE;
     if (offset >= count) {
         return;
     }
@@ -81,8 +81,8 @@ void set_kernel(const CELL *source, char *target, long count, long x, long y, lo
 /**
  * Specialization for CUDA
  */
-template<typename CELL>
-class set_instance_functor<CELL, true>
+template<typename CELL, long SOURCE_STRIDE>
+class set_instance_functor<CELL, SOURCE_STRIDE, true>
 {
 public:
     set_instance_functor(
@@ -106,7 +106,7 @@ public:
         dim3 block_dim;
         generate_launch_config()(&grid_dim, &block_dim, count, 1, 1);
 
-        set_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
+        set_kernel<CELL, SOURCE_STRIDE, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
             source,
             accessor.data(),
             count,
