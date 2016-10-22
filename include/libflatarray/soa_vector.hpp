@@ -8,6 +8,7 @@
 #ifndef FLAT_ARRAY_SOA_VECTOR_HPP
 #define FLAT_ARRAY_SOA_VECTOR_HPP
 
+#include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/soa_accessor.hpp>
 #include <libflatarray/soa_grid.hpp>
 #include <stdexcept>
@@ -19,7 +20,10 @@ namespace LibFlatArray {
  * to provide an interface similar to std::vector and simultaneously
  * have a callback to expose the struct-of-arrays layout.
  */
-template<typename T>
+template<
+    typename T,
+    typename ALLOCATOR = aligned_allocator<char, 4096>,
+    bool USE_CUDA_FUNCTORS = false>
 class soa_vector
 {
 public:
@@ -89,7 +93,7 @@ public:
     __host__ __device__
     void reserve(std::size_t new_count)
     {
-        soa_grid<T> new_grid(new_count, 1, 1);
+        soa_grid<T, ALLOCATOR, USE_CUDA_FUNCTORS> new_grid(new_count, 1, 1);
         new_grid.resize(new_grid.extent_x(), 1, 1);
 
         detail::flat_array::simple_streak iter[2] = {
@@ -153,12 +157,12 @@ public:
     }
 
 private:
-    // fixme: make allocator configurable
-    soa_grid<T> grid;
+    soa_grid<T, ALLOCATOR, USE_CUDA_FUNCTORS> grid;
     std::size_t count;
 
     // fixme: retrieval of multiple elements
     // fixme: emplace
+    // fixme: add cuda test
 };
 
 }
