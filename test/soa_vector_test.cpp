@@ -64,6 +64,46 @@ ADD_TEST(TestConstructor)
     }
 }
 
+ADD_TEST(TestResizeAndReserve)
+{
+    soa_vector<Particle> vec(10);
+
+    for (int i = 0; i < 10; ++i) {
+        Particle p = vec.get(i);
+        p.time_to_live = 1000 + i;
+        vec.set(i, p);
+    }
+
+    BOOST_TEST_EQ(10, vec.size());
+
+    vec.resize(50);
+    BOOST_TEST_EQ(50, vec.size());
+
+    for (int i = 0; i < 10; ++i) {
+        Particle p = vec.get(i);
+        BOOST_TEST_EQ(1000 + i, p.time_to_live);
+    }
+
+    vec.resize(5);
+    BOOST_TEST_EQ(5, vec.size());
+
+    for (int i = 0; i < 5; ++i) {
+        Particle p = vec.get(i);
+        BOOST_TEST_EQ(1000 + i, p.time_to_live);
+    }
+
+    vec.reserve(1000);
+    BOOST_TEST(vec.grid.extent_x() > 1000);
+    BOOST_TEST_EQ(vec.grid.extent_y(), 1);
+    BOOST_TEST_EQ(vec.grid.extent_z(), 1);
+    BOOST_TEST_EQ(5, vec.size());
+
+    for (int i = 0; i < 5; ++i) {
+        Particle p = vec.get(i);
+        BOOST_TEST_EQ(1000 + i, p.time_to_live);
+    }
+}
+
 }
 
 int main(int argc, char **argv)

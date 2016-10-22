@@ -23,6 +23,8 @@ template<typename T>
 class soa_vector
 {
 public:
+    friend class TestResizeAndReserve;
+
     typedef T value_type;
 
     inline
@@ -74,6 +76,33 @@ public:
 
     inline
     __host__ __device__
+    void resize(std::size_t new_count)
+    {
+        if (new_count > capacity()) {
+            reserve(new_count);
+        }
+
+        count = new_count;
+    }
+
+    inline
+    __host__ __device__
+    void reserve(std::size_t new_count)
+    {
+        soa_grid<T> new_grid(new_count, 1, 1);
+        new_grid.resize(new_grid.extent_x(), 1, 1);
+
+        detail::flat_array::simple_streak iter[2] = {
+            detail::flat_array::simple_streak(0, 0, 0, count),
+            detail::flat_array::simple_streak()
+        };
+
+        new_grid.load(iter + 0, iter + 1, grid.data(), grid.extent_x());
+        swap(new_grid, grid);
+    }
+
+    inline
+    __host__ __device__
     std::size_t capacity() const
     {
         return grid.dim_x();
@@ -92,11 +121,8 @@ private:
 
     // fixme: retrieval of multiple elements
     // fixme: emplace
-    // fixme: resize
-    // fixme: reserve
-    // fixme: begin
-    // fixme: end
     // fixme: push_back
+    // fixme: pop_back
 };
 
 }
