@@ -17,6 +17,28 @@ public:
     int time_to_live;
 };
 
+class UpdateParticles
+{
+public:
+    UpdateParticles(int count) :
+        count(count)
+    {}
+
+    template<typename SOA_ACCESSOR>
+    void operator()(SOA_ACCESSOR particle_iter)
+    {
+        // fixme: use particle_iter < count bzw !=
+        for (; particle_iter.index() < count; ++particle_iter) {
+            particle_iter.pos()[0] += 0.1f * particle_iter.vel()[0];
+            particle_iter.pos()[1] += 0.1f * particle_iter.vel()[1];
+            particle_iter.pos()[2] += 0.1f * particle_iter.vel()[2];
+        }
+    }
+
+private:
+    int count;
+};
+
 LIBFLATARRAY_REGISTER_SOA(
     Particle,
     ((float)(pos)(3))
@@ -147,6 +169,39 @@ ADD_TEST(TestPushBackAndPopBack)
     vec.pop_back();
     vec.pop_back();
     BOOST_TEST_EQ(996, vec.size());
+}
+
+ADD_TEST(TestCallback)
+{
+    soa_vector<Particle> vec;
+
+
+    for (int i = 0; i < 100; ++i) {
+        Particle p;
+        p.pos[0] = i * 1;
+        p.pos[1] = i * 2;
+        p.pos[2] = i * 3;
+
+        p.vel[0] = i * 4;
+        p.vel[1] = i * 5;
+        p.vel[2] = i * 6;
+
+        vec.push_back(p);
+    }
+
+    vec.callback(UpdateParticles(vec.size()));
+
+    for (int i = 0; i < 100; ++i) {
+        Particle p = vec.get(i);
+
+        float expected_pos_x = (i * 1) + 0.1f * (i * 4);
+        float expected_pos_y = (i * 2) + 0.1f * (i * 5);
+        float expected_pos_z = (i * 3) + 0.1f * (i * 6);
+
+        BOOST_TEST_EQ(p.pos[0], expected_pos_x);
+        BOOST_TEST_EQ(p.pos[1], expected_pos_y);
+        BOOST_TEST_EQ(p.pos[2], expected_pos_z);
+    }
 }
 
 }

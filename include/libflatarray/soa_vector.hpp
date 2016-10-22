@@ -136,12 +136,27 @@ public:
         set(count, T());
     }
 
+    template<typename FUNCTOR>
+    inline
+    __host__ __device__
+    void callback(FUNCTOR functor)
+    {
+        grid.callback(functor);
+    }
+
+    template<typename FUNCTOR>
+    inline
+    __host__ __device__
+    void callback(FUNCTOR functor) const
+    {
+        grid.callback(functor);
+    }
+
 private:
     // fixme: make allocator configurable
     soa_grid<T> grid;
     std::size_t count;
 
-    // fixme: callback
     // fixme: retrieval of multiple elements
     // fixme: emplace
 };
