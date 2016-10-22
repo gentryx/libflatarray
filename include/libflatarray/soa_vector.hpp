@@ -115,14 +115,35 @@ public:
         count = 0;
     }
 
+    inline
+    __host__ __device__
+    void push_back(const T& element)
+    {
+        if (count == grid.extent_x()) {
+            // fixme: make this configurable
+            reserve(count * 1.2);
+        }
+        set(count, element);
+        ++count;
+    }
+
+    inline
+    __host__ __device__
+    void pop_back()
+    {
+        --count;
+        // destroy last element by overwriting with default element:
+        set(count, T());
+    }
+
 private:
+    // fixme: make allocator configurable
     soa_grid<T> grid;
     std::size_t count;
 
+    // fixme: callback
     // fixme: retrieval of multiple elements
     // fixme: emplace
-    // fixme: push_back
-    // fixme: pop_back
 };
 
 }

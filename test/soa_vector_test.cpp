@@ -104,6 +104,51 @@ ADD_TEST(TestResizeAndReserve)
     }
 }
 
+ADD_TEST(TestPushBackAndPopBack)
+{
+    soa_vector<Particle> vec;
+    BOOST_TEST_EQ(0, vec.size());
+
+    Particle p;
+    p.pos[0] = 10.0;
+    p.pos[1] = 10.1;
+    p.pos[2] = 10.2;
+    vec.push_back(p);
+    BOOST_TEST_EQ(1, vec.size());
+
+    Particle q = vec.get(0);
+    BOOST_TEST_EQ(10.0f, q.pos[0]);
+    BOOST_TEST_EQ(10.1f, q.pos[1]);
+    BOOST_TEST_EQ(10.2f, q.pos[2]);
+
+    vec.pop_back();
+    BOOST_TEST_EQ(0, vec.size());
+
+    for (int i = 0; i < 1000; ++i) {
+        Particle p;
+        p.pos[0] = i + 0.0;
+        p.pos[1] = i + 0.1;
+        p.pos[2] = i + 0.2;
+        vec.push_back(p);
+    }
+
+    BOOST_TEST_EQ(1000, vec.size());
+    BOOST_TEST(1000 < vec.capacity());
+
+    for (int i = 0; i < 1000; ++i) {
+        Particle p = vec.get(i);
+        BOOST_TEST_EQ(i + 0.0f, p.pos[0]);
+        BOOST_TEST_EQ(i + 0.1f, p.pos[1]);
+        BOOST_TEST_EQ(i + 0.2f, p.pos[2]);
+    }
+
+    vec.pop_back();
+    vec.pop_back();
+    vec.pop_back();
+    vec.pop_back();
+    BOOST_TEST_EQ(996, vec.size());
+}
+
 }
 
 int main(int argc, char **argv)
