@@ -80,6 +80,13 @@ public:
 
     inline
     __host__ __device__
+    bool empty() const
+    {
+        return count == 0;
+    }
+
+    inline
+    __host__ __device__
     void resize(std::size_t new_count)
     {
         if (new_count > capacity()) {

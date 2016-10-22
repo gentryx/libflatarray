@@ -64,6 +64,9 @@ ADD_TEST(TestConstructor)
     BOOST_TEST_EQ(vec1.size(),  0);
     BOOST_TEST_EQ(vec2.size(), 20);
 
+    BOOST_TEST_EQ(vec1.empty(), true);
+    BOOST_TEST_EQ(vec2.empty(), false);
+
     BOOST_TEST(vec1.capacity() < vec2.capacity());
     BOOST_TEST_EQ(vec2.capacity(), 20);
 
@@ -71,9 +74,14 @@ ADD_TEST(TestConstructor)
     BOOST_TEST_EQ(vec1.size(), 20);
     BOOST_TEST_EQ(vec2.size(), 20);
 
+    BOOST_TEST_EQ(vec1.empty(), false);
+    BOOST_TEST_EQ(vec2.empty(), false);
+
     vec2.clear();
     BOOST_TEST_EQ(vec1.size(), 20);
     BOOST_TEST_EQ(vec2.size(),  0);
+    BOOST_TEST_EQ(vec1.empty(), false);
+    BOOST_TEST_EQ(vec2.empty(), true);
 
     for (std::size_t i = 0; i < vec1.size(); ++i) {
         BOOST_TEST_EQ(1.0f, vec1.get(i).pos[0]);
