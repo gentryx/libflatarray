@@ -103,8 +103,13 @@ public:
         swap(my_dim_x, other.my_dim_x);
         swap(my_dim_x, other.my_dim_x);
         swap(my_dim_x, other.my_dim_x);
+        swap(my_extent_x, other.my_extent_x);
+        swap(my_extent_x, other.my_extent_x);
+        swap(my_extent_x, other.my_extent_x);
         swap(my_byte_size, other.my_byte_size);
         swap(my_data, other.my_data);
+        swap(cell_staging_buffer, other.cell_staging_buffer);
+        swap(raw_staging_buffer, other.raw_staging_buffer);
     }
 
     /**
