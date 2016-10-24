@@ -12,6 +12,20 @@
 class Particle
 {
 public:
+    Particle()
+    {}
+
+    Particle(int i, int j)
+    {
+        pos[0] = i +  0;
+        pos[1] = i + 10;
+        pos[2] = i + 20;
+        vel[0] = i + 30;
+        vel[1] = i + 40;
+        vel[2] = i + 50;
+        time_to_live = j;
+    }
+
     float pos[3];
     float vel[3];
     int time_to_live;
@@ -210,6 +224,31 @@ ADD_TEST(TestCallback)
         BOOST_TEST_EQ(p.pos[1], expected_pos_y);
         BOOST_TEST_EQ(p.pos[2], expected_pos_z);
     }
+}
+
+ADD_TEST(TestEmplace)
+{
+#ifdef LIBFLATARRAY_WITH_CPP14
+    soa_vector<Particle> vec;
+    vec.emplace_back(1, 2);
+    vec.emplace_back(3, 4);
+
+    BOOST_TEST_EQ( 1, vec.get(0).pos[0]);
+    BOOST_TEST_EQ(11, vec.get(0).pos[1]);
+    BOOST_TEST_EQ(21, vec.get(0).pos[2]);
+    BOOST_TEST_EQ(31, vec.get(0).vel[0]);
+    BOOST_TEST_EQ(41, vec.get(0).vel[1]);
+    BOOST_TEST_EQ(51, vec.get(0).vel[2]);
+    BOOST_TEST_EQ( 2, vec.get(0).time_to_live);
+
+    BOOST_TEST_EQ( 3, vec.get(1).pos[0]);
+    BOOST_TEST_EQ(13, vec.get(1).pos[1]);
+    BOOST_TEST_EQ(23, vec.get(1).pos[2]);
+    BOOST_TEST_EQ(33, vec.get(1).vel[0]);
+    BOOST_TEST_EQ(43, vec.get(1).vel[1]);
+    BOOST_TEST_EQ(53, vec.get(1).vel[2]);
+    BOOST_TEST_EQ( 4, vec.get(1).time_to_live);
+#endif
 }
 
 }

@@ -147,6 +147,16 @@ public:
         set(count, T());
     }
 
+#ifdef LIBFLATARRAY_WITH_CPP14
+    template<class... ARGS>
+    inline
+    __host__ __device__
+    void emplace_back(ARGS&&... args)
+    {
+        push_back(T(std::forward<ARGS>(args)...));
+    }
+#endif
+
     template<typename FUNCTOR>
     inline
     __host__ __device__
@@ -168,8 +178,8 @@ private:
     std::size_t count;
 
     // fixme: retrieval of multiple elements
-    // fixme: emplace
     // fixme: add cuda test
+    // fixme: add begin/end for range-based loops, dito for soa_array and perhaps for short_vec (alternatively an iterator loop)
 };
 
 }
