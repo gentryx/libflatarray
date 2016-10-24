@@ -964,6 +964,107 @@ public:
         ptr[offsets[31]] = val32;
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<float, 1>& other)
+    {
+        if (mask & (1 << 0)) {
+            val1 = other.val1;
+        }
+        if (mask & (1 << 1)) {
+            val2 = other.val2;
+        }
+        if (mask & (1 << 2)) {
+            val3 = other.val3;
+        }
+        if (mask & (1 << 3)) {
+            val4 = other.val4;
+        }
+        if (mask & (1 << 4)) {
+            val5 = other.val5;
+        }
+        if (mask & (1 << 5)) {
+            val6 = other.val6;
+        }
+        if (mask & (1 << 6)) {
+            val7 = other.val7;
+        }
+        if (mask & (1 << 7)) {
+            val8 = other.val8;
+        }
+        if (mask & (1 << 8)) {
+            val9 = other.val9;
+        }
+        if (mask & (1 << 9)) {
+            val10 = other.val10;
+        }
+        if (mask & (1 << 10)) {
+            val11 = other.val11;
+        }
+        if (mask & (1 << 11)) {
+            val12 = other.val12;
+        }
+        if (mask & (1 << 12)) {
+            val13 = other.val13;
+        }
+        if (mask & (1 << 13)) {
+            val14 = other.val14;
+        }
+        if (mask & (1 << 14)) {
+            val15 = other.val15;
+        }
+        if (mask & (1 << 15)) {
+            val16 = other.val16;
+        }
+        if (mask & (1 << 16)) {
+            val17 = other.val17;
+        }
+        if (mask & (1 << 17)) {
+            val18 = other.val18;
+        }
+        if (mask & (1 << 18)) {
+            val19 = other.val19;
+        }
+        if (mask & (1 << 19)) {
+            val20 = other.val20;
+        }
+        if (mask & (1 << 20)) {
+            val21 = other.val21;
+        }
+        if (mask & (1 << 21)) {
+            val22 = other.val22;
+        }
+        if (mask & (1 << 22)) {
+            val23 = other.val23;
+        }
+        if (mask & (1 << 23)) {
+            val24 = other.val24;
+        }
+        if (mask & (1 << 24)) {
+            val25 = other.val25;
+        }
+        if (mask & (1 << 25)) {
+            val26 = other.val26;
+        }
+        if (mask & (1 << 26)) {
+            val27 = other.val27;
+        }
+        if (mask & (1 << 27)) {
+            val28 = other.val28;
+        }
+        if (mask & (1 << 28)) {
+            val29 = other.val29;
+        }
+        if (mask & (1 << 29)) {
+            val30 = other.val30;
+        }
+        if (mask & (1 << 30)) {
+            val31 = other.val31;
+        }
+        if (mask & (1 << 31)) {
+            val32 = other.val32;
+        }
+    }
+
 private:
     float val1;
     float val2;

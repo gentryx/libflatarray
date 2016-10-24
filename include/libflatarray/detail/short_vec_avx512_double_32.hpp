@@ -355,6 +355,15 @@ public:
         _mm512_i32scatter_pd(ptr, indices, val4, 8);
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<double, 32>& other)
+    {
+        _mm512_mask_blend_pd((mask >>  0)      , val1, other.val1);
+        _mm512_mask_blend_pd((mask >>  8) & 255, val2, other.val2);
+        _mm512_mask_blend_pd((mask >> 16) & 255, val3, other.val3);
+        _mm512_mask_blend_pd((mask >> 24) & 255, val4, other.val4);
+    }
+
 private:
     __m512d val1;
     __m512d val2;

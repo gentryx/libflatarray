@@ -389,6 +389,23 @@ public:
         _mm_storeh_pd(ptr + offsets[15], tmp);
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<double, 16>& other)
+    {
+        val1 = _mm256_or_pd(
+            _mm256_andnot_pd(mask.val1, val1),
+            _mm256_and_pd(mask.val1, other.val1));
+        val2 = _mm256_or_pd(
+            _mm256_andnot_pd(mask.val2, val2),
+            _mm256_and_pd(mask.val2, other.val2));
+        val3 = _mm256_or_pd(
+            _mm256_andnot_pd(mask.val3, val3),
+            _mm256_and_pd(mask.val3, other.val3));
+        val4 = _mm256_or_pd(
+            _mm256_andnot_pd(mask.val4, val4),
+            _mm256_and_pd(mask.val4, other.val4));
+    }
+
 private:
     __m256d val1;
     __m256d val2;

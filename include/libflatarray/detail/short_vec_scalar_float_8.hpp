@@ -391,6 +391,35 @@ public:
         ptr[offsets[7]] = val8;
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<float, 1>& other)
+    {
+        if (mask & (1 << 0)) {
+            val1 = other.val1;
+        }
+        if (mask & (1 << 1)) {
+            val2 = other.val2;
+        }
+        if (mask & (1 << 2)) {
+            val3 = other.val3;
+        }
+        if (mask & (1 << 3)) {
+            val4 = other.val4;
+        }
+        if (mask & (1 << 4)) {
+            val5 = other.val5;
+        }
+        if (mask & (1 << 5)) {
+            val6 = other.val6;
+        }
+        if (mask & (1 << 6)) {
+            val7 = other.val7;
+        }
+        if (mask & (1 << 7)) {
+            val8 = other.val8;
+        }
+    }
+
 private:
     float val1;
     float val2;

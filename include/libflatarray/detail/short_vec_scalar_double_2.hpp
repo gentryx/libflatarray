@@ -246,6 +246,17 @@ public:
         ptr[offsets[1]] = val2;
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<double, 2>& other)
+    {
+        if (mask & (1 << 0)) {
+            val1 = other.val1;
+        }
+        if (mask & (1 << 1)) {
+            val2 = other.val2;
+        }
+    }
+
 private:
     double val1;
     double val2;

@@ -266,6 +266,13 @@ public:
         _mm_storeh_pd(ptr + offsets[3], val2);
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<double, 4>& other)
+    {
+        val1  = _mm_blendv_pd(val1,  other.val1,  mask.val1);
+        val2  = _mm_blendv_pd(val2,  other.val2,  mask.val2);
+    }
+
 private:
     __m128d val1;
     __m128d val2;

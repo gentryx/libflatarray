@@ -454,6 +454,15 @@ public:
    }
 #endif
 
+    inline
+    void blend(const mask_type& mask, const short_vec<float, 16>& other)
+    {
+        val1 = _mm_blendv_ps(val1, other.val1, mask.val1);
+        val2 = _mm_blendv_ps(val2, other.val2, mask.val2);
+        val3 = _mm_blendv_ps(val3, other.val3, mask.val3);
+        val4 = _mm_blendv_ps(val4, other.val4, mask.val4);
+    }
+
 private:
     __m128 val1;
     __m128 val2;

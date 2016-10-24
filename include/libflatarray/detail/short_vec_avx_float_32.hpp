@@ -442,6 +442,23 @@ public:
         _MM_EXTRACT_FLOAT(ptr[offsets[31]], tmp, 3);
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<float, 32>& other)
+    {
+        val1 = _mm256_or_ps(
+            _mm256_andnot_ps(mask.val1, val1),
+            _mm256_and_ps(mask.val1, other.val1));
+        val2 = _mm256_or_ps(
+            _mm256_andnot_ps(mask.val2, val2),
+            _mm256_and_ps(mask.val2, other.val2));
+        val3 = _mm256_or_ps(
+            _mm256_andnot_ps(mask.val3, val3),
+            _mm256_and_ps(mask.val3, other.val3));
+        val4 = _mm256_or_ps(
+            _mm256_andnot_ps(mask.val4, val4),
+            _mm256_and_ps(mask.val4, other.val4));
+    }
+
 private:
     __m256 val1;
     __m256 val2;

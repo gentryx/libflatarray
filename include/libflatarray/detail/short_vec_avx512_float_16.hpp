@@ -280,6 +280,12 @@ public:
         _mm512_i32scatter_ps(ptr, indices, val1, 4);
     }
 
+    inline
+    void blend(const mask_type& mask, const short_vec<float, 32>& other)
+    {
+        _mm512_mask_blend_ps((mask >>  0)        , val1, other.val1);
+    }
+
 private:
     __m512 val1;
 };
