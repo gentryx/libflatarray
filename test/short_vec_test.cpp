@@ -546,6 +546,34 @@ void testImplementationReal()
         }
     }
 
+    // test blend with mask
+    {
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY * 10);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY * 10);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual(ARITY * 10);
+
+        for (int i = 0; i < (ARITY * 10); ++i) {
+            array1[i] = i;
+            array2[i] = i / ARITY * (ARITY - 4) + ARITY;
+        }
+
+        for (int i = 0; i < (ARITY * 10); i += ARITY) {
+            ShortVec a(&array1[i]);
+            ShortVec b(&array2[i]);
+
+            typename ShortVec::mask_type mask = a < b;
+            ShortVec res = 1;
+            res.blend(mask, ShortVec(-1));
+            &actual[i] << res;
+        }
+
+        for (int i = 0; i < (ARITY * 10); ++i) {
+            float expected = (array1[i] < array2[i]) ? -1 : 1;
+            BOOST_TEST_EQ(expected, actual[i]);
+        }
+    }
+
+
     // fixme: add all tests for int, too
 }
 
