@@ -61,7 +61,7 @@ namespace LibFlatArray {
  *     on an Intel i7-6700HQ). Bottom line: never underestimate the
  *     cache size!
  */
-template<typename CARGO, typename ACCESSOR, int LAST_LEVEL_CACHE_SIZE_ESTIMATE = (1 << 25)>
+template<typename CARGO, typename ACCESSOR, int UNROLL_FACTOR = 2, int LAST_LEVEL_CACHE_SIZE_ESTIMATE = (1 << 25)>
 class estimate_optimum_short_vec_type
 {
 public:
@@ -100,8 +100,7 @@ public:
 #    endif
 #  endif
 
-    // rule of thumb: 2x loop unrolling for CPUs:
-    static const int ARITY = 2 * BIT_WIDTH / sizeof(CARGO) / 8;
+    static const int ARITY = UNROLL_FACTOR * BIT_WIDTH / sizeof(CARGO) / 8;
 #endif
 
     static const int STREAMING_FLAG =
