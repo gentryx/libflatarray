@@ -260,9 +260,9 @@ public:
     }
 
     inline
-    void blend(const mask_type& mask, const short_vec<double, 32>& other)
+    void blend(const mask_type& mask, const short_vec<double, 8>& other)
     {
-        _mm512_mask_blend_pd((mask >>  0), val1, other.val1);
+        val1 = _mm512_mask_blend_pd((mask >>  0), val1, other.val1);
     }
 
 private:

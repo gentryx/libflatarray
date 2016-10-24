@@ -317,8 +317,8 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<float, 32>& other)
     {
-        _mm512_mask_blend_ps((mask >>  0)        , val1, other.val1);
-        _mm512_mask_blend_ps((mask >> 16) & 65535, val2, other.val2);
+        val1 = _mm512_mask_blend_ps((mask >>  0)        , val1, other.val1);
+        val2 = _mm512_mask_blend_ps((mask >> 16) & 65535, val2, other.val2);
     }
 
 private:

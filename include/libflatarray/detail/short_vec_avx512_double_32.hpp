@@ -358,10 +358,10 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<double, 32>& other)
     {
-        _mm512_mask_blend_pd((mask >>  0)      , val1, other.val1);
-        _mm512_mask_blend_pd((mask >>  8) & 255, val2, other.val2);
-        _mm512_mask_blend_pd((mask >> 16) & 255, val3, other.val3);
-        _mm512_mask_blend_pd((mask >> 24) & 255, val4, other.val4);
+        val1 = _mm512_mask_blend_pd((mask >>  0)      , val1, other.val1);
+        val2 = _mm512_mask_blend_pd((mask >>  8) & 255, val2, other.val2);
+        val3 = _mm512_mask_blend_pd((mask >> 16) & 255, val3, other.val3);
+        val4 = _mm512_mask_blend_pd((mask >> 24) & 255, val4, other.val4);
     }
 
 private:
