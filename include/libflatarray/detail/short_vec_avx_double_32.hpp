@@ -576,30 +576,14 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<double, 32>& other)
     {
-        val1 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val1, val1),
-            _mm256_and_pd(mask.val1, other.val1));
-        val2 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val2, val2),
-            _mm256_and_pd(mask.val2, other.val2));
-        val3 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val3, val3),
-            _mm256_and_pd(mask.val3, other.val3));
-        val4 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val4, val4),
-            _mm256_and_pd(mask.val4, other.val4));
-        val5 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val5, val5),
-            _mm256_and_pd(mask.val5, other.val5));
-        val6 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val6, val6),
-            _mm256_and_pd(mask.val6, other.val6));
-        val7 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val7, val7),
-            _mm256_and_pd(mask.val7, other.val7));
-        val8 = _mm256_or_pd(
-            _mm256_andnot_pd(mask.val8, val8),
-            _mm256_and_pd(mask.val8, other.val8));
+        val1  = _mm256_blendv_pd(val1,  other.val1,  mask.val1);
+        val2  = _mm256_blendv_pd(val2,  other.val2,  mask.val2);
+        val3  = _mm256_blendv_pd(val3,  other.val3,  mask.val3);
+        val4  = _mm256_blendv_pd(val4,  other.val4,  mask.val4);
+        val5  = _mm256_blendv_pd(val5,  other.val5,  mask.val5);
+        val6  = _mm256_blendv_pd(val6,  other.val6,  mask.val6);
+        val7  = _mm256_blendv_pd(val7,  other.val7,  mask.val7);
+        val8  = _mm256_blendv_pd(val8,  other.val8,  mask.val8);
     }
 
 private:

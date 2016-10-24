@@ -349,12 +349,8 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<float, 16>& other)
     {
-        val1 = _mm256_or_ps(
-            _mm256_andnot_ps(mask.val1, val1),
-            _mm256_and_ps(mask.val1, other.val1));
-        val2 = _mm256_or_ps(
-            _mm256_andnot_ps(mask.val2, val2),
-            _mm256_and_ps(mask.val2, other.val2));
+        val1  = _mm256_blendv_ps(val1,  other.val1,  mask.val1);
+        val2  = _mm256_blendv_ps(val2,  other.val2,  mask.val2);
     }
 
 private:
