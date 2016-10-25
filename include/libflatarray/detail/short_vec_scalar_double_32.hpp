@@ -1061,7 +1061,7 @@ public:
         if (mask & (1 << 30)) {
             val31 = other.val31;
         }
-        if (mask & (1 << 31)) {
+        if (mask & (0x80000000)) {
             val32 = other.val32;
         }
     }

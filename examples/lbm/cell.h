@@ -6,6 +6,9 @@
 class CellLBM
 {
 public:
+    class API : public LibFlatArray::api_traits::has_default_3d_sizes
+    {};
+
     double C;
     double N;
     double E;

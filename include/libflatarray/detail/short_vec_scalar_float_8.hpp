@@ -392,7 +392,7 @@ public:
     }
 
     inline
-    void blend(const mask_type& mask, const short_vec<float, 1>& other)
+    void blend(const mask_type& mask, const short_vec<float, 8>& other)
     {
         if (mask & (1 << 0)) {
             val1 = other.val1;
