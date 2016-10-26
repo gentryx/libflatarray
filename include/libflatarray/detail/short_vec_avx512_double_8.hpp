@@ -72,7 +72,7 @@ public:
     inline
     bool any() const
     {
-        return 0 == _mm512_testn_epi64_mask(
+        return _mm512_test_epi64_mask(
             _mm512_castpd_si512(val1),
             _mm512_castpd_si512(val1));
     }
