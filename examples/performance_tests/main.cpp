@@ -2274,7 +2274,7 @@ public:
         for (int t = 0; t < repeats; ++t) {
             typedef short_vec<float, 16> Float;
 
-            auto i = particle;
+            ACCESSOR i = particle;
             LIBFLATARRAY_LOOP_PEELER(Float, long, i.index(), n, update, i);
         }
     }
