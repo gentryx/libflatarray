@@ -2189,6 +2189,176 @@ public:
 
 };
 
+class ConditionalAny : public cpu_benchmark
+{
+public:
+    std::string family()
+    {
+        return "ConditionalAny";
+    }
+
+    std::string unit()
+    {
+        return "s";
+    }
+};
+
+class ConditionalAnyVanilla : public ConditionalAny
+{
+public:
+    std::string species()
+    {
+        return "vanilla";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        float radius2 = radius * radius;
+        int repeats = dim[2];
+
+        std::vector<Particle> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        int counter = 0;
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            for (std::vector<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
+                for (std::vector<Particle>::iterator j = particles.begin(); j != particles.end(); ++j) {
+                    float delta_x = i->posX - j->posX;
+                    float delta_y = i->posY - j->posY;
+                    float delta_z = i->posZ - j->posZ;
+                    float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
+                    if (distance2 < radius2) {
+                        ++counter;
+                    }
+                }
+            }
+        }
+
+        double tEnd = time();
+
+        if (counter == 4711) {
+            std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
+        }
+
+        return tEnd - tStart;
+
+    }
+};
+
+class ConditionalUpdater
+{
+public:
+    ConditionalUpdater(int repeats, long n, float radius2, int *counter) :
+        repeats(repeats),
+        n(n),
+        radius2(radius2),
+        counter(counter)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& particle) {
+        for (int t = 0; t < repeats; ++t) {
+            typedef short_vec<float, 16> Float;
+
+            auto i = particle;
+            LIBFLATARRAY_LOOP_PEELER(Float, long, i.index(), n, update, i);
+        }
+    }
+
+    template<typename Float, typename ACCESSOR>
+    void update(long& unused_counter, long end, ACCESSOR& i)
+    {
+        Float sum = 0.0f;
+
+        for (; i.index() < end; i += Float::ARITY) {
+            for (ACCESSOR j(i.data(), 0); j.index() < n; ++j) {
+                Float delta_x = Float(&i.posX()) - j.posX();
+                Float delta_y = Float(&i.posY()) - j.posY();
+                Float delta_z = Float(&i.posZ()) - j.posZ();
+                Float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
+
+                typename Float::mask_type mask = (distance2 < radius2);
+                if (any(mask)) {
+                    Float add(0.0f);
+                    add.blend(mask, 1.0f);
+                    sum += add;
+                }
+            }
+        }
+        float foo[Float::ARITY];
+        foo << sum;
+        for (int i = 0; i < Float::ARITY; ++i) {
+            *counter += foo[i];
+        }
+    }
+
+private:
+    int repeats;
+    long n;
+    float radius2;
+    int *counter;
+};
+
+
+class ConditionalAnyGold : public ConditionalAny
+{
+public:
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        float radius2 = radius * radius;
+        int repeats = dim[2];
+
+        soa_vector<Particle> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        int counter = 0;
+        std::size_t n = particles.size();
+
+        double tStart = time();
+
+        particles.callback(ConditionalUpdater(repeats, n, radius2, &counter));
+
+        double tEnd = time();
+
+        if (counter == 4711) {
+            std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
+        }
+
+        return tEnd - tStart;
+
+    }
+};
+
 int main(int argc, char **argv)
 {
     if ((argc < 3) || (argc == 4) || (argc > 5)) {
@@ -2317,6 +2487,31 @@ int main(int argc, char **argv)
     sizes[0][1] = 20;
     eval(ParticleInteractorVanilla(), sizes[0]);
     eval(ParticleInteractorGold(),    sizes[0]);
+
+    sizes.clear();
+
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back( 4);
+    sizes.back().push_back(70);
+
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back(16);
+    sizes.back().push_back(70);
+
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back(64);
+    sizes.back().push_back(70);
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(ConditionalAnyVanilla(), *i);
+    }
+
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(ConditionalAnyGold(), *i);
+    }
 
     return 0;
 }
