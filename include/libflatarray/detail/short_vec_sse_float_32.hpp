@@ -711,6 +711,7 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<float, 32>& other)
     {
+#ifdef __SSE4_1__
         val1 = _mm_blendv_ps(val1, other.val1, mask.val1);
         val2 = _mm_blendv_ps(val2, other.val2, mask.val2);
         val3 = _mm_blendv_ps(val3, other.val3, mask.val3);
@@ -719,6 +720,32 @@ public:
         val6 = _mm_blendv_ps(val6, other.val6, mask.val6);
         val7 = _mm_blendv_ps(val7, other.val7, mask.val7);
         val8 = _mm_blendv_ps(val8, other.val8, mask.val8);
+#else
+        val1 = _mm_or_ps(
+            _mm_and_ps(mask.val1, other.val1),
+            _mm_andnot_ps(mask.val1, val1));
+        val2 = _mm_or_ps(
+            _mm_and_ps(mask.val2, other.val2),
+            _mm_andnot_ps(mask.val2, val2));
+        val3 = _mm_or_ps(
+            _mm_and_ps(mask.val3, other.val3),
+            _mm_andnot_ps(mask.val3, val3));
+        val4 = _mm_or_ps(
+            _mm_and_ps(mask.val4, other.val4),
+            _mm_andnot_ps(mask.val4, val4));
+        val5 = _mm_or_ps(
+            _mm_and_ps(mask.val5, other.val5),
+            _mm_andnot_ps(mask.val5, val5));
+        val6 = _mm_or_ps(
+            _mm_and_ps(mask.val6, other.val6),
+            _mm_andnot_ps(mask.val6, val6));
+        val7 = _mm_or_ps(
+            _mm_and_ps(mask.val7, other.val7),
+            _mm_andnot_ps(mask.val7, val7));
+        val8 = _mm_or_ps(
+            _mm_and_ps(mask.val8, other.val8),
+            _mm_andnot_ps(mask.val8, val8));
+#endif
     }
 
 private:

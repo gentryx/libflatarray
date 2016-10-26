@@ -303,7 +303,13 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<float, 4>& other)
     {
+#ifdef __SSE4_1__
         val1 = _mm_blendv_ps(val1, other.val1, mask.val1);
+#else
+        val1 = _mm_or_ps(
+            _mm_and_ps(mask.val1, other.val1),
+            _mm_andnot_ps(mask.val1, val1));
+#endif
     }
 
 private:
