@@ -114,8 +114,8 @@ public:
 
 #ifdef __SSE4_1__
         return (0 == _mm_testz_si128(
-                    _mm_castpd_si128(buf1),
-                    _mm_castpd_si128(buf1)));
+                    _mm_castps_si128(buf1),
+                    _mm_castps_si128(buf1)));
 #else
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
         buf1 = _mm_or_ps(buf1, buf2);
