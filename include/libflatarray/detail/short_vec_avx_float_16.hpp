@@ -81,19 +81,9 @@ public:
     bool any() const
     {
         __m256 buf0 = _mm256_or_ps(val1, val2);
-        // merge both 128-bit lanes of AVX register:
-        __m128 buf1 = _mm_or_ps(
-            _mm256_extractf128_ps(buf0, 0),
-            _mm256_extractf128_ps(buf0, 1));
-        // shuffle upper 64-bit half down to first 64 bits so we can
-        // "or" both together:
-        __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
-        buf2 = _mm_or_ps(buf1, buf2);
-        // another shuffle to extract 2nd least significant float
-        // member and or it together with least significant float
-        // member:
-        buf1 = _mm_shuffle_ps(buf2, buf2, (1 << 0));
-        return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+        return (0 == _mm256_testz_si256(
+                    _mm256_castps_si256(buf0),
+                    _mm256_castps_si256(buf0)));
     }
 
     inline
