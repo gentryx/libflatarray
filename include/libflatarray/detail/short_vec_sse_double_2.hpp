@@ -76,9 +76,14 @@ public:
     inline
     bool any() const
     {
-        __m128d buf = _mm_shuffle_pd(val1, val1, 1);
-
-        return _mm_cvtsd_f64(val1) || _mm_cvtsd_f64(buf);
+#ifdef __SSE4_1__
+        return (0 == _mm_testz_si128(
+                    _mm_castpd_si128(val1),
+                    _mm_castpd_si128(val1)));
+#else
+        __m128d buf0 = _mm_shuffle_pd(val1, val1, 1);
+        return _mm_cvtsd_f64(buf0) || _mm_cvtsd_f64(val1);
+#endif
     }
 
     inline

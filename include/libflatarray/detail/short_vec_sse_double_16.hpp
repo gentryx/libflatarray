@@ -102,9 +102,15 @@ public:
             _mm_or_pd(
                 _mm_or_pd(val5, val6),
                 _mm_or_pd(val7, val8)));
-        __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
+#ifdef __SSE4_1__
+        return (0 == _mm_testz_si128(
+                    _mm_castpd_si128(buf1),
+                    _mm_castpd_si128(buf1)));
+#else
+        __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
         return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+#endif
     }
 
     inline

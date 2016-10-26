@@ -119,7 +119,7 @@ public:
     inline
     bool any() const
     {
-        __m128d buf1 = _mm_or_pd(
+        __m128d buf0 = _mm_or_pd(
             _mm_or_pd(
                 _mm_or_pd(
                     _mm_or_pd(val1, val2),
@@ -134,9 +134,15 @@ public:
                 _mm_or_pd(
                     _mm_or_pd(val13, val14),
                     _mm_or_pd(val15, val16))));
-        __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1);
 
-        return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+#ifdef __SSE4_1__
+        return (0 == _mm_testz_si128(
+                    _mm_castpd_si128(buf0),
+                    _mm_castpd_si128(buf0)));
+#else
+        __m128d buf1 = _mm_shuffle_pd(buf0, buf0, 1);
+        return _mm_cvtsd_f64(buf0) || _mm_cvtsd_f64(buf1);
+#endif
     }
 
     inline

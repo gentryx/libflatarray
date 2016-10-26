@@ -88,10 +88,16 @@ public:
     inline
     bool any() const
     {
+#ifdef __SSE4_1__
+        return (0 == _mm_testz_si128(
+                    _mm_castps_si128(val1),
+                    _mm_castps_si128(val1)));
+#else
         __m128 buf1 = _mm_shuffle_ps(val1, val1, (3 << 2) | (2 << 0));
         buf1 = _mm_or_ps(val1, buf1);
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
         return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+#endif
     }
 
     inline

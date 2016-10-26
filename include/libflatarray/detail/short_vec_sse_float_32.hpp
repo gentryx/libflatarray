@@ -111,10 +111,17 @@ public:
                       _mm_or_ps(val3, val4)),
             _mm_or_ps(_mm_or_ps(val5, val6),
                       _mm_or_ps(val7, val8)));
+
+#ifdef __SSE4_1__
+        return (0 == _mm_testz_si128(
+                    _mm_castpd_si128(buf1),
+                    _mm_castpd_si128(buf1)));
+#else
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (3 << 2) | (2 << 0));
         buf1 = _mm_or_ps(buf1, buf2);
         buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
         return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
+#endif
     }
 
     inline
