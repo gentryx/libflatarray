@@ -82,20 +82,9 @@ public:
         __m512d buf0 = _mm512_or_pd(
             _mm512_or_pd(val1, val2),
             _mm512_or_pd(val3, val4));
-        __m128d buf1 = _mm_or_pd(
-            _mm_or_pd(
-                _mm512_extractf64x2_pd(buf0, 0),
-                _mm512_extractf64x2_pd(buf0, 1)),
-            _mm_or_pd(
-                _mm512_extractf64x2_pd(buf0, 2),
-                _mm512_extractf64x2_pd(buf0, 3)));
-        // shuffle upper 64-bit half down to first 64 bits so we can
-        // "or" both together:
-        __m128d buf2 = _mm_shuffle_pd(buf1, buf1, 1 << 0);
-        buf2 = _mm_or_pd(buf1, buf2);
-        // another shuffle to extract the upper 64-bit half:
-        buf1 = _mm_shuffle_pd(buf2, buf2, 1 << 0);
-        return _mm_cvtsd_f64(buf1) || _mm_cvtsd_f64(buf2);
+        return 0 == _mm512_testn_epi64_mask(
+            _mm512_castpd_si512(buf0),
+            _mm512_castpd_si512(buf0));
     }
 
     inline

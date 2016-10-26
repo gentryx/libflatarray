@@ -72,20 +72,9 @@ public:
     inline
     bool any() const
     {
-        __m128d buf0 = _mm_or_pd(
-            _mm_or_pd(
-                _mm512_extractf64x2_pd(val1, 0),
-                _mm512_extractf64x2_pd(val1, 1)),
-            _mm_or_pd(
-                _mm512_extractf64x2_pd(val1, 2),
-                _mm512_extractf64x2_pd(val1, 3)));
-        // shuffle upper 64-bit half down to first 64 bits so we can
-        // "or" both together:
-        __m128d buf1 = _mm_shuffle_pd(buf0, buf0, 1 << 0);
-        buf1 = _mm_or_pd(buf0, buf1);
-        // another shuffle to extract the upper 64-bit half:
-        buf0 = _mm_shuffle_pd(buf1, buf1, 1 << 0);
-        return _mm_cvtsd_f64(buf0) || _mm_cvtsd_f64(buf1);
+        return 0 == _mm512_testn_epi64_mask(
+            _mm512_castpd_si512(val1),
+            _mm512_castpd_si512(val1));
     }
 
     inline
