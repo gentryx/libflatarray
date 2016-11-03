@@ -440,6 +440,9 @@ void testImplementationReal()
                 }
             }
 
+            // test count_mask()
+            BOOST_TEST_EQ((count_mask<CARGO, ARITY>(res)), test_value);
+
             // test reduction to bool:
             bool actual = any(res);
             bool expected = (test_value > 0);

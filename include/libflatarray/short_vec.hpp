@@ -79,41 +79,137 @@ inline bool get(unsigned char mask, const int i)
     return (mask >> i) & 1;
 }
 
+// fixme: this is slow
+template<typename T, int ARITY>
+inline int count_mask(const typename short_vec<T, ARITY>::mask_type& mask)
+{
+    if (!any(mask)) {
+        return 0;
+    }
+
+    short_vec<T, ARITY> v(T(0));
+    v.blend(mask, short_vec<T, ARITY>(T(1)));
+    int sum = 0;
+
+    for (int i = 0; i < ARITY; ++i) {
+        sum += get(v, i);
+    }
+
+    return sum;
+}
+
 class short_vec_strategy
 {
 public:
     class scalar
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = sizeof(CARGO);
+        };
+    };
 
     class avx
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 32;
+        };
+    };
 
     class avx2
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 32;
+        };
+    };
 
     class avx512f
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 64;
+        };
+    };
 
     class cuda
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = sizeof(CARGO);
+        };
+    };
 
     class qpx
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 32;
+        };
+    };
 
     class sse
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 16;
+        };
+    };
 
     class sse2
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 16;
+        };
+    };
 
     class sse4_1
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 16;
+        };
+    };
 
     class mic
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 32;
+        };
+    };
 
     class neon
-    {};
+    {
+    public:
+        template<typename CARGO>
+        class alignment
+        {
+            const static int ALIGNMENT = 16;
+        };
+    };
 };
 
 }
