@@ -153,14 +153,19 @@ endif()
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   "
-get_filename_component(LIBFLATARRAY_CMAKE_DIR \${CMAKE_CURRENT_LIST_FILE} PATH)
-set(libflatarray_INCLUDE_DIR \"\${LIBFLATARRAY_CMAKE_DIR}/../../../include\")
+set(libflatarray_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}\" \"${CMAKE_CURRENT_LIST_DIR}/include\")
+set(libflatarray_FLAGS \"${libflatarray_FLAGS}\")
+")
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}/${PACKAGE_NAME}Config.cmake"
+  "
+set(libflatarray_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../../include\")
 set(libflatarray_FLAGS \"${libflatarray_FLAGS}\")
 ")
 
 set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})
 install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}/${PACKAGE_NAME}Config.cmake"
   DESTINATION "${ConfigPackageLocation}")
 
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libflatarray/*.hpp")
