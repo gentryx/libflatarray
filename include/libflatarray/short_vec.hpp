@@ -79,6 +79,15 @@ inline bool get(unsigned char mask, const int i)
     return (mask >> i) & 1;
 }
 
+template<typename SHORT_VEC1, typename SHORT_VEC2>
+inline
+SHORT_VEC1 blend(const SHORT_VEC1& v1, const SHORT_VEC2& v2, const typename SHORT_VEC1::mask_type& mask)
+{
+    SHORT_VEC1 ret = v1;
+    ret.blend(mask, v2);
+    return ret;
+}
+
 // fixme: this is slow
 template<typename T, int ARITY>
 inline int count_mask(const typename short_vec<T, ARITY>::mask_type& mask)

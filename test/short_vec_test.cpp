@@ -586,7 +586,20 @@ void testImplementationReal()
             float expected = (array1[i] < array2[i]) ? -1 : 1;
             BOOST_TEST_EQ(expected, actual[i]);
         }
-    }
+
+        for (int i = 0; i < (ARITY * 10); i += ARITY) {
+            ShortVec a(&array1[i]);
+            ShortVec b(&array2[i]);
+
+            typename ShortVec::mask_type mask = a < b;
+            &actual[i] << blend(ShortVec(1), ShortVec(-1), mask);
+        }
+
+        for (int i = 0; i < (ARITY * 10); ++i) {
+            float expected = (array1[i] < array2[i]) ? -1 : 1;
+            BOOST_TEST_EQ(expected, actual[i]);
+        }
+}
 
 
     // fixme: add all tests for int, too

@@ -2293,9 +2293,7 @@ public:
 
                 typename Float::mask_type mask = (distance2 < radius2);
                 if (any(mask)) {
-                    Float add(0.0f);
-                    add.blend(mask, 1.0f);
-                    sum += add;
+                    sum += blend(Float(0.0f), 1.0f, mask);
                 }
             }
         }
