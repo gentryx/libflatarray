@@ -291,22 +291,22 @@ public:
     short_vec<int, 16> sqrt() const
     {
         return short_vec<int, 16>(
-            std::sqrt(val1),
-            std::sqrt(val2),
-            std::sqrt(val3),
-            std::sqrt(val4),
-            std::sqrt(val5),
-            std::sqrt(val6),
-            std::sqrt(val7),
-            std::sqrt(val8),
-            std::sqrt(val9),
-            std::sqrt(val10),
-            std::sqrt(val11),
-            std::sqrt(val12),
-            std::sqrt(val13),
-            std::sqrt(val14),
-            std::sqrt(val15),
-            std::sqrt(val16));
+            static_cast<int>(std::sqrt(val1)),
+            static_cast<int>(std::sqrt(val2)),
+            static_cast<int>(std::sqrt(val3)),
+            static_cast<int>(std::sqrt(val4)),
+            static_cast<int>(std::sqrt(val5)),
+            static_cast<int>(std::sqrt(val6)),
+            static_cast<int>(std::sqrt(val7)),
+            static_cast<int>(std::sqrt(val8)),
+            static_cast<int>(std::sqrt(val9)),
+            static_cast<int>(std::sqrt(val10)),
+            static_cast<int>(std::sqrt(val11)),
+            static_cast<int>(std::sqrt(val12)),
+            static_cast<int>(std::sqrt(val13)),
+            static_cast<int>(std::sqrt(val14)),
+            static_cast<int>(std::sqrt(val15)),
+            static_cast<int>(std::sqrt(val16)));
     }
 
     inline
