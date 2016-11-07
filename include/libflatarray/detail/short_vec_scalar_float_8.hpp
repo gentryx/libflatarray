@@ -14,6 +14,7 @@
     (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_MIC)
 
 #include <libflatarray/config.h>
+#include <libflatarray/short_vec_base.hpp>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
@@ -31,7 +32,7 @@ class short_vec;
 #endif
 
 template<>
-class short_vec<float, 8>
+class short_vec<float, 8> : public short_vec_base<float, 8>
 {
 public:
     static const std::size_t ARITY = 8;

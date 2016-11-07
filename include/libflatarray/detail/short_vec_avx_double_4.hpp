@@ -17,6 +17,7 @@
 #include <libflatarray/detail/sqrt_reference.hpp>
 #include <libflatarray/detail/short_vec_helpers.hpp>
 #include <libflatarray/config.h>
+#include <libflatarray/short_vec_base.hpp>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
@@ -34,7 +35,7 @@ class short_vec;
 #endif
 
 template<>
-class short_vec<double, 4>
+class short_vec<double, 4> : public short_vec_base<double, 4>
 {
 public:
     static const std::size_t ARITY = 4;

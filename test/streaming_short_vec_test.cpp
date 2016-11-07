@@ -38,6 +38,12 @@ void testImplementationReal()
         vec1[i] = i + 0.1;
     }
 
+    // test size:
+    {
+        ShortVec v;
+        BOOST_TEST_EQ(ARITY, v.size());
+    }
+
     // test default c-tor:
     for (std::size_t i = 0; i < numElements; ++i) {
         BOOST_TEST(4711 == vec2[i]);
@@ -560,6 +566,12 @@ void testImplementationInt()
     // init vec1:
     for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = i;
+    }
+
+    // test size:
+    {
+        ShortVec v;
+        BOOST_TEST_EQ(ARITY, v.size());
     }
 
     // test default c-tor:

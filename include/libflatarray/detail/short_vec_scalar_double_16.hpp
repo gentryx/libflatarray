@@ -13,6 +13,7 @@
     (LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_ARM_NEON)
 
 #include <libflatarray/config.h>
+#include <libflatarray/short_vec_base.hpp>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
@@ -30,7 +31,7 @@ class short_vec;
 #endif
 
 template<>
-class short_vec<double, 16>
+class short_vec<double, 16> : public short_vec_base<double, 16>
 {
 public:
     static const std::size_t ARITY = 16;

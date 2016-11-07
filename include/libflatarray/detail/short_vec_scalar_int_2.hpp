@@ -10,6 +10,7 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_INT_2_HPP
 
 #include <libflatarray/config.h>
+#include <libflatarray/short_vec_base.hpp>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
@@ -27,7 +28,7 @@ class short_vec;
 #endif
 
 template<>
-class short_vec<int, 2>
+class short_vec<int, 2> : public short_vec_base<int, 2>
 {
 public:
     static const std::size_t ARITY = 2;
