@@ -116,7 +116,7 @@ public:
     short_vec<int, 1> sqrt() const
     {
         return short_vec<int, 1>(
-            std::sqrt(val1));
+            static_cast<int>(std::sqrt(val1)));
     }
 
     inline

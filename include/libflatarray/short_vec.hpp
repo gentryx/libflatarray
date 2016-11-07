@@ -116,6 +116,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = sizeof(CARGO);
         };
     };
@@ -126,6 +127,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -136,6 +138,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -146,6 +149,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 64;
         };
     };
@@ -156,6 +160,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = sizeof(CARGO);
         };
     };
@@ -166,6 +171,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -176,6 +182,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -186,6 +193,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -196,6 +204,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -206,6 +215,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -216,6 +226,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
