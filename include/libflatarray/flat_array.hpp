@@ -16,6 +16,7 @@
 #include <libflatarray/cuda_allocator.hpp>
 #endif
 
+#include <libflatarray/alignment.hpp>
 #include <libflatarray/coord.hpp>
 #include <libflatarray/estimate_optimum_short_vec_type.hpp>
 #include <libflatarray/loop_peeler.hpp>
