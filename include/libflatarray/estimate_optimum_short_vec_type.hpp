@@ -69,7 +69,7 @@ public:
     // vector unit is much wider, but from a programming PoV it's
     // scalar:
 #ifdef __CUDA_ARCH__
-    static const int ARITY = 1;
+    static const std::size_t ARITY = 1;
 #else
     // for IBM Blue Gene/Q's QPX, which is mutually exclusive to
     // Intel/AMD's AVX/SSE or ARM's NEON ISAs:
@@ -100,7 +100,7 @@ public:
 #    endif
 #  endif
 
-    static const int ARITY = UNROLL_FACTOR * BIT_WIDTH / sizeof(CARGO) / 8;
+    static const std::size_t ARITY = UNROLL_FACTOR * BIT_WIDTH / sizeof(CARGO) / 8;
 #endif
 
     static const int STREAMING_FLAG =

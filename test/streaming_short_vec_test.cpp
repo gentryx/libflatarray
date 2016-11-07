@@ -24,223 +24,223 @@ namespace LibFlatArray {
 
 #define SHORT_VEC_TEMPLATE short_vec
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 void testImplementationReal()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    int numElements = ShortVec::ARITY * 5;
+    std::size_t numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
 
     // init vec1:
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = i + 0.1;
     }
 
     // test default c-tor:
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         BOOST_TEST(4711 == vec2[i]);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         BOOST_TEST(0 == vec2[i]);
     }
 
     // tests vector load/store:
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((i + 0.1), vec2[i]);
     }
 
     // tests scalar load, vector add:
     ShortVec w = vec1[0];
 
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << (v + w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((i + 0.2), vec2[i]);
     }
 
     // test +
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v + w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((2 * i + 0.3), vec2[i]);
     }
 
     // test +=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v += w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((2 * i + 0.3), vec2[i]);
     }
 
     // test -
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v - w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((-i - 0.2), vec2[i]);
     }
 
     // test -=
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v -= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((2 * i + 0.3), vec2[i]);
     }
 
     // test *
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v * w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         double reference = ((i + 0.1) * (2 * i + 0.3));
         TEST_REAL(reference, vec2[i]);
     }
 
     // test *=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v *= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((i + 0.1) * (i + 0.2), vec2[i]);
     }
 
     // test /
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v / w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         // accept lower accuracy for estimated division, really low
         // accuracy accepted because of results from ARM NEON:
         TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0025);
     }
 
     // test /=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v /= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         // here, too, lower accuracy is acceptable. As with divisions,
         // ARM NEON costs us an order of magnitude here compared to X86.
         TEST_REAL_ACCURACY((i + 0.1) / (i + 0.2), vec2[i], 0.0025);
     }
 
     // test sqrt()
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << sqrt(v);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         // lower accuracy, mainly for ARM NEON
         TEST_REAL_ACCURACY(std::sqrt(double(i + 0.1)), vec2[i], 0.0025);
     }
 
     // test "/ sqrt()"
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << w / sqrt(v);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
     }
 
     // test "/= sqrt()"
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 0.2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         w /= sqrt(v);
         &vec2[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         // the expression "foo / sqrt(bar)" will again result in an
         // estimated result for single precision floats, so lower accuracy is acceptable:
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
     }
 
     // test "sqrt() /" with shortvec
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
         vec2[i] = (i + 2);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
         &vec1[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
     }
 
     // test "sqrt() /" with scalar
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = sqrt(v) / CARGO(3);
         &vec1[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL_ACCURACY((i + 2) / CARGO(3), vec1[i], 0.001);
     }
 
     // test string conversion
-    for (int i = 0; i < ShortVec::ARITY; ++i) {
+    for (std::size_t i = 0; i < ShortVec::ARITY; ++i) {
         vec1[i] = i + 0.1;
     }
     ShortVec v(&vec1[0]);
@@ -249,7 +249,7 @@ void testImplementationReal()
 
     std::ostringstream buf2;
     buf2 << "[";
-    for (int i = 0; i < (ShortVec::ARITY - 1); ++i) {
+    for (std::size_t i = 0; i < (ShortVec::ARITY - 1); ++i) {
         buf2 << (i + 0.1) << ", ";
     }
     buf2 << (ShortVec::ARITY - 1 + 0.1) << "]";
@@ -264,13 +264,13 @@ void testImplementationReal()
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 array[i] = i * 0.75;
             }
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
             expected[i] = (i * 10) * 0.75;
         }
@@ -279,7 +279,7 @@ void testImplementationReal()
         vec.gather(array, &indices[0]);
         actual.data() << vec;
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual[i], expected[i], 0.001);
         }
     }
@@ -290,7 +290,7 @@ void testImplementationReal()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > actual1(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > actual2(ARITY);
         CARGO expected[ARITY];
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) * 0.75;
         }
 
@@ -307,7 +307,7 @@ void testImplementationReal()
         actual1.data() << vec1;
         actual2.data() << vec2;
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(actual1[i], expected[i], 0.001);
             TEST_REAL_ACCURACY(actual2[i], expected[i], 0.001);
         }
@@ -322,18 +322,18 @@ void testImplementationReal()
         std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 expected[i] = i * 0.75;
             }
         }
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
         }
 
         vec.gather(expected, &indices[0]);
         vec.scatter(array, &indices[0]);
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -343,21 +343,21 @@ void testImplementationReal()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
         }
         ShortVec v1 = 5.0;
         v1.store_nt(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
         }
         ShortVec v2 = &expected[0];
         v2.store_nt(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -367,21 +367,21 @@ void testImplementationReal()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = 5.0;
         }
         ShortVec v1 = 5.0;
         v1.store_aligned(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = i + 0.1;
         }
         ShortVec v2 = &expected[0];
         v2.store_aligned(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
@@ -391,25 +391,25 @@ void testImplementationReal()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             array[i]    = i + 0.1;
             expected[i] = 0;
         }
         ShortVec v1;
         v1.load_aligned(&array[0]);
         v1.store(&expected[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], expected[i], 0.001);
         }
     }
 
     // test comparison
     {
-        for (int test_value = 0; test_value <= ARITY; ++test_value) {
+        for (std::size_t test_value = 0; test_value <= ARITY; ++test_value) {
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY);
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 array1[i] = i;
                 array2[i] = test_value;
             }
@@ -421,7 +421,7 @@ void testImplementationReal()
             // test operator<()
             res = (v1 < v2);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 if (i < test_value) {
                     BOOST_TEST(get(res, i) != 0);
                 } else {
@@ -437,7 +437,7 @@ void testImplementationReal()
             // test operator<=()
             res = (v1 <= v2);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 if (i <= test_value) {
                     BOOST_TEST(get(res, i) != 0);
                 } else {
@@ -448,7 +448,7 @@ void testImplementationReal()
             // test operator==()
             res = (v1 == v2);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 if (i == test_value) {
                     BOOST_TEST(get(res, i) != 0);
                 } else {
@@ -464,7 +464,7 @@ void testImplementationReal()
             // test operator>()
             res = (v1 > v2);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 if (i > test_value) {
                     BOOST_TEST(get(res, i) != 0);
                 } else {
@@ -475,7 +475,7 @@ void testImplementationReal()
             // test operator>=()
             res = (v1 >= v2);
 
-            for (int i = 0; i < ARITY; ++i) {
+            for (std::size_t i = 0; i < ARITY; ++i) {
                 if (i >= test_value) {
                     BOOST_TEST(get(res, i) != 0);
                 } else {
@@ -494,12 +494,12 @@ void testImplementationReal()
     {
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             array[i] = i + 0.123;
         }
         ShortVec v1;
         v1.load_aligned(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             TEST_REAL_ACCURACY(array[i], get(v1, i), 0.001);
         }
     }
@@ -507,7 +507,7 @@ void testImplementationReal()
     // test operators with scalars on left side:
     {
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             array[i] = i + 0.123;
         }
         ShortVec v1;
@@ -516,7 +516,7 @@ void testImplementationReal()
 
         // test +
         v2 = CARGO(10) + v1;
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 + (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
@@ -524,7 +524,7 @@ void testImplementationReal()
 
         // test -
         v2 = CARGO(10) - v1;
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 - (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
@@ -532,7 +532,7 @@ void testImplementationReal()
 
         // v2 *
         v2 = CARGO(10) * v1;
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 * (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
@@ -540,7 +540,7 @@ void testImplementationReal()
 
         // test /
         v2 = CARGO(10) / v1;
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 / (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
@@ -548,7 +548,7 @@ void testImplementationReal()
     }
 }
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 void testImplementationInt()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
@@ -558,211 +558,211 @@ void testImplementationInt()
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
 
     // init vec1:
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = i;
     }
 
     // test default c-tor:
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         BOOST_TEST(4711 == vec2[i]);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         BOOST_TEST(0 == vec2[i]);
     }
 
     // tests vector load/store:
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(i, vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(i), vec2[i]);
     }
 
     // tests scalar load, vector add:
     ShortVec w = vec1[1];
 
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << (v + w);
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ((i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(i + 1), vec2[i]);
     }
 
     // test +
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v + w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL((2 * i + 1), vec2[i]);
     }
 
     // test +=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 1;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v += w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ((2 * i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(2 * i + 1), vec2[i]);
     }
 
     // test -
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v - w);
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ((-i - 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ((-int(i) - 1), vec2[i]);
     }
 
     // test -=
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v -= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ((2 * i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(2 * i + 1), vec2[i]);
     }
 
     // test *
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v * w);
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         int reference = (i * (2 * i + 1));
         BOOST_TEST_EQ(reference, vec2[i]);
     }
 
     // test *=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec2[i] = i + 2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v *= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(i * (i + 2), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(i) * int(i + 2), vec2[i]);
     }
 
     // test /
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = 4 * (i + 1) * (i + 1);
         vec2[i] = (i + 1);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << (v / w);
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(4 * (i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(4 * int(i + 1), vec2[i]);
     }
 
     // test /=
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = 4 * (i + 1) * (i + 1);
         vec2[i] = (i + 1);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         v /= w;
         &vec2[i] << v;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(4 * (i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(4 * int(i + 1), vec2[i]);
     }
 
     // test sqrt()
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = i * i;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         &vec2[i] << sqrt(v);
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(i, vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(int(i), vec2[i]);
     }
 
     // test "/ sqrt()"
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 1) * (i + 1);
         vec2[i] = (i + 1) * (i + 1) * 2;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         &vec2[i] << w / sqrt(v);
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(2 * (i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(2 * int(i + 1), vec2[i]);
     }
 
     // test "/= sqrt()"
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 1) * (i + 1);
         vec2[i] = (i + 1) * (i + 1) * 3;
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = &vec2[i];
         w /= sqrt(v);
         &vec2[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
-        BOOST_TEST_EQ(3 * (i + 1), vec2[i]);
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST_EQ(3 * int(i + 1), vec2[i]);
     }
 
     // test "sqrt() /" with shortvec
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
         vec2[i] = (i + 2);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = sqrt(v) / ShortVec(&vec2[i]);
         &vec1[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL_ACCURACY((i + 2), vec1[i], 0.001);
     }
 
     // test "sqrt() /" with scalar
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2);
     }
-    for (int i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
         ShortVec v = &vec1[i];
         ShortVec w = sqrt(v) / 3;
         &vec1[i] << w;
     }
-    for (int i = 0; i < numElements; ++i) {
+    for (std::size_t i = 0; i < numElements; ++i) {
         TEST_REAL_ACCURACY((i + 2) / 3, vec1[i], 0.001);
     }
 
     // test string conversion
-    for (int i = 0; i < ShortVec::ARITY; ++i) {
+    for (std::size_t i = 0; i < ShortVec::ARITY; ++i) {
         vec1[i] = i + 5;
     }
     ShortVec v(&vec1[0]);
@@ -771,7 +771,7 @@ void testImplementationInt()
 
     std::ostringstream buf2;
     buf2 << "[";
-    for (int i = 0; i < (ShortVec::ARITY - 1); ++i) {
+    for (std::size_t i = 0; i < (ShortVec::ARITY - 1); ++i) {
         buf2 << (i + 5) << ", ";
     }
     buf2 << (ShortVec::ARITY - 1 + 5) << "]";
@@ -786,13 +786,13 @@ void testImplementationInt()
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 array[i] = i + 5;
             }
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
             expected[i] = (i * 10) + 5;
         }
@@ -801,7 +801,7 @@ void testImplementationInt()
         vec.gather(array, &indices[0]);
         actual << vec;
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual[i], expected[i]);
         }
     }
@@ -812,7 +812,7 @@ void testImplementationInt()
         CARGO actual1[ARITY];
         CARGO actual2[ARITY];
         CARGO expected[ARITY];
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) + 5;
         }
 
@@ -828,7 +828,7 @@ void testImplementationInt()
                  245, 255, 265, 275, 285, 295, 305, 315 };
         actual1 << vec1;
         actual2 << vec2;
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual1[i], expected[i]);
             BOOST_TEST_EQ(actual2[i], expected[i]);
         }
@@ -843,18 +843,18 @@ void testImplementationInt()
         std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
         std::memset(array,    '\0', sizeof(CARGO) * ARITY * 10);
         std::memset(expected, '\0', sizeof(CARGO) * ARITY * 10);
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             if (i % 10 == 0) {
                 expected[i] = i + 5;
             }
         }
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             indices[i] = i * 10;
         }
 
         vec.gather(expected, &indices[0]);
         vec.scatter(array, &indices[0]);
-        for (int i = 0; i < ARITY * 10; ++i) {
+        for (std::size_t i = 0; i < ARITY * 10; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -864,21 +864,21 @@ void testImplementationInt()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = 5;
         }
         ShortVec v1 = 5;
         v1.store_nt(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = i;
         }
         ShortVec v2 = &expected[0];
         v2.store_nt(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -888,21 +888,21 @@ void testImplementationInt()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = 5;
         }
         ShortVec v1 = 5;
         v1.store_aligned(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = i;
         }
         ShortVec v2 = &expected[0];
         v2.store_aligned(&array[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -912,14 +912,14 @@ void testImplementationInt()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             array[i]    = i;
             expected[i] = 0;
         }
         ShortVec v1;
         v1.load_aligned(&array[0]);
         v1.store(&expected[0]);
-        for (int i = 0; i < ARITY; ++i) {
+        for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }

@@ -2299,7 +2299,7 @@ public:
         }
         float foo[Float::ARITY];
         foo << sum;
-        for (int i = 0; i < Float::ARITY; ++i) {
+        for (std::size_t i = 0; i < Float::ARITY; ++i) {
             *counter += foo[i];
         }
     }

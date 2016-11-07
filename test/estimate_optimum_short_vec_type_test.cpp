@@ -86,14 +86,14 @@ ADD_TEST(TestArity)
 template<typename SHORT_VEC>
 class is_streaming_short_vec;
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class is_streaming_short_vec<streaming_short_vec<CARGO, ARITY> >
 {
 public:
     static const bool VALUE = true;
 };
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class is_streaming_short_vec<short_vec<CARGO, ARITY> >
 {
 public:
