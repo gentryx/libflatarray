@@ -130,8 +130,8 @@ public:
     short_vec<int, 2> sqrt() const
     {
         return short_vec<int, 2>(
-            std::sqrt(val1),
-            std::sqrt(val2));
+            static_cast<int>(std::sqrt(val1)),
+            static_cast<int>(std::sqrt(val2)));
     }
 
     inline

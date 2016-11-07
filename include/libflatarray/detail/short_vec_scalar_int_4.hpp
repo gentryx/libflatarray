@@ -159,10 +159,10 @@ public:
     short_vec<int, 4> sqrt() const
     {
         return short_vec<int, 4>(
-            std::sqrt(val1),
-            std::sqrt(val2),
-            std::sqrt(val3),
-            std::sqrt(val4));
+            static_cast<int>(std::sqrt(val1)),
+            static_cast<int>(std::sqrt(val2)),
+            static_cast<int>(std::sqrt(val3)),
+            static_cast<int>(std::sqrt(val4)));
     }
 
     inline

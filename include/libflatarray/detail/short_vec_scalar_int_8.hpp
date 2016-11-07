@@ -203,14 +203,14 @@ public:
     short_vec<int, 8> sqrt() const
     {
         return short_vec<int, 8>(
-            std::sqrt(val1),
-            std::sqrt(val2),
-            std::sqrt(val3),
-            std::sqrt(val4),
-            std::sqrt(val5),
-            std::sqrt(val6),
-            std::sqrt(val7),
-            std::sqrt(val8));
+            static_cast<int>(std::sqrt(val1)),
+            static_cast<int>(std::sqrt(val2)),
+            static_cast<int>(std::sqrt(val3)),
+            static_cast<int>(std::sqrt(val4)),
+            static_cast<int>(std::sqrt(val5)),
+            static_cast<int>(std::sqrt(val6)),
+            static_cast<int>(std::sqrt(val7)),
+            static_cast<int>(std::sqrt(val8)));
     }
 
     inline

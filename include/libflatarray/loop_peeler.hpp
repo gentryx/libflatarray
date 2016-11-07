@@ -24,20 +24,20 @@
  * reference).
  */
 #define LIBFLATARRAY_LOOP_PEELER(SHORT_VEC_TYPE, COUNTER_TYPE,          \
-                                 X, END_X, FUNCTION, ARGS...)           \
+                                 X, END_X, FUNCTION, ...)               \
     LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
-        , SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS)
+        , SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__)
 
 /**
  * Same as LIBFLATARRAY_LOOP_PEELER(), but for use in templates
  */
 #define LIBFLATARRAY_LOOP_PEELER_TEMPLATE(SHORT_VEC_TYPE, COUNTER_TYPE, \
-                                          X, END_X, FUNCTION, ARGS...)  \
+                                          X, END_X, FUNCTION, ...)      \
     LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
-        typename, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS)
+        typename, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__)
 
 #define LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                        \
-    TYPENAME, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ARGS...) \
+    TYPENAME, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ...)    \
     {                                                                   \
         typedef SHORT_VEC_TYPE lfa_local_short_vec;                     \
         typedef TYPENAME LibFlatArray::detail::flat_array::             \
@@ -51,9 +51,9 @@
         COUNTER_TYPE last_stop = (END_X) -                              \
             (END_X) % (lfa_local_short_vec::ARITY);                     \
                                                                         \
-        FUNCTION<lfa_local_scalar   >(X, next_stop, ARGS);              \
-        FUNCTION<lfa_local_short_vec>(X, last_stop, ARGS);              \
-        FUNCTION<lfa_local_scalar   >(X, (END_X),   ARGS);              \
+        FUNCTION<lfa_local_scalar   >(X, next_stop, __VA_ARGS__);       \
+        FUNCTION<lfa_local_short_vec>(X, last_stop, __VA_ARGS__);       \
+        FUNCTION<lfa_local_scalar   >(X, (END_X),   __VA_ARGS__);       \
     }
 
 #ifdef LIBFLATARRAY_WITH_CPP14
