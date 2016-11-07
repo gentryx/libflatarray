@@ -19,6 +19,7 @@
 #include <libflatarray/alignment.hpp>
 #include <libflatarray/coord.hpp>
 #include <libflatarray/estimate_optimum_short_vec_type.hpp>
+#include <libflatarray/ilp_to_arity.hpp>
 #include <libflatarray/loop_peeler.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/member_ptr_to_offset.hpp>

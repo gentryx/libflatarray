@@ -9,6 +9,7 @@
 #define FLAT_ARRAY_ESTIMATE_OPTIMUM_SHORT_VEC_TYPE_HPP
 
 #include <libflatarray/detail/streaming_short_vec_switch.hpp>
+#include <libflatarray/ilp_to_arity.hpp>
 
 namespace LibFlatArray {
 
@@ -65,43 +66,7 @@ template<typename CARGO, typename ACCESSOR, int UNROLL_FACTOR = 2, int LAST_LEVE
 class estimate_optimum_short_vec_type
 {
 public:
-    // Revert to scalar values when running on a CUDA device. The
-    // vector unit is much wider, but from a programming PoV it's
-    // scalar:
-#ifdef __CUDA_ARCH__
-    static const std::size_t ARITY = 1;
-#else
-    // for IBM Blue Gene/Q's QPX, which is mutually exclusive to
-    // Intel/AMD's AVX/SSE or ARM's NEON ISAs:
-#  ifdef __VECTOR4DOUBLE__
-    static const int BIT_WIDTH = 256;
-#  endif
-
-    // Dito for ARM NEON:
-#  ifdef __ARM_NEON__
-    static const int BIT_WIDTH = 128;
-#  endif
-
-    // Only the case of the IBM PC is complicated. No thanks to you,
-    // history!
-#  if !defined(__CUDA_ARCH__) && !defined(__ARM_NEON__) && !defined(__MIC__)
-#    ifdef __AVX512F__
-    static const int BIT_WIDTH = 512;
-#    else
-#      ifdef __AVX__
-    static const int BIT_WIDTH = 256;
-#      else
-#        ifdef __SSE__
-    static const int BIT_WIDTH = 128;
-#        else
-    static const int BIT_WIDTH = sizeof(CARGO) * 8;
-#        endif
-#      endif
-#    endif
-#  endif
-
-    static const std::size_t ARITY = UNROLL_FACTOR * BIT_WIDTH / sizeof(CARGO) / 8;
-#endif
+    static const std::size_t ARITY = ilp_to_arity<CARGO, UNROLL_FACTOR>::ARITY;
 
     static const int STREAMING_FLAG =
         ACCESSOR::DIM_PROD * sizeof(typename ACCESSOR::element_type) / LAST_LEVEL_CACHE_SIZE_ESTIMATE;

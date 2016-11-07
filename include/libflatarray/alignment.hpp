@@ -11,6 +11,8 @@
 #include <libflatarray/short_vec.hpp>
 #include <libflatarray/streaming_short_vec.hpp>
 
+namespace LibFlatArray {
+
 template<typename vec>
 class alignment;
 
@@ -31,5 +33,7 @@ public:
     typedef typename strategy::template alignment<T> align;
     const static std::size_t VALUE = align::ALIGNMENT;
 };
+
+}
 
 #endif
