@@ -18,7 +18,7 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class short_vec;
 
 #ifdef __ICC
@@ -31,7 +31,7 @@ template<>
 class short_vec<float, 1>
 {
 public:
-    static const int ARITY = 1;
+    static const std::size_t ARITY = 1;
     typedef unsigned char mask_type;
     typedef short_vec_strategy::scalar strategy;
 

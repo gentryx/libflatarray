@@ -22,10 +22,10 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class short_vec;
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class sqrt_reference;
 
 #ifdef __ICC
@@ -38,7 +38,7 @@ template<>
 class short_vec<float, 16>
 {
 public:
-    static const int ARITY = 16;
+    static const std::size_t ARITY = 16;
     typedef short_vec<float, 16> mask_type;
     typedef short_vec_strategy::avx strategy;
 
@@ -358,7 +358,7 @@ template<>
 class sqrt_reference<float, 16>
 {
 public:
-    template<typename OTHER_CARGO, int OTHER_ARITY>
+    template<typename OTHER_CARGO, std::size_t OTHER_ARITY>
     friend class short_vec;
 
     sqrt_reference(const short_vec<float, 16>& vec) :

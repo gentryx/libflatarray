@@ -26,7 +26,7 @@ template<>
 class short_vec<float, 4>
 {
 public:
-    static const int ARITY = 4;
+    static const std::size_t ARITY = 4;
     typedef uint32x4_t mask_type;
     typedef short_vec_strategy::neon strategy;
 

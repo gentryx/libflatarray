@@ -18,7 +18,7 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class short_vec;
 
 #ifdef __ICC
@@ -31,8 +31,8 @@ template<>
 class short_vec<int, 1>
 {
 public:
-    static const int ARITY = 1;
-
+    static const std::size_t ARITY = 1;
+    typedef unsigned char mask_type;
     typedef short_vec_strategy::scalar strategy;
 
     template<typename _CharT, typename _Traits>
@@ -59,6 +59,18 @@ public:
         load(ptr);
     }
 #endif
+
+    inline
+    bool any() const
+    {
+        return val1;
+    }
+
+    inline
+    float get(const int i) const
+    {
+        return val1;
+    }
 
     inline
     void operator-=(const short_vec<int, 1>& other)
@@ -111,6 +123,45 @@ public:
         return short_vec<int, 1>(
             val1 / other.val1);
     }
+
+#define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
+    inline
+    mask_type operator<(const short_vec<int, 1>& other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <);
+    }
+
+    inline
+    mask_type operator<=(const short_vec<int, 1>& other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=);
+    }
+
+    inline
+    mask_type operator==(const short_vec<int, 1>& other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==);
+    }
+
+    // fixme: this should be a free function?
+    inline
+    mask_type operator==(int other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other, ==);
+    }
+
+    inline
+    mask_type operator>(const short_vec<int, 1>& other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >);
+    }
+
+    inline
+    mask_type operator>=(const short_vec<int, 1>& other) const
+    {
+        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=);
+    }
+#undef LFA_SHORTVEC_COMPARE_HELPER
 
     inline
     short_vec<int, 1> sqrt() const

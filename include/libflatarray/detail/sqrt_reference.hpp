@@ -10,16 +10,16 @@
 
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class sqrt_reference;
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 short_vec<CARGO, ARITY> operator/(const sqrt_reference<CARGO, ARITY>& a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) / b;
 }
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 inline short_vec<CARGO, ARITY> operator/(const sqrt_reference<CARGO, ARITY>& a, const CARGO b)
 {
     return short_vec<CARGO, ARITY>(a) / b;

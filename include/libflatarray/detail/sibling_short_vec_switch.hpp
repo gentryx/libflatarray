@@ -12,14 +12,14 @@ namespace LibFlatArray {
 namespace detail {
 namespace flat_array {
 
-template<typename SHORT_VEC, int TARGET_ARITY>
+template<typename SHORT_VEC, std::size_t TARGET_ARITY>
 class sibling_short_vec_switch;
 
 template<
-    template<typename CARGO_PARAM, int ARITY_PARAM> class SHORT_VEC_TEMPLATE,
+    template<typename CARGO_PARAM, std::size_t ARITY_PARAM> class SHORT_VEC_TEMPLATE,
     typename CARGO,
-    int ARITY,
-    int TARGET_ARITY>
+    std::size_t ARITY,
+    std::size_t TARGET_ARITY>
 class sibling_short_vec_switch<SHORT_VEC_TEMPLATE<CARGO, ARITY>, TARGET_ARITY>
 {
 public:

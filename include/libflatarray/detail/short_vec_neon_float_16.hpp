@@ -26,7 +26,7 @@ template<>
 class short_vec<float, 16>
 {
 public:
-    static const int ARITY = 16;
+    static const std::size_t ARITY = 16;
 
     typedef short_vec_strategy::neon strategy;
 

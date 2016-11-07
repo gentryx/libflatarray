@@ -15,14 +15,14 @@ namespace LibFlatArray {
 namespace detail {
 namespace flat_array {
 
-template<typename CARGO, int ARITY, int STREAMING_FLAG>
+template<typename CARGO, std::size_t ARITY, int STREAMING_FLAG>
 class streaming_short_vec_switch
 {
 public:
     typedef streaming_short_vec<CARGO, ARITY> VALUE;
 };
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class streaming_short_vec_switch<CARGO, ARITY, 0>
 {
 public:

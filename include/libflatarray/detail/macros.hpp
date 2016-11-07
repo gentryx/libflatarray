@@ -66,7 +66,7 @@
             }                                                           \
         }                                                               \
                                                                         \
-        template<int ARITY>                                             \
+        template<std::size_t ARITY>                                     \
         inline                                                          \
         int operator()(LIBFLATARRAY_ELEM(0, MEMBER) (CELL_TYPE:: *member_ptr)[ARITY]) \
         {                                                               \
