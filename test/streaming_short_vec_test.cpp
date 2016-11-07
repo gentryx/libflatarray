@@ -101,7 +101,7 @@ void testImplementationReal()
         &vec2[i] << (v - w);
     }
     for (std::size_t i = 0; i < numElements; ++i) {
-        TEST_REAL((-i - 0.2), vec2[i]);
+        TEST_REAL((-int(i) - 0.2), vec2[i]);
     }
 
     // test -=
