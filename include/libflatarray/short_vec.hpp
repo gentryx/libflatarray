@@ -8,36 +8,38 @@
 #ifndef FLAT_ARRAY_SHORT_VEC_HPP
 #define FLAT_ARRAY_SHORT_VEC_HPP
 
+#include <cstdlib>
+
 namespace LibFlatArray {
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class short_vec;
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 inline short_vec<CARGO, ARITY> operator+(CARGO a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) + b;
 }
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 inline short_vec<CARGO, ARITY> operator-(CARGO a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) - b;
 }
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 inline short_vec<CARGO, ARITY> operator*(CARGO a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) * b;
 }
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 inline short_vec<CARGO, ARITY> operator/(CARGO a, const short_vec<CARGO, ARITY>& b)
 {
     return short_vec<CARGO, ARITY>(a) / b;
 }
 
-template<typename CARGO, int ARITY >
+template<typename CARGO, std::size_t ARITY >
 inline bool any(const short_vec<CARGO, ARITY>& vec)
 {
     return vec.any();
@@ -58,7 +60,7 @@ inline bool any(unsigned char mask)
     return mask;
 }
 
-template<typename CARGO, int ARITY >
+template<typename CARGO, std::size_t ARITY >
 inline CARGO get(const short_vec<CARGO, ARITY>& vec, const int i)
 {
     return vec.get(i);
@@ -89,8 +91,8 @@ SHORT_VEC1 blend(const SHORT_VEC1& v1, const SHORT_VEC2& v2, const typename SHOR
 }
 
 // fixme: this is slow
-template<typename T, int ARITY>
-inline int count_mask(const typename short_vec<T, ARITY>::mask_type& mask)
+template<typename T, std::size_t ARITY>
+inline std::size_t count_mask(const typename short_vec<T, ARITY>::mask_type& mask)
 {
     if (!any(mask)) {
         return 0;
@@ -98,9 +100,9 @@ inline int count_mask(const typename short_vec<T, ARITY>::mask_type& mask)
 
     short_vec<T, ARITY> v(T(0));
     v.blend(mask, short_vec<T, ARITY>(T(1)));
-    int sum = 0;
+    std::size_t sum = 0;
 
-    for (int i = 0; i < ARITY; ++i) {
+    for (std::size_t i = 0; i < ARITY; ++i) {
         sum += get(v, i);
     }
 
@@ -116,6 +118,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = sizeof(CARGO);
         };
     };
@@ -126,6 +129,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -136,6 +140,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -146,6 +151,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 64;
         };
     };
@@ -156,6 +162,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = sizeof(CARGO);
         };
     };
@@ -166,6 +173,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -176,6 +184,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -186,6 +195,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -196,6 +206,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };
@@ -206,6 +217,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 32;
         };
     };
@@ -216,6 +228,7 @@ public:
         template<typename CARGO>
         class alignment
         {
+        public:
             const static int ALIGNMENT = 16;
         };
     };

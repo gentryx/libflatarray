@@ -18,10 +18,10 @@ namespace LibFlatArray {
 #pragma warning (disable: 2304)
 #endif
 
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class streaming_short_vec;
 
-template<typename CARGO, int ARITY >
+template<typename CARGO, std::size_t ARITY >
 inline bool any(const streaming_short_vec<CARGO, ARITY>& vec)
 {
     return vec.any();
@@ -32,7 +32,7 @@ inline bool any(const streaming_short_vec<CARGO, ARITY>& vec)
  * streaming (i.e. non-temporal) stores. Downside: all store addresses
  * must be aligned.
  */
-template<typename CARGO, int ARITY>
+template<typename CARGO, std::size_t ARITY>
 class streaming_short_vec : public short_vec<CARGO, ARITY>
 {
 public:
