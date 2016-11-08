@@ -63,7 +63,7 @@ inline bool any(unsigned char mask)
 template<typename CARGO, std::size_t ARITY >
 inline CARGO get(const short_vec<CARGO, ARITY>& vec, const int i)
 {
-    return vec.get(i);
+    return vec[i];
 }
 
 inline bool get(unsigned mask, const int i)
@@ -91,6 +91,7 @@ SHORT_VEC1 blend(const SHORT_VEC1& v1, const SHORT_VEC2& v2, const typename SHOR
 }
 
 // fixme: this is slow
+// fixme: replace by horizontal sum, get rid of get() alltoggether
 template<typename T, std::size_t ARITY>
 inline std::size_t count_mask(const typename short_vec<T, ARITY>::mask_type& mask)
 {

@@ -89,7 +89,7 @@ public:
     }
 
     inline
-    double get(int i) const
+    double operator[](int i) const
     {
         __m512d buf0;
         if (i < 16) {

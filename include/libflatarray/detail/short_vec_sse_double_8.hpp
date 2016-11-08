@@ -94,7 +94,7 @@ public:
     }
 
     inline
-    double get(int i) const
+    double operator[](int i) const
     {
         __m128d buf;
         if (i < 4) {

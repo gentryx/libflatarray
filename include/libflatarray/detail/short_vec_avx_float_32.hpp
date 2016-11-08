@@ -94,7 +94,7 @@ public:
     }
 
     inline
-    float get(int i) const
+    float operator[](int i) const
     {
         __m256 buf0;
         if (i < 16) {

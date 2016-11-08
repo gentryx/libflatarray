@@ -88,7 +88,7 @@ public:
     }
 
     inline
-    double get(const int i) const
+    double operator[](const int i) const
     {
         if (i == 0) {
             return _mm_cvtsd_f64(val1);

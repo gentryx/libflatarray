@@ -85,7 +85,7 @@ public:
     }
 
     inline
-    float get(int i) const
+    float operator[](int i) const
     {
         __m128 buf0;
         if (i < 8) {

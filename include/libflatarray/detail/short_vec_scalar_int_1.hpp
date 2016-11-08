@@ -68,7 +68,7 @@ public:
     }
 
     inline
-    float get(const int i) const
+    float operator[](const int i) const
     {
         return val1;
     }

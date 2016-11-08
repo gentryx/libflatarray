@@ -137,7 +137,7 @@ public:
     }
 
     inline
-    double get(const int i) const
+    double operator[](const int i) const
     {
         switch (i) {
         case 0:
