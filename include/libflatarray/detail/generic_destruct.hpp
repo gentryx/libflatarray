@@ -32,27 +32,27 @@ inline void generic_destruct(TYPENAME *member)
 
 // primitive types don't have d-tors:
 __host__ __device__
-inline void generic_destruct(char *member)
+inline void generic_destruct(char *)
 {}
 
 __host__ __device__
-inline void generic_destruct(float *member)
+inline void generic_destruct(float *)
 {}
 
 __host__ __device__
-inline void generic_destruct(double *member)
+inline void generic_destruct(double *)
 {}
 
 __host__ __device__
-inline void generic_destruct(int *member)
+inline void generic_destruct(int *)
 {}
 
 __host__ __device__
-inline void generic_destruct(unsigned *member)
+inline void generic_destruct(unsigned *)
 {}
 
 __host__ __device__
-inline void generic_destruct(long *member)
+inline void generic_destruct(long *)
 {}
 
 }
