@@ -15,8 +15,20 @@ set(PACKAGE_HOMEPAGE "http://www.libgeodecomp.org/libflatarray.html")
 set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
 
-set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall -Wno-sign-conversion -Wnon-virtual-dtor")
+set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall")
+
 include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag("-Wno-sign-conversion" SUPPORTS_WARN_NO_WSIGN)
+if(SUPPORTS_WARN_NO_WSIGN)
+  set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} -Wno-sign-conversion")
+endif()
+
+check_cxx_compiler_flag("-Wnon-virtual-dtor" SUPPORTS_WARN_NON_VIRTUAL_DTOR)
+if(SUPPORTS_WARN_NON_WSIGN)
+  set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} -Wnon-virtual-dtor")
+endif()
+
 check_cxx_compiler_flag("-march=native" SUPPORTS_MARCH_NATIVE)
 if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
