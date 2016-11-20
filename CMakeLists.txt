@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 include(CheckCXXCompilerFlag)
 
+cmake_policy(SET CMP0012 NEW)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 # 1. GENERIC PACKAGE INFORMATION
@@ -16,8 +18,6 @@ set(PACKAGE_EMAIL "users@libgeodecomp.org")
 project(${PACKAGE_NAME})
 
 set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -Wall")
-
-include(CheckCXXCompilerFlag)
 
 check_cxx_compiler_flag("-Wno-sign-conversion" SUPPORTS_WARN_NO_WSIGN)
 if(SUPPORTS_WARN_NO_WSIGN)
