@@ -11,7 +11,10 @@
 #include <libflatarray/testbed/benchmark.hpp>
 #include <ctime>
 #include <iomanip>
+#ifdef _WIN32
+#else
 #include <unistd.h>
+#endif
 
 namespace LibFlatArray {
 

@@ -8,7 +8,11 @@
 #ifndef FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 #define FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
 #include <sys/time.h>
+#endif
 
 namespace LibFlatArray {
 
@@ -27,10 +31,18 @@ public:
 
     static double time()
     {
+#ifdef _WIN32
+		LARGE_INTEGER time;
+		LARGE_INTEGER freq;
+		QueryPerformanceCounter(&time);
+		QueryPerformanceFrequency(&freq);
+		return 1.0 * time.QuadPart / freq.QuadPart;
+#else
         timeval t;
         gettimeofday(&t, 0);
+		return t.tv_sec + t.tv_usec * 1.0e-6;
+#endif
 
-        return t.tv_sec + t.tv_usec * 1.0e-6;
     }
 
 };
