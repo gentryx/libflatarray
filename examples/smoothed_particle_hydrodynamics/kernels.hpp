@@ -105,7 +105,7 @@ void compute_density_lfa(int n, LibFlatArray::soa_accessor<CELL, DIM_X, DIM_Y, D
                     FLOAT overlap = h_squared_vec - dist_squared;
 
                     if (LibFlatArray::any(overlap > FLOAT(0.0))) {
-                        for (int e = 0; e < FLOAT::ARITY; ++e) {
+                        for (std::size_t e = 0; e < FLOAT::ARITY; ++e) {
                             float o = get(overlap, e);
                             if (o > 0) {
                                 float rho_ij = C * o * o * o;
@@ -139,7 +139,7 @@ void handle_interactions(SOA_ACCESSOR& particles, SOA_ARRAY& interaction_buf, co
         FLOAT add_x = w_p * &interaction_buf[f].delta_x() + w_v * delta_v_x;
         FLOAT add_y = w_p * &interaction_buf[f].delta_y() + w_v * delta_v_y;
         // scalar store to avoid simultaneous overwrites:
-        for (int i = 0; i < FLOAT::ARITY; ++i) {
+        for (std::size_t i = 0; i < FLOAT::ARITY; ++i) {
             float add_x_scalar = get(add_x, i);
             float add_y_scalar = get(add_y, i);
             (&particles.a_x())[interaction_buf[f + i].i()] += add_x_scalar;
@@ -211,7 +211,7 @@ void compute_accel_lfa(
                     FLOAT dist_squared = delta_x * delta_x + delta_y * delta_y;
 
                     if (LibFlatArray::any(dist_squared < FLOAT(h_squared))) {
-                        for (int e = 0; e < FLOAT::ARITY; ++e, ++particles_j) {
+                        for (std::size_t e = 0; e < FLOAT::ARITY; ++e, ++particles_j) {
                             if (get(dist_squared, e) < h_squared) {
                                 interaction_buf << InteractionBuffer(
                                     particles_i.rho(),
