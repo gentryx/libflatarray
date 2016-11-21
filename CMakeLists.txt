@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 include(CheckCXXCompilerFlag)
 
-cmake_policy(SET CMP0012 NEW)
+if (CMAKE_VERSIPN VERSION_GREATER 2.7)
+  cmake_policy(SET CMP0012 NEW)
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
