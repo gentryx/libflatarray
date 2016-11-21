@@ -45,17 +45,17 @@ inline bool any(const short_vec<CARGO, ARITY>& vec)
     return vec.any();
 }
 
-inline bool any(unsigned mask)
+inline unsigned any(unsigned mask)
 {
     return mask;
 }
 
-inline bool any(unsigned short mask)
+inline unsigned short any(unsigned short mask)
 {
     return mask;
 }
 
-inline bool any(unsigned char mask)
+inline unsigned char any(unsigned char mask)
 {
     return mask;
 }
