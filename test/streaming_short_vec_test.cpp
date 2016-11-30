@@ -558,7 +558,7 @@ template<typename CARGO, std::size_t ARITY>
 void testImplementationInt()
 {
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    const int numElements = ShortVec::ARITY * 5;
+    const std::size_t numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
