@@ -97,7 +97,7 @@ lfa_add_config_option(UNITEXEC "May be used to specify a wrapper which then call
 lfa_add_config_option(WITH_CUDA "Enable modules which harness NVIDIA CUDA GPUs" ${CUDA_FOUND} true)
 lfa_add_config_option(LIB_INSTALL_DIR "Directory where libraries will be installed to, may be overridden for 64-bit installations" "lib" false)
 lfa_add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" ${SUPPORTS_CPP14} true)
-lfa_add_config_option(WITH_FORCED_CPP11 "Some C++11-compatible compilers support sufficient features of C++14 to allow LibFlatArray to enable C++14 mode. Use this setting in conjunction with WITH_CPP14" false false)
+lfa_add_config_option(WITH_FORCED_CPP11 "Some C++11-compatible compilers support sufficient features of C++14 to allow LibFlatArray to enable C++14 mode. Use this setting in conjunction with WITH_CPP14" false true)
 lfa_add_config_option(WITH_INCREASED_PRECISION "Some architectures (*cough*ARM*cough*) yield poor accuracy when using fast estimates. This option enforces mitigates that flaw at the expense of a few extra cycles." false true)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
