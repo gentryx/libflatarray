@@ -334,6 +334,11 @@ public:
         return my_data;
     }
 
+    const char *data() const
+    {
+        return my_data;
+    }
+
     void set_data(char *new_data)
     {
         my_data = new_data;
