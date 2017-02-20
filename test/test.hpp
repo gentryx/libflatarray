@@ -6,7 +6,13 @@
 #include <sstream>
 
 #ifndef BOOST_TEST
+// Microsoft Visual Studio doesn't define __PRETTY_FUNCTION__:
+#ifdef _MSC_VER
+#define BOOST_TEST(ARG) if (!(ARG)) { std::cerr << __FILE__ << "(" << __LINE__ << "): test '" << #ARG << "' failed in function '" << __FUNCSIG__ << "'" << std::endl; }
+#else
 #define BOOST_TEST(ARG) if (!(ARG)) { std::cerr << __FILE__ << "(" << __LINE__ << "): test '" << #ARG << "' failed in function '" << __PRETTY_FUNCTION__ << "'" << std::endl; }
+#endif
+
 #endif
 
 
