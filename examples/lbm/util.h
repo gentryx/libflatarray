@@ -11,16 +11,8 @@
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
-#include <sys/time.h>
 #include <vector>
-
-long long time_usec()
-{
-        timeval t;
-        gettimeofday(&t, 0);
-
-        return (long long)(t.tv_sec) * 1000000 + t.tv_usec;
-}
+#include <libflatarray/testbed/benchmark.hpp>
 
 void check_cuda_error()
 {
@@ -51,10 +43,9 @@ public:
             repeats *= 10;
         }
 
-        long long useconds = exec(dim, repeats);
+        double seconds = exec(dim, repeats);
 
         double updates = 1.0 * gridSize(dim) * repeats;
-        double seconds = useconds * 10e-6;
         double glups = 10e-9 * updates / seconds;
 
         std::cout << std::setiosflags(std::ios::left);
@@ -72,7 +63,7 @@ protected:
 class benchmark_lbm_cuda : public benchmark
 {
 protected:
-    long long exec(int dim, int repeats)
+    double exec(int dim, int repeats)
     {
         dim3 dimBlock;
         dim3 dimGrid;
@@ -90,7 +81,7 @@ protected:
         return dimGrid.x * dimBlock.x * dimGrid.y * dimBlock.y * (256 - 4);
     }
 
-    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
+    virtual double cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats) = 0;
 
     void gen_dims(dim3 *dimBlock, dim3 *dimGrid, int dim)
     {
@@ -110,7 +101,7 @@ protected:
     virtual ~benchmark_lbm_cuda_basic()
     {}
 
-    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    virtual double cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         int size = dim * dim * (256 + 64) * 20;
         int bytesize = size * sizeof(double);
@@ -127,7 +118,7 @@ protected:
         check_cuda_error();
 
         cudaDeviceSynchronize();
-        long long t_start = time_usec();
+        double t_start = benchmark::time();
 
         for (int t = 0; t < repeats; ++t) {
             update(dimGrid, dimBlock, dim, dim, 256, devGridOld, devGridNew);
@@ -135,7 +126,7 @@ protected:
         }
 
         cudaDeviceSynchronize();
-        long long t_end = time_usec();
+        double t_end = benchmark::time();
         check_cuda_error();
 
         cudaMemcpy(&grid[0], devGridNew, bytesize, cudaMemcpyDeviceToHost);
@@ -143,7 +134,7 @@ protected:
         cudaFree(devGridNew);
         check_cuda_error();
 
-        long long time = t_end - t_start;
+        double time = t_end - t_start;
         return time;
     }
 
