@@ -9,13 +9,14 @@
 #define LIBFLATARRAY_EXAMPLES_LBM_UPDATE_LBM_CUDA_FLAT_ARRAY_H
 
 #include <libflatarray/soa_grid.hpp>
+#include <libflatarray/testbed/benchmark.hpp>
 
 #include "util.h"
 #include "cudalineupdatefunctorprototype.h"
 
 class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
 {
-    virtual long long cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
+    virtual double cudaExec(int dim, dim3 dimBlock, dim3 dimGrid, int repeats)
     {
         LibFlatArray::soa_grid<CellLBM> gridA(dim, dim, 256);
         LibFlatArray::soa_grid<CellLBM> gridB(dim, dim, 256);
@@ -34,7 +35,7 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         LibFlatArray::soa_grid<CellLBM> *gridNew = &gridB;
 
         cudaDeviceSynchronize();
-        long long t_start = time_usec();
+        double t_start = LibFlatArray::benchmark::time();
 
         CudaLineUpdateFunctorPrototype<CellLBM> updater(dimBlock, dimGrid);
 
@@ -44,7 +45,7 @@ class benchmark_lbm_cuda_flat_array : public benchmark_lbm_cuda
         }
 
         cudaDeviceSynchronize();
-        long long t_end = time_usec();
+        double t_end = LibFlatArray::benchmark::time();
         check_cuda_error();
 
         cudaFree(gridA.data());

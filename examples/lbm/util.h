@@ -55,7 +55,7 @@ public:
     }
 
 protected:
-    virtual long long exec(int dim, int repeats) = 0;
+    virtual double exec(int dim, int repeats) = 0;
     virtual std::string name() = 0;
     virtual size_t gridSize(int dim) = 0;
 };
@@ -118,7 +118,7 @@ protected:
         check_cuda_error();
 
         cudaDeviceSynchronize();
-        double t_start = benchmark::time();
+        double t_start = LibFlatArray::benchmark::time();
 
         for (int t = 0; t < repeats; ++t) {
             update(dimGrid, dimBlock, dim, dim, 256, devGridOld, devGridNew);
@@ -126,7 +126,7 @@ protected:
         }
 
         cudaDeviceSynchronize();
-        double t_end = benchmark::time();
+        double t_end = LibFlatArray::benchmark::time();
         check_cuda_error();
 
         cudaMemcpy(&grid[0], devGridNew, bytesize, cudaMemcpyDeviceToHost);
