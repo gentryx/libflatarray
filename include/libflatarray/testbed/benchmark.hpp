@@ -8,6 +8,8 @@
 #ifndef FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 #define FLAT_ARRAY_TESTBED_BENCHMARK_HPP
 
+#include <vector>
+
 #ifdef _WIN32
 #include <Windows.h>
 #else
