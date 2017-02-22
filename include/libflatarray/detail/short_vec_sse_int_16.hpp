@@ -462,18 +462,15 @@ private:
 
 inline
 short_vec<int, 16>::short_vec(const sqrt_reference<int, 16>& other) :
-    val[ 0](
+    val{_mm_cvtps_epi32(
+            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 0]))),
         _mm_cvtps_epi32(
-            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 0])))),
-    val[ 1](
+            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 1]))),
         _mm_cvtps_epi32(
-            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 1])))),
-    val[ 2](
+            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 2]))),
         _mm_cvtps_epi32(
-            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 2])))),
-    val[ 3](
-        _mm_cvtps_epi32(
-            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 3]))))
+            _mm_sqrt_ps(_mm_cvtepi32_ps(other.vec.val[ 3])))
+        }
 {}
 
 inline
