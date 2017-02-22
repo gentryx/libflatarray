@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -46,10 +46,10 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(data),
-        val2(data),
-        val3(data),
-        val4(data)
+        val{data,
+            data,
+            data,
+            data}
     {}
 
     inline
@@ -64,10 +64,10 @@ public:
         const double val2,
         const double val3,
         const double val4) :
-        val1( val1),
-        val2( val2),
-        val3( val3),
-        val4( val4)
+        val{val1,
+            val2,
+            val3,
+            val4}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -83,101 +83,92 @@ public:
     bool any() const
     {
         return
-            val1 ||
-            val2 ||
-            val3 ||
-            val4;
+            val[ 0] ||
+            val[ 1] ||
+            val[ 2] ||
+            val[ 3];
     }
 
     inline
     double operator[](const int i) const
     {
-        switch (i) {
-        case 0:
-            return val1;
-        case 1:
-            return val2;
-        case 2:
-            return val3;
-        default:
-            return val4;
-        }
+        return val[i];
     }
 
     inline
     void operator-=(const short_vec<double, 4>& other)
     {
-        val1  -= other.val1;
-        val2  -= other.val2;
-        val3  -= other.val3;
-        val4  -= other.val4;
+        val[ 0] -= other.val[ 0];
+        val[ 1] -= other.val[ 1];
+        val[ 2] -= other.val[ 2];
+        val[ 3] -= other.val[ 3];
     }
 
     inline
     short_vec<double, 4> operator-(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            val1  - other.val1,
-            val2  - other.val2,
-            val3  - other.val3,
-            val4  - other.val4);
+            val[ 0] - other.val[ 0],
+            val[ 1] - other.val[ 1],
+            val[ 2] - other.val[ 2],
+            val[ 3] - other.val[ 3]);
     }
 
     inline
     void operator+=(const short_vec<double, 4>& other)
     {
-        val1  += other.val1;
-        val2  += other.val2;
-        val3  += other.val3;
-        val4  += other.val4;
+        val[ 0] += other.val[ 0];
+        val[ 1] += other.val[ 1];
+        val[ 2] += other.val[ 2];
+        val[ 3] += other.val[ 3];
     }
 
     inline
     short_vec<double, 4> operator+(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            val1  + other.val1,
-            val2  + other.val2,
-            val3  + other.val3,
-            val4  + other.val4);
+            val[ 0] + other.val[ 0],
+            val[ 1] + other.val[ 1],
+            val[ 2] + other.val[ 2],
+            val[ 3] + other.val[ 3]);
     }
 
     inline
     void operator*=(const short_vec<double, 4>& other)
     {
-        val1  *= other.val1;
-        val2  *= other.val2;
-        val3  *= other.val3;
-        val4  *= other.val4;
+        val[ 0] *= other.val[ 0];
+        val[ 1] *= other.val[ 1];
+        val[ 2] *= other.val[ 2];
+        val[ 3] *= other.val[ 3];
     }
 
     inline
     short_vec<double, 4> operator*(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            val1  * other.val1,
-            val2  * other.val2,
-            val3  * other.val3,
-            val4  * other.val4);
+            val[ 0] * other.val[ 0],
+            val[ 1] * other.val[ 1],
+            val[ 2] * other.val[ 2],
+            val[ 3] * other.val[ 3]);
     }
 
     inline
     void operator/=(const short_vec<double, 4>& other)
     {
-        val1  /= other.val1;
-        val2  /= other.val2;
-        val3  /= other.val3;
-        val4  /= other.val4;
+        val[ 0] /= other.val[ 0];
+        val[ 1] /= other.val[ 1];
+        val[ 2] /= other.val[ 2];
+        val[ 3] /= other.val[ 3];
     }
 
     inline
     short_vec<double, 4> operator/(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            val1  / other.val1,
-            val2  / other.val2,
-            val3  / other.val3,
-            val4  / other.val4);
+            val[ 0] / other.val[ 0],
+            val[ 1] / other.val[ 1],
+            val[ 2] / other.val[ 2],
+            val[ 3] / other.val[ 3]);
     }
 
 #define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
@@ -185,50 +176,50 @@ public:
     mask_type operator<(const short_vec<double, 4>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <) <<  3);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <) <<  3);
     }
 
     inline
     mask_type operator<=(const short_vec<double, 4>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <=) <<  3);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <=) <<  3);
     }
 
     inline
     mask_type operator==(const short_vec<double, 4>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  ==) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  ==) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  ==) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  ==) <<  3);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], ==) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], ==) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], ==) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], ==) <<  3);
     }
 
     inline
     mask_type operator>(const short_vec<double, 4>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >) <<  3);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >) <<  3);
     }
 
     inline
     mask_type operator>=(const short_vec<double, 4>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >=) <<  3);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >=) <<  3);
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
@@ -236,19 +227,19 @@ public:
     short_vec<double, 4> sqrt() const
     {
         return short_vec<double, 4>(
-            std::sqrt(val1),
-            std::sqrt(val2),
-            std::sqrt(val3),
-            std::sqrt(val4));
+            std::sqrt(val[ 0]),
+            std::sqrt(val[ 1]),
+            std::sqrt(val[ 2]),
+            std::sqrt(val[ 3]));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = data[0];
-        val2 = data[1];
-        val3 = data[2];
-        val4 = data[3];
+        val[ 0] = data[0];
+        val[ 1] = data[1];
+        val[ 2] = data[2];
+        val[ 3] = data[3];
     }
 
     inline
@@ -260,10 +251,10 @@ public:
     inline
     void store(double *data) const
     {
-        *(data +  0) = val1;
-        *(data +  1) = val2;
-        *(data +  2) = val3;
-        *(data +  3) = val4;
+        *(data +  0) = val[ 0];
+        *(data +  1) = val[ 1];
+        *(data +  2) = val[ 2];
+        *(data +  3) = val[ 3];
     }
 
     inline
@@ -281,43 +272,40 @@ public:
     inline
     void gather(const double *ptr, const int *offsets)
     {
-        val1 = ptr[offsets[0]];
-        val2 = ptr[offsets[1]];
-        val3 = ptr[offsets[2]];
-        val4 = ptr[offsets[3]];
+        val[ 0] = ptr[offsets[0]];
+        val[ 1] = ptr[offsets[1]];
+        val[ 2] = ptr[offsets[2]];
+        val[ 3] = ptr[offsets[3]];
     }
 
     inline
     void scatter(double *ptr, const int *offsets) const
     {
-        ptr[offsets[0]] = val1;
-        ptr[offsets[1]] = val2;
-        ptr[offsets[2]] = val3;
-        ptr[offsets[3]] = val4;
+        ptr[offsets[0]] = val[ 0];
+        ptr[offsets[1]] = val[ 1];
+        ptr[offsets[2]] = val[ 2];
+        ptr[offsets[3]] = val[ 3];
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<double, 4>& other)
     {
         if (mask & (1 << 0)) {
-            val1 = other.val1;
+            val[ 0] = other.val[ 0];
         }
         if (mask & (1 << 1)) {
-            val2 = other.val2;
+            val[ 1] = other.val[ 1];
         }
         if (mask & (1 << 2)) {
-            val3 = other.val3;
+            val[ 2] = other.val[ 2];
         }
         if (mask & (1 << 3)) {
-            val4 = other.val4;
+            val[ 3] = other.val[ 3];
         }
     }
 
 private:
-    double val1;
-    double val2;
-    double val3;
-    double val4;
+    double val[4];
 };
 
 inline
@@ -341,8 +329,11 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 4>& vec)
 {
-    __os << "["  << vec.val1  << ", " << vec.val2  << ", " << vec.val3  << ", " << vec.val4
-         << "]";
+    __os << "["
+         << vec.val[ 0] << ", "
+         << vec.val[ 1] << ", "
+         << vec.val[ 2] << ", "
+         << vec.val[ 3] << "]";
     return __os;
 }
 

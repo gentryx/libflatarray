@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -46,14 +46,14 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(data),
-        val2(data),
-        val3(data),
-        val4(data),
-        val5(data),
-        val6(data),
-        val7(data),
-        val8(data)
+        val{data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data}
     {}
 
     inline
@@ -72,14 +72,14 @@ public:
         const float val6,
         const float val7,
         const float val8) :
-        val1( val1),
-        val2( val2),
-        val3( val3),
-        val4( val4),
-        val5( val5),
-        val6( val6),
-        val7( val7),
-        val8( val8)
+        val{val1,
+            val2,
+            val3,
+            val4,
+            val5,
+            val6,
+            val7,
+            val8}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -95,145 +95,128 @@ public:
     bool any() const
     {
         return
-            val1 ||
-            val2 ||
-            val3 ||
-            val4 ||
-            val5 ||
-            val6 ||
-            val7 ||
-            val8;
+            val[ 0] ||
+            val[ 1] ||
+            val[ 2] ||
+            val[ 3] ||
+            val[ 4] ||
+            val[ 5] ||
+            val[ 6] ||
+            val[ 7];
     }
 
     inline
     float operator[](const int i) const
     {
-        switch (i) {
-        case 0:
-            return val1;
-        case 1:
-            return val2;
-        case 2:
-            return val3;
-        case 3:
-            return val4;
-        case 4:
-            return val5;
-        case 5:
-            return val6;
-        case 6:
-            return val7;
-        default:
-            return val8;
-        }
+        return val[i];
     }
 
     inline
     void operator-=(const short_vec<float, 8>& other)
     {
-        val1  -= other.val1;
-        val2  -= other.val2;
-        val3  -= other.val3;
-        val4  -= other.val4;
-        val5  -= other.val5;
-        val6  -= other.val6;
-        val7  -= other.val7;
-        val8  -= other.val8;
+        val[ 0] -= other.val[ 0];
+        val[ 1] -= other.val[ 1];
+        val[ 2] -= other.val[ 2];
+        val[ 3] -= other.val[ 3];
+        val[ 4] -= other.val[ 4];
+        val[ 5] -= other.val[ 5];
+        val[ 6] -= other.val[ 6];
+        val[ 7] -= other.val[ 7];
     }
 
     inline
     short_vec<float, 8> operator-(const short_vec<float, 8>& other) const
     {
         return short_vec<float, 8>(
-            val1  - other.val1,
-            val2  - other.val2,
-            val3  - other.val3,
-            val4  - other.val4,
-            val5  - other.val5,
-            val6  - other.val6,
-            val7  - other.val7,
-            val8  - other.val8);
+            val[ 0] - other.val[ 0],
+            val[ 1] - other.val[ 1],
+            val[ 2] - other.val[ 2],
+            val[ 3] - other.val[ 3],
+            val[ 4] - other.val[ 4],
+            val[ 5] - other.val[ 5],
+            val[ 6] - other.val[ 6],
+            val[ 7] - other.val[ 7]);
     }
 
     inline
     void operator+=(const short_vec<float, 8>& other)
     {
-        val1  += other.val1;
-        val2  += other.val2;
-        val3  += other.val3;
-        val4  += other.val4;
-        val5  += other.val5;
-        val6  += other.val6;
-        val7  += other.val7;
-        val8  += other.val8;
+        val[ 0] += other.val[ 0];
+        val[ 1] += other.val[ 1];
+        val[ 2] += other.val[ 2];
+        val[ 3] += other.val[ 3];
+        val[ 4] += other.val[ 4];
+        val[ 5] += other.val[ 5];
+        val[ 6] += other.val[ 6];
+        val[ 7] += other.val[ 7];
     }
 
     inline
     short_vec<float, 8> operator+(const short_vec<float, 8>& other) const
     {
         return short_vec<float, 8>(
-            val1  + other.val1,
-            val2  + other.val2,
-            val3  + other.val3,
-            val4  + other.val4,
-            val5  + other.val5,
-            val6  + other.val6,
-            val7  + other.val7,
-            val8  + other.val8);
+            val[ 0] + other.val[ 0],
+            val[ 1] + other.val[ 1],
+            val[ 2] + other.val[ 2],
+            val[ 3] + other.val[ 3],
+            val[ 4] + other.val[ 4],
+            val[ 5] + other.val[ 5],
+            val[ 6] + other.val[ 6],
+            val[ 7] + other.val[ 7]);
     }
 
     inline
     void operator*=(const short_vec<float, 8>& other)
     {
-        val1  *= other.val1;
-        val2  *= other.val2;
-        val3  *= other.val3;
-        val4  *= other.val4;
-        val5  *= other.val5;
-        val6  *= other.val6;
-        val7  *= other.val7;
-        val8  *= other.val8;
+        val[ 0] *= other.val[ 0];
+        val[ 1] *= other.val[ 1];
+        val[ 2] *= other.val[ 2];
+        val[ 3] *= other.val[ 3];
+        val[ 4] *= other.val[ 4];
+        val[ 5] *= other.val[ 5];
+        val[ 6] *= other.val[ 6];
+        val[ 7] *= other.val[ 7];
     }
 
     inline
     short_vec<float, 8> operator*(const short_vec<float, 8>& other) const
     {
         return short_vec<float, 8>(
-            val1  * other.val1,
-            val2  * other.val2,
-            val3  * other.val3,
-            val4  * other.val4,
-            val5  * other.val5,
-            val6  * other.val6,
-            val7  * other.val7,
-            val8  * other.val8);
+            val[ 0] * other.val[ 0],
+            val[ 1] * other.val[ 1],
+            val[ 2] * other.val[ 2],
+            val[ 3] * other.val[ 3],
+            val[ 4] * other.val[ 4],
+            val[ 5] * other.val[ 5],
+            val[ 6] * other.val[ 6],
+            val[ 7] * other.val[ 7]);
     }
 
     inline
     void operator/=(const short_vec<float, 8>& other)
     {
-        val1  /= other.val1;
-        val2  /= other.val2;
-        val3  /= other.val3;
-        val4  /= other.val4;
-        val5  /= other.val5;
-        val6  /= other.val6;
-        val7  /= other.val7;
-        val8  /= other.val8;
+        val[ 0] /= other.val[ 0];
+        val[ 1] /= other.val[ 1];
+        val[ 2] /= other.val[ 2];
+        val[ 3] /= other.val[ 3];
+        val[ 4] /= other.val[ 4];
+        val[ 5] /= other.val[ 5];
+        val[ 6] /= other.val[ 6];
+        val[ 7] /= other.val[ 7];
     }
 
     inline
     short_vec<float, 8> operator/(const short_vec<float, 8>& other) const
     {
         return short_vec<float, 8>(
-            val1  / other.val1,
-            val2  / other.val2,
-            val3  / other.val3,
-            val4  / other.val4,
-            val5  / other.val5,
-            val6  / other.val6,
-            val7  / other.val7,
-            val8  / other.val8);
+            val[ 0] / other.val[ 0],
+            val[ 1] / other.val[ 1],
+            val[ 2] / other.val[ 2],
+            val[ 3] / other.val[ 3],
+            val[ 4] / other.val[ 4],
+            val[ 5] / other.val[ 5],
+            val[ 6] / other.val[ 6],
+            val[ 7] / other.val[ 7]);
     }
 
 #define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
@@ -241,70 +224,70 @@ public:
     mask_type operator<(const short_vec<float, 8>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val5,  other.val5,  <) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val6,  other.val6,  <) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val7,  other.val7,  <) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val8,  other.val8,  <) <<  7);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <) <<  3) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <) <<  4) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <) <<  5) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <) <<  6) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <) <<  7);
     }
 
     inline
     mask_type operator<=(const short_vec<float, 8>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  <=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  <=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  <=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  <=) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val5,  other.val5,  <=) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val6,  other.val6,  <=) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val7,  other.val7,  <=) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val8,  other.val8,  <=) <<  7);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <=) <<  3) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <=) <<  4) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <=) <<  5) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <=) <<  6) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <=) <<  7);
     }
 
     inline
     mask_type operator==(const short_vec<float, 8>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  ==) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  ==) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  ==) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  ==) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val5,  other.val5,  ==) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val6,  other.val6,  ==) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val7,  other.val7,  ==) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val8,  other.val8,  ==) <<  7);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], ==) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], ==) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], ==) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], ==) <<  3) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], ==) <<  4) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], ==) <<  5) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], ==) <<  6) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], ==) <<  7);
     }
 
     inline
     mask_type operator>(const short_vec<float, 8>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val5,  other.val5,  >) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val6,  other.val6,  >) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val7,  other.val7,  >) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val8,  other.val8,  >) <<  7);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >) <<  3) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >) <<  4) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >) <<  5) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >) <<  6) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >) <<  7);
     }
 
     inline
     mask_type operator>=(const short_vec<float, 8>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val1,  other.val1,  >=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val2,  other.val2,  >=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val3,  other.val3,  >=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val4,  other.val4,  >=) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val5,  other.val5,  >=) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val6,  other.val6,  >=) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val7,  other.val7,  >=) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val8,  other.val8,  >=) <<  7);
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >=) <<  0) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >=) <<  1) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >=) <<  2) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >=) <<  3) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >=) <<  4) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >=) <<  5) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >=) <<  6) +
+            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >=) <<  7);
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
@@ -312,27 +295,27 @@ public:
     short_vec<float, 8> sqrt() const
     {
         return short_vec<float, 8>(
-            std::sqrt(val1),
-            std::sqrt(val2),
-            std::sqrt(val3),
-            std::sqrt(val4),
-            std::sqrt(val5),
-            std::sqrt(val6),
-            std::sqrt(val7),
-            std::sqrt(val8));
+            std::sqrt(val[ 0]),
+            std::sqrt(val[ 1]),
+            std::sqrt(val[ 2]),
+            std::sqrt(val[ 3]),
+            std::sqrt(val[ 4]),
+            std::sqrt(val[ 5]),
+            std::sqrt(val[ 6]),
+            std::sqrt(val[ 7]));
     }
 
     inline
     void load(const float *data)
     {
-        val1 = data[0];
-        val2 = data[1];
-        val3 = data[2];
-        val4 = data[3];
-        val5 = data[4];
-        val6 = data[5];
-        val7 = data[6];
-        val8 = data[7];
+        val[ 0] = data[0];
+        val[ 1] = data[1];
+        val[ 2] = data[2];
+        val[ 3] = data[3];
+        val[ 4] = data[4];
+        val[ 5] = data[5];
+        val[ 6] = data[6];
+        val[ 7] = data[7];
     }
 
     inline
@@ -344,14 +327,14 @@ public:
     inline
     void store(float *data) const
     {
-        *(data +  0) = val1;
-        *(data +  1) = val2;
-        *(data +  2) = val3;
-        *(data +  3) = val4;
-        *(data +  4) = val5;
-        *(data +  5) = val6;
-        *(data +  6) = val7;
-        *(data +  7) = val8;
+        *(data +  0) = val[ 0];
+        *(data +  1) = val[ 1];
+        *(data +  2) = val[ 2];
+        *(data +  3) = val[ 3];
+        *(data +  4) = val[ 4];
+        *(data +  5) = val[ 5];
+        *(data +  6) = val[ 6];
+        *(data +  7) = val[ 7];
     }
 
     inline
@@ -369,67 +352,60 @@ public:
     inline
     void gather(const float *ptr, const int *offsets)
     {
-        val1 = ptr[offsets[0]];
-        val2 = ptr[offsets[1]];
-        val3 = ptr[offsets[2]];
-        val4 = ptr[offsets[3]];
-        val5 = ptr[offsets[4]];
-        val6 = ptr[offsets[5]];
-        val7 = ptr[offsets[6]];
-        val8 = ptr[offsets[7]];
+        val[ 0] = ptr[offsets[0]];
+        val[ 1] = ptr[offsets[1]];
+        val[ 2] = ptr[offsets[2]];
+        val[ 3] = ptr[offsets[3]];
+        val[ 4] = ptr[offsets[4]];
+        val[ 5] = ptr[offsets[5]];
+        val[ 6] = ptr[offsets[6]];
+        val[ 7] = ptr[offsets[7]];
     }
 
     inline
     void scatter(float *ptr, const int *offsets) const
     {
-        ptr[offsets[0]] = val1;
-        ptr[offsets[1]] = val2;
-        ptr[offsets[2]] = val3;
-        ptr[offsets[3]] = val4;
-        ptr[offsets[4]] = val5;
-        ptr[offsets[5]] = val6;
-        ptr[offsets[6]] = val7;
-        ptr[offsets[7]] = val8;
+        ptr[offsets[0]] = val[ 0];
+        ptr[offsets[1]] = val[ 1];
+        ptr[offsets[2]] = val[ 2];
+        ptr[offsets[3]] = val[ 3];
+        ptr[offsets[4]] = val[ 4];
+        ptr[offsets[5]] = val[ 5];
+        ptr[offsets[6]] = val[ 6];
+        ptr[offsets[7]] = val[ 7];
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<float, 8>& other)
     {
         if (mask & (1 << 0)) {
-            val1 = other.val1;
+            val[ 0] = other.val[ 0];
         }
         if (mask & (1 << 1)) {
-            val2 = other.val2;
+            val[ 1] = other.val[ 1];
         }
         if (mask & (1 << 2)) {
-            val3 = other.val3;
+            val[ 2] = other.val[ 2];
         }
         if (mask & (1 << 3)) {
-            val4 = other.val4;
+            val[ 3] = other.val[ 3];
         }
         if (mask & (1 << 4)) {
-            val5 = other.val5;
+            val[ 4] = other.val[ 4];
         }
         if (mask & (1 << 5)) {
-            val6 = other.val6;
+            val[ 5] = other.val[ 5];
         }
         if (mask & (1 << 6)) {
-            val7 = other.val7;
+            val[ 6] = other.val[ 6];
         }
         if (mask & (1 << 7)) {
-            val8 = other.val8;
+            val[ 7] = other.val[ 7];
         }
     }
 
 private:
-    float val1;
-    float val2;
-    float val3;
-    float val4;
-    float val5;
-    float val6;
-    float val7;
-    float val8;
+    float val[8];
 };
 
 inline
@@ -453,8 +429,8 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 8>& vec)
 {
-    __os << "["  << vec.val1  << ", " << vec.val2  << ", " << vec.val3  << ", " << vec.val4
-         << ", " << vec.val5  << ", " << vec.val6  << ", " << vec.val7  << ", " << vec.val8
+    __os << "["  << vec.val[ 0] << ", " << vec.val[ 1] << ", " << vec.val[ 2] << ", " << vec.val[ 3]
+         << ", " << vec.val[ 4] << ", " << vec.val[ 5] << ", " << vec.val[ 6] << ", " << vec.val[ 7]
          << "]";
     return __os;
 }

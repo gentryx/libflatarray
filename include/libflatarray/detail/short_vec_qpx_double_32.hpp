@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -40,27 +40,21 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(vec_splats(data)),
-        val2(vec_splats(data)),
-        val3(vec_splats(data)),
-        val4(vec_splats(data)),
-        val5(vec_splats(data)),
-        val6(vec_splats(data)),
-        val7(vec_splats(data)),
-        val8(vec_splats(data))
+        val{vec_splats(data),
+            vec_splats(data),
+            vec_splats(data),
+            vec_splats(data),
+            vec_splats(data),
+            vec_splats(data),
+            vec_splats(data),
+            vec_splats(data)}
     {}
 
     inline
-    short_vec(const double *data) :
-        val1(vec_ld(0, const_cast<double *>(data +  0))),
-        val2(vec_ld(0, const_cast<double *>(data +  4))),
-        val3(vec_ld(0, const_cast<double *>(data +  8))),
-        val4(vec_ld(0, const_cast<double *>(data + 12))),
-        val5(vec_ld(0, const_cast<double *>(data + 16))),
-        val6(vec_ld(0, const_cast<double *>(data + 20))),
-        val7(vec_ld(0, const_cast<double *>(data + 24))),
-        val8(vec_ld(0, const_cast<double *>(data + 28)))
-    {}
+    short_vec(const double *data)
+    {
+        load(data);
+    }
 
     inline
     short_vec(
@@ -72,14 +66,14 @@ public:
         const vector4double& val6,
         const vector4double& val7,
         const vector4double& val8) :
-        val1(val1),
-        val2(val2),
-        val3(val3),
-        val4(val4),
-        val5(val5),
-        val6(val6),
-        val7(val7),
-        val8(val8)
+        val{val1,
+            val2,
+            val3,
+            val4,
+            val5,
+            val6,
+            val7,
+            val8}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -97,82 +91,82 @@ public:
     inline
     void operator-=(const short_vec<double, 32>& other)
     {
-        val1 = vec_sub(val1, other.val1);
-        val2 = vec_sub(val2, other.val2);
-        val3 = vec_sub(val3, other.val3);
-        val4 = vec_sub(val4, other.val4);
-        val5 = vec_sub(val5, other.val5);
-        val6 = vec_sub(val6, other.val6);
-        val7 = vec_sub(val7, other.val7);
-        val8 = vec_sub(val8, other.val8);
+        val[ 0] = vec_sub(val[ 0], other.val[ 0]);
+        val[ 1] = vec_sub(val[ 1], other.val[ 1]);
+        val[ 2] = vec_sub(val[ 2], other.val[ 2]);
+        val[ 3] = vec_sub(val[ 3], other.val[ 3]);
+        val[ 4] = vec_sub(val[ 4], other.val[ 4]);
+        val[ 5] = vec_sub(val[ 5], other.val[ 5]);
+        val[ 6] = vec_sub(val[ 6], other.val[ 6]);
+        val[ 7] = vec_sub(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<double, 32> operator-(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            vec_sub(val1, other.val1),
-            vec_sub(val2, other.val2),
-            vec_sub(val3, other.val3),
-            vec_sub(val4, other.val4),
-            vec_sub(val5, other.val5),
-            vec_sub(val6, other.val6),
-            vec_sub(val7, other.val7),
-            vec_sub(val8, other.val8));
+            vec_sub(val[ 0], other.val[ 0]),
+            vec_sub(val[ 1], other.val[ 1]),
+            vec_sub(val[ 2], other.val[ 2]),
+            vec_sub(val[ 3], other.val[ 3]),
+            vec_sub(val[ 4], other.val[ 4]),
+            vec_sub(val[ 5], other.val[ 5]),
+            vec_sub(val[ 6], other.val[ 6]),
+            vec_sub(val[ 7], other.val[ 7]));
     }
 
     inline
     void operator+=(const short_vec<double, 32>& other)
     {
-        val1 = vec_add(val1, other.val1);
-        val2 = vec_add(val2, other.val2);
-        val3 = vec_add(val3, other.val3);
-        val4 = vec_add(val4, other.val4);
-        val5 = vec_add(val5, other.val5);
-        val6 = vec_add(val6, other.val6);
-        val7 = vec_add(val7, other.val7);
-        val8 = vec_add(val8, other.val8);
+        val[ 0] = vec_add(val[ 0], other.val[ 0]);
+        val[ 1] = vec_add(val[ 1], other.val[ 1]);
+        val[ 2] = vec_add(val[ 2], other.val[ 2]);
+        val[ 3] = vec_add(val[ 3], other.val[ 3]);
+        val[ 4] = vec_add(val[ 4], other.val[ 4]);
+        val[ 5] = vec_add(val[ 5], other.val[ 5]);
+        val[ 6] = vec_add(val[ 6], other.val[ 6]);
+        val[ 7] = vec_add(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<double, 32> operator+(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            vec_add(val1, other.val1),
-            vec_add(val2, other.val2),
-            vec_add(val3, other.val3),
-            vec_add(val4, other.val4),
-            vec_add(val5, other.val5),
-            vec_add(val6, other.val6),
-            vec_add(val7, other.val7),
-            vec_add(val8, other.val8));
+            vec_add(val[ 0], other.val[ 0]),
+            vec_add(val[ 1], other.val[ 1]),
+            vec_add(val[ 2], other.val[ 2]),
+            vec_add(val[ 3], other.val[ 3]),
+            vec_add(val[ 4], other.val[ 4]),
+            vec_add(val[ 5], other.val[ 5]),
+            vec_add(val[ 6], other.val[ 6]),
+            vec_add(val[ 7], other.val[ 7]));
     }
 
     inline
     void operator*=(const short_vec<double, 32>& other)
     {
-        val1 = vec_add(val1, other.val1);
-        val2 = vec_add(val2, other.val2);
-        val3 = vec_add(val3, other.val3);
-        val4 = vec_add(val4, other.val4);
-        val5 = vec_add(val5, other.val5);
-        val6 = vec_add(val6, other.val6);
-        val7 = vec_add(val7, other.val7);
-        val8 = vec_add(val8, other.val8);
+        val[ 0] = vec_add(val[ 0], other.val[ 0]);
+        val[ 1] = vec_add(val[ 1], other.val[ 1]);
+        val[ 2] = vec_add(val[ 2], other.val[ 2]);
+        val[ 3] = vec_add(val[ 3], other.val[ 3]);
+        val[ 4] = vec_add(val[ 4], other.val[ 4]);
+        val[ 5] = vec_add(val[ 5], other.val[ 5]);
+        val[ 6] = vec_add(val[ 6], other.val[ 6]);
+        val[ 7] = vec_add(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<double, 32> operator*(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            vec_mul(val1, other.val1),
-            vec_mul(val2, other.val2),
-            vec_mul(val3, other.val3),
-            vec_mul(val4, other.val4),
-            vec_mul(val5, other.val5),
-            vec_mul(val6, other.val6),
-            vec_mul(val7, other.val7),
-            vec_mul(val8, other.val8));
+            vec_mul(val[ 0], other.val[ 0]),
+            vec_mul(val[ 1], other.val[ 1]),
+            vec_mul(val[ 2], other.val[ 2]),
+            vec_mul(val[ 3], other.val[ 3]),
+            vec_mul(val[ 4], other.val[ 4]),
+            vec_mul(val[ 5], other.val[ 5]),
+            vec_mul(val[ 6], other.val[ 6]),
+            vec_mul(val[ 7], other.val[ 7]));
     }
 
     inline
@@ -181,28 +175,28 @@ public:
     inline
     void operator/=(const short_vec<double, 32>& other)
     {
-        val1 = vec_swdiv_nochk(val1, other.val1);
-        val2 = vec_swdiv_nochk(val2, other.val2);
-        val3 = vec_swdiv_nochk(val3, other.val3);
-        val4 = vec_swdiv_nochk(val4, other.val4);
-        val5 = vec_swdiv_nochk(val5, other.val5);
-        val6 = vec_swdiv_nochk(val6, other.val6);
-        val7 = vec_swdiv_nochk(val7, other.val7);
-        val8 = vec_swdiv_nochk(val8, other.val8);
+        val[ 0] = vec_swdiv_nochk(val[ 0], other.val[ 0]);
+        val[ 1] = vec_swdiv_nochk(val[ 1], other.val[ 1]);
+        val[ 2] = vec_swdiv_nochk(val[ 2], other.val[ 2]);
+        val[ 3] = vec_swdiv_nochk(val[ 3], other.val[ 3]);
+        val[ 4] = vec_swdiv_nochk(val[ 4], other.val[ 4]);
+        val[ 5] = vec_swdiv_nochk(val[ 5], other.val[ 5]);
+        val[ 6] = vec_swdiv_nochk(val[ 6], other.val[ 6]);
+        val[ 7] = vec_swdiv_nochk(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<double, 32> operator/(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            vec_swdiv_nochk(val1, other.val1),
-            vec_swdiv_nochk(val2, other.val2),
-            vec_swdiv_nochk(val3, other.val3),
-            vec_swdiv_nochk(val4, other.val4),
-            vec_swdiv_nochk(val5, other.val5),
-            vec_swdiv_nochk(val6, other.val6),
-            vec_swdiv_nochk(val7, other.val7),
-            vec_swdiv_nochk(val8, other.val8));
+            vec_swdiv_nochk(val[ 0], other.val[ 0]),
+            vec_swdiv_nochk(val[ 1], other.val[ 1]),
+            vec_swdiv_nochk(val[ 2], other.val[ 2]),
+            vec_swdiv_nochk(val[ 3], other.val[ 3]),
+            vec_swdiv_nochk(val[ 4], other.val[ 4]),
+            vec_swdiv_nochk(val[ 5], other.val[ 5]),
+            vec_swdiv_nochk(val[ 6], other.val[ 6]),
+            vec_swdiv_nochk(val[ 7], other.val[ 7]));
     }
 
     inline
@@ -212,68 +206,68 @@ public:
     short_vec<double, 32> sqrt() const
     {
         return short_vec<double, 32>(
-            vec_swsqrt(val1),
-            vec_swsqrt(val2),
-            vec_swsqrt(val3),
-            vec_swsqrt(val4),
-            vec_swsqrt(val5),
-            vec_swsqrt(val6),
-            vec_swsqrt(val7),
-            vec_swsqrt(val8));
+            vec_swsqrt(val[ 0]),
+            vec_swsqrt(val[ 1]),
+            vec_swsqrt(val[ 2]),
+            vec_swsqrt(val[ 3]),
+            vec_swsqrt(val[ 4]),
+            vec_swsqrt(val[ 5]),
+            vec_swsqrt(val[ 6]),
+            vec_swsqrt(val[ 7]));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = vec_ld(0, const_cast<double *>(data +  0));
-        val2 = vec_ld(0, const_cast<double *>(data +  4));
-        val3 = vec_ld(0, const_cast<double *>(data +  8));
-        val4 = vec_ld(0, const_cast<double *>(data + 12));
-        val5 = vec_ld(0, const_cast<double *>(data + 16));
-        val6 = vec_ld(0, const_cast<double *>(data + 20));
-        val7 = vec_ld(0, const_cast<double *>(data + 24));
-        val8 = vec_ld(0, const_cast<double *>(data + 28));
+        val[ 0] = vec_ld(0, const_cast<double *>(data +  0));
+        val[ 1] = vec_ld(0, const_cast<double *>(data +  4));
+        val[ 2] = vec_ld(0, const_cast<double *>(data +  8));
+        val[ 3] = vec_ld(0, const_cast<double *>(data + 12));
+        val[ 4] = vec_ld(0, const_cast<double *>(data + 16));
+        val[ 5] = vec_ld(0, const_cast<double *>(data + 20));
+        val[ 6] = vec_ld(0, const_cast<double *>(data + 24));
+        val[ 7] = vec_ld(0, const_cast<double *>(data + 28));
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        val1 = vec_lda(0, const_cast<double *>(data +  0));
-        val2 = vec_lda(0, const_cast<double *>(data +  4));
-        val3 = vec_lda(0, const_cast<double *>(data +  8));
-        val4 = vec_lda(0, const_cast<double *>(data + 12));
-        val5 = vec_lda(0, const_cast<double *>(data + 16));
-        val6 = vec_lda(0, const_cast<double *>(data + 20));
-        val7 = vec_lda(0, const_cast<double *>(data + 24));
-        val8 = vec_lda(0, const_cast<double *>(data + 28));
+        val[ 0] = vec_lda(0, const_cast<double *>(data +  0));
+        val[ 1] = vec_lda(0, const_cast<double *>(data +  4));
+        val[ 2] = vec_lda(0, const_cast<double *>(data +  8));
+        val[ 3] = vec_lda(0, const_cast<double *>(data + 12));
+        val[ 4] = vec_lda(0, const_cast<double *>(data + 16));
+        val[ 5] = vec_lda(0, const_cast<double *>(data + 20));
+        val[ 6] = vec_lda(0, const_cast<double *>(data + 24));
+        val[ 7] = vec_lda(0, const_cast<double *>(data + 28));
     }
 
     inline
     void store(double *data) const
     {
-        vec_st(val1, 0, data +  0);
-        vec_st(val2, 0, data +  4);
-        vec_st(val3, 0, data +  8);
-        vec_st(val4, 0, data + 12);
-        vec_st(val5, 0, data + 16);
-        vec_st(val6, 0, data + 20);
-        vec_st(val7, 0, data + 24);
-        vec_st(val8, 0, data + 28);
+        vec_st(val[ 0], 0, data +  0);
+        vec_st(val[ 1], 0, data +  4);
+        vec_st(val[ 2], 0, data +  8);
+        vec_st(val[ 3], 0, data + 12);
+        vec_st(val[ 4], 0, data + 16);
+        vec_st(val[ 5], 0, data + 20);
+        vec_st(val[ 6], 0, data + 24);
+        vec_st(val[ 7], 0, data + 28);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        vec_sta(val1, 0, data +  0);
-        vec_sta(val2, 0, data +  4);
-        vec_sta(val3, 0, data +  8);
-        vec_sta(val4, 0, data + 12);
-        vec_sta(val5, 0, data + 16);
-        vec_sta(val6, 0, data + 20);
-        vec_sta(val7, 0, data + 24);
-        vec_sta(val8, 0, data + 28);
+        vec_sta(val[ 0], 0, data +  0);
+        vec_sta(val[ 1], 0, data +  4);
+        vec_sta(val[ 2], 0, data +  8);
+        vec_sta(val[ 3], 0, data + 12);
+        vec_sta(val[ 4], 0, data + 16);
+        vec_sta(val[ 5], 0, data + 20);
+        vec_sta(val[ 6], 0, data + 24);
+        vec_sta(val[ 7], 0, data + 28);
     }
 
     inline
@@ -286,100 +280,100 @@ public:
     void gather(const double *ptr, const int *offsets)
     {
         double *base = const_cast<double *>(ptr);
-        val1 = vec_insert(base[offsets[ 0]], val1, 0);
-        val1 = vec_insert(base[offsets[ 1]], val1, 1);
-        val1 = vec_insert(base[offsets[ 2]], val1, 2);
-        val1 = vec_insert(base[offsets[ 3]], val1, 3);
+        val[ 0] = vec_insert(base[offsets[ 0]], val[ 0], 0);
+        val[ 0] = vec_insert(base[offsets[ 1]], val[ 0], 1);
+        val[ 0] = vec_insert(base[offsets[ 2]], val[ 0], 2);
+        val[ 0] = vec_insert(base[offsets[ 3]], val[ 0], 3);
 
-        val2 = vec_insert(base[offsets[ 4]], val2, 0);
-        val2 = vec_insert(base[offsets[ 5]], val2, 1);
-        val2 = vec_insert(base[offsets[ 6]], val2, 2);
-        val2 = vec_insert(base[offsets[ 7]], val2, 3);
+        val[ 1] = vec_insert(base[offsets[ 4]], val[ 1], 0);
+        val[ 1] = vec_insert(base[offsets[ 5]], val[ 1], 1);
+        val[ 1] = vec_insert(base[offsets[ 6]], val[ 1], 2);
+        val[ 1] = vec_insert(base[offsets[ 7]], val[ 1], 3);
 
-        val3 = vec_insert(base[offsets[ 8]], val3, 0);
-        val3 = vec_insert(base[offsets[ 9]], val3, 1);
-        val3 = vec_insert(base[offsets[10]], val3, 2);
-        val3 = vec_insert(base[offsets[11]], val3, 3);
+        val[ 2] = vec_insert(base[offsets[ 8]], val[ 2], 0);
+        val[ 2] = vec_insert(base[offsets[ 9]], val[ 2], 1);
+        val[ 2] = vec_insert(base[offsets[10]], val[ 2], 2);
+        val[ 2] = vec_insert(base[offsets[11]], val[ 2], 3);
 
-        val4 = vec_insert(base[offsets[12]], val4, 0);
-        val4 = vec_insert(base[offsets[13]], val4, 1);
-        val4 = vec_insert(base[offsets[14]], val4, 2);
-        val4 = vec_insert(base[offsets[15]], val4, 3);
+        val[ 3] = vec_insert(base[offsets[12]], val[ 3], 0);
+        val[ 3] = vec_insert(base[offsets[13]], val[ 3], 1);
+        val[ 3] = vec_insert(base[offsets[14]], val[ 3], 2);
+        val[ 3] = vec_insert(base[offsets[15]], val[ 3], 3);
 
-        val5 = vec_insert(base[offsets[16]], val5, 0);
-        val5 = vec_insert(base[offsets[17]], val5, 1);
-        val5 = vec_insert(base[offsets[18]], val5, 2);
-        val5 = vec_insert(base[offsets[19]], val5, 3);
+        val[ 4] = vec_insert(base[offsets[16]], val[ 4], 0);
+        val[ 4] = vec_insert(base[offsets[17]], val[ 4], 1);
+        val[ 4] = vec_insert(base[offsets[18]], val[ 4], 2);
+        val[ 4] = vec_insert(base[offsets[19]], val[ 4], 3);
 
-        val6 = vec_insert(base[offsets[20]], val6, 0);
-        val6 = vec_insert(base[offsets[21]], val6, 1);
-        val6 = vec_insert(base[offsets[22]], val6, 2);
-        val6 = vec_insert(base[offsets[23]], val6, 3);
+        val[ 5] = vec_insert(base[offsets[20]], val[ 5], 0);
+        val[ 5] = vec_insert(base[offsets[21]], val[ 5], 1);
+        val[ 5] = vec_insert(base[offsets[22]], val[ 5], 2);
+        val[ 5] = vec_insert(base[offsets[23]], val[ 5], 3);
 
-        val7 = vec_insert(base[offsets[24]], val7, 0);
-        val7 = vec_insert(base[offsets[25]], val7, 1);
-        val7 = vec_insert(base[offsets[26]], val7, 2);
-        val7 = vec_insert(base[offsets[27]], val7, 3);
+        val[ 6] = vec_insert(base[offsets[24]], val[ 6], 0);
+        val[ 6] = vec_insert(base[offsets[25]], val[ 6], 1);
+        val[ 6] = vec_insert(base[offsets[26]], val[ 6], 2);
+        val[ 6] = vec_insert(base[offsets[27]], val[ 6], 3);
 
-        val8 = vec_insert(base[offsets[28]], val8, 0);
-        val8 = vec_insert(base[offsets[29]], val8, 1);
-        val8 = vec_insert(base[offsets[30]], val8, 2);
-        val8 = vec_insert(base[offsets[31]], val8, 3);
+        val[ 7] = vec_insert(base[offsets[28]], val[ 7], 0);
+        val[ 7] = vec_insert(base[offsets[29]], val[ 7], 1);
+        val[ 7] = vec_insert(base[offsets[30]], val[ 7], 2);
+        val[ 7] = vec_insert(base[offsets[31]], val[ 7], 3);
     }
 
     inline
     void scatter(double *ptr, const int *offsets) const
     {
-        ptr[offsets[ 0]] = vec_extract(val1, 0);
-        ptr[offsets[ 1]] = vec_extract(val1, 1);
-        ptr[offsets[ 2]] = vec_extract(val1, 2);
-        ptr[offsets[ 3]] = vec_extract(val1, 3);
+        ptr[offsets[ 0]] = vec_extract(val[ 0], 0);
+        ptr[offsets[ 1]] = vec_extract(val[ 0], 1);
+        ptr[offsets[ 2]] = vec_extract(val[ 0], 2);
+        ptr[offsets[ 3]] = vec_extract(val[ 0], 3);
 
-        ptr[offsets[ 4]] = vec_extract(val2, 0);
-        ptr[offsets[ 5]] = vec_extract(val2, 1);
-        ptr[offsets[ 6]] = vec_extract(val2, 2);
-        ptr[offsets[ 7]] = vec_extract(val2, 3);
+        ptr[offsets[ 4]] = vec_extract(val[ 1], 0);
+        ptr[offsets[ 5]] = vec_extract(val[ 1], 1);
+        ptr[offsets[ 6]] = vec_extract(val[ 1], 2);
+        ptr[offsets[ 7]] = vec_extract(val[ 1], 3);
 
-        ptr[offsets[ 8]] = vec_extract(val3, 0);
-        ptr[offsets[ 9]] = vec_extract(val3, 1);
-        ptr[offsets[10]] = vec_extract(val3, 2);
-        ptr[offsets[11]] = vec_extract(val3, 3);
+        ptr[offsets[ 8]] = vec_extract(val[ 2], 0);
+        ptr[offsets[ 9]] = vec_extract(val[ 2], 1);
+        ptr[offsets[10]] = vec_extract(val[ 2], 2);
+        ptr[offsets[11]] = vec_extract(val[ 2], 3);
 
-        ptr[offsets[12]] = vec_extract(val4, 0);
-        ptr[offsets[13]] = vec_extract(val4, 1);
-        ptr[offsets[14]] = vec_extract(val4, 2);
-        ptr[offsets[15]] = vec_extract(val4, 3);
+        ptr[offsets[12]] = vec_extract(val[ 3], 0);
+        ptr[offsets[13]] = vec_extract(val[ 3], 1);
+        ptr[offsets[14]] = vec_extract(val[ 3], 2);
+        ptr[offsets[15]] = vec_extract(val[ 3], 3);
 
-        ptr[offsets[16]] = vec_extract(val5, 0);
-        ptr[offsets[17]] = vec_extract(val5, 1);
-        ptr[offsets[18]] = vec_extract(val5, 2);
-        ptr[offsets[19]] = vec_extract(val5, 3);
+        ptr[offsets[16]] = vec_extract(val[ 4], 0);
+        ptr[offsets[17]] = vec_extract(val[ 4], 1);
+        ptr[offsets[18]] = vec_extract(val[ 4], 2);
+        ptr[offsets[19]] = vec_extract(val[ 4], 3);
 
-        ptr[offsets[20]] = vec_extract(val6, 0);
-        ptr[offsets[21]] = vec_extract(val6, 1);
-        ptr[offsets[22]] = vec_extract(val6, 2);
-        ptr[offsets[23]] = vec_extract(val6, 3);
+        ptr[offsets[20]] = vec_extract(val[ 5], 0);
+        ptr[offsets[21]] = vec_extract(val[ 5], 1);
+        ptr[offsets[22]] = vec_extract(val[ 5], 2);
+        ptr[offsets[23]] = vec_extract(val[ 5], 3);
 
-        ptr[offsets[24]] = vec_extract(val7, 0);
-        ptr[offsets[25]] = vec_extract(val7, 1);
-        ptr[offsets[26]] = vec_extract(val7, 2);
-        ptr[offsets[27]] = vec_extract(val7, 3);
+        ptr[offsets[24]] = vec_extract(val[ 6], 0);
+        ptr[offsets[25]] = vec_extract(val[ 6], 1);
+        ptr[offsets[26]] = vec_extract(val[ 6], 2);
+        ptr[offsets[27]] = vec_extract(val[ 6], 3);
 
-        ptr[offsets[28]] = vec_extract(val8, 0);
-        ptr[offsets[29]] = vec_extract(val8, 1);
-        ptr[offsets[30]] = vec_extract(val8, 2);
-        ptr[offsets[31]] = vec_extract(val8, 3);
+        ptr[offsets[28]] = vec_extract(val[ 7], 0);
+        ptr[offsets[29]] = vec_extract(val[ 7], 1);
+        ptr[offsets[30]] = vec_extract(val[ 7], 2);
+        ptr[offsets[31]] = vec_extract(val[ 7], 3);
     }
 
 private:
-    vector4double val1;
-    vector4double val2;
-    vector4double val3;
-    vector4double val4;
-    vector4double val5;
-    vector4double val6;
-    vector4double val7;
-    vector4double val8;
+    vector4double val[ 0];
+    vector4double val[ 1];
+    vector4double val[ 2];
+    vector4double val[ 3];
+    vector4double val[ 4];
+    vector4double val[ 5];
+    vector4double val[ 6];
+    vector4double val[ 7];
 };
 
 #ifdef __ICC
@@ -409,41 +403,41 @@ private:
 
 inline
 short_vec<double, 32>::short_vec(const sqrt_reference<double, 32>& other) :
-    val1(vec_swsqrt(other.vec.val1)),
-    val2(vec_swsqrt(other.vec.val2)),
-    val3(vec_swsqrt(other.vec.val3)),
-    val4(vec_swsqrt(other.vec.val4)),
-    val5(vec_swsqrt(other.vec.val5)),
-    val6(vec_swsqrt(other.vec.val6)),
-    val7(vec_swsqrt(other.vec.val7)),
-    val8(vec_swsqrt(other.vec.val8))
+    val[ 0](vec_swsqrt(other.vec.val[ 0])),
+    val[ 1](vec_swsqrt(other.vec.val[ 1])),
+    val[ 2](vec_swsqrt(other.vec.val[ 2])),
+    val[ 3](vec_swsqrt(other.vec.val[ 3])),
+    val[ 4](vec_swsqrt(other.vec.val[ 4])),
+    val[ 5](vec_swsqrt(other.vec.val[ 5])),
+    val[ 6](vec_swsqrt(other.vec.val[ 6])),
+    val[ 7](vec_swsqrt(other.vec.val[ 7]))
 {}
 
 inline
 void short_vec<double, 32>::operator/=(const sqrt_reference<double, 32>& other)
 {
-    val1 = vec_mul(val1, vec_rsqrte(other.vec.val1));
-    val2 = vec_mul(val2, vec_rsqrte(other.vec.val2));
-    val3 = vec_mul(val3, vec_rsqrte(other.vec.val3));
-    val4 = vec_mul(val4, vec_rsqrte(other.vec.val4));
-    val5 = vec_mul(val5, vec_rsqrte(other.vec.val5));
-    val6 = vec_mul(val6, vec_rsqrte(other.vec.val6));
-    val7 = vec_mul(val7, vec_rsqrte(other.vec.val7));
-    val8 = vec_mul(val8, vec_rsqrte(other.vec.val8));
+    val[ 0] = vec_mul(val[ 0], vec_rsqrte(other.vec.val[ 0]));
+    val[ 1] = vec_mul(val[ 1], vec_rsqrte(other.vec.val[ 1]));
+    val[ 2] = vec_mul(val[ 2], vec_rsqrte(other.vec.val[ 2]));
+    val[ 3] = vec_mul(val[ 3], vec_rsqrte(other.vec.val[ 3]));
+    val[ 4] = vec_mul(val[ 4], vec_rsqrte(other.vec.val[ 4]));
+    val[ 5] = vec_mul(val[ 5], vec_rsqrte(other.vec.val[ 5]));
+    val[ 6] = vec_mul(val[ 6], vec_rsqrte(other.vec.val[ 6]));
+    val[ 7] = vec_mul(val[ 7], vec_rsqrte(other.vec.val[ 7]));
 }
 
 inline
 short_vec<double, 32> short_vec<double, 32>::operator/(const sqrt_reference<double, 32>& other) const
 {
     return short_vec<double, 32>(
-        vec_mul(val1, vec_rsqrte(other.vec.val1)),
-        vec_mul(val2, vec_rsqrte(other.vec.val2)),
-        vec_mul(val3, vec_rsqrte(other.vec.val3)),
-        vec_mul(val4, vec_rsqrte(other.vec.val4)),
-        vec_mul(val5, vec_rsqrte(other.vec.val5)),
-        vec_mul(val6, vec_rsqrte(other.vec.val6)),
-        vec_mul(val7, vec_rsqrte(other.vec.val7)),
-        vec_mul(val8, vec_rsqrte(other.vec.val8)));
+        vec_mul(val[ 0], vec_rsqrte(other.vec.val[ 0])),
+        vec_mul(val[ 1], vec_rsqrte(other.vec.val[ 1])),
+        vec_mul(val[ 2], vec_rsqrte(other.vec.val[ 2])),
+        vec_mul(val[ 3], vec_rsqrte(other.vec.val[ 3])),
+        vec_mul(val[ 4], vec_rsqrte(other.vec.val[ 4])),
+        vec_mul(val[ 5], vec_rsqrte(other.vec.val[ 5])),
+        vec_mul(val[ 6], vec_rsqrte(other.vec.val[ 6])),
+        vec_mul(val[ 7], vec_rsqrte(other.vec.val[ 7])));
 }
 
 inline
@@ -457,14 +451,14 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 32>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
-    const double *data2 = reinterpret_cast<const double *>(&vec.val2);
-    const double *data3 = reinterpret_cast<const double *>(&vec.val3);
-    const double *data4 = reinterpret_cast<const double *>(&vec.val4);
-    const double *data5 = reinterpret_cast<const double *>(&vec.val5);
-    const double *data6 = reinterpret_cast<const double *>(&vec.val6);
-    const double *data7 = reinterpret_cast<const double *>(&vec.val7);
-    const double *data8 = reinterpret_cast<const double *>(&vec.val8);
+    const double *data1 = reinterpret_cast<const double *>(&vec.val[ 0]);
+    const double *data2 = reinterpret_cast<const double *>(&vec.val[ 1]);
+    const double *data3 = reinterpret_cast<const double *>(&vec.val[ 2]);
+    const double *data4 = reinterpret_cast<const double *>(&vec.val[ 3]);
+    const double *data5 = reinterpret_cast<const double *>(&vec.val[ 4]);
+    const double *data6 = reinterpret_cast<const double *>(&vec.val[ 5]);
+    const double *data7 = reinterpret_cast<const double *>(&vec.val[ 6]);
+    const double *data8 = reinterpret_cast<const double *>(&vec.val[ 7]);
     __os << "["  << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
          << ", " << data2[0] << ", " << data2[1] << ", " << data2[2] << ", " << data2[3]
          << ", " << data3[0] << ", " << data3[1] << ", " << data3[2] << ", " << data3[3]

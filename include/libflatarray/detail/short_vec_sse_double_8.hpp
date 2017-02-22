@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -48,10 +48,10 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(_mm_set1_pd(data)),
-        val2(_mm_set1_pd(data)),
-        val3(_mm_set1_pd(data)),
-        val4(_mm_set1_pd(data))
+        val{_mm_set1_pd(data),
+            _mm_set1_pd(data),
+            _mm_set1_pd(data),
+            _mm_set1_pd(data)}
     {}
 
     inline
@@ -62,10 +62,10 @@ public:
 
     inline
     short_vec(const __m128d& val1, const __m128d& val2, const __m128d& val3, const __m128d& val4) :
-        val1(val1),
-        val2(val2),
-        val3(val3),
-        val4(val4)
+        val{val1,
+            val2,
+            val3,
+            val4}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -80,8 +80,8 @@ public:
     inline
     bool any() const
     {
-        __m128d buf1 = _mm_or_pd(_mm_or_pd(val1, val2),
-                                 _mm_or_pd(val3, val4));
+        __m128d buf1 = _mm_or_pd(_mm_or_pd(val[ 0], val[ 1]),
+                                 _mm_or_pd(val[ 2], val[ 3]));
 
 #ifdef __SSE4_1__
         return (0 == _mm_testz_si128(
@@ -96,21 +96,7 @@ public:
     inline
     double operator[](int i) const
     {
-        __m128d buf;
-        if (i < 4) {
-            if (i < 2) {
-                buf = val1;
-            } else {
-                buf = val2;
-            }
-        } else {
-            if (i < 6) {
-                buf = val3;
-            } else {
-                buf = val4;
-            }
-        }
-
+        __m128d buf = val[i >> 1];
         i &= 1;
 
         if (i == 0) {
@@ -124,77 +110,77 @@ public:
     inline
     void operator-=(const short_vec<double, 8>& other)
     {
-        val1 = _mm_sub_pd(val1, other.val1);
-        val2 = _mm_sub_pd(val2, other.val2);
-        val3 = _mm_sub_pd(val3, other.val3);
-        val4 = _mm_sub_pd(val4, other.val4);
+        val[ 0] = _mm_sub_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm_sub_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm_sub_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm_sub_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 8> operator-(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_sub_pd(val1, other.val1),
-            _mm_sub_pd(val2, other.val2),
-            _mm_sub_pd(val3, other.val3),
-            _mm_sub_pd(val4, other.val4));
+            _mm_sub_pd(val[ 0], other.val[ 0]),
+            _mm_sub_pd(val[ 1], other.val[ 1]),
+            _mm_sub_pd(val[ 2], other.val[ 2]),
+            _mm_sub_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator+=(const short_vec<double, 8>& other)
     {
-        val1 = _mm_add_pd(val1, other.val1);
-        val2 = _mm_add_pd(val2, other.val2);
-        val3 = _mm_add_pd(val3, other.val3);
-        val4 = _mm_add_pd(val4, other.val4);
+        val[ 0] = _mm_add_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm_add_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm_add_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm_add_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 8> operator+(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_add_pd(val1, other.val1),
-            _mm_add_pd(val2, other.val2),
-            _mm_add_pd(val3, other.val3),
-            _mm_add_pd(val4, other.val4));
+            _mm_add_pd(val[ 0], other.val[ 0]),
+            _mm_add_pd(val[ 1], other.val[ 1]),
+            _mm_add_pd(val[ 2], other.val[ 2]),
+            _mm_add_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator*=(const short_vec<double, 8>& other)
     {
-        val1 = _mm_mul_pd(val1, other.val1);
-        val2 = _mm_mul_pd(val2, other.val2);
-        val3 = _mm_mul_pd(val3, other.val3);
-        val4 = _mm_mul_pd(val4, other.val4);
+        val[ 0] = _mm_mul_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm_mul_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm_mul_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm_mul_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 8> operator*(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_mul_pd(val1, other.val1),
-            _mm_mul_pd(val2, other.val2),
-            _mm_mul_pd(val3, other.val3),
-            _mm_mul_pd(val4, other.val4));
+            _mm_mul_pd(val[ 0], other.val[ 0]),
+            _mm_mul_pd(val[ 1], other.val[ 1]),
+            _mm_mul_pd(val[ 2], other.val[ 2]),
+            _mm_mul_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator/=(const short_vec<double, 8>& other)
     {
-        val1 = _mm_div_pd(val1, other.val1);
-        val2 = _mm_div_pd(val2, other.val2);
-        val3 = _mm_div_pd(val3, other.val3);
-        val4 = _mm_div_pd(val4, other.val4);
+        val[ 0] = _mm_div_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm_div_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm_div_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm_div_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 8> operator/(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_div_pd(val1, other.val1),
-            _mm_div_pd(val2, other.val2),
-            _mm_div_pd(val3, other.val3),
-            _mm_div_pd(val4, other.val4));
+            _mm_div_pd(val[ 0], other.val[ 0]),
+            _mm_div_pd(val[ 1], other.val[ 1]),
+            _mm_div_pd(val[ 2], other.val[ 2]),
+            _mm_div_pd(val[ 3], other.val[ 3]));
     }
 
     inline
@@ -204,165 +190,162 @@ public:
     short_vec<double, 8> operator<(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_cmplt_pd(val1, other.val1),
-            _mm_cmplt_pd(val2, other.val2),
-            _mm_cmplt_pd(val3, other.val3),
-            _mm_cmplt_pd(val4, other.val4));
+            _mm_cmplt_pd(val[ 0], other.val[ 0]),
+            _mm_cmplt_pd(val[ 1], other.val[ 1]),
+            _mm_cmplt_pd(val[ 2], other.val[ 2]),
+            _mm_cmplt_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     short_vec<double, 8> operator<=(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_cmple_pd(val1, other.val1),
-            _mm_cmple_pd(val2, other.val2),
-            _mm_cmple_pd(val3, other.val3),
-            _mm_cmple_pd(val4, other.val4));
+            _mm_cmple_pd(val[ 0], other.val[ 0]),
+            _mm_cmple_pd(val[ 1], other.val[ 1]),
+            _mm_cmple_pd(val[ 2], other.val[ 2]),
+            _mm_cmple_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     short_vec<double, 8> operator==(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_cmpeq_pd(val1, other.val1),
-            _mm_cmpeq_pd(val2, other.val2),
-            _mm_cmpeq_pd(val3, other.val3),
-            _mm_cmpeq_pd(val4, other.val4));
+            _mm_cmpeq_pd(val[ 0], other.val[ 0]),
+            _mm_cmpeq_pd(val[ 1], other.val[ 1]),
+            _mm_cmpeq_pd(val[ 2], other.val[ 2]),
+            _mm_cmpeq_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     short_vec<double, 8> operator>(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_cmpgt_pd(val1, other.val1),
-            _mm_cmpgt_pd(val2, other.val2),
-            _mm_cmpgt_pd(val3, other.val3),
-            _mm_cmpgt_pd(val4, other.val4));
+            _mm_cmpgt_pd(val[ 0], other.val[ 0]),
+            _mm_cmpgt_pd(val[ 1], other.val[ 1]),
+            _mm_cmpgt_pd(val[ 2], other.val[ 2]),
+            _mm_cmpgt_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     short_vec<double, 8> operator>=(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm_cmpge_pd(val1, other.val1),
-            _mm_cmpge_pd(val2, other.val2),
-            _mm_cmpge_pd(val3, other.val3),
-            _mm_cmpge_pd(val4, other.val4));
+            _mm_cmpge_pd(val[ 0], other.val[ 0]),
+            _mm_cmpge_pd(val[ 1], other.val[ 1]),
+            _mm_cmpge_pd(val[ 2], other.val[ 2]),
+            _mm_cmpge_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     short_vec<double, 8> sqrt() const
     {
         return short_vec<double, 8>(
-            _mm_sqrt_pd(val1),
-            _mm_sqrt_pd(val2),
-            _mm_sqrt_pd(val3),
-            _mm_sqrt_pd(val4));
+            _mm_sqrt_pd(val[ 0]),
+            _mm_sqrt_pd(val[ 1]),
+            _mm_sqrt_pd(val[ 2]),
+            _mm_sqrt_pd(val[ 3]));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = _mm_loadu_pd(data + 0);
-        val2 = _mm_loadu_pd(data + 2);
-        val3 = _mm_loadu_pd(data + 4);
-        val4 = _mm_loadu_pd(data + 6);
+        val[ 0] = _mm_loadu_pd(data + 0);
+        val[ 1] = _mm_loadu_pd(data + 2);
+        val[ 2] = _mm_loadu_pd(data + 4);
+        val[ 3] = _mm_loadu_pd(data + 6);
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        val1 = _mm_load_pd(data + 0);
-        val2 = _mm_load_pd(data + 2);
-        val3 = _mm_load_pd(data + 4);
-        val4 = _mm_load_pd(data + 6);
+        val[ 0] = _mm_load_pd(data + 0);
+        val[ 1] = _mm_load_pd(data + 2);
+        val[ 2] = _mm_load_pd(data + 4);
+        val[ 3] = _mm_load_pd(data + 6);
     }
 
     inline
     void store(double *data) const
     {
-        _mm_storeu_pd(data + 0, val1);
-        _mm_storeu_pd(data + 2, val2);
-        _mm_storeu_pd(data + 4, val3);
-        _mm_storeu_pd(data + 6, val4);
+        _mm_storeu_pd(data + 0, val[ 0]);
+        _mm_storeu_pd(data + 2, val[ 1]);
+        _mm_storeu_pd(data + 4, val[ 2]);
+        _mm_storeu_pd(data + 6, val[ 3]);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        _mm_store_pd(data + 0, val1);
-        _mm_store_pd(data + 2, val2);
-        _mm_store_pd(data + 4, val3);
-        _mm_store_pd(data + 6, val4);
+        _mm_store_pd(data + 0, val[ 0]);
+        _mm_store_pd(data + 2, val[ 1]);
+        _mm_store_pd(data + 4, val[ 2]);
+        _mm_store_pd(data + 6, val[ 3]);
     }
 
     inline
     void store_nt(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        _mm_stream_pd(data + 0, val1);
-        _mm_stream_pd(data + 2, val2);
-        _mm_stream_pd(data + 4, val3);
-        _mm_stream_pd(data + 6, val4);
+        _mm_stream_pd(data + 0, val[ 0]);
+        _mm_stream_pd(data + 2, val[ 1]);
+        _mm_stream_pd(data + 4, val[ 2]);
+        _mm_stream_pd(data + 6, val[ 3]);
     }
 
     inline
     void gather(const double *ptr, const int *offsets)
     {
-        val1 = _mm_loadl_pd(val1, ptr + offsets[0]);
-        val1 = _mm_loadh_pd(val1, ptr + offsets[1]);
-        val2 = _mm_loadl_pd(val2, ptr + offsets[2]);
-        val2 = _mm_loadh_pd(val2, ptr + offsets[3]);
-        val3 = _mm_loadl_pd(val3, ptr + offsets[4]);
-        val3 = _mm_loadh_pd(val3, ptr + offsets[5]);
-        val4 = _mm_loadl_pd(val4, ptr + offsets[6]);
-        val4 = _mm_loadh_pd(val4, ptr + offsets[7]);
+        val[ 0] = _mm_loadl_pd(val[ 0], ptr + offsets[0]);
+        val[ 0] = _mm_loadh_pd(val[ 0], ptr + offsets[1]);
+        val[ 1] = _mm_loadl_pd(val[ 1], ptr + offsets[2]);
+        val[ 1] = _mm_loadh_pd(val[ 1], ptr + offsets[3]);
+        val[ 2] = _mm_loadl_pd(val[ 2], ptr + offsets[4]);
+        val[ 2] = _mm_loadh_pd(val[ 2], ptr + offsets[5]);
+        val[ 3] = _mm_loadl_pd(val[ 3], ptr + offsets[6]);
+        val[ 3] = _mm_loadh_pd(val[ 3], ptr + offsets[7]);
     }
 
     inline
     void scatter(double *ptr, const int *offsets) const
     {
-        _mm_storel_pd(ptr + offsets[0], val1);
-        _mm_storeh_pd(ptr + offsets[1], val1);
-        _mm_storel_pd(ptr + offsets[2], val2);
-        _mm_storeh_pd(ptr + offsets[3], val2);
-        _mm_storel_pd(ptr + offsets[4], val3);
-        _mm_storeh_pd(ptr + offsets[5], val3);
-        _mm_storel_pd(ptr + offsets[6], val4);
-        _mm_storeh_pd(ptr + offsets[7], val4);
+        _mm_storel_pd(ptr + offsets[0], val[ 0]);
+        _mm_storeh_pd(ptr + offsets[1], val[ 0]);
+        _mm_storel_pd(ptr + offsets[2], val[ 1]);
+        _mm_storeh_pd(ptr + offsets[3], val[ 1]);
+        _mm_storel_pd(ptr + offsets[4], val[ 2]);
+        _mm_storeh_pd(ptr + offsets[5], val[ 2]);
+        _mm_storel_pd(ptr + offsets[6], val[ 3]);
+        _mm_storeh_pd(ptr + offsets[7], val[ 3]);
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<double, 8>& other)
     {
 #ifdef __SSE4_1__
-        val1  = _mm_blendv_pd(val1,  other.val1,  mask.val1);
-        val2  = _mm_blendv_pd(val2,  other.val2,  mask.val2);
-        val3  = _mm_blendv_pd(val3,  other.val3,  mask.val3);
-        val4  = _mm_blendv_pd(val4,  other.val4,  mask.val4);
+        val[ 0] = _mm_blendv_pd(val[ 0], other.val[ 0], mask.val[ 0]);
+        val[ 1] = _mm_blendv_pd(val[ 1], other.val[ 1], mask.val[ 1]);
+        val[ 2] = _mm_blendv_pd(val[ 2], other.val[ 2], mask.val[ 2]);
+        val[ 3] = _mm_blendv_pd(val[ 3], other.val[ 3], mask.val[ 3]);
 #else
-        val1 = _mm_or_pd(
-            _mm_and_pd(mask.val1, other.val1),
-            _mm_andnot_pd(mask.val1, val1));
-        val2 = _mm_or_pd(
-            _mm_and_pd(mask.val2, other.val2),
-            _mm_andnot_pd(mask.val2, val2));
-        val3 = _mm_or_pd(
-            _mm_and_pd(mask.val3, other.val3),
-            _mm_andnot_pd(mask.val3, val3));
-        val4 = _mm_or_pd(
-            _mm_and_pd(mask.val4, other.val4),
-            _mm_andnot_pd(mask.val4, val4));
+        val[ 0] = _mm_or_pd(
+            _mm_and_pd(mask.val[ 0], other.val[ 0]),
+            _mm_andnot_pd(mask.val[ 0], val[ 0]));
+        val[ 1] = _mm_or_pd(
+            _mm_and_pd(mask.val[ 1], other.val[ 1]),
+            _mm_andnot_pd(mask.val[ 1], val[ 1]));
+        val[ 2] = _mm_or_pd(
+            _mm_and_pd(mask.val[ 2], other.val[ 2]),
+            _mm_andnot_pd(mask.val[ 2], val[ 2]));
+        val[ 3] = _mm_or_pd(
+            _mm_and_pd(mask.val[ 3], other.val[ 3]),
+            _mm_andnot_pd(mask.val[ 3], val[ 3]));
 #endif
     }
 
 private:
-    __m128d val1;
-    __m128d val2;
-    __m128d val3;
-    __m128d val4;
+    __m128d val[4];
 };
 
 #ifdef __ICC
@@ -386,11 +369,15 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 8>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
-    const double *data2 = reinterpret_cast<const double *>(&vec.val2);
-    const double *data3 = reinterpret_cast<const double *>(&vec.val3);
-    const double *data4 = reinterpret_cast<const double *>(&vec.val4);
-    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data2[0]  << ", " << data2[1]  << ", " << data3[0]  << ", " << data3[1]  << ", " << data4[0]  << ", " << data4[1] << "]";
+    const double *data1 = reinterpret_cast<const double *>(&vec.val[ 0]);
+    const double *data2 = reinterpret_cast<const double *>(&vec.val[ 1]);
+    const double *data3 = reinterpret_cast<const double *>(&vec.val[ 2]);
+    const double *data4 = reinterpret_cast<const double *>(&vec.val[ 3]);
+    __os << "["
+         << data1[0] << ", " << data1[1] << ", "
+         << data2[0] << ", " << data2[1] << ", "
+         << data3[0] << ", " << data3[1] << ", "
+         << data4[0] << ", " << data4[1] << "]";
     return __os;
 }
 

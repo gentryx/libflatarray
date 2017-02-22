@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -48,10 +48,10 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(_mm512_set1_pd(data)),
-        val2(_mm512_set1_pd(data)),
-        val3(_mm512_set1_pd(data)),
-        val4(_mm512_set1_pd(data))
+        val{_mm512_set1_pd(data),
+            _mm512_set1_pd(data),
+            _mm512_set1_pd(data),
+            _mm512_set1_pd(data)}
     {}
 
     inline
@@ -62,10 +62,10 @@ public:
 
     inline
     short_vec(const __m512d& val1, const __m512d& val2, const __m512d& val3, const __m512d& val4) :
-        val1(val1),
-        val2(val2),
-        val3(val3),
-        val4(val4)
+        val{val1,
+            val2,
+            val3,
+            val4}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -81,8 +81,8 @@ public:
     bool any() const
     {
         __m512d buf0 = _mm512_or_pd(
-            _mm512_or_pd(val1, val2),
-            _mm512_or_pd(val3, val4));
+            _mm512_or_pd(val[ 0], val[ 1]),
+            _mm512_or_pd(val[ 2], val[ 3]));
         return _mm512_test_epi64_mask(
             _mm512_castpd_si512(buf0),
             _mm512_castpd_si512(buf0));
@@ -91,21 +91,7 @@ public:
     inline
     double operator[](int i) const
     {
-        __m512d buf0;
-        if (i < 16) {
-            if (i < 8) {
-                buf0 = val1;
-            } else {
-                buf0 = val2;
-            }
-        } else {
-            if (i < 24) {
-                buf0 = val3;
-            } else {
-                buf0 = val4;
-            }
-        }
-
+        __m512d buf0 = val[i >> 3];
         i &= 7;
 
         __m128d buf1;
@@ -136,185 +122,185 @@ public:
     inline
     void operator-=(const short_vec<double, 32>& other)
     {
-        val1 = _mm512_sub_pd(val1, other.val1);
-        val2 = _mm512_sub_pd(val2, other.val2);
-        val3 = _mm512_sub_pd(val3, other.val3);
-        val4 = _mm512_sub_pd(val4, other.val4);
+        val[ 0] = _mm512_sub_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_sub_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm512_sub_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm512_sub_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 32> operator-(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            _mm512_sub_pd(val1, other.val1),
-            _mm512_sub_pd(val2, other.val2),
-            _mm512_sub_pd(val3, other.val3),
-            _mm512_sub_pd(val4, other.val4));
+            _mm512_sub_pd(val[ 0], other.val[ 0]),
+            _mm512_sub_pd(val[ 1], other.val[ 1]),
+            _mm512_sub_pd(val[ 2], other.val[ 2]),
+            _mm512_sub_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator+=(const short_vec<double, 32>& other)
     {
-        val1 = _mm512_add_pd(val1, other.val1);
-        val2 = _mm512_add_pd(val2, other.val2);
-        val3 = _mm512_add_pd(val3, other.val3);
-        val4 = _mm512_add_pd(val4, other.val4);
+        val[ 0] = _mm512_add_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_add_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm512_add_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm512_add_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 32> operator+(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            _mm512_add_pd(val1, other.val1),
-            _mm512_add_pd(val2, other.val2),
-            _mm512_add_pd(val3, other.val3),
-            _mm512_add_pd(val4, other.val4));
+            _mm512_add_pd(val[ 0], other.val[ 0]),
+            _mm512_add_pd(val[ 1], other.val[ 1]),
+            _mm512_add_pd(val[ 2], other.val[ 2]),
+            _mm512_add_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator*=(const short_vec<double, 32>& other)
     {
-        val1 = _mm512_mul_pd(val1, other.val1);
-        val2 = _mm512_mul_pd(val2, other.val2);
-        val3 = _mm512_mul_pd(val3, other.val3);
-        val4 = _mm512_mul_pd(val4, other.val4);
+        val[ 0] = _mm512_mul_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_mul_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm512_mul_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm512_mul_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 32> operator*(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            _mm512_mul_pd(val1, other.val1),
-            _mm512_mul_pd(val2, other.val2),
-            _mm512_mul_pd(val3, other.val3),
-            _mm512_mul_pd(val4, other.val4));
+            _mm512_mul_pd(val[ 0], other.val[ 0]),
+            _mm512_mul_pd(val[ 1], other.val[ 1]),
+            _mm512_mul_pd(val[ 2], other.val[ 2]),
+            _mm512_mul_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     void operator/=(const short_vec<double, 32>& other)
     {
-        val1 = _mm512_div_pd(val1, other.val1);
-        val2 = _mm512_div_pd(val2, other.val2);
-        val3 = _mm512_div_pd(val3, other.val3);
-        val4 = _mm512_div_pd(val4, other.val4);
+        val[ 0] = _mm512_div_pd(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_div_pd(val[ 1], other.val[ 1]);
+        val[ 2] = _mm512_div_pd(val[ 2], other.val[ 2]);
+        val[ 3] = _mm512_div_pd(val[ 3], other.val[ 3]);
     }
 
     inline
     short_vec<double, 32> operator/(const short_vec<double, 32>& other) const
     {
         return short_vec<double, 32>(
-            _mm512_div_pd(val1, other.val1),
-            _mm512_div_pd(val2, other.val2),
-            _mm512_div_pd(val3, other.val3),
-            _mm512_div_pd(val4, other.val4));
+            _mm512_div_pd(val[ 0], other.val[ 0]),
+            _mm512_div_pd(val[ 1], other.val[ 1]),
+            _mm512_div_pd(val[ 2], other.val[ 2]),
+            _mm512_div_pd(val[ 3], other.val[ 3]));
     }
 
     inline
     mask_type operator<(const short_vec<double, 32>& other) const
     {
         return
-            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LT_OS) <<  0) +
-            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_LT_OS) <<  8) +
-            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_LT_OS) << 16) +
-            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_LT_OS) << 24);
+            (_mm512_cmp_pd_mask(val[ 0], other.val[ 0], _CMP_LT_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val[ 1], other.val[ 1], _CMP_LT_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val[ 2], other.val[ 2], _CMP_LT_OS) << 16) +
+            (_mm512_cmp_pd_mask(val[ 3], other.val[ 3], _CMP_LT_OS) << 24);
     }
 
     inline
     mask_type operator<=(const short_vec<double, 32>& other) const
     {
         return
-            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_LE_OS) <<  0) +
-            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_LE_OS) <<  8) +
-            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_LE_OS) << 16) +
-            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_LE_OS) << 24);
+            (_mm512_cmp_pd_mask(val[ 0], other.val[ 0], _CMP_LE_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val[ 1], other.val[ 1], _CMP_LE_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val[ 2], other.val[ 2], _CMP_LE_OS) << 16) +
+            (_mm512_cmp_pd_mask(val[ 3], other.val[ 3], _CMP_LE_OS) << 24);
     }
 
     inline
     mask_type operator==(const short_vec<double, 32>& other) const
     {
         return
-            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_EQ_OQ) <<  0) +
-            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_EQ_OQ) <<  8) +
-            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_EQ_OQ) << 16) +
-            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_EQ_OQ) << 24);
+            (_mm512_cmp_pd_mask(val[ 0], other.val[ 0], _CMP_EQ_OQ) <<  0) +
+            (_mm512_cmp_pd_mask(val[ 1], other.val[ 1], _CMP_EQ_OQ) <<  8) +
+            (_mm512_cmp_pd_mask(val[ 2], other.val[ 2], _CMP_EQ_OQ) << 16) +
+            (_mm512_cmp_pd_mask(val[ 3], other.val[ 3], _CMP_EQ_OQ) << 24);
     }
 
     inline
     mask_type operator>(const short_vec<double, 32>& other) const
     {
         return
-            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GT_OS) <<  0) +
-            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GT_OS) <<  8) +
-            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_GT_OS) << 16) +
-            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_GT_OS) << 24);
+            (_mm512_cmp_pd_mask(val[ 0], other.val[ 0], _CMP_GT_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val[ 1], other.val[ 1], _CMP_GT_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val[ 2], other.val[ 2], _CMP_GT_OS) << 16) +
+            (_mm512_cmp_pd_mask(val[ 3], other.val[ 3], _CMP_GT_OS) << 24);
     }
 
     inline
     mask_type operator>=(const short_vec<double, 32>& other) const
     {
         return
-            (_mm512_cmp_pd_mask(val1, other.val1, _CMP_GE_OS) <<  0) +
-            (_mm512_cmp_pd_mask(val2, other.val2, _CMP_GE_OS) <<  8) +
-            (_mm512_cmp_pd_mask(val3, other.val3, _CMP_GE_OS) << 16) +
-            (_mm512_cmp_pd_mask(val4, other.val4, _CMP_GE_OS) << 24);
+            (_mm512_cmp_pd_mask(val[ 0], other.val[ 0], _CMP_GE_OS) <<  0) +
+            (_mm512_cmp_pd_mask(val[ 1], other.val[ 1], _CMP_GE_OS) <<  8) +
+            (_mm512_cmp_pd_mask(val[ 2], other.val[ 2], _CMP_GE_OS) << 16) +
+            (_mm512_cmp_pd_mask(val[ 3], other.val[ 3], _CMP_GE_OS) << 24);
     }
 
     inline
     short_vec<double, 32> sqrt() const
     {
         return short_vec<double, 32>(
-            _mm512_sqrt_pd(val1),
-            _mm512_sqrt_pd(val2),
-            _mm512_sqrt_pd(val3),
-            _mm512_sqrt_pd(val4));
+            _mm512_sqrt_pd(val[ 0]),
+            _mm512_sqrt_pd(val[ 1]),
+            _mm512_sqrt_pd(val[ 2]),
+            _mm512_sqrt_pd(val[ 3]));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = _mm512_loadu_pd(data +  0);
-        val2 = _mm512_loadu_pd(data +  8);
-        val3 = _mm512_loadu_pd(data + 16);
-        val4 = _mm512_loadu_pd(data + 24);
+        val[ 0] = _mm512_loadu_pd(data +  0);
+        val[ 1] = _mm512_loadu_pd(data +  8);
+        val[ 2] = _mm512_loadu_pd(data + 16);
+        val[ 3] = _mm512_loadu_pd(data + 24);
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        val1 = _mm512_load_pd(data +  0);
-        val2 = _mm512_load_pd(data +  8);
-        val3 = _mm512_load_pd(data + 16);
-        val4 = _mm512_load_pd(data + 24);
+        val[ 0] = _mm512_load_pd(data +  0);
+        val[ 1] = _mm512_load_pd(data +  8);
+        val[ 2] = _mm512_load_pd(data + 16);
+        val[ 3] = _mm512_load_pd(data + 24);
     }
 
     inline
     void store(double *data) const
     {
-        _mm512_storeu_pd(data +  0, val1);
-        _mm512_storeu_pd(data +  8, val2);
-        _mm512_storeu_pd(data + 16, val3);
-        _mm512_storeu_pd(data + 24, val4);
+        _mm512_storeu_pd(data +  0, val[ 0]);
+        _mm512_storeu_pd(data +  8, val[ 1]);
+        _mm512_storeu_pd(data + 16, val[ 2]);
+        _mm512_storeu_pd(data + 24, val[ 3]);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_store_pd(data +  0, val1);
-        _mm512_store_pd(data +  8, val2);
-        _mm512_store_pd(data + 16, val3);
-        _mm512_store_pd(data + 24, val4);
+        _mm512_store_pd(data +  0, val[ 0]);
+        _mm512_store_pd(data +  8, val[ 1]);
+        _mm512_store_pd(data + 16, val[ 2]);
+        _mm512_store_pd(data + 24, val[ 3]);
     }
 
     inline
     void store_nt(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_stream_pd(data +  0, val1);
-        _mm512_stream_pd(data +  8, val2);
-        _mm512_stream_pd(data + 16, val3);
-        _mm512_stream_pd(data + 24, val4);
+        _mm512_stream_pd(data +  0, val[ 0]);
+        _mm512_stream_pd(data +  8, val[ 1]);
+        _mm512_stream_pd(data + 16, val[ 2]);
+        _mm512_stream_pd(data + 24, val[ 3]);
     }
 
     inline
@@ -322,13 +308,13 @@ public:
     {
         __m256i indices;
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets));
-        val1    = _mm512_i32gather_pd(indices, ptr, 8);
+        val[ 0]   = _mm512_i32gather_pd(indices, ptr, 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 8));
-        val2    = _mm512_i32gather_pd(indices, ptr, 8);
+        val[ 1]   = _mm512_i32gather_pd(indices, ptr, 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 16));
-        val3    = _mm512_i32gather_pd(indices, ptr, 8);
+        val[ 2]   = _mm512_i32gather_pd(indices, ptr, 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 24));
-        val4    = _mm512_i32gather_pd(indices, ptr, 8);
+        val[ 3]   = _mm512_i32gather_pd(indices, ptr, 8);
     }
 
     inline
@@ -336,29 +322,26 @@ public:
     {
         __m256i indices;
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets));
-        _mm512_i32scatter_pd(ptr, indices, val1, 8);
+        _mm512_i32scatter_pd(ptr, indices, val[ 0], 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 8));
-        _mm512_i32scatter_pd(ptr, indices, val2, 8);
+        _mm512_i32scatter_pd(ptr, indices, val[ 1], 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 16));
-        _mm512_i32scatter_pd(ptr, indices, val3, 8);
+        _mm512_i32scatter_pd(ptr, indices, val[ 2], 8);
         indices = _mm256_loadu_si256(reinterpret_cast<const __m256i *>(offsets + 24));
-        _mm512_i32scatter_pd(ptr, indices, val4, 8);
+        _mm512_i32scatter_pd(ptr, indices, val[ 3], 8);
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<double, 32>& other)
     {
-        val1 = _mm512_mask_blend_pd((mask >>  0)      , val1, other.val1);
-        val2 = _mm512_mask_blend_pd((mask >>  8) & 255, val2, other.val2);
-        val3 = _mm512_mask_blend_pd((mask >> 16) & 255, val3, other.val3);
-        val4 = _mm512_mask_blend_pd((mask >> 24) & 255, val4, other.val4);
+        val[ 0] = _mm512_mask_blend_pd((mask >>  0)      , val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_mask_blend_pd((mask >>  8) & 255, val[ 1], other.val[ 1]);
+        val[ 2] = _mm512_mask_blend_pd((mask >> 16) & 255, val[ 2], other.val[ 2]);
+        val[ 3] = _mm512_mask_blend_pd((mask >> 24) & 255, val[ 3], other.val[ 3]);
     }
 
 private:
-    __m512d val1;
-    __m512d val2;
-    __m512d val3;
-    __m512d val4;
+    __m512d val[4];
 };
 
 inline
@@ -382,10 +365,10 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 32>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
-    const double *data2 = reinterpret_cast<const double *>(&vec.val2);
-    const double *data3 = reinterpret_cast<const double *>(&vec.val3);
-    const double *data4 = reinterpret_cast<const double *>(&vec.val4);
+    const double *data1 = reinterpret_cast<const double *>(&vec.val[ 0]);
+    const double *data2 = reinterpret_cast<const double *>(&vec.val[ 1]);
+    const double *data3 = reinterpret_cast<const double *>(&vec.val[ 2]);
+    const double *data4 = reinterpret_cast<const double *>(&vec.val[ 3]);
 
     __os << "["  << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
          << ", " << data1[4] << ", " << data1[5] << ", " << data1[6] << ", " << data1[7]

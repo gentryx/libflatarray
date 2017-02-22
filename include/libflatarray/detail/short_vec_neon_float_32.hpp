@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Di Xiao
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -37,30 +37,40 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(vdupq_n_f32(data)), val2(vdupq_n_f32(data)),
-        val3(vdupq_n_f32(data)), val4(vdupq_n_f32(data)),
-        val5(vdupq_n_f32(data)), val6(vdupq_n_f32(data)),
-        val7(vdupq_n_f32(data)), val8(vdupq_n_f32(data))
+        val{vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data),
+            vdupq_n_f32(data)}
     {}
 
     inline
-    short_vec(const float *data) :
-        val1(vld1q_f32((data + 0))), val2(vld1q_f32((data + 4))),
-        val3(vld1q_f32((data + 8))), val4(vld1q_f32((data + 12))),
-        val5(vld1q_f32((data + 16))), val6(vld1q_f32((data + 20))),
-        val7(vld1q_f32((data + 24))), val8(vld1q_f32((data + 28)))
-    {}
+    short_vec(const float *data)
+    {
+        load(data);
+    }
 
     inline
-    short_vec(const float32x4_t& val1, const float32x4_t& val2,
-        const float32x4_t& val3, const float32x4_t& val4,
-        const float32x4_t& val5, const float32x4_t& val6,
-        const float32x4_t& val7, const float32x4_t& val8
-        ) :
-        val1(val1), val2(val2),
-        val3(val3), val4(val4),
-        val5(val5), val6(val6),
-        val7(val7), val8(val8)
+    short_vec(
+        const float32x4_t& val1,
+        const float32x4_t& val2,
+        const float32x4_t& val3,
+        const float32x4_t& val4,
+        const float32x4_t& val5,
+        const float32x4_t& val6,
+        const float32x4_t& val7,
+        const float32x4_t& val8) :
+        val{val1,
+            val2,
+            val3,
+            val4,
+            val5,
+            val6,
+            val7,
+            val8}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -75,48 +85,48 @@ public:
     inline
     void operator-=(const short_vec<float, 32>& other)
     {
-        val1 = vsubq_f32(val1, other.val1);
-        val2 = vsubq_f32(val2, other.val2);
-        val3 = vsubq_f32(val3, other.val3);
-        val4 = vsubq_f32(val4, other.val4);
-        val5 = vsubq_f32(val5, other.val5);
-        val6 = vsubq_f32(val6, other.val6);
-        val7 = vsubq_f32(val7, other.val7);
-        val8 = vsubq_f32(val8, other.val8);
+        val[ 0] = vsubq_f32(val[ 0], other.val[ 0]);
+        val[ 1] = vsubq_f32(val[ 1], other.val[ 1]);
+        val[ 2] = vsubq_f32(val[ 2], other.val[ 2]);
+        val[ 3] = vsubq_f32(val[ 3], other.val[ 3]);
+        val[ 4] = vsubq_f32(val[ 4], other.val[ 4]);
+        val[ 5] = vsubq_f32(val[ 5], other.val[ 5]);
+        val[ 6] = vsubq_f32(val[ 6], other.val[ 6]);
+        val[ 7] = vsubq_f32(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<float, 32> operator-(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
-            vsubq_f32(val1, other.val1), vsubq_f32(val2, other.val2),
-            vsubq_f32(val3, other.val3), vsubq_f32(val4, other.val4),
-            vsubq_f32(val5, other.val5), vsubq_f32(val6, other.val6),
-            vsubq_f32(val7, other.val7), vsubq_f32(val8, other.val8)
+            vsubq_f32(val[ 0], other.val[ 0]), vsubq_f32(val[ 1], other.val[ 1]),
+            vsubq_f32(val[ 2], other.val[ 2]), vsubq_f32(val[ 3], other.val[ 3]),
+            vsubq_f32(val[ 4], other.val[ 4]), vsubq_f32(val[ 5], other.val[ 5]),
+            vsubq_f32(val[ 6], other.val[ 6]), vsubq_f32(val[ 7], other.val[ 7])
             );
     }
 
     inline
     void operator+=(const short_vec<float, 32>& other)
     {
-        val1 = vaddq_f32(val1, other.val1);
-        val2 = vaddq_f32(val2, other.val2);
-        val3 = vaddq_f32(val3, other.val3);
-        val4 = vaddq_f32(val4, other.val4);
-        val5 = vaddq_f32(val5, other.val5);
-        val6 = vaddq_f32(val6, other.val6);
-        val7 = vaddq_f32(val7, other.val7);
-        val8 = vaddq_f32(val8, other.val8);
+        val[ 0] = vaddq_f32(val[ 0], other.val[ 0]);
+        val[ 1] = vaddq_f32(val[ 1], other.val[ 1]);
+        val[ 2] = vaddq_f32(val[ 2], other.val[ 2]);
+        val[ 3] = vaddq_f32(val[ 3], other.val[ 3]);
+        val[ 4] = vaddq_f32(val[ 4], other.val[ 4]);
+        val[ 5] = vaddq_f32(val[ 5], other.val[ 5]);
+        val[ 6] = vaddq_f32(val[ 6], other.val[ 6]);
+        val[ 7] = vaddq_f32(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<float, 32> operator+(const short_vec<float, 32>& other) const
     {
         short_vec<float, 32> ret(
-            vaddq_f32(val1, other.val1), vaddq_f32(val2, other.val2),
-            vaddq_f32(val3, other.val3), vaddq_f32(val4, other.val4),
-            vaddq_f32(val5, other.val5), vaddq_f32(val6, other.val6),
-            vaddq_f32(val7, other.val7), vaddq_f32(val8, other.val8)
+            vaddq_f32(val[ 0], other.val[ 0]), vaddq_f32(val[ 1], other.val[ 1]),
+            vaddq_f32(val[ 2], other.val[ 2]), vaddq_f32(val[ 3], other.val[ 3]),
+            vaddq_f32(val[ 4], other.val[ 4]), vaddq_f32(val[ 5], other.val[ 5]),
+            vaddq_f32(val[ 6], other.val[ 6]), vaddq_f32(val[ 7], other.val[ 7])
             );
         return ret;
     }
@@ -124,24 +134,24 @@ public:
     inline
     void operator*=(const short_vec<float, 32>& other)
     {
-        val1 = vmulq_f32(val1, other.val1);
-        val2 = vmulq_f32(val2, other.val2);
-        val3 = vmulq_f32(val3, other.val3);
-        val4 = vmulq_f32(val4, other.val4);
-        val5 = vmulq_f32(val5, other.val5);
-        val6 = vmulq_f32(val6, other.val6);
-        val7 = vmulq_f32(val7, other.val7);
-        val8 = vmulq_f32(val8, other.val8);
+        val[ 0] = vmulq_f32(val[ 0], other.val[ 0]);
+        val[ 1] = vmulq_f32(val[ 1], other.val[ 1]);
+        val[ 2] = vmulq_f32(val[ 2], other.val[ 2]);
+        val[ 3] = vmulq_f32(val[ 3], other.val[ 3]);
+        val[ 4] = vmulq_f32(val[ 4], other.val[ 4]);
+        val[ 5] = vmulq_f32(val[ 5], other.val[ 5]);
+        val[ 6] = vmulq_f32(val[ 6], other.val[ 6]);
+        val[ 7] = vmulq_f32(val[ 7], other.val[ 7]);
     }
 
     inline
     short_vec<float, 32> operator*(const short_vec<float, 32>& other) const
     {
         short_vec<float, 32> ret(
-            vmulq_f32(val1, other.val1), vmulq_f32(val2, other.val2),
-            vmulq_f32(val3, other.val3), vmulq_f32(val4, other.val4),
-            vmulq_f32(val5, other.val5), vmulq_f32(val6, other.val6),
-            vmulq_f32(val7, other.val7), vmulq_f32(val8, other.val8)
+            vmulq_f32(val[ 0], other.val[ 0]), vmulq_f32(val[ 1], other.val[ 1]),
+            vmulq_f32(val[ 2], other.val[ 2]), vmulq_f32(val[ 3], other.val[ 3]),
+            vmulq_f32(val[ 4], other.val[ 4]), vmulq_f32(val[ 5], other.val[ 5]),
+            vmulq_f32(val[ 6], other.val[ 6]), vmulq_f32(val[ 7], other.val[ 7])
             );
         return ret;
     }
@@ -157,14 +167,14 @@ public:
     {
         int iterations = 1;
         // get an initial estimate of 1/b.
-        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
-        float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
-        float32x4_t reciprocal3 = vrecpeq_f32(other.val3);
-        float32x4_t reciprocal4 = vrecpeq_f32(other.val4);
-        float32x4_t reciprocal5 = vrecpeq_f32(other.val5);
-        float32x4_t reciprocal6 = vrecpeq_f32(other.val6);
-        float32x4_t reciprocal7 = vrecpeq_f32(other.val7);
-        float32x4_t reciprocal8 = vrecpeq_f32(other.val8);
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val[ 0]);
+        float32x4_t reciprocal2 = vrecpeq_f32(other.val[ 1]);
+        float32x4_t reciprocal3 = vrecpeq_f32(other.val[ 2]);
+        float32x4_t reciprocal4 = vrecpeq_f32(other.val[ 3]);
+        float32x4_t reciprocal5 = vrecpeq_f32(other.val[ 4]);
+        float32x4_t reciprocal6 = vrecpeq_f32(other.val[ 5]);
+        float32x4_t reciprocal7 = vrecpeq_f32(other.val[ 6]);
+        float32x4_t reciprocal8 = vrecpeq_f32(other.val[ 7]);
 
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
@@ -173,25 +183,25 @@ public:
         iterations = 2;
 #endif
         for (int i = 0; i < iterations; ++i) {
-            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
-            reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
-            reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
-            reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
-            reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val[ 0], reciprocal1), reciprocal1);
+            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val[ 1], reciprocal2), reciprocal2);
+            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val[ 2], reciprocal3), reciprocal3);
+            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val[ 3], reciprocal4), reciprocal4);
+            reciprocal5 = vmulq_f32(vrecpsq_f32(other.val[ 4], reciprocal5), reciprocal5);
+            reciprocal6 = vmulq_f32(vrecpsq_f32(other.val[ 5], reciprocal6), reciprocal6);
+            reciprocal7 = vmulq_f32(vrecpsq_f32(other.val[ 6], reciprocal7), reciprocal7);
+            reciprocal8 = vmulq_f32(vrecpsq_f32(other.val[ 7], reciprocal8), reciprocal8);
         }
 
         // and finally, compute a/b = a*(1/b)
-        val1 = vmulq_f32(val1, reciprocal1);
-        val2 = vmulq_f32(val2, reciprocal2);
-        val3 = vmulq_f32(val3, reciprocal3);
-        val4 = vmulq_f32(val4, reciprocal4);
-        val5 = vmulq_f32(val5, reciprocal5);
-        val6 = vmulq_f32(val6, reciprocal6);
-        val7 = vmulq_f32(val7, reciprocal7);
-        val8 = vmulq_f32(val8, reciprocal8);
+        val[ 0] = vmulq_f32(val[ 0], reciprocal1);
+        val[ 1] = vmulq_f32(val[ 1], reciprocal2);
+        val[ 2] = vmulq_f32(val[ 2], reciprocal3);
+        val[ 3] = vmulq_f32(val[ 3], reciprocal4);
+        val[ 4] = vmulq_f32(val[ 4], reciprocal5);
+        val[ 5] = vmulq_f32(val[ 5], reciprocal6);
+        val[ 6] = vmulq_f32(val[ 6], reciprocal7);
+        val[ 7] = vmulq_f32(val[ 7], reciprocal8);
     }
 
     // Code created with the help of Stack Overflow question
@@ -205,14 +215,14 @@ public:
     {
         int iterations = 1;
         // get an initial estimate of 1/b.
-        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
-        float32x4_t reciprocal2 = vrecpeq_f32(other.val2);
-        float32x4_t reciprocal3 = vrecpeq_f32(other.val3);
-        float32x4_t reciprocal4 = vrecpeq_f32(other.val4);
-        float32x4_t reciprocal5 = vrecpeq_f32(other.val5);
-        float32x4_t reciprocal6 = vrecpeq_f32(other.val6);
-        float32x4_t reciprocal7 = vrecpeq_f32(other.val7);
-        float32x4_t reciprocal8 = vrecpeq_f32(other.val8);
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val[ 0]);
+        float32x4_t reciprocal2 = vrecpeq_f32(other.val[ 1]);
+        float32x4_t reciprocal3 = vrecpeq_f32(other.val[ 2]);
+        float32x4_t reciprocal4 = vrecpeq_f32(other.val[ 3]);
+        float32x4_t reciprocal5 = vrecpeq_f32(other.val[ 4]);
+        float32x4_t reciprocal6 = vrecpeq_f32(other.val[ 5]);
+        float32x4_t reciprocal7 = vrecpeq_f32(other.val[ 6]);
+        float32x4_t reciprocal8 = vrecpeq_f32(other.val[ 7]);
 
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
@@ -221,25 +231,25 @@ public:
         iterations = 2;
 #endif
         for (int i = 0; i < iterations; ++i) {
-            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
-            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val2, reciprocal2), reciprocal2);
-            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val3, reciprocal3), reciprocal3);
-            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val4, reciprocal4), reciprocal4);
-            reciprocal5 = vmulq_f32(vrecpsq_f32(other.val5, reciprocal5), reciprocal5);
-            reciprocal6 = vmulq_f32(vrecpsq_f32(other.val6, reciprocal6), reciprocal6);
-            reciprocal7 = vmulq_f32(vrecpsq_f32(other.val7, reciprocal7), reciprocal7);
-            reciprocal8 = vmulq_f32(vrecpsq_f32(other.val8, reciprocal8), reciprocal8);
+            reciprocal1 = vmulq_f32(vrecpsq_f32(other.val[ 0], reciprocal1), reciprocal1);
+            reciprocal2 = vmulq_f32(vrecpsq_f32(other.val[ 1], reciprocal2), reciprocal2);
+            reciprocal3 = vmulq_f32(vrecpsq_f32(other.val[ 2], reciprocal3), reciprocal3);
+            reciprocal4 = vmulq_f32(vrecpsq_f32(other.val[ 3], reciprocal4), reciprocal4);
+            reciprocal5 = vmulq_f32(vrecpsq_f32(other.val[ 4], reciprocal5), reciprocal5);
+            reciprocal6 = vmulq_f32(vrecpsq_f32(other.val[ 5], reciprocal6), reciprocal6);
+            reciprocal7 = vmulq_f32(vrecpsq_f32(other.val[ 6], reciprocal7), reciprocal7);
+            reciprocal8 = vmulq_f32(vrecpsq_f32(other.val[ 7], reciprocal8), reciprocal8);
         }
 
         // and finally, compute a/b = a*(1/b)
-        float32x4_t result1 = vmulq_f32(val1, reciprocal1);
-        float32x4_t result2 = vmulq_f32(val2, reciprocal2);
-        float32x4_t result3 = vmulq_f32(val3, reciprocal3);
-        float32x4_t result4 = vmulq_f32(val4, reciprocal4);
-        float32x4_t result5 = vmulq_f32(val5, reciprocal5);
-        float32x4_t result6 = vmulq_f32(val6, reciprocal6);
-        float32x4_t result7 = vmulq_f32(val7, reciprocal7);
-        float32x4_t result8 = vmulq_f32(val8, reciprocal8);
+        float32x4_t result1 = vmulq_f32(val[ 0], reciprocal1);
+        float32x4_t result2 = vmulq_f32(val[ 1], reciprocal2);
+        float32x4_t result3 = vmulq_f32(val[ 2], reciprocal3);
+        float32x4_t result4 = vmulq_f32(val[ 3], reciprocal4);
+        float32x4_t result5 = vmulq_f32(val[ 4], reciprocal5);
+        float32x4_t result6 = vmulq_f32(val[ 5], reciprocal6);
+        float32x4_t result7 = vmulq_f32(val[ 6], reciprocal7);
+        float32x4_t result8 = vmulq_f32(val[ 7], reciprocal8);
 
         short_vec<float, 32> ret(
             result1,
@@ -260,14 +270,14 @@ public:
     {
         // note that vsqrtq_f32 is to be implemented in the gcc compiler
         int i, iterations=1;
-        float32x4_t x1 = vrsqrteq_f32(val1);
-        float32x4_t x2 = vrsqrteq_f32(val2);
-        float32x4_t x3 = vrsqrteq_f32(val3);
-        float32x4_t x4 = vrsqrteq_f32(val4);
-        float32x4_t x5 = vrsqrteq_f32(val5);
-        float32x4_t x6 = vrsqrteq_f32(val6);
-        float32x4_t x7 = vrsqrteq_f32(val7);
-        float32x4_t x8 = vrsqrteq_f32(val8);
+        float32x4_t x1 = vrsqrteq_f32(val[ 0]);
+        float32x4_t x2 = vrsqrteq_f32(val[ 1]);
+        float32x4_t x3 = vrsqrteq_f32(val[ 2]);
+        float32x4_t x4 = vrsqrteq_f32(val[ 3]);
+        float32x4_t x5 = vrsqrteq_f32(val[ 4]);
+        float32x4_t x6 = vrsqrteq_f32(val[ 5]);
+        float32x4_t x7 = vrsqrteq_f32(val[ 6]);
+        float32x4_t x8 = vrsqrteq_f32(val[ 7]);
 
         // Code to handle sqrt(0).
         // If the input to sqrtf() is zero, a zero will be returned.
@@ -309,24 +319,24 @@ public:
         iterations = 2;
 #endif
         for (i = 0; i < iterations; ++i) {
-            x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
-            x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val2), x2);
-            x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val3), x3);
-            x4 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x4, x4), val4), x4);
-            x5 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x5, x5), val5), x5);
-            x6 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x6, x6), val6), x6);
-            x7 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x7, x7), val7), x7);
-            x8 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x8, x8), val8), x8);
+            x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val[ 0]), x1);
+            x2 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x2, x2), val[ 1]), x2);
+            x3 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x3, x3), val[ 2]), x3);
+            x4 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x4, x4), val[ 3]), x4);
+            x5 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x5, x5), val[ 4]), x5);
+            x6 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x6, x6), val[ 5]), x6);
+            x7 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x7, x7), val[ 6]), x7);
+            x8 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x8, x8), val[ 7]), x8);
         }
         // sqrt(s) = s * 1/sqrt(s)
-        float32x4_t result1 = vmulq_f32(val1, x1);
-        float32x4_t result2 = vmulq_f32(val2, x2);
-        float32x4_t result3 = vmulq_f32(val3, x3);
-        float32x4_t result4 = vmulq_f32(val4, x4);
-        float32x4_t result5 = vmulq_f32(val5, x5);
-        float32x4_t result6 = vmulq_f32(val6, x6);
-        float32x4_t result7 = vmulq_f32(val7, x7);
-        float32x4_t result8 = vmulq_f32(val8, x8);
+        float32x4_t result1 = vmulq_f32(val[ 0], x1);
+        float32x4_t result2 = vmulq_f32(val[ 1], x2);
+        float32x4_t result3 = vmulq_f32(val[ 2], x3);
+        float32x4_t result4 = vmulq_f32(val[ 3], x4);
+        float32x4_t result5 = vmulq_f32(val[ 4], x5);
+        float32x4_t result6 = vmulq_f32(val[ 5], x6);
+        float32x4_t result7 = vmulq_f32(val[ 6], x7);
+        float32x4_t result8 = vmulq_f32(val[ 7], x8);
         short_vec<float, 32> ret(
             result1, result2, result3, result4,
             result5, result6, result7, result8
@@ -337,14 +347,14 @@ public:
     inline
     void load(const float *data)
     {
-        val1 = vld1q_f32((data + 0));
-        val2 = vld1q_f32((data + 4));
-        val3 = vld1q_f32((data + 8));
-        val4 = vld1q_f32((data + 12));
-        val5 = vld1q_f32((data + 16));
-        val6 = vld1q_f32((data + 20));
-        val7 = vld1q_f32((data + 24));
-        val8 = vld1q_f32((data + 28));
+        val[ 0] = vld1q_f32((data + 0));
+        val[ 1] = vld1q_f32((data + 4));
+        val[ 2] = vld1q_f32((data + 8));
+        val[ 3] = vld1q_f32((data + 12));
+        val[ 4] = vld1q_f32((data + 16));
+        val[ 5] = vld1q_f32((data + 20));
+        val[ 6] = vld1q_f32((data + 24));
+        val[ 7] = vld1q_f32((data + 28));
     }
 
     inline
@@ -357,14 +367,14 @@ public:
     inline
     void store(float *data) const
     {
-        vst1q_f32(data + 0, val1);
-        vst1q_f32(data + 4, val2);
-        vst1q_f32(data + 8, val3);
-        vst1q_f32(data + 12, val4);
-        vst1q_f32(data + 16, val5);
-        vst1q_f32(data + 20, val6);
-        vst1q_f32(data + 24, val7);
-        vst1q_f32(data + 28, val8);
+        vst1q_f32(data + 0, val[ 0]);
+        vst1q_f32(data + 4, val[ 1]);
+        vst1q_f32(data + 8, val[ 2]);
+        vst1q_f32(data + 12, val[ 3]);
+        vst1q_f32(data + 16, val[ 4]);
+        vst1q_f32(data + 20, val[ 5]);
+        vst1q_f32(data + 24, val[ 6]);
+        vst1q_f32(data + 28, val[ 7]);
     }
 
     inline
@@ -378,7 +388,7 @@ public:
     void store_nt(float *data) const
     {
         // in arm only stnp support non-temporal hint, thus need to
-        // break into two registers. (use helper val2)
+        // break into two registers. (use helper val[ 1])
         // see if it can get optimized by compiler
 
         // the mapping between Q registers and D registers
@@ -386,28 +396,28 @@ public:
         // stnp is for arm 64 (armv32)
 #if __LP64__
         register float32x4_t tmp1 asm ("q0");
-        tmp1 = val1;
+        tmp1 = val[ 0];
         register float32x4_t tmp2 asm ("q1");
-        tmp2 = val2;
+        tmp2 = val[ 1];
         register float32x4_t tmp3 asm ("q2");
-        tmp3 = val3;
+        tmp3 = val[ 2];
         register float32x4_t tmp4 asm ("q3");
-        tmp4 = val4;
+        tmp4 = val[ 3];
         register float32x4_t tmp5 asm ("q4");
-        tmp5 = val5;
+        tmp5 = val[ 4];
         register float32x4_t tmp6 asm ("q5");
-        tmp6 = val6;
+        tmp6 = val[ 5];
         register float32x4_t tmp7 asm ("q6");
-        tmp7 = val7;
+        tmp7 = val[ 6];
         register float32x4_t tmp8 asm ("q7");
-        tmp8 = val8;
-        asm("stnp d0,  d1,  %[store]" :[store] "=m" (data + 0));
-        asm("stnp d2,  d3,  %[store]" :[store] "=m" (data + 4));
-        asm("stnp d4,  d5,  %[store]" :[store] "=m" (data + 8));
-        asm("stnp d6,  d7,  %[store]" :[store] "=m" (data + 12));
-        asm("stnp d7,  d8,  %[store]" :[store] "=m" (data + 16));
-        asm("stnp d8,  d9,  %[store]" :[store] "=m" (data + 20));
-        asm("stnp d9,  d10, %[store]" :[store] "=m" (data + 24));
+        tmp8 = val[ 7];
+        asm("stnp d0, d1, %[store]" :[store] "=m" (data + 0));
+        asm("stnp d2, d3, %[store]" :[store] "=m" (data + 4));
+        asm("stnp d4, d5, %[store]" :[store] "=m" (data + 8));
+        asm("stnp d6, d7, %[store]" :[store] "=m" (data + 12));
+        asm("stnp d7, d8, %[store]" :[store] "=m" (data + 16));
+        asm("stnp d8, d9, %[store]" :[store] "=m" (data + 20));
+        asm("stnp d9, d10, %[store]" :[store] "=m" (data + 24));
         asm("stnp d10, d11, %[store]" :[store] "=m" (data + 28));
 #else
         store(data);
@@ -458,14 +468,14 @@ public:
     inline
     void scatter(float *ptr, const int *offsets) const
     {
-        const float *data1 = reinterpret_cast<const float *>(&val1);
-        const float *data2 = reinterpret_cast<const float *>(&val2);
-        const float *data3 = reinterpret_cast<const float *>(&val3);
-        const float *data4 = reinterpret_cast<const float *>(&val4);
-        const float *data5 = reinterpret_cast<const float *>(&val5);
-        const float *data6 = reinterpret_cast<const float *>(&val6);
-        const float *data7 = reinterpret_cast<const float *>(&val7);
-        const float *data8 = reinterpret_cast<const float *>(&val8);
+        const float *data1 = reinterpret_cast<const float *>(&val[ 0]);
+        const float *data2 = reinterpret_cast<const float *>(&val[ 1]);
+        const float *data3 = reinterpret_cast<const float *>(&val[ 2]);
+        const float *data4 = reinterpret_cast<const float *>(&val[ 3]);
+        const float *data5 = reinterpret_cast<const float *>(&val[ 4]);
+        const float *data6 = reinterpret_cast<const float *>(&val[ 5]);
+        const float *data7 = reinterpret_cast<const float *>(&val[ 6]);
+        const float *data8 = reinterpret_cast<const float *>(&val[ 7]);
         ptr[offsets[0]] = data1[0];
         ptr[offsets[1]] = data1[1];
         ptr[offsets[2]] = data1[2];
@@ -501,8 +511,7 @@ public:
     }
 
 private:
-    float32x4_t val1, val2, val3, val4;
-    float32x4_t val5, val6, val7, val8;
+    float32x4_t val[8];
 };
 
 inline
@@ -522,14 +531,14 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 32>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
-    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
-    const float *data3 = reinterpret_cast<const float *>(&vec.val3);
-    const float *data4 = reinterpret_cast<const float *>(&vec.val4);
-    const float *data5 = reinterpret_cast<const float *>(&vec.val5);
-    const float *data6 = reinterpret_cast<const float *>(&vec.val6);
-    const float *data7 = reinterpret_cast<const float *>(&vec.val7);
-    const float *data8 = reinterpret_cast<const float *>(&vec.val8);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val[ 0]);
+    const float *data2 = reinterpret_cast<const float *>(&vec.val[ 1]);
+    const float *data3 = reinterpret_cast<const float *>(&vec.val[ 2]);
+    const float *data4 = reinterpret_cast<const float *>(&vec.val[ 3]);
+    const float *data5 = reinterpret_cast<const float *>(&vec.val[ 4]);
+    const float *data6 = reinterpret_cast<const float *>(&vec.val[ 5]);
+    const float *data7 = reinterpret_cast<const float *>(&vec.val[ 6]);
+    const float *data8 = reinterpret_cast<const float *>(&vec.val[ 7]);
     __os << "["
         << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
         << ", "

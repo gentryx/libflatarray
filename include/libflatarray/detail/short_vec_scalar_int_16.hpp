@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -47,22 +47,22 @@ public:
 
     inline
     short_vec(const int data = 0) :
-        val1(data),
-        val2(data),
-        val3(data),
-        val4(data),
-        val5(data),
-        val6(data),
-        val7(data),
-        val8(data),
-        val9(data),
-        val10(data),
-        val11(data),
-        val12(data),
-        val13(data),
-        val14(data),
-        val15(data),
-        val16(data)
+        val{data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data,
+            data}
     {}
 
     inline
@@ -89,22 +89,22 @@ public:
         const int val14,
         const int val15,
         const int val16) :
-        val1( val1),
-        val2( val2),
-        val3( val3),
-        val4( val4),
-        val5( val5),
-        val6( val6),
-        val7( val7),
-        val8( val8),
-        val9( val9),
-        val10(val10),
-        val11(val11),
-        val12(val12),
-        val13(val13),
-        val14(val14),
-        val15(val15),
-        val16(val16)
+        val{val1,
+            val2,
+            val3,
+            val4,
+            val5,
+            val6,
+            val7,
+            val8,
+            val9,
+            val10,
+            val11,
+            val12,
+            val13,
+            val14,
+            val15,
+            val16}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -119,216 +119,216 @@ public:
     inline
     void operator-=(const short_vec<int, 16>& other)
     {
-        val1  -= other.val1;
-        val2  -= other.val2;
-        val3  -= other.val3;
-        val4  -= other.val4;
-        val5  -= other.val5;
-        val6  -= other.val6;
-        val7  -= other.val7;
-        val8  -= other.val8;
-        val9  -= other.val9;
-        val10 -= other.val10;
-        val11 -= other.val11;
-        val12 -= other.val12;
-        val13 -= other.val13;
-        val14 -= other.val14;
-        val15 -= other.val15;
-        val16 -= other.val16;
+        val[ 0] -= other.val[ 0];
+        val[ 1] -= other.val[ 1];
+        val[ 2] -= other.val[ 2];
+        val[ 3] -= other.val[ 3];
+        val[ 4] -= other.val[ 4];
+        val[ 5] -= other.val[ 5];
+        val[ 6] -= other.val[ 6];
+        val[ 7] -= other.val[ 7];
+        val[ 8] -= other.val[ 8];
+        val[ 9] -= other.val[ 9];
+        val[10] -= other.val[10];
+        val[11] -= other.val[11];
+        val[12] -= other.val[12];
+        val[13] -= other.val[13];
+        val[14] -= other.val[14];
+        val[15] -= other.val[15];
     }
 
     inline
     short_vec<int, 16> operator-(const short_vec<int, 16>& other) const
     {
         return short_vec<int, 16>(
-            val1  - other.val1,
-            val2  - other.val2,
-            val3  - other.val3,
-            val4  - other.val4,
-            val5  - other.val5,
-            val6  - other.val6,
-            val7  - other.val7,
-            val8  - other.val8,
-            val9  - other.val9,
-            val10 - other.val10,
-            val11 - other.val11,
-            val12 - other.val12,
-            val13 - other.val13,
-            val14 - other.val14,
-            val15 - other.val15,
-            val16 - other.val16);
+            val[ 0] - other.val[ 0],
+            val[ 1] - other.val[ 1],
+            val[ 2] - other.val[ 2],
+            val[ 3] - other.val[ 3],
+            val[ 4] - other.val[ 4],
+            val[ 5] - other.val[ 5],
+            val[ 6] - other.val[ 6],
+            val[ 7] - other.val[ 7],
+            val[ 8] - other.val[ 8],
+            val[ 9] - other.val[ 9],
+            val[10] - other.val[10],
+            val[11] - other.val[11],
+            val[12] - other.val[12],
+            val[13] - other.val[13],
+            val[14] - other.val[14],
+            val[15] - other.val[15]);
     }
 
     inline
     void operator+=(const short_vec<int, 16>& other)
     {
-        val1  += other.val1;
-        val2  += other.val2;
-        val3  += other.val3;
-        val4  += other.val4;
-        val5  += other.val5;
-        val6  += other.val6;
-        val7  += other.val7;
-        val8  += other.val8;
-        val9  += other.val9;
-        val10 += other.val10;
-        val11 += other.val11;
-        val12 += other.val12;
-        val13 += other.val13;
-        val14 += other.val14;
-        val15 += other.val15;
-        val16 += other.val16;
+        val[ 0] += other.val[ 0];
+        val[ 1] += other.val[ 1];
+        val[ 2] += other.val[ 2];
+        val[ 3] += other.val[ 3];
+        val[ 4] += other.val[ 4];
+        val[ 5] += other.val[ 5];
+        val[ 6] += other.val[ 6];
+        val[ 7] += other.val[ 7];
+        val[ 8] += other.val[ 8];
+        val[ 9] += other.val[ 9];
+        val[10] += other.val[10];
+        val[11] += other.val[11];
+        val[12] += other.val[12];
+        val[13] += other.val[13];
+        val[14] += other.val[14];
+        val[15] += other.val[15];
     }
 
     inline
     short_vec<int, 16> operator+(const short_vec<int, 16>& other) const
     {
         return short_vec<int, 16>(
-            val1  + other.val1,
-            val2  + other.val2,
-            val3  + other.val3,
-            val4  + other.val4,
-            val5  + other.val5,
-            val6  + other.val6,
-            val7  + other.val7,
-            val8  + other.val8,
-            val9  + other.val9,
-            val10 + other.val10,
-            val11 + other.val11,
-            val12 + other.val12,
-            val13 + other.val13,
-            val14 + other.val14,
-            val15 + other.val15,
-            val16 + other.val16);
+            val[ 0] + other.val[ 0],
+            val[ 1] + other.val[ 1],
+            val[ 2] + other.val[ 2],
+            val[ 3] + other.val[ 3],
+            val[ 4] + other.val[ 4],
+            val[ 5] + other.val[ 5],
+            val[ 6] + other.val[ 6],
+            val[ 7] + other.val[ 7],
+            val[ 8] + other.val[ 8],
+            val[ 9] + other.val[ 9],
+            val[10] + other.val[10],
+            val[11] + other.val[11],
+            val[12] + other.val[12],
+            val[13] + other.val[13],
+            val[14] + other.val[14],
+            val[15] + other.val[15]);
     }
 
     inline
     void operator*=(const short_vec<int, 16>& other)
     {
-        val1  *= other.val1;
-        val2  *= other.val2;
-        val3  *= other.val3;
-        val4  *= other.val4;
-        val5  *= other.val5;
-        val6  *= other.val6;
-        val7  *= other.val7;
-        val8  *= other.val8;
-        val9  *= other.val9;
-        val10 *= other.val10;
-        val11 *= other.val11;
-        val12 *= other.val12;
-        val13 *= other.val13;
-        val14 *= other.val14;
-        val15 *= other.val15;
-        val16 *= other.val16;
+        val[ 0] *= other.val[ 0];
+        val[ 1] *= other.val[ 1];
+        val[ 2] *= other.val[ 2];
+        val[ 3] *= other.val[ 3];
+        val[ 4] *= other.val[ 4];
+        val[ 5] *= other.val[ 5];
+        val[ 6] *= other.val[ 6];
+        val[ 7] *= other.val[ 7];
+        val[ 8] *= other.val[ 8];
+        val[ 9] *= other.val[ 9];
+        val[10] *= other.val[10];
+        val[11] *= other.val[11];
+        val[12] *= other.val[12];
+        val[13] *= other.val[13];
+        val[14] *= other.val[14];
+        val[15] *= other.val[15];
     }
 
     inline
     short_vec<int, 16> operator*(const short_vec<int, 16>& other) const
     {
         return short_vec<int, 16>(
-            val1  * other.val1,
-            val2  * other.val2,
-            val3  * other.val3,
-            val4  * other.val4,
-            val5  * other.val5,
-            val6  * other.val6,
-            val7  * other.val7,
-            val8  * other.val8,
-            val9  * other.val9,
-            val10 * other.val10,
-            val11 * other.val11,
-            val12 * other.val12,
-            val13 * other.val13,
-            val14 * other.val14,
-            val15 * other.val15,
-            val16 * other.val16);
+            val[ 0] * other.val[ 0],
+            val[ 1] * other.val[ 1],
+            val[ 2] * other.val[ 2],
+            val[ 3] * other.val[ 3],
+            val[ 4] * other.val[ 4],
+            val[ 5] * other.val[ 5],
+            val[ 6] * other.val[ 6],
+            val[ 7] * other.val[ 7],
+            val[ 8] * other.val[ 8],
+            val[ 9] * other.val[ 9],
+            val[10] * other.val[10],
+            val[11] * other.val[11],
+            val[12] * other.val[12],
+            val[13] * other.val[13],
+            val[14] * other.val[14],
+            val[15] * other.val[15]);
     }
 
     inline
     void operator/=(const short_vec<int, 16>& other)
     {
-        val1  /= other.val1;
-        val2  /= other.val2;
-        val3  /= other.val3;
-        val4  /= other.val4;
-        val5  /= other.val5;
-        val6  /= other.val6;
-        val7  /= other.val7;
-        val8  /= other.val8;
-        val9  /= other.val9;
-        val10 /= other.val10;
-        val11 /= other.val11;
-        val12 /= other.val12;
-        val13 /= other.val13;
-        val14 /= other.val14;
-        val15 /= other.val15;
-        val16 /= other.val16;
+        val[ 0] /= other.val[ 0];
+        val[ 1] /= other.val[ 1];
+        val[ 2] /= other.val[ 2];
+        val[ 3] /= other.val[ 3];
+        val[ 4] /= other.val[ 4];
+        val[ 5] /= other.val[ 5];
+        val[ 6] /= other.val[ 6];
+        val[ 7] /= other.val[ 7];
+        val[ 8] /= other.val[ 8];
+        val[ 9] /= other.val[ 9];
+        val[10] /= other.val[10];
+        val[11] /= other.val[11];
+        val[12] /= other.val[12];
+        val[13] /= other.val[13];
+        val[14] /= other.val[14];
+        val[15] /= other.val[15];
     }
 
     inline
     short_vec<int, 16> operator/(const short_vec<int, 16>& other) const
     {
         return short_vec<int, 16>(
-            val1  / other.val1,
-            val2  / other.val2,
-            val3  / other.val3,
-            val4  / other.val4,
-            val5  / other.val5,
-            val6  / other.val6,
-            val7  / other.val7,
-            val8  / other.val8,
-            val9  / other.val9,
-            val10 / other.val10,
-            val11 / other.val11,
-            val12 / other.val12,
-            val13 / other.val13,
-            val14 / other.val14,
-            val15 / other.val15,
-            val16 / other.val16);
+            val[ 0] / other.val[ 0],
+            val[ 1] / other.val[ 1],
+            val[ 2] / other.val[ 2],
+            val[ 3] / other.val[ 3],
+            val[ 4] / other.val[ 4],
+            val[ 5] / other.val[ 5],
+            val[ 6] / other.val[ 6],
+            val[ 7] / other.val[ 7],
+            val[ 8] / other.val[ 8],
+            val[ 9] / other.val[ 9],
+            val[10] / other.val[10],
+            val[11] / other.val[11],
+            val[12] / other.val[12],
+            val[13] / other.val[13],
+            val[14] / other.val[14],
+            val[15] / other.val[15]);
     }
 
     inline
     short_vec<int, 16> sqrt() const
     {
         return short_vec<int, 16>(
-            static_cast<int>(std::sqrt(val1)),
-            static_cast<int>(std::sqrt(val2)),
-            static_cast<int>(std::sqrt(val3)),
-            static_cast<int>(std::sqrt(val4)),
-            static_cast<int>(std::sqrt(val5)),
-            static_cast<int>(std::sqrt(val6)),
-            static_cast<int>(std::sqrt(val7)),
-            static_cast<int>(std::sqrt(val8)),
-            static_cast<int>(std::sqrt(val9)),
-            static_cast<int>(std::sqrt(val10)),
-            static_cast<int>(std::sqrt(val11)),
-            static_cast<int>(std::sqrt(val12)),
-            static_cast<int>(std::sqrt(val13)),
-            static_cast<int>(std::sqrt(val14)),
-            static_cast<int>(std::sqrt(val15)),
-            static_cast<int>(std::sqrt(val16)));
+            static_cast<int>(std::sqrt(val[ 0])),
+            static_cast<int>(std::sqrt(val[ 1])),
+            static_cast<int>(std::sqrt(val[ 2])),
+            static_cast<int>(std::sqrt(val[ 3])),
+            static_cast<int>(std::sqrt(val[ 4])),
+            static_cast<int>(std::sqrt(val[ 5])),
+            static_cast<int>(std::sqrt(val[ 6])),
+            static_cast<int>(std::sqrt(val[ 7])),
+            static_cast<int>(std::sqrt(val[ 8])),
+            static_cast<int>(std::sqrt(val[ 9])),
+            static_cast<int>(std::sqrt(val[10])),
+            static_cast<int>(std::sqrt(val[11])),
+            static_cast<int>(std::sqrt(val[12])),
+            static_cast<int>(std::sqrt(val[13])),
+            static_cast<int>(std::sqrt(val[14])),
+            static_cast<int>(std::sqrt(val[15])));
     }
 
     inline
     void load(const int *data)
     {
-        val1  = data[ 0];
-        val2  = data[ 1];
-        val3  = data[ 2];
-        val4  = data[ 3];
-        val5  = data[ 4];
-        val6  = data[ 5];
-        val7  = data[ 6];
-        val8  = data[ 7];
-        val9  = data[ 8];
-        val10 = data[ 9];
-        val11 = data[10];
-        val12 = data[11];
-        val13 = data[12];
-        val14 = data[13];
-        val15 = data[14];
-        val16 = data[15];
+        val[ 0] = data[ 0];
+        val[ 1] = data[ 1];
+        val[ 2] = data[ 2];
+        val[ 3] = data[ 3];
+        val[ 4] = data[ 4];
+        val[ 5] = data[ 5];
+        val[ 6] = data[ 6];
+        val[ 7] = data[ 7];
+        val[ 8] = data[ 8];
+        val[ 9] = data[ 9];
+        val[10] = data[10];
+        val[11] = data[11];
+        val[12] = data[12];
+        val[13] = data[13];
+        val[14] = data[14];
+        val[15] = data[15];
     }
 
     inline
@@ -340,22 +340,22 @@ public:
     inline
     void store(int *data) const
     {
-        *(data +  0) = val1;
-        *(data +  1) = val2;
-        *(data +  2) = val3;
-        *(data +  3) = val4;
-        *(data +  4) = val5;
-        *(data +  5) = val6;
-        *(data +  6) = val7;
-        *(data +  7) = val8;
-        *(data +  8) = val9;
-        *(data +  9) = val10;
-        *(data + 10) = val11;
-        *(data + 11) = val12;
-        *(data + 12) = val13;
-        *(data + 13) = val14;
-        *(data + 14) = val15;
-        *(data + 15) = val16;
+        *(data +  0) = val[ 0];
+        *(data +  1) = val[ 1];
+        *(data +  2) = val[ 2];
+        *(data +  3) = val[ 3];
+        *(data +  4) = val[ 4];
+        *(data +  5) = val[ 5];
+        *(data +  6) = val[ 6];
+        *(data +  7) = val[ 7];
+        *(data +  8) = val[ 8];
+        *(data +  9) = val[ 9];
+        *(data + 10) = val[10];
+        *(data + 11) = val[11];
+        *(data + 12) = val[12];
+        *(data + 13) = val[13];
+        *(data + 14) = val[14];
+        *(data + 15) = val[15];
     }
 
     inline
@@ -373,62 +373,47 @@ public:
     inline
     void gather(const int *ptr, const int *offsets)
     {
-        val1  = ptr[offsets[ 0]];
-        val2  = ptr[offsets[ 1]];
-        val3  = ptr[offsets[ 2]];
-        val4  = ptr[offsets[ 3]];
-        val5  = ptr[offsets[ 4]];
-        val6  = ptr[offsets[ 5]];
-        val7  = ptr[offsets[ 6]];
-        val8  = ptr[offsets[ 7]];
-        val9  = ptr[offsets[ 8]];
-        val10 = ptr[offsets[ 9]];
-        val11 = ptr[offsets[10]];
-        val12 = ptr[offsets[11]];
-        val13 = ptr[offsets[12]];
-        val14 = ptr[offsets[13]];
-        val15 = ptr[offsets[14]];
-        val16 = ptr[offsets[15]];
+        val[ 0] = ptr[offsets[ 0]];
+        val[ 1] = ptr[offsets[ 1]];
+        val[ 2] = ptr[offsets[ 2]];
+        val[ 3] = ptr[offsets[ 3]];
+        val[ 4] = ptr[offsets[ 4]];
+        val[ 5] = ptr[offsets[ 5]];
+        val[ 6] = ptr[offsets[ 6]];
+        val[ 7] = ptr[offsets[ 7]];
+        val[ 8] = ptr[offsets[ 8]];
+        val[ 9] = ptr[offsets[ 9]];
+        val[10] = ptr[offsets[10]];
+        val[11] = ptr[offsets[11]];
+        val[12] = ptr[offsets[12]];
+        val[13] = ptr[offsets[13]];
+        val[14] = ptr[offsets[14]];
+        val[15] = ptr[offsets[15]];
     }
 
     inline
     void scatter(int *ptr, const int *offsets) const
     {
-        ptr[offsets[0]]  = val1;
-        ptr[offsets[1]]  = val2;
-        ptr[offsets[2]]  = val3;
-        ptr[offsets[3]]  = val4;
-        ptr[offsets[4]]  = val5;
-        ptr[offsets[5]]  = val6;
-        ptr[offsets[6]]  = val7;
-        ptr[offsets[7]]  = val8;
-        ptr[offsets[8]]  = val9;
-        ptr[offsets[9]]  = val10;
-        ptr[offsets[10]] = val11;
-        ptr[offsets[11]] = val12;
-        ptr[offsets[12]] = val13;
-        ptr[offsets[13]] = val14;
-        ptr[offsets[14]] = val15;
-        ptr[offsets[15]] = val16;
+        ptr[offsets[0]] = val[ 0];
+        ptr[offsets[1]] = val[ 1];
+        ptr[offsets[2]] = val[ 2];
+        ptr[offsets[3]] = val[ 3];
+        ptr[offsets[4]] = val[ 4];
+        ptr[offsets[5]] = val[ 5];
+        ptr[offsets[6]] = val[ 6];
+        ptr[offsets[7]] = val[ 7];
+        ptr[offsets[8]] = val[ 8];
+        ptr[offsets[9]] = val[ 9];
+        ptr[offsets[10]] = val[10];
+        ptr[offsets[11]] = val[11];
+        ptr[offsets[12]] = val[12];
+        ptr[offsets[13]] = val[13];
+        ptr[offsets[14]] = val[14];
+        ptr[offsets[15]] = val[15];
     }
 
 private:
-    int val1;
-    int val2;
-    int val3;
-    int val4;
-    int val5;
-    int val6;
-    int val7;
-    int val8;
-    int val9;
-    int val10;
-    int val11;
-    int val12;
-    int val13;
-    int val14;
-    int val15;
-    int val16;
+    int val[16];
 };
 
 inline
@@ -452,10 +437,10 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<int, 16>& vec)
 {
-    __os << "["  << vec.val1  << ", " << vec.val2  << ", " << vec.val3  << ", " << vec.val4
-         << ", " << vec.val5  << ", " << vec.val6  << ", " << vec.val7  << ", " << vec.val8
-         << ", " << vec.val9  << ", " << vec.val10 << ", " << vec.val11 << ", " << vec.val12
-         << ", " << vec.val13 << ", " << vec.val14 << ", " << vec.val15 << ", " << vec.val16
+    __os << "["  << vec.val[ 0] << ", " << vec.val[ 1] << ", " << vec.val[ 2] << ", " << vec.val[ 3]
+         << ", " << vec.val[ 4] << ", " << vec.val[ 5] << ", " << vec.val[ 6] << ", " << vec.val[ 7]
+         << ", " << vec.val[ 8] << ", " << vec.val[ 9] << ", " << vec.val[10] << ", " << vec.val[11]
+         << ", " << vec.val[12] << ", " << vec.val[13] << ", " << vec.val[14] << ", " << vec.val[15]
          << "]";
     return __os;
 }
