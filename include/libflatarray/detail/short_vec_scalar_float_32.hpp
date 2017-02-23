@@ -509,190 +509,190 @@ public:
     mask_type operator<(const short_vec<float, 32>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <) <<  7) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], <) <<  8) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], <) <<  9) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], <) << 10) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], <) << 11) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], <) << 12) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], <) << 13) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], <) << 14) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], <) << 15) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], <) << 16) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], <) << 17) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], <) << 18) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], <) << 19) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], <) << 20) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], <) << 21) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], <) << 22) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], <) << 23) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], <) << 24) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], <) << 25) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], <) << 26) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], <) << 27) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], <) << 28) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], <) << 29) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], <) << 30) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <) << 31);
+            mask_type((LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <) <<  0) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <) <<  1) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <) <<  2) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <) <<  3) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <) <<  4) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <) <<  5) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <) <<  6) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <) <<  7) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], <) <<  8) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], <) <<  9) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], <) << 10) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], <) << 11) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], <) << 12) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], <) << 13) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], <) << 14) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], <) << 15) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], <) << 16) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], <) << 17) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], <) << 18) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], <) << 19) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], <) << 20) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], <) << 21) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], <) << 22) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], <) << 23) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], <) << 24) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], <) << 25) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], <) << 26) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], <) << 27) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], <) << 28) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], <) << 29) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], <) << 30) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <) << 31));
     }
 
     inline
     mask_type operator<=(const short_vec<float, 32>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <=) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <=) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <=) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <=) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <=) <<  7) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], <=) <<  8) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], <=) <<  9) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], <=) << 10) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], <=) << 11) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], <=) << 12) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], <=) << 13) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], <=) << 14) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], <=) << 15) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], <=) << 16) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], <=) << 17) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], <=) << 18) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], <=) << 19) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], <=) << 20) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], <=) << 21) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], <=) << 22) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], <=) << 23) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], <=) << 24) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], <=) << 25) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], <=) << 26) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], <=) << 27) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], <=) << 28) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], <=) << 29) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], <=) << 30) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <=) << 31);
+            mask_type((LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], <=) <<  0) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], <=) <<  1) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], <=) <<  2) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], <=) <<  3) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], <=) <<  4) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], <=) <<  5) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], <=) <<  6) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], <=) <<  7) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], <=) <<  8) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], <=) <<  9) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], <=) << 10) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], <=) << 11) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], <=) << 12) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], <=) << 13) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], <=) << 14) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], <=) << 15) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], <=) << 16) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], <=) << 17) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], <=) << 18) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], <=) << 19) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], <=) << 20) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], <=) << 21) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], <=) << 22) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], <=) << 23) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], <=) << 24) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], <=) << 25) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], <=) << 26) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], <=) << 27) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], <=) << 28) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], <=) << 29) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], <=) << 30) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <=) << 31));
     }
 
     inline
     mask_type operator==(const short_vec<float, 32>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], ==) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], ==) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], ==) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], ==) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], ==) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], ==) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], ==) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], ==) <<  7) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], ==) <<  8) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], ==) <<  9) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], ==) << 10) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], ==) << 11) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], ==) << 12) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], ==) << 13) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], ==) << 14) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], ==) << 15) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], ==) << 16) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], ==) << 17) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], ==) << 18) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], ==) << 19) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], ==) << 20) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], ==) << 21) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], ==) << 22) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], ==) << 23) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], ==) << 24) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], ==) << 25) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], ==) << 26) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], ==) << 27) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], ==) << 28) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], ==) << 29) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], ==) << 30) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], ==) << 31);
+            mask_type((LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], ==) <<  0) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], ==) <<  1) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], ==) <<  2) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], ==) <<  3) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], ==) <<  4) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], ==) <<  5) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], ==) <<  6) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], ==) <<  7) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], ==) <<  8) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], ==) <<  9) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], ==) << 10) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], ==) << 11) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], ==) << 12) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], ==) << 13) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], ==) << 14) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], ==) << 15) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], ==) << 16) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], ==) << 17) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], ==) << 18) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], ==) << 19) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], ==) << 20) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], ==) << 21) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], ==) << 22) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], ==) << 23) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], ==) << 24) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], ==) << 25) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], ==) << 26) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], ==) << 27) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], ==) << 28) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], ==) << 29) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], ==) << 30) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], ==) << 31));
     }
 
     inline
     mask_type operator>(const short_vec<float, 32>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >) <<  7) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], >) <<  8) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], >) <<  9) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], >) << 10) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], >) << 11) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], >) << 12) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], >) << 13) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], >) << 14) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], >) << 15) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], >) << 16) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], >) << 17) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], >) << 18) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], >) << 19) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], >) << 20) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], >) << 21) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], >) << 22) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], >) << 23) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], >) << 24) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], >) << 25) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], >) << 26) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], >) << 27) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], >) << 28) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], >) << 29) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], >) << 30) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], >) << 31);
+            mask_type((LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >) <<  0) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >) <<  1) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >) <<  2) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >) <<  3) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >) <<  4) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >) <<  5) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >) <<  6) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >) <<  7) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], >) <<  8) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], >) <<  9) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], >) << 10) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], >) << 11) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], >) << 12) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], >) << 13) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], >) << 14) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], >) << 15) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], >) << 16) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], >) << 17) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], >) << 18) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], >) << 19) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], >) << 20) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], >) << 21) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], >) << 22) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], >) << 23) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], >) << 24) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], >) << 25) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], >) << 26) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], >) << 27) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], >) << 28) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], >) << 29) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], >) << 30) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], >) << 31));
     }
 
     inline
     mask_type operator>=(const short_vec<float, 32>& other) const
     {
         return
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >=) <<  0) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >=) <<  1) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >=) <<  2) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >=) <<  3) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >=) <<  4) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >=) <<  5) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >=) <<  6) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >=) <<  7) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], >=) <<  8) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], >=) <<  9) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], >=) << 10) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], >=) << 11) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], >=) << 12) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], >=) << 13) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], >=) << 14) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], >=) << 15) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], >=) << 16) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], >=) << 17) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], >=) << 18) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], >=) << 19) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], >=) << 20) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], >=) << 21) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], >=) << 22) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], >=) << 23) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], >=) << 24) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], >=) << 25) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], >=) << 26) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], >=) << 27) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], >=) << 28) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], >=) << 29) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], >=) << 30) +
-            (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], >=) << 31);
+            mask_type((LFA_SHORTVEC_COMPARE_HELPER(val[ 0], other.val[ 0], >=) <<  0) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 1], other.val[ 1], >=) <<  1) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 2], other.val[ 2], >=) <<  2) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 3], other.val[ 3], >=) <<  3) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 4], other.val[ 4], >=) <<  4) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 5], other.val[ 5], >=) <<  5) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 6], other.val[ 6], >=) <<  6) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 7], other.val[ 7], >=) <<  7) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 8], other.val[ 8], >=) <<  8) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[ 9], other.val[ 9], >=) <<  9) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[10], other.val[10], >=) << 10) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[11], other.val[11], >=) << 11) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[12], other.val[12], >=) << 12) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[13], other.val[13], >=) << 13) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[14], other.val[14], >=) << 14) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[15], other.val[15], >=) << 15) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[16], other.val[16], >=) << 16) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[17], other.val[17], >=) << 17) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[18], other.val[18], >=) << 18) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[19], other.val[19], >=) << 19) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[20], other.val[20], >=) << 20) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[21], other.val[21], >=) << 21) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[22], other.val[22], >=) << 22) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[23], other.val[23], >=) << 23) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[24], other.val[24], >=) << 24) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[25], other.val[25], >=) << 25) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[26], other.val[26], >=) << 26) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[27], other.val[27], >=) << 27) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[28], other.val[28], >=) << 28) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[29], other.val[29], >=) << 29) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[30], other.val[30], >=) << 30) +
+                      (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], >=) << 31));
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 

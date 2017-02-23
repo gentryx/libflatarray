@@ -64,11 +64,11 @@ public:
     inline
     bool any() const
     {
-        return bool(val);
+        return val != 0;
     }
 
     inline
-    float operator[](const int /* i */) const
+    int operator[](const int /* i */) const
     {
         return val;
     }

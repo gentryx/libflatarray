@@ -64,7 +64,7 @@ public:
     inline
     bool any() const
     {
-        return bool(val);
+        return val != 0;
     }
 
     inline
