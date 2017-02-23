@@ -507,10 +507,10 @@ private:
 
 inline
 short_vec<float, 16>::short_vec(const sqrt_reference<float, 16>& other) :
-    val[ 0](_mm_sqrt_ps(other.vec.val[ 0])),
-    val[ 1](_mm_sqrt_ps(other.vec.val[ 1])),
-    val[ 2](_mm_sqrt_ps(other.vec.val[ 2])),
-    val[ 3](_mm_sqrt_ps(other.vec.val[ 3]))
+    val{_mm_sqrt_ps(other.vec.val[ 0]),
+        _mm_sqrt_ps(other.vec.val[ 1]),
+        _mm_sqrt_ps(other.vec.val[ 2]),
+        _mm_sqrt_ps(other.vec.val[ 3])}
 {}
 
 inline
@@ -543,7 +543,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 16>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val[ 0]!);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val[ 0]);
     const float *data2 = reinterpret_cast<const float *>(&vec.val[ 1]);
     const float *data3 = reinterpret_cast<const float *>(&vec.val[ 2]);
     const float *data4 = reinterpret_cast<const float *>(&vec.val[ 3]);
