@@ -64,7 +64,7 @@ public:
     inline
     bool any() const
     {
-        return val;
+        return bool(val);
     }
 
     inline
@@ -129,39 +129,38 @@ public:
     inline
     mask_type operator<(const short_vec<double, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <));
     }
 
     inline
     mask_type operator<=(const short_vec<double, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <=);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <=));
     }
 
     inline
     mask_type operator==(const short_vec<double, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, ==);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, ==));
     }
 
     inline
     mask_type operator>(const short_vec<double, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >));
     }
 
     inline
     mask_type operator>=(const short_vec<double, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >=);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >=));
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
     inline
     short_vec<double, 1> sqrt() const
     {
-        return short_vec<double, 1>(
-            std::sqrt(val));
+        return short_vec<double, 1>(std::sqrt(val));
     }
 
     inline

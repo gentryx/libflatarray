@@ -64,7 +64,7 @@ public:
     inline
     bool any() const
     {
-        return val;
+        return bool(val);
     }
 
     inline
@@ -129,38 +129,38 @@ public:
     inline
     mask_type operator<(const short_vec<int, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <));
     }
 
     inline
     mask_type operator<=(const short_vec<int, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <=);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <=));
     }
 
     inline
     mask_type operator==(const short_vec<int, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, ==);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, ==));
     }
 
     // fixme: this should be a free function?
     inline
     mask_type operator==(int other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other, ==);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other, ==));
     }
 
     inline
     mask_type operator>(const short_vec<int, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >));
     }
 
     inline
     mask_type operator>=(const short_vec<int, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >=);
+        return mask_type(LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >=));
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
