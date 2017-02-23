@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -51,8 +51,8 @@ public:
 
     inline
     short_vec(const int data = 0) :
-        val1(_mm512_set1_epi32(data)),
-        val2(_mm512_set1_epi32(data))
+        val{_mm512_set1_epi32(data),
+            _mm512_set1_epi32(data)}
     {}
 
     inline
@@ -63,8 +63,8 @@ public:
 
     inline
     short_vec(const __m512i& val1, const __m512i& val2) :
-        val1(val1),
-        val2(val2)
+        val{val1,
+            val2}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -82,55 +82,55 @@ public:
     inline
     void operator-=(const short_vec<int, 32>& other)
     {
-        val1 = _mm512_sub_epi32(val1, other.val1);
-        val2 = _mm512_sub_epi32(val2, other.val2);
+        val[ 0] = _mm512_sub_epi32(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_sub_epi32(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<int, 32> operator-(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
-            _mm512_sub_epi32(val1, other.val1),
-            _mm512_sub_epi32(val2, other.val2));
+            _mm512_sub_epi32(val[ 0], other.val[ 0]),
+            _mm512_sub_epi32(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator+=(const short_vec<int, 32>& other)
     {
-        val1 = _mm512_add_epi32(val1, other.val1);
-        val2 = _mm512_add_epi32(val2, other.val2);
+        val[ 0] = _mm512_add_epi32(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_add_epi32(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<int, 32> operator+(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
-            _mm512_add_epi32(val1, other.val1),
-            _mm512_add_epi32(val2, other.val2));
+            _mm512_add_epi32(val[ 0], other.val[ 0]),
+            _mm512_add_epi32(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator*=(const short_vec<int, 32>& other)
     {
-        val1 = _mm512_mullo_epi32(val1, other.val1);
-        val2 = _mm512_mullo_epi32(val2, other.val2);
+        val[ 0] = _mm512_mullo_epi32(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_mullo_epi32(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<int, 32> operator*(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
-            _mm512_mullo_epi32(val1, other.val1),
-            _mm512_mullo_epi32(val2, other.val2));
+            _mm512_mullo_epi32(val[ 0], other.val[ 0]),
+            _mm512_mullo_epi32(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator/=(const short_vec<int, 32>& other)
     {
-        val1 = _mm512_cvtps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val1),
-                                                _mm512_cvtepi32_ps(other.val1)));
-        val2 = _mm512_cvtps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val2),
-                                                _mm512_cvtepi32_ps(other.val2)));
+        val[ 0] = _mm512_cvtps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val[ 0]),
+                                                _mm512_cvtepi32_ps(other.val[ 0])));
+        val[ 1] = _mm512_cvtps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val[ 1]),
+                                                _mm512_cvtepi32_ps(other.val[ 1])));
     }
 
     inline
@@ -140,10 +140,10 @@ public:
     short_vec<int, 32> operator/(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
-            _mm512_cvttps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val1),
-                                              _mm512_cvtepi32_ps(other.val1))),
-            _mm512_cvttps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val2),
-                                              _mm512_cvtepi32_ps(other.val2))));
+            _mm512_cvttps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val[ 0]),
+                                              _mm512_cvtepi32_ps(other.val[ 0]))),
+            _mm512_cvttps_epi32(_mm512_div_ps(_mm512_cvtepi32_ps(val[ 1]),
+                                              _mm512_cvtepi32_ps(other.val[ 1]))));
     }
 
     inline
@@ -154,47 +154,47 @@ public:
     {
         return short_vec<int, 32>(
             _mm512_cvtps_epi32(
-                _mm512_sqrt_ps(_mm512_cvtepi32_ps(val1))),
+                _mm512_sqrt_ps(_mm512_cvtepi32_ps(val[ 0]))),
             _mm512_cvtps_epi32(
-                _mm512_sqrt_ps(_mm512_cvtepi32_ps(val2))));
+                _mm512_sqrt_ps(_mm512_cvtepi32_ps(val[ 1]))));
     }
 
     inline
     void load(const int *data)
     {
-        val1 = _mm512_loadu_si512(data +  0);
-        val2 = _mm512_loadu_si512(data + 16);
+        val[ 0] = _mm512_loadu_si512(data +  0);
+        val[ 1] = _mm512_loadu_si512(data + 16);
     }
 
     inline
     void load_aligned(const int *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        val1 = _mm512_load_epi32(data +  0);
-        val2 = _mm512_load_epi32(data + 16);
+        val[ 0] = _mm512_load_epi32(data +  0);
+        val[ 1] = _mm512_load_epi32(data + 16);
     }
 
     inline
     void store(int *data) const
     {
-        _mm512_storeu_si512(data +  0, val1);
-        _mm512_storeu_si512(data + 16, val2);
+        _mm512_storeu_si512(data +  0, val[ 0]);
+        _mm512_storeu_si512(data + 16, val[ 1]);
     }
 
     inline
     void store_aligned(int *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_store_epi32(data +  0, val1);
-        _mm512_store_epi32(data + 16, val2);
+        _mm512_store_epi32(data +  0, val[ 0]);
+        _mm512_store_epi32(data + 16, val[ 1]);
     }
 
     inline
     void store_nt(int *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_stream_si512(reinterpret_cast<__m512i *>(data +  0), val1);
-        _mm512_stream_si512(reinterpret_cast<__m512i *>(data + 16), val2);
+        _mm512_stream_si512(reinterpret_cast<__m512i *>(data +  0), val[ 0]);
+        _mm512_stream_si512(reinterpret_cast<__m512i *>(data + 16), val[ 1]);
     }
 
     inline
@@ -202,8 +202,8 @@ public:
     {
         __m512i indices1 = _mm512_loadu_si512(offsets +  0);
         __m512i indices2 = _mm512_loadu_si512(offsets + 16);
-        val1 = _mm512_i32gather_epi32(indices1, ptr, 4);
-        val2 = _mm512_i32gather_epi32(indices2, ptr, 4);
+        val[ 0] = _mm512_i32gather_epi32(indices1, ptr, 4);
+        val[ 1] = _mm512_i32gather_epi32(indices2, ptr, 4);
     }
 
     inline
@@ -211,13 +211,12 @@ public:
     {
         __m512i indices1 = _mm512_loadu_si512(offsets +  0);
         __m512i indices2 = _mm512_loadu_si512(offsets + 16);
-        _mm512_i32scatter_epi32(ptr, indices1, val1, 4);
-        _mm512_i32scatter_epi32(ptr, indices2, val2, 4);
+        _mm512_i32scatter_epi32(ptr, indices1, val[ 0], 4);
+        _mm512_i32scatter_epi32(ptr, indices2, val[ 1], 4);
     }
 
 private:
-    __m512i val1;
-    __m512i val2;
+    __m512i val[2];
 };
 
 inline
@@ -247,23 +246,23 @@ private:
 
 inline
 short_vec<int, 32>::short_vec(const sqrt_reference<int, 32>& other) :
-    val1(
+    val{
         _mm512_cvtps_epi32(
-            _mm512_sqrt_ps(_mm512_cvtepi32_ps(other.vec.val1)))),
-    val2(
+            _mm512_sqrt_ps(_mm512_cvtepi32_ps(other.vec.val[ 0]))),
         _mm512_cvtps_epi32(
-            _mm512_sqrt_ps(_mm512_cvtepi32_ps(other.vec.val2))))
+            _mm512_sqrt_ps(_mm512_cvtepi32_ps(other.vec.val[ 1])))
+            }
 {}
 
 inline
 void short_vec<int, 32>::operator/=(const sqrt_reference<int, 32>& other)
 {
-    val1 = _mm512_cvtps_epi32(
-        _mm512_mul_ps(_mm512_cvtepi32_ps(val1),
-                      _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val1))));
-    val2 = _mm512_cvtps_epi32(
-        _mm512_mul_ps(_mm512_cvtepi32_ps(val2),
-                      _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val2))));
+    val[ 0] = _mm512_cvtps_epi32(
+        _mm512_mul_ps(_mm512_cvtepi32_ps(val[ 0]),
+                      _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val[ 0]))));
+    val[ 1] = _mm512_cvtps_epi32(
+        _mm512_mul_ps(_mm512_cvtepi32_ps(val[ 1]),
+                      _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val[ 1]))));
 }
 
 inline
@@ -271,11 +270,11 @@ short_vec<int, 32> short_vec<int, 32>::operator/(const sqrt_reference<int, 32>& 
 {
     return short_vec<int, 32>(
         _mm512_cvtps_epi32(
-            _mm512_mul_ps(_mm512_cvtepi32_ps(val1),
-                          _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val1)))),
+            _mm512_mul_ps(_mm512_cvtepi32_ps(val[ 0]),
+                          _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val[ 0])))),
         _mm512_cvtps_epi32(
-            _mm512_mul_ps(_mm512_cvtepi32_ps(val2),
-                          _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val2)))));
+            _mm512_mul_ps(_mm512_cvtepi32_ps(val[ 1]),
+                          _mm512_rsqrt14_ps(_mm512_cvtepi32_ps(other.vec.val[ 1])))));
 }
 
 inline
@@ -289,8 +288,8 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<int, 32>& vec)
 {
-    const int *data1 = reinterpret_cast<const int *>(&vec.val1);
-    const int *data2 = reinterpret_cast<const int *>(&vec.val2);
+    const int *data1 = reinterpret_cast<const int *>(&vec.val[ 0]);
+    const int *data2 = reinterpret_cast<const int *>(&vec.val[ 1]);
     __os << "["
          << data1[ 0] << ", " << data1[ 1]  << ", " << data1[ 2]  << ", " << data1[ 3] << ", "
          << data1[ 4] << ", " << data1[ 5]  << ", " << data1[ 6]  << ", " << data1[ 7] << ", "

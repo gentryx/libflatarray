@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Di Xiao
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -37,17 +37,17 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(vdupq_n_f32(data))
+        val(vdupq_n_f32(data))
     {}
 
     inline
     short_vec(const float *data) :
-        val1(vld1q_f32( (data + 0) ))
+        val(vld1q_f32( (data + 0) ))
     {}
 
     inline
-    short_vec(const float32x4_t& val1) :
-        val1(val1)
+    short_vec(const float32x4_t& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -62,38 +62,38 @@ public:
     inline
     void operator-=(const short_vec<float, 4>& other)
     {
-        val1 = vsubq_f32(val1, other.val1);
+        val = vsubq_f32(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator-(const short_vec<float, 4>& other) const
     {
-        return short_vec<float, 4>(vsubq_f32(val1, other.val1));
+        return short_vec<float, 4>(vsubq_f32(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<float, 4>& other)
     {
-        val1 = vaddq_f32(val1, other.val1);
+        val = vaddq_f32(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator+(const short_vec<float, 4>& other) const
     {
-        short_vec<float, 4> ret(vaddq_f32(val1, other.val1));
+        short_vec<float, 4> ret(vaddq_f32(val, other.val));
         return ret;
     }
 
     inline
     void operator*=(const short_vec<float, 4>& other)
     {
-        val1 = vmulq_f32(val1, other.val1);
+        val = vmulq_f32(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator*(const short_vec<float, 4>& other) const
     {
-        short_vec<float, 4> ret(vmulq_f32(val1, other.val1));
+        short_vec<float, 4> ret(vmulq_f32(val, other.val));
         return ret;
     }
 
@@ -107,18 +107,18 @@ public:
     void operator/=(const short_vec<float, 4>& other)
     {
         // get an initial estimate of 1/b.
-        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val);
 
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val, reciprocal1), reciprocal1);
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val, reciprocal1), reciprocal1);
 #endif
 
         // and finally, compute a/b = a*(1/b)
-        val1 = vmulq_f32(val1, reciprocal1);
+        val = vmulq_f32(val, reciprocal1);
     }
 
     // Code created with the help of Stack Overflow question
@@ -131,18 +131,18 @@ public:
     short_vec<float, 4> operator/(const short_vec<float, 4>& other) const
     {
         // get an initial estimate of 1/b.
-        float32x4_t reciprocal1 = vrecpeq_f32(other.val1);
+        float32x4_t reciprocal1 = vrecpeq_f32(other.val);
 
         // use a couple Newton-Raphson steps to refine the estimate.  Depending on your
         // application's accuracy requirements, you may be able to get away with only
         // one refinement (instead of the two used here).  Be sure to test!
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val, reciprocal1), reciprocal1);
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
-        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val1, reciprocal1), reciprocal1);
+        reciprocal1 = vmulq_f32(vrecpsq_f32(other.val, reciprocal1), reciprocal1);
 #endif
 
         // and finally, compute a/b = a*(1/b)
-        float32x4_t result = vmulq_f32(val1, reciprocal1);
+        float32x4_t result = vmulq_f32(val, reciprocal1);
 
         short_vec<float, 4> ret(result);
         return ret;
@@ -151,31 +151,31 @@ public:
     inline
     uint32x4_t operator<(const short_vec<float, 4>& other) const
     {
-        return vcltq_f32(val1, other.val1);
+        return vcltq_f32(val, other.val);
     }
 
     inline
     uint32x4_t operator<=(const short_vec<float, 4>& other) const
     {
-        return vcaleq_f32(val1, other.val1);
+        return vcaleq_f32(val, other.val);
     }
 
     inline
     uint32x4_t operator==(const short_vec<float, 4>& other) const
     {
-        return  vcltq_f32(val1, other.val1);
+        return  vcltq_f32(val, other.val);
     }
 
     inline
     uint32x4_t operator>(const short_vec<float, 4>& other) const
     {
-        return vcgtq_f32(val1, other.val1);
+        return vcgtq_f32(val, other.val);
     }
 
     inline
     uint32x4_t operator>=(const short_vec<float, 4>& other) const
     {
-        return vcgeq_f32(val1, other.val1);
+        return vcgeq_f32(val, other.val);
     }
 
     // Copyright (c) 2011, The WebRTC project authors. All rights reserved.
@@ -183,7 +183,7 @@ public:
     short_vec<float, 4> sqrt() const
     {
         // note that vsqrtq_f32 is to be implemented in the gcc compiler
-        float32x4_t x1 = vrsqrteq_f32(val1);
+        float32x4_t x1 = vrsqrteq_f32(val);
 
         // Code to handle sqrt(0).
         // If the input to sqrtf() is zero, a zero will be returned.
@@ -200,18 +200,18 @@ public:
         // converges to (1/√d) if x0 is the result of VRSQRTE applied to d.
         //
         // Note: The precision did not improve after 2 iterations.
-        x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+        x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val), x1);
 #ifdef LIBFLATARRAY_WITH_INCREASED_PRECISION
-        x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val1), x1);
+        x1 = vmulq_f32(vrsqrtsq_f32(vmulq_f32(x1, x1), val), x1);
 #endif
         // sqrt(s) = s * 1/sqrt(s)
-        return vmulq_f32(val1, x1);
+        return vmulq_f32(val, x1);
     }
 
     inline
     void load(const float *data)
     {
-        val1 = vld1q_f32((data + 0));
+        val = vld1q_f32((data + 0));
     }
 
     inline
@@ -224,7 +224,7 @@ public:
     inline
     void store(float *data) const
     {
-        vst1q_f32(data, val1);
+        vst1q_f32(data, val);
     }
 
     inline
@@ -246,7 +246,7 @@ public:
         // stnp is for arm 64 (armv8)
 #if __LP64__
         register float32x4_t val2 asm ("q0");
-        val2 = val1;
+        val2 = val;
         asm("stnp d0, d1, %[store]"
             :[store] "=m" (data)
             );
@@ -271,7 +271,7 @@ public:
     inline
     void scatter(float *ptr, const int *offsets) const
     {
-        const float *data1 = reinterpret_cast<const float *>(&val1);
+        const float *data1 = reinterpret_cast<const float *>(&val);
         ptr[offsets[0]] = data1[0];
         ptr[offsets[1]] = data1[1];
         ptr[offsets[2]] = data1[2];
@@ -279,7 +279,7 @@ public:
     }
 
 private:
-    float32x4_t val1;
+    float32x4_t val;
 };
 
 inline
@@ -299,7 +299,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 4>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val);
     __os << "["  << data1[0]  << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3]
         << "]";
     return __os;

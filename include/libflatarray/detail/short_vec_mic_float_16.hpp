@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -49,7 +49,7 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(_mm512_set1_ps(data))
+        val(_mm512_set1_ps(data))
     {}
 
     inline
@@ -59,8 +59,8 @@ public:
     }
 
     inline
-    short_vec(const __m512& val1) :
-        val1(val1)
+    short_vec(const __m512& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -78,46 +78,46 @@ public:
     inline
     void operator-=(const short_vec<float, 16>& other)
     {
-        val1 = _mm512_sub_ps(val1, other.val1);
+        val = _mm512_sub_ps(val, other.val);
     }
 
     inline
     short_vec<float, 16> operator-(const short_vec<float, 16>& other) const
     {
         return short_vec<float, 16>(
-            _mm512_sub_ps(val1, other.val1));
+            _mm512_sub_ps(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<float, 16>& other)
     {
-        val1 = _mm512_add_ps(val1, other.val1);
+        val = _mm512_add_ps(val, other.val);
     }
 
     inline
     short_vec<float, 16> operator+(const short_vec<float, 16>& other) const
     {
         return short_vec<float, 16>(
-            _mm512_add_ps(val1, other.val1));
+            _mm512_add_ps(val, other.val));
     }
 
     inline
     void operator*=(const short_vec<float, 16>& other)
     {
-        val1 = _mm512_mul_ps(val1, other.val1);
+        val = _mm512_mul_ps(val, other.val);
     }
 
     inline
     short_vec<float, 16> operator*(const short_vec<float, 16>& other) const
     {
         return short_vec<float, 16>(
-            _mm512_mul_ps(val1, other.val1));
+            _mm512_mul_ps(val, other.val));
     }
 
     inline
     void operator/=(const short_vec<float, 16>& other)
     {
-        val1 = _mm512_mul_ps(val1, _mm512_rcp23_ps(other.val1));
+        val = _mm512_mul_ps(val, _mm512_rcp23_ps(other.val));
     }
 
     inline
@@ -127,7 +127,7 @@ public:
     short_vec<float, 16> operator/(const short_vec<float, 16>& other) const
     {
         return short_vec<float, 16>(
-            _mm512_mul_ps(val1, _mm512_rcp23_ps(other.val1)));
+            _mm512_mul_ps(val, _mm512_rcp23_ps(other.val)));
     }
 
     inline
@@ -137,42 +137,42 @@ public:
     short_vec<float, 16> sqrt() const
     {
         return short_vec<float, 16>(
-            _mm512_sqrt_ps(val1));
+            _mm512_sqrt_ps(val));
     }
 
     inline
     void load(const float *data)
     {
-        val1 = _mm512_loadunpacklo_ps(val1, data +  0);
-        val1 = _mm512_loadunpackhi_ps(val1, data + 16);
+        val = _mm512_loadunpacklo_ps(val, data +  0);
+        val = _mm512_loadunpackhi_ps(val, data + 16);
     }
 
     inline
     void load_aligned(const float *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        val1 = _mm512_load_ps(data);
+        val = _mm512_load_ps(data);
     }
 
     inline
     void store(float *data) const
     {
-        _mm512_packstorelo_ps(data +  0, val1);
-        _mm512_packstorehi_ps(data + 16, val1);
+        _mm512_packstorelo_ps(data +  0, val);
+        _mm512_packstorehi_ps(data + 16, val);
     }
 
     inline
     void store_aligned(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_store_ps(data, val1);
+        _mm512_store_ps(data, val);
     }
 
     inline
     void store_nt(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_storenr_ps(data, val1);
+        _mm512_storenr_ps(data, val);
     }
 
     inline
@@ -181,7 +181,7 @@ public:
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);
         indices = _mm512_load_epi32(offsets);
-        val1    = _mm512_i32gather_ps(indices, ptr, 4);
+        val    = _mm512_i32gather_ps(indices, ptr, 4);
     }
 
     inline
@@ -190,11 +190,11 @@ public:
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);
         indices = _mm512_load_epi32(offsets);
-        _mm512_i32scatter_ps(ptr, indices, val1, 4);
+        _mm512_i32scatter_ps(ptr, indices, val, 4);
     }
 
 private:
-    __m512 val1;
+    __m512 val;
 };
 
 inline
@@ -224,20 +224,20 @@ private:
 
 inline
 short_vec<float, 16>::short_vec(const sqrt_reference<float, 16>& other) :
-    val1(_mm512_sqrt_ps(other.vec.val1))
+    val(_mm512_sqrt_ps(other.vec.val))
 {}
 
 inline
 void short_vec<float, 16>::operator/=(const sqrt_reference<float, 16>& other)
 {
-    val1 = _mm512_mul_ps(val1, _mm512_rsqrt23_ps(other.vec.val1));
+    val = _mm512_mul_ps(val, _mm512_rsqrt23_ps(other.vec.val));
 }
 
 inline
 short_vec<float, 16> short_vec<float, 16>::operator/(const sqrt_reference<float, 16>& other) const
 {
     return short_vec<float, 16>(
-        _mm512_mul_ps(val1, _mm512_rsqrt23_ps(other.vec.val1)));
+        _mm512_mul_ps(val, _mm512_rsqrt23_ps(other.vec.val)));
 }
 
 inline
@@ -251,7 +251,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 16>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val);
     __os << "["  << data1[ 0] << ", " << data1[ 1] << ", " << data1[ 2] << ", " << data1[ 3]
          << ", " << data1[ 4] << ", " << data1[ 5] << ", " << data1[ 6] << ", " << data1[ 7]
          << ", " << data1[ 8] << ", " << data1[ 9] << ", " << data1[10] << ", " << data1[11]

@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -46,7 +46,7 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(_mm512_set1_pd(data))
+        val(_mm512_set1_pd(data))
     {}
 
     inline
@@ -56,8 +56,8 @@ public:
     }
 
     inline
-    short_vec(const __m512d& val1) :
-        val1(val1)
+    short_vec(const __m512d& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -72,95 +72,95 @@ public:
     inline
     void operator-=(const short_vec<double, 8>& other)
     {
-        val1 = _mm512_sub_pd(val1, other.val1);
+        val = _mm512_sub_pd(val, other.val);
     }
 
     inline
     short_vec<double, 8> operator-(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm512_sub_pd(val1, other.val1));
+            _mm512_sub_pd(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<double, 8>& other)
     {
-        val1 = _mm512_add_pd(val1, other.val1);
+        val = _mm512_add_pd(val, other.val);
     }
 
     inline
     short_vec<double, 8> operator+(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm512_add_pd(val1, other.val1));
+            _mm512_add_pd(val, other.val));
     }
 
     inline
     void operator*=(const short_vec<double, 8>& other)
     {
-        val1 = _mm512_mul_pd(val1, other.val1);
+        val = _mm512_mul_pd(val, other.val);
     }
 
     inline
     short_vec<double, 8> operator*(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm512_mul_pd(val1, other.val1));
+            _mm512_mul_pd(val, other.val));
     }
 
     inline
     void operator/=(const short_vec<double, 8>& other)
     {
-        val1 = _mm512_div_pd(val1, other.val1);
+        val = _mm512_div_pd(val, other.val);
     }
 
     inline
     short_vec<double, 8> operator/(const short_vec<double, 8>& other) const
     {
         return short_vec<double, 8>(
-            _mm512_div_pd(val1, other.val1));
+            _mm512_div_pd(val, other.val));
     }
 
     inline
     short_vec<double, 8> sqrt() const
     {
         return short_vec<double, 8>(
-            _mm512_sqrt_pd(val1));
+            _mm512_sqrt_pd(val));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = _mm512_loadunpacklo_pd(val1, data + 0);
-        val1 = _mm512_loadunpackhi_pd(val1, data + 8);
+        val = _mm512_loadunpacklo_pd(val, data + 0);
+        val = _mm512_loadunpackhi_pd(val, data + 8);
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        val1 = _mm512_load_pd(data);
+        val = _mm512_load_pd(data);
     }
 
     inline
     void store(double *data) const
     {
-        _mm512_packstorelo_pd(data + 0, val1);
-        _mm512_packstorehi_pd(data + 8, val1);
+        _mm512_packstorelo_pd(data + 0, val);
+        _mm512_packstorehi_pd(data + 8, val);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_store_pd(data, val1);
+        _mm512_store_pd(data, val);
     }
 
     inline
     void store_nt(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_storenr_pd(data, val1);
+        _mm512_storenr_pd(data, val);
     }
 
     inline
@@ -168,7 +168,7 @@ public:
     {
         __m512i indices;
         indices = _mm512_loadunpacklo_epi32(indices, offsets);
-        val1    = _mm512_i32logather_pd(indices, ptr, 8);
+        val    = _mm512_i32logather_pd(indices, ptr, 8);
     }
 
     inline
@@ -176,11 +176,11 @@ public:
     {
         __m512i indices;
         indices = _mm512_loadunpacklo_epi32(indices, offsets);
-        _mm512_i32loscatter_pd(ptr, indices, val1, 8);
+        _mm512_i32loscatter_pd(ptr, indices, val, 8);
     }
 
 private:
-    __m512d val1;
+    __m512d val;
 };
 
 inline
@@ -204,7 +204,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 8>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
+    const double *data1 = reinterpret_cast<const double *>(&vec.val);
 
     __os << "["  << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
          << ", " << data1[4] << ", " << data1[5] << ", " << data1[6] << ", " << data1[7]

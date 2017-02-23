@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -40,17 +40,17 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(vec_splats(data))
+        val(vec_splats(data))
     {}
 
     inline
     short_vec(const double *data) :
-        val1(vec_ld(0, const_cast<double*>(data)))
+        val(vec_ld(0, const_cast<double*>(data)))
     {}
 
     inline
-    short_vec(const vector4double& val1) :
-        val1(val1)
+    short_vec(const vector4double& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -68,40 +68,40 @@ public:
     inline
     void operator-=(const short_vec<double, 4>& other)
     {
-        val1 = vec_sub(val1, other.val1);
+        val = vec_sub(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator-(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            vec_sub(val1, other.val1));
+            vec_sub(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<double, 4>& other)
     {
-        val1 = vec_add(val1, other.val1);
+        val = vec_add(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator+(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            vec_add(val1, other.val1));
+            vec_add(val, other.val));
     }
 
     inline
     void operator*=(const short_vec<double, 4>& other)
     {
-        val1 = vec_add(val1, other.val1);
+        val = vec_add(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator*(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            vec_mul(val1, other.val1));
+            vec_mul(val, other.val));
     }
 
     inline
@@ -110,14 +110,14 @@ public:
     inline
     void operator/=(const short_vec<double, 4>& other)
     {
-        val1 = vec_swdiv_nochk(val1, other.val1);
+        val = vec_swdiv_nochk(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator/(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            vec_swdiv_nochk(val1, other.val1));
+            vec_swdiv_nochk(val, other.val));
     }
 
     inline
@@ -127,33 +127,33 @@ public:
     short_vec<double, 4> sqrt() const
     {
         return short_vec<double, 4>(
-            vec_swsqrt(val1));
+            vec_swsqrt(val));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = vec_ld(0, const_cast<double*>(data));
+        val = vec_ld(0, const_cast<double*>(data));
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        val1 = vec_lda(0, const_cast<double*>(data));
+        val = vec_lda(0, const_cast<double*>(data));
     }
 
     inline
     void store(double *data) const
     {
-        vec_st(val1, 0, data);
+        vec_st(val, 0, data);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        vec_sta(val1, 0, data);
+        vec_sta(val, 0, data);
     }
 
     inline
@@ -166,23 +166,23 @@ public:
     void gather(const double *ptr, const int *offsets)
     {
         double *base = const_cast<double *>(ptr);
-        val1 = vec_insert(base[offsets[0]], val1, 0);
-        val1 = vec_insert(base[offsets[1]], val1, 1);
-        val1 = vec_insert(base[offsets[2]], val1, 2);
-        val1 = vec_insert(base[offsets[3]], val1, 3);
+        val = vec_insert(base[offsets[0]], val, 0);
+        val = vec_insert(base[offsets[1]], val, 1);
+        val = vec_insert(base[offsets[2]], val, 2);
+        val = vec_insert(base[offsets[3]], val, 3);
     }
 
     inline
     void scatter(double *ptr, const int *offsets) const
     {
-        ptr[offsets[0]] = vec_extract(val1, 0);
-        ptr[offsets[1]] = vec_extract(val1, 1);
-        ptr[offsets[2]] = vec_extract(val1, 2);
-        ptr[offsets[3]] = vec_extract(val1, 3);
+        ptr[offsets[0]] = vec_extract(val, 0);
+        ptr[offsets[1]] = vec_extract(val, 1);
+        ptr[offsets[2]] = vec_extract(val, 2);
+        ptr[offsets[3]] = vec_extract(val, 3);
     }
 
 private:
-    vector4double val1;
+    vector4double val;
 };
 
 #ifdef __ICC
@@ -212,19 +212,19 @@ private:
 
 inline
 short_vec<double, 4>::short_vec(const sqrt_reference<double, 4>& other) :
-    val1(vec_swsqrt(other.vec.val1))
+    val(vec_swsqrt(other.vec.val))
 {}
 
 inline
 void short_vec<double, 4>::operator/=(const sqrt_reference<double, 4>& other)
 {
-    val1 = vec_mul(val1, vec_rsqrte(other.vec.val1));
+    val = vec_mul(val, vec_rsqrte(other.vec.val));
 }
 
 inline
 short_vec<double, 4> short_vec<double, 4>::operator/(const sqrt_reference<double, 4>& other) const
 {
-    return vec_mul(val1, vec_rsqrte(other.vec.val1));
+    return vec_mul(val, vec_rsqrte(other.vec.val));
 }
 
 inline
@@ -238,8 +238,12 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 4>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
-    __os << "[" << data1[0] << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3] << "]";
+    const double *data1 = reinterpret_cast<const double *>(&vec.val);
+    __os << "["
+         << data1[0]  << ", "
+         << data1[1]  << ", "
+         << data1[2]  << ", "
+         << data1[3]  << "]";
     return __os;
 }
 

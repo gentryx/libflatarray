@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -49,7 +49,7 @@ public:
 
     inline
     short_vec(const double data = 0) :
-        val1(_mm256_broadcast_sd(&data))
+        val(_mm256_broadcast_sd(&data))
     {}
 
     inline
@@ -59,8 +59,8 @@ public:
     }
 
     inline
-    short_vec(const __m256d& val1) :
-        val1(val1)
+    short_vec(const __m256d& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -76,8 +76,8 @@ public:
     bool any() const
     {
         return (0 == _mm256_testz_si256(
-                    _mm256_castpd_si256(val1),
-                    _mm256_castpd_si256(val1)));
+                    _mm256_castpd_si256(val),
+                    _mm256_castpd_si256(val)));
     }
 
     inline
@@ -85,9 +85,9 @@ public:
     {
         __m128d buf;
         if (i < 2) {
-            buf = _mm256_extractf128_pd(val1, 0);
+            buf = _mm256_extractf128_pd(val, 0);
         } else {
-            buf = _mm256_extractf128_pd(val1, 1);
+            buf = _mm256_extractf128_pd(val, 1);
         }
 
         i &= 1;
@@ -103,127 +103,127 @@ public:
     inline
     void operator-=(const short_vec<double, 4>& other)
     {
-        val1 = _mm256_sub_pd(val1, other.val1);
+        val = _mm256_sub_pd(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator-(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_sub_pd(val1, other.val1));
+            _mm256_sub_pd(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<double, 4>& other)
     {
-        val1 = _mm256_add_pd(val1, other.val1);
+        val = _mm256_add_pd(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator+(const short_vec<double, 4>& other) const
     {
-        return short_vec<double, 4>(_mm256_add_pd(val1, other.val1));
+        return short_vec<double, 4>(_mm256_add_pd(val, other.val));
     }
 
     inline
     void operator*=(const short_vec<double, 4>& other)
     {
-        val1 = _mm256_mul_pd(val1, other.val1);
+        val = _mm256_mul_pd(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator*(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_mul_pd(val1, other.val1));
+            _mm256_mul_pd(val, other.val));
     }
 
     inline
     void operator/=(const short_vec<double, 4>& other)
     {
-        val1 = _mm256_div_pd(val1, other.val1);
+        val = _mm256_div_pd(val, other.val);
     }
 
     inline
     short_vec<double, 4> operator/(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_div_pd(val1, other.val1));
+            _mm256_div_pd(val, other.val));
     }
 
     inline
     short_vec<double, 4> operator<(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_cmp_pd(val1, other.val1, _CMP_LT_OS));
+            _mm256_cmp_pd(val, other.val, _CMP_LT_OS));
     }
 
     inline
     short_vec<double, 4> operator<=(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_cmp_pd(val1, other.val1, _CMP_LE_OS));
+            _mm256_cmp_pd(val, other.val, _CMP_LE_OS));
     }
 
     inline
     short_vec<double, 4> operator==(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_cmp_pd(val1, other.val1, _CMP_EQ_OQ));
+            _mm256_cmp_pd(val, other.val, _CMP_EQ_OQ));
     }
 
     inline
     short_vec<double, 4> operator>(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_cmp_pd(val1, other.val1, _CMP_GT_OS));
+            _mm256_cmp_pd(val, other.val, _CMP_GT_OS));
     }
 
     inline
     short_vec<double, 4> operator>=(const short_vec<double, 4>& other) const
     {
         return short_vec<double, 4>(
-            _mm256_cmp_pd(val1, other.val1, _CMP_GE_OS));
+            _mm256_cmp_pd(val, other.val, _CMP_GE_OS));
     }
 
     inline
     short_vec<double, 4> sqrt() const
     {
         return short_vec<double, 4>(
-            _mm256_sqrt_pd(val1));
+            _mm256_sqrt_pd(val));
     }
 
     inline
     void load(const double *data)
     {
-        val1 = _mm256_loadu_pd(data);
+        val = _mm256_loadu_pd(data);
     }
 
     inline
     void load_aligned(const double *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        val1 = _mm256_load_pd(data);
+        val = _mm256_load_pd(data);
     }
 
     inline
     void store(double *data) const
     {
-        _mm256_storeu_pd(data +  0, val1);
+        _mm256_storeu_pd(data +  0, val);
     }
 
     inline
     void store_aligned(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        _mm256_store_pd(data, val1);
+        _mm256_store_pd(data, val);
     }
 
     inline
     void store_nt(double *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 32);
-        _mm256_stream_pd(data, val1);
+        _mm256_stream_pd(data, val);
     }
 
 #ifdef __AVX2__
@@ -232,13 +232,13 @@ public:
     {
         __m128i indices;
         indices = _mm_loadu_si128(reinterpret_cast<const __m128i *>(offsets));
-        val1    = _mm256_i32gather_pd(ptr, indices, 8);
+        val    = _mm256_i32gather_pd(ptr, indices, 8);
     }
 #else
     inline
     void gather(const double *ptr, const int *offsets)
     {
-        val1 = _mm256_set_pd(
+        val = _mm256_set_pd(
             *(ptr + offsets[3]),
             *(ptr + offsets[2]),
             *(ptr + offsets[1]),
@@ -250,10 +250,10 @@ public:
     void scatter(double *ptr, const int *offsets) const
     {
         __m128d tmp;
-        tmp = _mm256_extractf128_pd(val1, 0);
+        tmp = _mm256_extractf128_pd(val, 0);
         _mm_storel_pd(ptr + offsets[0], tmp);
         _mm_storeh_pd(ptr + offsets[1], tmp);
-        tmp = _mm256_extractf128_pd(val1, 1);
+        tmp = _mm256_extractf128_pd(val, 1);
         _mm_storel_pd(ptr + offsets[2], tmp);
         _mm_storeh_pd(ptr + offsets[3], tmp);
     }
@@ -261,11 +261,11 @@ public:
     inline
     void blend(const mask_type& mask, const short_vec<double, 4>& other)
     {
-        val1  = _mm256_blendv_pd(val1,  other.val1,  mask.val1);
+        val  = _mm256_blendv_pd(val,  other.val,  mask.val);
     }
 
 private:
-    __m256d val1;
+    __m256d val;
 };
 
 inline
@@ -289,7 +289,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<double, 4>& vec)
 {
-    const double *data1 = reinterpret_cast<const double *>(&vec.val1);
+    const double *data1 = reinterpret_cast<const double *>(&vec.val);
 
     __os << "["  << data1[0] << ", " << data1[1] << ", " << data1[2] << ", " << data1[3]
          << "]";

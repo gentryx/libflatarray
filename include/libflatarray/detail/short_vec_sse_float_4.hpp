@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -59,7 +59,7 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(_mm_set1_ps(data))
+        val(_mm_set1_ps(data))
     {}
 
     inline
@@ -69,8 +69,8 @@ public:
     }
 
     inline
-    short_vec(const __m128& val1) :
-        val1(val1)
+    short_vec(const __m128& val) :
+        val(val)
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -90,11 +90,11 @@ public:
     {
 #ifdef __SSE4_1__
         return (0 == _mm_testz_si128(
-                    _mm_castps_si128(val1),
-                    _mm_castps_si128(val1)));
+                    _mm_castps_si128(val),
+                    _mm_castps_si128(val)));
 #else
-        __m128 buf1 = _mm_shuffle_ps(val1, val1, (3 << 2) | (2 << 0));
-        buf1 = _mm_or_ps(val1, buf1);
+        __m128 buf1 = _mm_shuffle_ps(val, val, (3 << 2) | (2 << 0));
+        buf1 = _mm_or_ps(val, buf1);
         __m128 buf2 = _mm_shuffle_ps(buf1, buf1, (1 << 0));
         return _mm_cvtss_f32(buf1) || _mm_cvtss_f32(buf2);
 #endif
@@ -104,61 +104,61 @@ public:
     float operator[](int i) const
     {
         if (i == 3) {
-            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 3));
+            return _mm_cvtss_f32(_mm_shuffle_ps(val, val, 3));
         }
         if (i == 2) {
-            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 2));
+            return _mm_cvtss_f32(_mm_shuffle_ps(val, val, 2));
         }
         if (i == 1) {
-            return _mm_cvtss_f32(_mm_shuffle_ps(val1, val1, 1));
+            return _mm_cvtss_f32(_mm_shuffle_ps(val, val, 1));
         }
 
-        return _mm_cvtss_f32(val1);
+        return _mm_cvtss_f32(val);
     }
 
     inline
     void operator-=(const short_vec<float, 4>& other)
     {
-        val1 = _mm_sub_ps(val1, other.val1);
+        val = _mm_sub_ps(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator-(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_sub_ps(val1, other.val1));
+            _mm_sub_ps(val, other.val));
     }
 
     inline
     void operator+=(const short_vec<float, 4>& other)
     {
-        val1 = _mm_add_ps(val1, other.val1);
+        val = _mm_add_ps(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator+(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_add_ps(val1, other.val1));
+            _mm_add_ps(val, other.val));
     }
 
     inline
     void operator*=(const short_vec<float, 4>& other)
     {
-        val1 = _mm_mul_ps(val1, other.val1);
+        val = _mm_mul_ps(val, other.val);
     }
 
     inline
     short_vec<float, 4> operator*(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_mul_ps(val1, other.val1));
+            _mm_mul_ps(val, other.val));
     }
 
     inline
     void operator/=(const short_vec<float, 4>& other)
     {
-        val1 = _mm_div_ps(val1, other.val1);
+        val = _mm_div_ps(val, other.val);
     }
 
     inline
@@ -168,7 +168,7 @@ public:
     short_vec<float, 4> operator/(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_div_ps(val1, other.val1));
+            _mm_div_ps(val, other.val));
     }
 
     inline
@@ -178,95 +178,95 @@ public:
     short_vec<float, 4> operator<(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_cmplt_ps(val1, other.val1));
+            _mm_cmplt_ps(val, other.val));
     }
 
     inline
     short_vec<float, 4> operator<=(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_cmple_ps(val1, other.val1));
+            _mm_cmple_ps(val, other.val));
     }
 
     inline
     short_vec<float, 4> operator==(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_cmpeq_ps(val1, other.val1));
+            _mm_cmpeq_ps(val, other.val));
     }
 
     inline
     short_vec<float, 4> operator>(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_cmpgt_ps(val1, other.val1));
+            _mm_cmpgt_ps(val, other.val));
     }
 
     inline
     short_vec<float, 4> operator>=(const short_vec<float, 4>& other) const
     {
         return short_vec<float, 4>(
-            _mm_cmpge_ps(val1, other.val1));
+            _mm_cmpge_ps(val, other.val));
     }
 
     inline
     short_vec<float, 4> sqrt() const
     {
         return short_vec<float, 4>(
-            _mm_sqrt_ps(val1));
+            _mm_sqrt_ps(val));
     }
 
     inline
     void load(const float *data)
     {
-        val1 = _mm_loadu_ps(data);
+        val = _mm_loadu_ps(data);
     }
 
     inline
     void load_aligned(const float *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        val1 = _mm_load_ps(data);
+        val = _mm_load_ps(data);
     }
 
     inline
     void store(float *data) const
     {
-        _mm_storeu_ps(data + 0, val1);
+        _mm_storeu_ps(data + 0, val);
     }
 
     inline
     void store_aligned(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        _mm_store_ps(data + 0, val1);
+        _mm_store_ps(data + 0, val);
     }
 
     inline
     void store_nt(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 16);
-        _mm_stream_ps(data + 0, val1);
+        _mm_stream_ps(data + 0, val);
     }
 
 #ifdef __SSE4_1__
     inline
     void gather(const float *ptr, const int *offsets)
     {
-        val1 = _mm_load_ss(ptr + offsets[0]);
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[2], _MM_MK_INSERTPS_NDX(0,2,0));
-        SHORTVEC_INSERT_PS(val1, ptr, offsets[3], _MM_MK_INSERTPS_NDX(0,3,0));
+        val = _mm_load_ss(ptr + offsets[0]);
+        SHORTVEC_INSERT_PS(val, ptr, offsets[1], _MM_MK_INSERTPS_NDX(0,1,0));
+        SHORTVEC_INSERT_PS(val, ptr, offsets[2], _MM_MK_INSERTPS_NDX(0,2,0));
+        SHORTVEC_INSERT_PS(val, ptr, offsets[3], _MM_MK_INSERTPS_NDX(0,3,0));
     }
 
     inline
     void scatter(float *ptr, const int *offsets) const
     {
         ShortVecHelpers::ExtractResult r1, r2, r3, r4;
-        r1.i = _mm_extract_ps(val1, 0);
-        r2.i = _mm_extract_ps(val1, 1);
-        r3.i = _mm_extract_ps(val1, 2);
-        r4.i = _mm_extract_ps(val1, 3);
+        r1.i = _mm_extract_ps(val, 0);
+        r2.i = _mm_extract_ps(val, 1);
+        r3.i = _mm_extract_ps(val, 2);
+        r4.i = _mm_extract_ps(val, 3);
         ptr[offsets[0]] = r1.f;
         ptr[offsets[1]] = r2.f;
         ptr[offsets[2]] = r3.f;
@@ -283,13 +283,13 @@ public:
         f3   = _mm_load_ss(ptr + offsets[1]);
         f4   = _mm_load_ss(ptr + offsets[3]);
         f3   = _mm_unpacklo_ps(f3, f4);
-        val1 = _mm_unpacklo_ps(f1, f3);
+        val = _mm_unpacklo_ps(f1, f3);
     }
 
     inline
     void scatter(float *ptr, const int *offsets) const
     {
-        __m128 tmp = val1;
+        __m128 tmp = val;
         _mm_store_ss(ptr + offsets[0], tmp);
         tmp = _mm_shuffle_ps(tmp, tmp, _MM_SHUFFLE(0,3,2,1));
         _mm_store_ss(ptr + offsets[1], tmp);
@@ -304,16 +304,16 @@ public:
     void blend(const mask_type& mask, const short_vec<float, 4>& other)
     {
 #ifdef __SSE4_1__
-        val1 = _mm_blendv_ps(val1, other.val1, mask.val1);
+        val = _mm_blendv_ps(val, other.val, mask.val);
 #else
-        val1 = _mm_or_ps(
-            _mm_and_ps(mask.val1, other.val1),
-            _mm_andnot_ps(mask.val1, val1));
+        val = _mm_or_ps(
+            _mm_and_ps(mask.val, other.val),
+            _mm_andnot_ps(mask.val, val));
 #endif
     }
 
 private:
-    __m128 val1;
+    __m128 val;
 };
 
 inline
@@ -343,20 +343,20 @@ private:
 
 inline
 short_vec<float, 4>::short_vec(const sqrt_reference<float, 4>& other) :
-    val1(_mm_sqrt_ps(other.vec.val1))
+    val(_mm_sqrt_ps(other.vec.val))
 {}
 
 inline
 void short_vec<float, 4>::operator/=(const sqrt_reference<float, 4>& other)
 {
-    val1 = _mm_mul_ps(val1, _mm_rsqrt_ps(other.vec.val1));
+    val = _mm_mul_ps(val, _mm_rsqrt_ps(other.vec.val));
 }
 
 inline
 short_vec<float, 4> short_vec<float, 4>::operator/(const sqrt_reference<float, 4>& other) const
 {
     return short_vec<float, 4>(
-        _mm_mul_ps(val1, _mm_rsqrt_ps(other.vec.val1)));
+        _mm_mul_ps(val, _mm_rsqrt_ps(other.vec.val)));
 }
 
 inline
@@ -370,7 +370,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 4>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val);
     __os << "[" << data1[0] << ", " << data1[1]  << ", " << data1[2]  << ", " << data1[3] << "]";
     return __os;
 }

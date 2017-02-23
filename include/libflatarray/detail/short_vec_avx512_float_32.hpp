@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -50,8 +50,8 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(_mm512_set1_ps(data)),
-        val2(_mm512_set1_ps(data))
+        val{_mm512_set1_ps(data),
+            _mm512_set1_ps(data)}
     {}
 
     inline
@@ -62,7 +62,8 @@ public:
 
     inline
     short_vec(const __m512& val1, const __m512& val2) :
-        val1(val1), val2(val2)
+        val{val1,
+            val2}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -75,12 +76,12 @@ public:
 #endif
 
     inline
-    short_vec(const sqrt_reference<float, 32>& other);
+    short_vec!(const sqrt_reference<float, 32>& other);
 
     inline
     bool any() const
     {
-        __m512 buf0 = _mm512_or_ps(val1, val2);
+        __m512 buf0 = _mm512_or_ps(val[ 0], val[ 1]);
         return _mm512_test_epi64_mask(
             _mm512_castps_si512(buf0),
             _mm512_castps_si512(buf0));
@@ -89,13 +90,7 @@ public:
     inline
     float operator[](int i) const
     {
-        __m512 buf0;
-        if (i < 16) {
-            buf0 = val1;
-        } else {
-            buf0 = val2;
-        }
-
+        __m512 buf0 = val[i >> 4];
         i &= 15;
 
         __m128 buf1;
@@ -131,53 +126,53 @@ public:
     inline
     void operator-=(const short_vec<float, 32>& other)
     {
-        val1 = _mm512_sub_ps(val1, other.val1);
-        val2 = _mm512_sub_ps(val2, other.val2);
+        val[ 0] = _mm512_sub_ps(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_sub_ps(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<float, 32> operator-(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
-            _mm512_sub_ps(val1, other.val1),
-            _mm512_sub_ps(val2, other.val2));
+            _mm512_sub_ps(val[ 0], other.val[ 0]),
+            _mm512_sub_ps(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator+=(const short_vec<float, 32>& other)
     {
-        val1 = _mm512_add_ps(val1, other.val1);
-        val2 = _mm512_add_ps(val2, other.val2);
+        val[ 0] = _mm512_add_ps(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_add_ps(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<float, 32> operator+(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
-            _mm512_add_ps(val1, other.val1),
-            _mm512_add_ps(val2, other.val2));
+            _mm512_add_ps(val[ 0], other.val[ 0]),
+            _mm512_add_ps(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator*=(const short_vec<float, 32>& other)
     {
-        val1 = _mm512_mul_ps(val1, other.val1);
-        val2 = _mm512_mul_ps(val2, other.val2);
+        val[ 0] = _mm512_mul_ps(val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_mul_ps(val[ 1], other.val[ 1]);
     }
 
     inline
     short_vec<float, 32> operator*(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
-            _mm512_mul_ps(val1, other.val1),
-            _mm512_mul_ps(val2, other.val2));
+            _mm512_mul_ps(val[ 0], other.val[ 0]),
+            _mm512_mul_ps(val[ 1], other.val[ 1]));
     }
 
     inline
     void operator/=(const short_vec<float, 32>& other)
     {
-        val1 = _mm512_mul_ps(val1, _mm512_rcp14_ps(other.val1));
-        val2 = _mm512_mul_ps(val2, _mm512_rcp14_ps(other.val2));
+        val[ 0] = _mm512_mul_ps(val[ 0], _mm512_rcp14_ps(other.val[ 0]));
+        val[ 1] = _mm512_mul_ps(val[ 1], _mm512_rcp14_ps(other.val[ 1]));
     }
 
     inline
@@ -187,8 +182,8 @@ public:
     short_vec<float, 32> operator/(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
-            _mm512_mul_ps(val1, _mm512_rcp14_ps(other.val1)),
-            _mm512_mul_ps(val2, _mm512_rcp14_ps(other.val2)));
+            _mm512_mul_ps(val[ 0], _mm512_rcp14_ps(other.val[ 0])),
+            _mm512_mul_ps(val[ 1], _mm512_rcp14_ps(other.val[ 1])));
     }
 
     inline
@@ -198,86 +193,86 @@ public:
     mask_type operator<(const short_vec<float, 32>& other) const
     {
         return
-            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LT_OS) <<  0) +
-            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_LT_OS) << 16);
+            (_mm512_cmp_ps_mask(val[ 0], other.val[ 0], _CMP_LT_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val[ 1], other.val[ 1], _CMP_LT_OS) << 16);
     }
 
     inline
     mask_type operator<=(const short_vec<float, 32>& other) const
     {
         return
-            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_LE_OS) <<  0) +
-            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_LE_OS) << 16);
+            (_mm512_cmp_ps_mask(val[ 0], other.val[ 0], _CMP_LE_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val[ 1], other.val[ 1], _CMP_LE_OS) << 16);
     }
 
     inline
     mask_type operator==(const short_vec<float, 32>& other) const
     {
         return
-            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_EQ_OQ) <<  0) +
-            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_EQ_OQ) << 16);
+            (_mm512_cmp_ps_mask(val[ 0], other.val[ 0], _CMP_EQ_OQ) <<  0) +
+            (_mm512_cmp_ps_mask(val[ 1], other.val[ 1], _CMP_EQ_OQ) << 16);
     }
 
     inline
     mask_type operator>(const short_vec<float, 32>& other) const
     {
         return
-            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GT_OS) <<  0) +
-            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_GT_OS) << 16);
+            (_mm512_cmp_ps_mask(val[ 0], other.val[ 0], _CMP_GT_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val[ 1], other.val[ 1], _CMP_GT_OS) << 16);
     }
 
     inline
     mask_type operator>=(const short_vec<float, 32>& other) const
     {
         return
-            (_mm512_cmp_ps_mask(val1, other.val1, _CMP_GE_OS) <<  0) +
-            (_mm512_cmp_ps_mask(val2, other.val2, _CMP_GE_OS) << 16);
+            (_mm512_cmp_ps_mask(val[ 0], other.val[ 0], _CMP_GE_OS) <<  0) +
+            (_mm512_cmp_ps_mask(val[ 1], other.val[ 1], _CMP_GE_OS) << 16);
     }
 
     inline
     short_vec<float, 32> sqrt() const
     {
         return short_vec<float, 32>(
-            _mm512_sqrt_ps(val1),
-            _mm512_sqrt_ps(val2));
+            _mm512_sqrt_ps(val[ 0]),
+            _mm512_sqrt_ps(val[ 1]));
     }
 
     inline
     void load(const float *data)
     {
-        val1 = _mm512_loadu_ps(data +  0);
-        val2 = _mm512_loadu_ps(data + 16);
+        val[ 0] = _mm512_loadu_ps(data +  0);
+        val[ 1] = _mm512_loadu_ps(data + 16);
     }
 
     inline
     void load_aligned(const float *data)
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        val1 = _mm512_load_ps(data +  0);
-        val2 = _mm512_load_ps(data + 16);
+        val[ 0] = _mm512_load_ps(data +  0);
+        val[ 1] = _mm512_load_ps(data + 16);
     }
 
     inline
     void store(float *data) const
     {
-        _mm512_storeu_ps(data +  0, val1);
-        _mm512_storeu_ps(data + 16, val2);
+        _mm512_storeu_ps(data +  0, val[ 0]);
+        _mm512_storeu_ps(data + 16, val[ 1]);
     }
 
     inline
     void store_aligned(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_store_ps(data +  0, val1);
-        _mm512_store_ps(data + 16, val2);
+        _mm512_store_ps(data +  0, val[ 0]);
+        _mm512_store_ps(data + 16, val[ 1]);
     }
 
     inline
     void store_nt(float *data) const
     {
         SHORTVEC_ASSERT_ALIGNED(data, 64);
-        _mm512_stream_ps(data +  0, val1);
-        _mm512_stream_ps(data + 16, val2);
+        _mm512_stream_ps(data +  0, val[ 0]);
+        _mm512_stream_ps(data + 16, val[ 1]);
     }
 
     inline
@@ -286,9 +281,9 @@ public:
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);
         indices = _mm512_load_epi32(offsets);
-        val1    = _mm512_i32gather_ps(indices, ptr, 4);
+        val[ 0]    = _mm512_i32gather_ps(indices, ptr, 4);
         indices = _mm512_load_epi32(offsets + 16);
-        val2    = _mm512_i32gather_ps(indices, ptr, 4);
+        val[ 1]    = _mm512_i32gather_ps(indices, ptr, 4);
     }
 
     inline
@@ -297,21 +292,20 @@ public:
         __m512i indices;
         SHORTVEC_ASSERT_ALIGNED(offsets, 64);
         indices = _mm512_load_epi32(offsets);
-        _mm512_i32scatter_ps(ptr, indices, val1, 4);
+        _mm512_i32scatter_ps(ptr, indices, val[ 0], 4);
         indices = _mm512_load_epi32(offsets + 16);
-        _mm512_i32scatter_ps(ptr, indices, val2, 4);
+        _mm512_i32scatter_ps(ptr, indices, val[ 1], 4);
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<float, 32>& other)
     {
-        val1 = _mm512_mask_blend_ps((mask >>  0)        , val1, other.val1);
-        val2 = _mm512_mask_blend_ps((mask >> 16) & 65535, val2, other.val2);
+        val[ 0] = _mm512_mask_blend_ps((mask >>  0)        , val[ 0], other.val[ 0]);
+        val[ 1] = _mm512_mask_blend_ps((mask >> 16) & 65535, val[ 1], other.val[ 1]);
     }
 
 private:
-    __m512 val1;
-    __m512 val2;
+    __m512 val[2];
 };
 
 inline
@@ -341,23 +335,23 @@ private:
 
 inline
 short_vec<float, 32>::short_vec(const sqrt_reference<float, 32>& other) :
-    val1(_mm512_sqrt_ps(other.vec.val1)),
-    val2(_mm512_sqrt_ps(other.vec.val2))
+    val{_mm512_sqrt_ps(other.vec.val[ 0]),
+        _mm512_sqrt_ps(other.vec.val[ 1])}
 {}
 
 inline
 void short_vec<float, 32>::operator/=(const sqrt_reference<float, 32>& other)
 {
-    val1 = _mm512_mul_ps(val1, _mm512_rsqrt14_ps(other.vec.val1));
-    val2 = _mm512_mul_ps(val2, _mm512_rsqrt14_ps(other.vec.val2));
+    val[ 0] = _mm512_mul_ps(val[ 0], _mm512_rsqrt14_ps(other.vec.val[ 0]));
+    val[ 1] = _mm512_mul_ps(val[ 1], _mm512_rsqrt14_ps(other.vec.val[ 1]));
 }
 
 inline
 short_vec<float, 32> short_vec<float, 32>::operator/(const sqrt_reference<float, 32>& other) const
 {
     return short_vec<float, 32>(
-        _mm512_mul_ps(val1, _mm512_rsqrt14_ps(other.vec.val1)),
-        _mm512_mul_ps(val2, _mm512_rsqrt14_ps(other.vec.val2)));
+        _mm512_mul_ps(val[ 0], _mm512_rsqrt14_ps(other.vec.val[ 0])),
+        _mm512_mul_ps(val[ 1], _mm512_rsqrt14_ps(other.vec.val[ 1])));
 }
 
 inline
@@ -371,8 +365,8 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 32>& vec)
 {
-    const float *data1 = reinterpret_cast<const float *>(&vec.val1);
-    const float *data2 = reinterpret_cast<const float *>(&vec.val2);
+    const float *data1 = reinterpret_cast<const float *>(&vec.val[ 0]);
+    const float *data2 = reinterpret_cast<const float *>(&vec.val[ 1]);
     __os << "["  << data1[ 0] << ", " << data1[ 1] << ", " << data1[ 2] << ", " << data1[ 3]
          << ", " << data1[ 4] << ", " << data1[ 5] << ", " << data1[ 6] << ", " << data1[ 7]
          << ", " << data1[ 8] << ", " << data1[ 9] << ", " << data1[10] << ", " << data1[11]

@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -42,8 +42,7 @@ public:
 
     inline
     short_vec(const int data = 0) :
-        val1(data),
-        val2(data)
+        val{data, data}
     {}
 
     inline
@@ -54,8 +53,8 @@ public:
 
     inline
     short_vec(const int val1, const int val2) :
-        val1(val1),
-        val2(val2)
+        val{val1,
+            val2}
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
@@ -70,76 +69,76 @@ public:
     inline
     void operator-=(const short_vec<int, 2>& other)
     {
-        val1 -= other.val1;
-        val2 -= other.val2;
+        val[ 0] -= other.val[ 0];
+        val[ 1] -= other.val[ 1];
     }
 
     inline
     short_vec<int, 2> operator-(const short_vec<int, 2>& other) const
     {
         return short_vec<int, 2>(
-            val1 - other.val1,
-            val2 - other.val2);
+            val[ 0] - other.val[ 0],
+            val[ 1] - other.val[ 1]);
     }
 
     inline
     void operator+=(const short_vec<int, 2>& other)
     {
-        val1 += other.val1;
-        val2 += other.val2;
+        val[ 0] += other.val[ 0];
+        val[ 1] += other.val[ 1];
     }
 
     inline
     short_vec<int, 2> operator+(const short_vec<int, 2>& other) const
     {
         return short_vec<int, 2>(
-            val1 + other.val1,
-            val2 + other.val2);
+            val[ 0] + other.val[ 0],
+            val[ 1] + other.val[ 1]);
     }
 
     inline
     void operator*=(const short_vec<int, 2>& other)
     {
-        val1 *= other.val1;
-        val2 *= other.val2;
+        val[ 0] *= other.val[ 0];
+        val[ 1] *= other.val[ 1];
     }
 
     inline
     short_vec<int, 2> operator*(const short_vec<int, 2>& other) const
     {
         return short_vec<int, 2>(
-            val1 * other.val1,
-            val2 * other.val2);
+            val[ 0] * other.val[ 0],
+            val[ 1] * other.val[ 1]);
     }
 
     inline
     void operator/=(const short_vec<int, 2>& other)
     {
-        val1 /= other.val1;
-        val2 /= other.val2;
+        val[ 0] /= other.val[ 0];
+        val[ 1] /= other.val[ 1];
     }
 
     inline
     short_vec<int, 2> operator/(const short_vec<int, 2>& other) const
     {
         return short_vec<int, 2>(
-            val1 / other.val1,
-            val2 / other.val2);
+            val[ 0] / other.val[ 0],
+            val[ 1] / other.val[ 1]);
     }
 
     inline
     short_vec<int, 2> sqrt() const
     {
         return short_vec<int, 2>(
-            static_cast<int>(std::sqrt(val1)),
-            static_cast<int>(std::sqrt(val2)));
+            static_cast<int>(std::sqrt(val[ 0])),
+            static_cast<int>(std::sqrt(val[ 1])));
     }
 
     inline
     void load(const int *data)
     {
-        val1 = data[0];
-        val2 = data[1];
+        val[ 0] = data[0];
+        val[ 1] = data[1];
     }
 
     inline
@@ -151,8 +150,8 @@ public:
     inline
     void store(int *data) const
     {
-        *(data +  0) = val1;
-        *(data +  1) = val2;
+        *(data +  0) = val[ 0];
+        *(data +  1) = val[ 1];
     }
 
     inline
@@ -170,20 +169,19 @@ public:
     inline
     void gather(const int *ptr, const int *offsets)
     {
-        val1 = ptr[offsets[0]];
-        val2 = ptr[offsets[1]];
+        val[ 0] = ptr[offsets[0]];
+        val[ 1] = ptr[offsets[1]];
     }
 
     inline
     void scatter(int *ptr, const int *offsets) const
     {
-        ptr[offsets[0]] = val1;
-        ptr[offsets[1]] = val2;
+        ptr[offsets[0]] = val[ 0];
+        ptr[offsets[1]] = val[ 1];
     }
 
 private:
-    int val1;
-    int val2;
+    int val[2];
 };
 
 inline
@@ -207,7 +205,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<int, 2>& vec)
 {
-    __os << "["  << vec.val1 << ", " << vec.val2
+    __os << "["  << vec.val[ 0] << ", " << vec.val[ 1]
          << "]";
     return __os;
 }

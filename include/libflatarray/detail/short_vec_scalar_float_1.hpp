@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -43,7 +43,7 @@ public:
 
     inline
     short_vec(const float data = 0) :
-        val1(data)
+        val(data)
     {}
 
     inline
@@ -64,96 +64,96 @@ public:
     inline
     bool any() const
     {
-        return val1;
+        return val;
     }
 
     inline
-    float operator[](const int i) const
+    float operator[](const int /* i */) const
     {
-        return val1;
+        return val;
     }
 
     inline
     void operator-=(const short_vec<float, 1>& other)
     {
-        val1 -= other.val1;
+        val -= other.val;
     }
 
     inline
     short_vec<float, 1> operator-(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
-            val1 - other.val1);
+            val - other.val);
     }
 
     inline
     void operator+=(const short_vec<float, 1>& other)
     {
-        val1 += other.val1;
+        val += other.val;
     }
 
     inline
     short_vec<float, 1> operator+(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
-            val1 + other.val1);
+            val + other.val);
     }
 
     inline
     void operator*=(const short_vec<float, 1>& other)
     {
-        val1 *= other.val1;
+        val *= other.val;
     }
 
     inline
     short_vec<float, 1> operator*(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
-            val1 * other.val1);
+            val * other.val);
     }
 
     inline
     void operator/=(const short_vec<float, 1>& other)
     {
-        val1 /= other.val1;
+        val /= other.val;
     }
 
     inline
     short_vec<float, 1> operator/(const short_vec<float, 1>& other) const
     {
         return short_vec<float, 1>(
-            val1 / other.val1);
+            val / other.val);
     }
 
 #define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
     inline
     mask_type operator<(const short_vec<float, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <);
+        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <);
     }
 
     inline
     mask_type operator<=(const short_vec<float, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, <=);
+        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, <=);
     }
 
     inline
     mask_type operator==(const short_vec<float, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, ==);
+        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, ==);
     }
 
     inline
     mask_type operator>(const short_vec<float, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >);
+        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >);
     }
 
     inline
     mask_type operator>=(const short_vec<float, 1>& other) const
     {
-        return LFA_SHORTVEC_COMPARE_HELPER(val1, other.val1, >=);
+        return LFA_SHORTVEC_COMPARE_HELPER(val, other.val, >=);
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
@@ -161,13 +161,13 @@ public:
     short_vec<float, 1> sqrt() const
     {
         return short_vec<float, 1>(
-            std::sqrt(val1));
+            std::sqrt(val));
     }
 
     inline
     void load(const float *data)
     {
-        val1 = data[0];
+        val = data[0];
     }
 
     inline
@@ -179,7 +179,7 @@ public:
     inline
     void store(float *data) const
     {
-        *(data + 0) = val1;
+        *(data + 0) = val;
     }
 
     inline
@@ -197,25 +197,25 @@ public:
     inline
     void gather(const float *ptr, const int *offsets)
     {
-        val1 = ptr[offsets[0]];
+        val = ptr[offsets[0]];
     }
 
     inline
     void scatter(float *ptr, const int *offsets) const
     {
-        ptr[offsets[0]] = val1;
+        ptr[offsets[0]] = val;
     }
 
     inline
     void blend(const mask_type& mask, const short_vec<float, 1>& other)
     {
         if (mask & 1) {
-            val1 = other.val1;
+            val = other.val;
         }
     }
 
 private:
-    float val1;
+    float val;
 };
 
 #ifdef __ICC
@@ -239,7 +239,7 @@ std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<float, 1>& vec)
 {
-    __os << "[" << vec.val1 << "]";
+    __os << "[" << vec.val << "]";
     return __os;
 }
 
