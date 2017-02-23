@@ -57,13 +57,13 @@ public:
     inline
     short_vec(const float data = 0) :
         val{_mm_set1_ps(data),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data)),
-            _mm_set1_ps(data))}
+            _mm_set1_ps(data),
+            _mm_set1_ps(data),
+            _mm_set1_ps(data),
+            _mm_set1_ps(data),
+            _mm_set1_ps(data),
+            _mm_set1_ps(data),
+            _mm_set1_ps(data)}
     {}
 
     inline

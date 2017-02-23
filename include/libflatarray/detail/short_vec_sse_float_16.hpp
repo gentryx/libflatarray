@@ -477,10 +477,7 @@ public:
     }
 
 private:
-    __m128 val[ 0];
-    __m128 val[ 1];
-    __m128 val[ 2];
-    __m128 val[ 3];
+    __m128 val[4];
 };
 
 inline
