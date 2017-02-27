@@ -88,7 +88,7 @@ function(lfa_add_config_option name help_message default add_to_header)
 endfunction(lfa_add_config_option)
 
 if(MSVC)
-  set(SUPPORTS_CPP14)
+  set(SUPPORTS_CPP14 true)
 else()
   check_cxx_compiler_flag("-std=c++14" SUPPORTS_CPP14)
   if(NOT SUPPORTS_CPP14)
