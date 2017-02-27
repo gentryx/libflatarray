@@ -1,5 +1,5 @@
 /**
- * Copyright 2012-2015 Andreas Schäfer
+ * Copyright 2012-2017 Andreas Schäfer
  * Copyright 2015 Kurt Kanzenbach
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -30,6 +30,10 @@ public:
     {
         typedef aligned_allocator<OTHER, ALIGNMENT> other;
     };
+
+    template<typename OTHER, int OTHER_ALIGNMENT>
+    inline explicit aligned_allocator(const aligned_allocator<OTHER, OTHER_ALIGNMENT>& /* other */)
+    {}
 
     inline pointer address(reference x) const
     {
