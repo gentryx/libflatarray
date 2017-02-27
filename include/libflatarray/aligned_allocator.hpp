@@ -31,6 +31,9 @@ public:
         typedef aligned_allocator<OTHER, ALIGNMENT> other;
     };
 
+    inline aligned_allocator()
+    {}
+
     template<typename OTHER, int OTHER_ALIGNMENT>
     inline explicit aligned_allocator(const aligned_allocator<OTHER, OTHER_ALIGNMENT>& /* other */)
     {}
