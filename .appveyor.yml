@@ -5,6 +5,21 @@ shallow_clone: true
 matrix:
   fast_finish: true
 
+environment:
+  matrix:
+    - GENERATOR: "Visual Studio 12"
+      CONFIG: Debug
+
+    - GENERATOR: "Visual Studio 12"
+      CONFIG: Release
+
+    - GENERATOR: "Visual Studio 15"
+      CONFIG: Debug
+
+    - GENERATOR: "Visual Studio 15"
+      CONFIG: Release
+
 build_script:
   - cmake "-G%GENERATOR%" -H. -B_builds
-  - cmake --build _builds --config "%CONFIG%"
+  - cmake --build . --config "%CONFIG%"
+  - cmake --build . --config "%CONFIG%" --target tests
