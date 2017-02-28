@@ -23,17 +23,6 @@
 #  define LIBFLATARRAY_ELEM_III(ELEMENT, _) ELEMENT
 #endif
 
-// cat.hpp
-#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_OO((a, b))
-#    define BOOST_PP_CAT_OO(par) BOOST_PP_CAT_I ## par
-#
-# if _MSC_BUILD
-#    define BOOST_PP_CAT_I(a, b) a ## b
-# else
-#    define BOOST_PP_CAT_I(a, b) BOOST_PP_CAT_II(~, a ## b)
-#    define BOOST_PP_CAT_II(p, res) res
-# endif
-
 // elem.hpp
 # define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I(i, seq)
 #
