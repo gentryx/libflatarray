@@ -28,24 +28,98 @@
         LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
         MEMBER)
 
-# define BOAST_PP_EMPTY()
-#    define BOAST_PP_SEQ_ELEM(i, seq) BOAST_PP_SEQ_ELEM_I((i, seq))
-#    define BOAST_PP_SEQ_ELEM_I(i, seq) BOAST_PP_SEQ_ELEM_II((BOAST_PP_SEQ_ELEM_ ## i seq))
-#    define BOAST_PP_SEQ_ELEM_II(res) BOAST_PP_SEQ_ELEM_IV(BOAST_PP_SEQ_ELEM_III res)
-#    define BOAST_PP_SEQ_ELEM_III(x, _) x BOAST_PP_EMPTY()
-#    define BOAST_PP_SEQ_ELEM_IV(x) x
-# define BOAST_PP_SEQ_ELEM_0(x) x, BOAST_PP_NIL
-# define BOAST_PP_SEQ_ELEM_1(_) BOAST_PP_SEQ_ELEM_0
-# define BOAST_PP_SEQ_ELEM_2(_) BOAST_PP_SEQ_ELEM_1
-# define BOAST_PP_SEQ_ELEM_3(_) BOAST_PP_SEQ_ELEM_2
-# define BOAST_PP_SEQ_ELEM_4(_) BOAST_PP_SEQ_ELEM_3
-# define BOAST_PP_SEQ_ELEM_5(_) BOAST_PP_SEQ_ELEM_4
-# define BOAST_PP_SEQ_ELEM_6(_) BOAST_PP_SEQ_ELEM_5
-# define BOAST_PP_SEQ_ELEM_7(_) BOAST_PP_SEQ_ELEM_6
-# define BOAST_PP_SEQ_ELEM_8(_) BOAST_PP_SEQ_ELEM_7
-# define BOAST_PP_SEQ_ELEM_9(_) BOAST_PP_SEQ_ELEM_8
+#define BOOST_PP_CONFIG_FLAGS
 
+# define BOOST_PP_EMPTY()
 
+# define BOOST_PP_CONFIG_STRICT() 0x0001
+# define BOOST_PP_CONFIG_IDEAL() 0x0002
+#
+# define BOOST_PP_CONFIG_MSVC() 0x0004
+# define BOOST_PP_CONFIG_MWCC() 0x0008
+# define BOOST_PP_CONFIG_BCC() 0x0010
+# define BOOST_PP_CONFIG_EDG() 0x0020
+# define BOOST_PP_CONFIG_DMC() 0x0040
+#
+# ifndef BOOST_PP_CONFIG_FLAGS
+#    if defined(__GCCXML__)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
+#    elif defined(__WAVE__)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
+#    elif defined(__MWERKS__) && __MWERKS__ >= 0x3200
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
+#    elif defined(__EDG__) || defined(__EDG_VERSION__)
+#        if defined(_MSC_VER) && (defined(__INTELLISENSE__) || __EDG_VERSION__ >= 308)
+#            define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MSVC())
+#        else
+#            define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_EDG() | BOOST_PP_CONFIG_STRICT())
+#        endif
+#    elif defined(__MWERKS__)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MWCC())
+#    elif defined(__DMC__)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_DMC())
+#    elif defined(__BORLANDC__) && __BORLANDC__ >= 0x581
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
+#    elif defined(__BORLANDC__) || defined(__IBMC__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_BCC())
+#    elif defined(_MSC_VER) && !defined(__clang__)
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MSVC())
+#    else
+#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
+#    endif
+# endif
+
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
+#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_I(a, b)
+# else
+#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_OO((a, b))
+#    define BOOST_PP_CAT_OO(par) BOOST_PP_CAT_I ## par
+# endif
+#
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_CAT_I(a, b) a ## b
+# else
+#    define BOOST_PP_CAT_I(a, b) BOOST_PP_CAT_II(~, a ## b)
+#    define BOOST_PP_CAT_II(p, res) res
+# endif
+
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
+#    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I(i, seq)
+# else
+#    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I((i, seq))
+# endif
+#
+# if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((BOOST_PP_SEQ_ELEM_ ## i seq))
+#    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
+#    define BOOST_PP_SEQ_ELEM_III(x, _) x BOOST_PP_EMPTY()
+#    define BOOST_PP_SEQ_ELEM_IV(x) x
+# elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
+#    define BOOST_PP_SEQ_ELEM_I(par) BOOST_PP_SEQ_ELEM_II ## par
+#    define BOOST_PP_SEQ_ELEM_II(i, seq) BOOST_PP_SEQ_ELEM_III(BOOST_PP_SEQ_ELEM_ ## i ## seq)
+#    define BOOST_PP_SEQ_ELEM_III(im) BOOST_PP_SEQ_ELEM_IV(im)
+#    define BOOST_PP_SEQ_ELEM_IV(x, _) x
+# else
+#    if defined(__IBMC__) || defined(__IBMCPP__)
+#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(BOOST_PP_CAT(BOOST_PP_SEQ_ELEM_ ## i, seq))
+#    else
+#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(BOOST_PP_SEQ_ELEM_ ## i seq)
+#    endif
+#    define BOOST_PP_SEQ_ELEM_II(im) BOOST_PP_SEQ_ELEM_III(im)
+#    define BOOST_PP_SEQ_ELEM_III(x, _) x
+# endif
+#
+# define BOOST_PP_SEQ_ELEM_0(x) x, BOOST_PP_NIL
+# define BOOST_PP_SEQ_ELEM_1(_) BOOST_PP_SEQ_ELEM_0
+# define BOOST_PP_SEQ_ELEM_2(_) BOOST_PP_SEQ_ELEM_1
+# define BOOST_PP_SEQ_ELEM_3(_) BOOST_PP_SEQ_ELEM_2
+# define BOOST_PP_SEQ_ELEM_4(_) BOOST_PP_SEQ_ELEM_3
+# define BOOST_PP_SEQ_ELEM_5(_) BOOST_PP_SEQ_ELEM_4
+# define BOOST_PP_SEQ_ELEM_6(_) BOOST_PP_SEQ_ELEM_5
+# define BOOST_PP_SEQ_ELEM_7(_) BOOST_PP_SEQ_ELEM_6
+# define BOOST_PP_SEQ_ELEM_8(_) BOOST_PP_SEQ_ELEM_7
+# define BOOST_PP_SEQ_ELEM_9(_) BOOST_PP_SEQ_ELEM_8
+# define BOOST_PP_SEQ_ELEM_10(_) BOOST_PP_SEQ_ELEM_9
 
 
 
@@ -59,7 +133,7 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            BOAST_PP_SEQ_ELEM_III(BOAST_PP_SEQ_ELEM_IV( BOAST_PP_SEQ_ELEM_0 (100)(200) ) ) \
+            BOOST_PP_SEQ_ELEM(1, (100)(200)(300))                             \
             ;                                                          \
     };                                                                  \
     }                                                                   \
