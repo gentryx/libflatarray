@@ -29,6 +29,12 @@
         MEMBER)
 
 
+#ifdef __clang__
+#pragma message andi1
+#endif
+#ifdef _MSC_VER
+#pragma message andi2
+#endif
 
 # define BOOST_PP_EMPTY()
 #    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I((i, seq))
