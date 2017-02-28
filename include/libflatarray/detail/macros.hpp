@@ -59,11 +59,13 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            BOAST_PP_SEQ_ELEM_III( 100, BOST_PP_NIL (200) )             \
+            BOAST_PP_SEQ_ELEM_III(BOAST_PP_SEQ_ELEM_0 (100)(200) ) \
             ;                                                          \
     };                                                                  \
     }                                                                   \
     }
+
+            // BOAST_PP_SEQ_ELEM_III( 100, BOST_PP_NIL (200) )             \
 
 
             // sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                      \
