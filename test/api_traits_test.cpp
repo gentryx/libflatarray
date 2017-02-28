@@ -10,6 +10,7 @@
 #include <libflatarray/api_traits.hpp>
 #include <libflatarray/soa_grid.hpp>
 #include <libflatarray/macros.hpp>
+#include <libflatarray/preprocessor.hpp>
 
 #include "test.hpp"
 
