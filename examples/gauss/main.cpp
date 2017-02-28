@@ -218,7 +218,7 @@ public:
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static) firstprivate(accessor_old, accessor_new)
 #endif
-        for (std::size_t z = 2; z < (dim_z - 2); ++z) {
+        for (unsigned z = 2; z < (dim_z - 2); ++z) {
             for (std::size_t y = 2; y < (dim_y - 2); ++y) {
                 std::size_t x = 0;
                 std::size_t end_x = dim_x - 0;
