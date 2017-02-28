@@ -29,7 +29,9 @@
         MEMBER)
 
 #define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
-    namespace detail {                                                  \
+
+/*
+    namespace detail {                                                      \
     namespace flat_array {                                              \
     template<>                                                          \
     class offset<CELL_TYPE, r + 1>                                      \
@@ -75,6 +77,7 @@
     };                                                                  \
     }                                                                   \
     }
+*/
 
 #define LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST, INDEX_VAR) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, , template<int ARRAY_INDEX >) \
