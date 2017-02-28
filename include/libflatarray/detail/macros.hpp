@@ -28,22 +28,22 @@
         LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
         MEMBER)
 
-# define BOOST_PP_EMPTY()
-#    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I((i, seq))
-#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((BOOST_PP_SEQ_ELEM_ ## i seq))
-#    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
-#    define BOOST_PP_SEQ_ELEM_III(x, _) x BOOST_PP_EMPTY()
-#    define BOOST_PP_SEQ_ELEM_IV(x) x
-# define BOOST_PP_SEQ_ELEM_0(x) x, BOOST_PP_NIL
-# define BOOST_PP_SEQ_ELEM_1(_) BOOST_PP_SEQ_ELEM_0
-# define BOOST_PP_SEQ_ELEM_2(_) BOOST_PP_SEQ_ELEM_1
-# define BOOST_PP_SEQ_ELEM_3(_) BOOST_PP_SEQ_ELEM_2
-# define BOOST_PP_SEQ_ELEM_4(_) BOOST_PP_SEQ_ELEM_3
-# define BOOST_PP_SEQ_ELEM_5(_) BOOST_PP_SEQ_ELEM_4
-# define BOOST_PP_SEQ_ELEM_6(_) BOOST_PP_SEQ_ELEM_5
-# define BOOST_PP_SEQ_ELEM_7(_) BOOST_PP_SEQ_ELEM_6
-# define BOOST_PP_SEQ_ELEM_8(_) BOOST_PP_SEQ_ELEM_7
-# define BOOST_PP_SEQ_ELEM_9(_) BOOST_PP_SEQ_ELEM_8
+# define BOAST_PP_EMPTY()
+#    define BOAST_PP_SEQ_ELEM(i, seq) BOAST_PP_SEQ_ELEM_I((i, seq))
+#    define BOAST_PP_SEQ_ELEM_I(i, seq) BOAST_PP_SEQ_ELEM_II((BOAST_PP_SEQ_ELEM_ ## i seq))
+#    define BOAST_PP_SEQ_ELEM_II(res) BOAST_PP_SEQ_ELEM_IV(BOAST_PP_SEQ_ELEM_III res)
+#    define BOAST_PP_SEQ_ELEM_III(x, _) x BOAST_PP_EMPTY()
+#    define BOAST_PP_SEQ_ELEM_IV(x) x
+# define BOAST_PP_SEQ_ELEM_0(x) x, BOAST_PP_NIL
+# define BOAST_PP_SEQ_ELEM_1(_) BOAST_PP_SEQ_ELEM_0
+# define BOAST_PP_SEQ_ELEM_2(_) BOAST_PP_SEQ_ELEM_1
+# define BOAST_PP_SEQ_ELEM_3(_) BOAST_PP_SEQ_ELEM_2
+# define BOAST_PP_SEQ_ELEM_4(_) BOAST_PP_SEQ_ELEM_3
+# define BOAST_PP_SEQ_ELEM_5(_) BOAST_PP_SEQ_ELEM_4
+# define BOAST_PP_SEQ_ELEM_6(_) BOAST_PP_SEQ_ELEM_5
+# define BOAST_PP_SEQ_ELEM_7(_) BOAST_PP_SEQ_ELEM_6
+# define BOAST_PP_SEQ_ELEM_8(_) BOAST_PP_SEQ_ELEM_7
+# define BOAST_PP_SEQ_ELEM_9(_) BOAST_PP_SEQ_ELEM_8
 
 
 
@@ -59,7 +59,7 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            BOOST_PP_SEQ_ELEM(1, (a)(b)(c)) +                           \
+            BOAST_PP_SEQ_ELEM(1, (a)(b)(c)) +                           \
             1;                                                          \
     };                                                                  \
     }                                                                   \
