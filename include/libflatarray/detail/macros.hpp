@@ -61,6 +61,8 @@
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
             1;                                                          \
     };                                                                  \
+    __pragma(message ( andi BOOST_PP_SEQ_ELEM(1, (a)(b)(c))                 \
+             )                                 )                         \
     }                                                                   \
     }
 
