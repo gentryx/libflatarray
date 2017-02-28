@@ -248,7 +248,7 @@ add_custom_target(check echo "Tests passed.")
 add_custom_target(tests echo "All tests have been built.")
 
 add_subdirectory(test)
-add_subdirectory(examples)
+# add_subdirectory(examples)
 
 if(GLOBAL_PACKAGE_NAME)
   set(PACKAGE_NAME ${GLOBAL_PACKAGE_NAME})
