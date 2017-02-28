@@ -152,7 +152,8 @@ public:
     __host__ __device__
     void load(const soa_accessor<value_type, OTHER_SIZE, 1, 1, 0>& accessor, std::size_t num, std::size_t offset)
     {
-        std::size_t new_elements = std::max(elements, num + offset);
+        using std::max;
+        std::size_t new_elements = max(elements, num + offset);
         if (new_elements > SIZE) {
             throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
         }

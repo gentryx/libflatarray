@@ -987,7 +987,7 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 1D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = dim_x;                                        \
+        std::size_t maxDim = dim_x;                                     \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_1D,                               \
@@ -1011,7 +1011,8 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 1D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = std::max(dim_x, dim_z);                       \
+        using std::max;                                                 \
+        std::size_t maxDim = max(dim_x, dim_z);                         \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_1D,                               \
@@ -1035,7 +1036,8 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 2D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = std::max(dim_x, dim_y);                       \
+        using std::max;                                                 \
+        std::size_t maxDim = max(dim_x, dim_y);                         \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
@@ -1056,7 +1058,8 @@
         if (dim_z != 1) {                                               \
             throw std::out_of_range("expected 2D grid, but z != 1");    \
         }                                                               \
-        std::size_t max = std::max(dim_x, dim_y);                       \
+        using std::max;                                                 \
+        std::size_t maxDim = max(dim_x, dim_y);                         \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_2D,                               \
@@ -1077,7 +1080,8 @@
         const std::size_t dim_y = 1,                                    \
         const std::size_t dim_z = 1)                                    \
     {                                                                   \
-        std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
+        using std::max;                                                 \
+        std::size_t maxDim = max(dim_x, max(dim_y, dim_z));             \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_3D,                               \
@@ -1095,7 +1099,8 @@
         const std::size_t dim_y = 1,                                    \
         const std::size_t dim_z = 1)                                    \
     {                                                                   \
-        std::size_t max = std::max(dim_x, std::max(dim_y, dim_z));      \
+        using std::max;                                                 \
+        std::size_t maxDim = max(dim_x, max(dim_y, dim_z));             \
                                                                         \
         LIBFLATARRAY_FOR_EACH(                                          \
             LIBFLATARRAY_CASE_DIM_MAX_3D,                               \

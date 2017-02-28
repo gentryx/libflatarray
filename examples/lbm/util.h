@@ -88,8 +88,10 @@ protected:
         int blockWidth = 1;
         for (; blockWidth <= dim; blockWidth *= 2) {
         }
+
+        using std::min;
         blockWidth /= 2;
-        blockWidth = std::min(256, blockWidth);
+        blockWidth = min(256, blockWidth);
         *dimBlock = dim3(blockWidth, 2, 1);
         *dimGrid = dim3(dim / dimBlock->x, dim / dimBlock->y, 1);
     }

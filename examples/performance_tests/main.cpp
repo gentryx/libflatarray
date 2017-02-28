@@ -71,7 +71,8 @@ public:
         int dim_y = dim[1];
         int dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
-        maxT = std::max(16, maxT);
+        using std::max;
+        maxT = max(16, maxT);
 
         int offsetZ = dim_x * dim_y;
         int gridVolume = dim_x * dim_y * dim_z;
@@ -142,7 +143,8 @@ public:
         int dim_y = dim[1];
         int dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
-        maxT = std::max(16, maxT);
+        using std::max;
+        maxT = max(16, maxT);
 
         int offsetZ = dim_x * dim_y;
         int gridVolume = dim_x * dim_y * dim_z;
@@ -371,7 +373,8 @@ public:
         long dim_y = dim[1];
         long dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
-        maxT = std::max(16, maxT);
+        using std::max;
+        maxT = max(16, maxT);
 
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
@@ -591,7 +594,8 @@ public:
         long dim_y = dim[1];
         long dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
-        maxT = std::max(16, maxT);
+        using std::max;
+        maxT = max(16, maxT);
 
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
@@ -738,7 +742,8 @@ public:
         long dim_y = dim[1];
         long dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
-        maxT = std::max(16, maxT);
+        using std::max;
+        maxT = max(16, maxT);
 
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
