@@ -38,13 +38,16 @@
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
             sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                      \
-            LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
-                MEMBER,                                                 \
-                1,                                                      \
-                LIBFLATARRAY_ARRAY_ARITY(MEMBER));                      \
+            1;                                                          \
     };                                                                  \
     }                                                                   \
     }
+
+
+            // LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
+            //     MEMBER,                                                 \
+            //     1,                                                      \
+            //     LIBFLATARRAY_ARRAY_ARITY(MEMBER));                      \
 
 /*
                                                                       \
