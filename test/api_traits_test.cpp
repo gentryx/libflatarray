@@ -669,7 +669,7 @@ LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double
 #define ANDIM1(x) LIBFLATARRAY_DEREF_ ## x
 // #define ANDI1(x) BOOST_PP_SEQ_SIZE((double)(memberA))
 #define ANDI2(x) ANDI3(x)
-#define ANDI3(x) ANDI4(x) ## GINKO
+#define ANDI3(x) ANDI4(x)
 #define ANDI4(x) #x
 #pragma message( "andi42")
 #pragma message( ANDI2(ANDI1(SEQ)) )
