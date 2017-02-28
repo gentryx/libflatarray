@@ -31,15 +31,9 @@
 # define BOOST_PP_EMPTY()
 
 # define BOOST_PP_CONFIG_STRICT() 0x0001
-# define BOOST_PP_CONFIG_IDEAL() 0x0002
 #
 # define BOOST_PP_CONFIG_MSVC() 0x0004
-# define BOOST_PP_CONFIG_MWCC() 0x0008
-# define BOOST_PP_CONFIG_BCC() 0x0010
-# define BOOST_PP_CONFIG_EDG() 0x0020
-# define BOOST_PP_CONFIG_DMC() 0x0040
 #
-# ifndef BOOST_PP_CONFIG_FLAGS
 #    if defined(__GCCXML__)
 #        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
 #    elif defined(__WAVE__)
@@ -52,20 +46,11 @@
 #        else
 #            define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_EDG() | BOOST_PP_CONFIG_STRICT())
 #        endif
-#    elif defined(__MWERKS__)
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MWCC())
-#    elif defined(__DMC__)
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_DMC())
-#    elif defined(__BORLANDC__) && __BORLANDC__ >= 0x581
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
-#    elif defined(__BORLANDC__) || defined(__IBMC__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_BCC())
 #    elif defined(_MSC_VER) && !defined(__clang__)
 #        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MSVC())
 #    else
 #        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
 #    endif
-# endif
 
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
 #    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_I(a, b)
@@ -88,21 +73,12 @@
 # endif
 #
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
-#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((BOOST_PP_SEQ_ELEM_ ## i seq))
+#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((LIBFLATARRAY_ELEM_ ## i seq))
 #    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
 #    define BOOST_PP_SEQ_ELEM_III(x, _) x BOOST_PP_EMPTY()
 #    define BOOST_PP_SEQ_ELEM_IV(x) x
-# elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_SEQ_ELEM_I(par) BOOST_PP_SEQ_ELEM_II ## par
-#    define BOOST_PP_SEQ_ELEM_II(i, seq) BOOST_PP_SEQ_ELEM_III(BOOST_PP_SEQ_ELEM_ ## i ## seq)
-#    define BOOST_PP_SEQ_ELEM_III(im) BOOST_PP_SEQ_ELEM_IV(im)
-#    define BOOST_PP_SEQ_ELEM_IV(x, _) x
 # else
-#    if defined(__IBMC__) || defined(__IBMCPP__)
-#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(BOOST_PP_CAT(BOOST_PP_SEQ_ELEM_ ## i, seq))
-#    else
-#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(BOOST_PP_SEQ_ELEM_ ## i seq)
-#    endif
+#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(LIBFLATARRAY_ELEM_ ## i seq)
 #    define BOOST_PP_SEQ_ELEM_II(im) BOOST_PP_SEQ_ELEM_III(im)
 #    define BOOST_PP_SEQ_ELEM_III(x, _) x
 # endif
