@@ -60,10 +60,8 @@
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
                                                                         \
-    }
-
-/*
-
+    }                                                                   \
+                                                                        \
     template<>                                                          \
     class number_of_members<CELL_TYPE>                                  \
     {                                                                   \
@@ -858,8 +856,6 @@
     {                                                                   \
         soa >> cell;                                                    \
     }
-
-*/
 
 #define LIBFLATARRAY_CUSTOM_SIZES(X_SIZES, Y_SIZES, Z_SIZES)            \
     typedef void has_sizes;                                             \
