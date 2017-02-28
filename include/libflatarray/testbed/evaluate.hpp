@@ -12,6 +12,7 @@
 #include <ctime>
 #include <iomanip>
 #ifdef _WIN32
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
@@ -38,11 +39,44 @@ public:
             return;
         }
 
+#ifdef _WIN32
+        // this charade is based on https://msdn.microsoft.com/en-us/library/windows/desktop/ms724928(v=vs.85).aspx
+        FILETIME fileTime;
+        GetSystemTimeAsFileTime(&fileTime);
+
+        ULARGE_INTEGER systemTime;
+        systemTime.LowPart = fileTime.dwLowDateTime;
+        systemTime.HighPart = fileTime.dwHighDateTime;
+
+        SYSTEMTIME epoch;
+        epoch.wYear = 1970;
+        epoch.wMonth = 1;
+        epoch.wDayOfWeek = 4;
+        epoch.wDay = 1;
+        epoch.wHour = 0;
+        epoch.wMinute = 0;
+        epoch.wSecond = 1;
+        epoch.wMillisecond = 0;
+        FILETIME epochFileTime;
+        SystemTimeToFileTime(&epoch, &epochFileTime);
+
+        ULARGE_INTEGER epochULargeInteger;
+        epochULargeInteger.LowPart = epochFileTime.dwLowDateTime;
+        epochULargeInteger.HighPart = epochFileTime.dwHighDateTime;
+
+        time_t secondsSinceEpoch = systemTime.QuadPart - epochULargeInteger.QuadPart;
+#else
         timeval t;
         gettimeofday(&t, 0);
         time_t secondsSinceEpoch = t.tv_sec;
+#endif
+
         tm timeSpec;
+#ifdef _WIN32
+        gmtime_s(&timeSpec, &secondsSinceEpoch);
+#else
         gmtime_r(&secondsSinceEpoch, &timeSpec);
+#endif
         char buf[1024];
         strftime(buf, 1024, "%Y-%b-%d %H:%M:%S", &timeSpec);
 
