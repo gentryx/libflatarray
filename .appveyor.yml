@@ -7,12 +7,6 @@ matrix:
 
 environment:
   matrix:
-    - GENERATOR: "Visual Studio 12"
-      CONFIG: Debug
-
-    - GENERATOR: "Visual Studio 12"
-      CONFIG: Release
-
     - GENERATOR: "Visual Studio 15"
       CONFIG: Debug
 
