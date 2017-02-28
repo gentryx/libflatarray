@@ -23,6 +23,7 @@
 #include <libflatarray/loop_peeler.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/member_ptr_to_offset.hpp>
+#include <libflatarray/preprocessor.hpp>
 #include <libflatarray/number_of_members.hpp>
 #include <libflatarray/short_vec.hpp>
 #include <libflatarray/streaming_short_vec.hpp>
