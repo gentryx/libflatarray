@@ -61,7 +61,7 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            sizeof(BOOST_PP_SEQ_ELEM(0, MEMBER)) *                      \
+            sizeof(BOOST_PP_SEQ_ELEM(1, MEMBER)) *                      \
             1;                                                          \
     };                                                                  \
     }                                                                   \
