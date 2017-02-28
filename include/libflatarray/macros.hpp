@@ -55,15 +55,15 @@
 #define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
     namespace LibFlatArray {                                            \
                                                                         \
-    }
-
-
-/*
     LIBFLATARRAY_FOR_EACH(                                              \
         LIBFLATARRAY_DEFINE_FIELD_OFFSET,                               \
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
                                                                         \
+    }
+
+/*
+
     template<>                                                          \
     class number_of_members<CELL_TYPE>                                  \
     {                                                                   \

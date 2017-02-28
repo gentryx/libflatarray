@@ -15,9 +15,6 @@ environment:
 
 os: Visual Studio 2015
 
-before_build:
-    - cmd: dir "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin"
-
 build_script:
   - cmake "-G%GENERATOR%" -H. -B_builds
   - cmake --build _builds --config "%CONFIG%"
