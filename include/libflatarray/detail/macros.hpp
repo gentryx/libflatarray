@@ -28,14 +28,6 @@
         LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
         MEMBER)
 
-
-#ifdef __clang__
-#pragma message andi1
-#endif
-#ifdef _MSC_VER
-#pragma message andi2
-#endif
-
 # define BOOST_PP_EMPTY()
 #    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I((i, seq))
 #    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((BOOST_PP_SEQ_ELEM_ ## i seq))
@@ -67,7 +59,7 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            sizeof(BOOST_PP_SEQ_ELEM(2, MEMBER)) *                      \
+            BOOST_PP_SEQ_ELEM(1, (a)(b)(c))                             \
             1;                                                          \
     };                                                                  \
     }                                                                   \
