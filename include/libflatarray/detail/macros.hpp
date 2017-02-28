@@ -59,10 +59,9 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
+            BOOST_PP_SEQ_ELEM(1, (a)(b)(c)) +                           \
             1;                                                          \
     };                                                                  \
-    __pragma(message ( andi BOOST_PP_SEQ_ELEM(1, (a)(b)(c))                 \
-             )                                 )                         \
     }                                                                   \
     }
 
