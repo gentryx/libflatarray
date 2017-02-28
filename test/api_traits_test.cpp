@@ -667,13 +667,12 @@ LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double
 #define ANDI1(x) ANDI_CAT( LIBFLATARRAY_SIZE_0 SEQ )
 #define ANDI0(x) ANDIM1(x)
 #define ANDIM1(x) LIBFLATARRAY_DEREF_ ## x
-#define ANDIM2(x) ANDIM1( ANDI_CAT( ANDI2(ANDI1(x)) ) )
 // #define ANDI1(x) BOOST_PP_SEQ_SIZE((double)(memberA))
 #define ANDI2(x) ANDI3(x)
 #define ANDI3(x) ANDI4(x)
 #define ANDI4(x) #x
 #pragma message( "andi42")
-#pragma message( ANDIM2(SEQ) )
+#pragma message( ANDI2(ANDI1(SEQ)) )
 #pragma message( "andi4711")
 
 /*LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
