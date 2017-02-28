@@ -46,10 +46,10 @@ ADD_TEST(test_usage_with_std_vector)
 
     vec.resize(80);
     for (int i = 0; i < 80; ++i) {
-        vec[i] = 4711 + i;
+        vec[std::size_t(i)] = 4711 + i;
     }
     for (int i = 0; i < 80; ++i) {
-        BOOST_TEST((4711 + i) == vec[i]);
+        BOOST_TEST((4711 + i) == vec[std::size_t(i)]);
     }
 
     vec.resize(0);
@@ -57,7 +57,7 @@ ADD_TEST(test_usage_with_std_vector)
         vec.push_back(23 + i);
     }
     for (int i = 0; i < 90; ++i) {
-        BOOST_TEST((23 + i) == vec[i]);
+        BOOST_TEST((23 + i) == vec[std::size_t(i)]);
     }
 
     vec.resize(0);
@@ -66,12 +66,12 @@ ADD_TEST(test_usage_with_std_vector)
         vec.push_back(69 + i);
     }
     for (int i = 0; i < 95; ++i) {
-        BOOST_TEST((69 + i) == vec[i]);
+        BOOST_TEST((69 + i) == vec[std::size_t(i)]);
     }
 
 }
 
-int main(int argc, char **argv)
+int main(int /* argc */, char** /* argv */)
 {
     return 0;
 }
