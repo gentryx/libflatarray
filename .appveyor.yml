@@ -7,10 +7,10 @@ matrix:
 
 environment:
   matrix:
-    - GENERATOR: "Visual Studio 13"
+    - GENERATOR: "Visual Studio 15"
       CONFIG: Debug
 
-    - GENERATOR: "Visual Studio 13"
+    - GENERATOR: "Visual Studio 15"
       CONFIG: Release
 
 build_script:
