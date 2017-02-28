@@ -16,8 +16,7 @@ environment:
 os: Visual Studio 2015
 
 before_build:
-    - cmd: dir "C:\Program Files (x86)\"
-    - cmd: dir "C:\Program Files (x86)\Microsoft Visual Studio 14.0\"
+    - cmd: dir "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"
     - cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
 
 build_script:
