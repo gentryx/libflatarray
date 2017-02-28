@@ -116,10 +116,10 @@ public:
 LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double)(memberB))((double)(memberC)))
 
 
-#define ANDI1 LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(((double)(memberA))))
+#define ANDI1(x) LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(((double)(memberA))))
 #define ANDI2(x) #x
 #pragma message( "andi42")
-#pragma message( ANDI2(ANDI1) )
+#pragma message( ANDI2(ANDI1(x)) )
 #pragma message( "andi4711")
 
 /*LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
