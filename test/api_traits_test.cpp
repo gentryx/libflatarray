@@ -722,7 +722,7 @@ ADD_TEST(TestSelectSizesCustomUniform)
     expected.clear();
 }
 
-int main(int argc, char **argv)
+int main(int /* argc*/, char** /* argv */)
 {
     return 0;
 }

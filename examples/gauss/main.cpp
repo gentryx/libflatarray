@@ -1,10 +1,14 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
+#ifdef _MSC_BUILD
+#  define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <iostream>
 #include <sstream>
@@ -218,13 +222,13 @@ public:
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static) firstprivate(accessor_old, accessor_new)
 #endif
-        for (unsigned z = 2; z < (dim_z - 2); ++z) {
+        for (int z = 2; z < int(dim_z - 2); ++z) {
             for (std::size_t y = 2; y < (dim_y - 2); ++y) {
                 std::size_t x = 0;
                 std::size_t end_x = dim_x - 0;
 
                 LIBFLATARRAY_LOOP_PEELER_TEMPLATE(
-                    my_short_vec, std::size_t, x, end_x, filter, y, z, accessor_old, accessor_new,
+                    my_short_vec, std::size_t, x, end_x, filter, y, std::size_t(z), accessor_old, accessor_new,
                     weights[2][2], weights[2][1], weights[2][0], weights[1][1], weights[1][0], weights[0][0]);
             }
         }

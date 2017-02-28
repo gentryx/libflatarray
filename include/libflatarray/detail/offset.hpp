@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -26,7 +26,7 @@ public:
     static const long OFFSET = 0;
 
     template<typename MEMBER_TYPE>
-    int operator()(MEMBER_TYPE CELL:: *member_ptr)
+    int operator()(MEMBER_TYPE CELL::* /* member_ptr */)
     {
         throw std::invalid_argument("member was not registered with LibFlatArray");
     }

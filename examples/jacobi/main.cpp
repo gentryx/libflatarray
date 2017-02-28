@@ -173,12 +173,21 @@ public:
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static) firstprivate(accessor_old, accessor_new)
 #endif
-        for (std::size_t z = 1; z < (dim_z - 1); ++z) {
+        for (int z = 1; z < int(dim_z - 1); ++z) {
             for (std::size_t y = 1; y < (dim_y - 1); ++y) {
                 std::size_t x = 1;
                 std::size_t end_x = dim_x - 1;
 
-                LIBFLATARRAY_LOOP_PEELER_TEMPLATE(my_short_vec, std::size_t, x, end_x, update, y, z, accessor_old, accessor_new);
+                LIBFLATARRAY_LOOP_PEELER_TEMPLATE(
+                    my_short_vec,
+                    std::size_t,
+                    x,
+                    end_x,
+                    update,
+                    y,
+                    std::size_t(z),
+                    accessor_old,
+                    accessor_new);
             }
         }
     }

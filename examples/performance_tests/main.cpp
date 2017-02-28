@@ -75,7 +75,7 @@ public:
         maxT = max(16, maxT);
 
         int offsetZ = dim_x * dim_y;
-        int gridVolume = dim_x * dim_y * dim_z;
+        std::size_t gridVolume = std::size_t(dim_x * dim_y * dim_z);
         std::vector<double> compressedGrid(2 * gridVolume);
         double *gridOld = &compressedGrid[0];
         double *gridNew = &compressedGrid[gridVolume];
