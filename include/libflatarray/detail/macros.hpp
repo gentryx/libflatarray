@@ -40,12 +40,7 @@
                 MEMBER,                                                 \
                 1,                                                      \
                 LIBFLATARRAY_ARRAY_ARITY(MEMBER));                      \
-    };                                                                  \
-    }                                                                   \
-    }
-
-/*
-                                                \
+                                                                        \
         template<typename MEMBER_TYPE>                                  \
         inline                                                          \
         int operator()(MEMBER_TYPE CELL_TYPE:: *member_ptr)             \
@@ -78,8 +73,6 @@
     };                                                                  \
     }                                                                   \
     }
-*/
-
 
 #define LIBFLATARRAY_DECLARE_SOA_MEMBER(MEMBER_INDEX, CELL, MEMBER, CONST, INDEX_VAR) \
     LIBFLATARRAY_ARRAY_CONDITIONAL(MEMBER, , template<int ARRAY_INDEX >) \
