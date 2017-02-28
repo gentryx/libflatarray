@@ -661,7 +661,7 @@ LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double
 # define BOOST_PP_SEQ_SIZE_BOOST_PP_SEQ_SIZE_257 257
 
 
-#define ANDI1(x) BOOST_PP_SEQ_SIZE(LIBFLATARRAY_DEQUEUE((double)(memberA)))
+#define ANDI1(x) BOOST_PP_SEQ_SIZE((double)(memberA))
 #define ANDI2(x) ANDI3(x)
 #define ANDI3(x) ANDI4(x)
 #define ANDI4(x) #x
