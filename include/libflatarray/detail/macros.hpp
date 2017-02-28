@@ -28,8 +28,6 @@
         LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
         MEMBER)
 
-#define BOOST_PP_CONFIG_FLAGS
-
 # define BOOST_PP_EMPTY()
 
 # define BOOST_PP_CONFIG_STRICT() 0x0001
