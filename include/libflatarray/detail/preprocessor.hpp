@@ -67,17 +67,8 @@
 #    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
 #    define BOOST_PP_SEQ_ELEM_III(x, _) x BOOST_PP_EMPTY()
 #    define BOOST_PP_SEQ_ELEM_IV(x) x
-# elif BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_SEQ_ELEM_I(par) BOOST_PP_SEQ_ELEM_II ## par
-#    define BOOST_PP_SEQ_ELEM_II(i, seq) BOOST_PP_SEQ_ELEM_III(LIBFLATARRAY_ELEM_ ## i ## seq)
-#    define BOOST_PP_SEQ_ELEM_III(im) BOOST_PP_SEQ_ELEM_IV(im)
-#    define BOOST_PP_SEQ_ELEM_IV(x, _) x
 # else
-#    if defined(__IBMC__) || defined(__IBMCPP__)
-#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(BOOST_PP_CAT(LIBFLATARRAY_ELEM_ ## i, seq))
-#    else
-#        define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(LIBFLATARRAY_ELEM_ ## i seq)
-#    endif
+#    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II(LIBFLATARRAY_ELEM_ ## i seq)
 #    define BOOST_PP_SEQ_ELEM_II(im) BOOST_PP_SEQ_ELEM_III(im)
 #    define BOOST_PP_SEQ_ELEM_III(x, _) x
 # endif
