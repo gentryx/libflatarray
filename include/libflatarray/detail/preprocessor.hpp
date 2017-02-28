@@ -25,30 +25,11 @@
 
 # define BOOST_PP_EMPTY()
 
-// config.hpp
-# define BOOST_PP_CONFIG_STRICT() 0x0001
-# define BOOST_PP_CONFIG_IDEAL() 0x0002
-#
-# define BOOST_PP_CONFIG_MSVC() 0x0004
-# define BOOST_PP_CONFIG_MWCC() 0x0008
-# define BOOST_PP_CONFIG_BCC() 0x0010
-# define BOOST_PP_CONFIG_EDG() 0x0020
-# define BOOST_PP_CONFIG_DMC() 0x0040
-#
-# ifndef BOOST_PP_CONFIG_FLAGS
-#    if defined(_MSC_VER) && !defined(__clang__)
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_MSVC())
-#    else
-#        define BOOST_PP_CONFIG_FLAGS() (BOOST_PP_CONFIG_STRICT())
-#    endif
-# endif
-
-
 // cat.hpp
 #    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_OO((a, b))
 #    define BOOST_PP_CAT_OO(par) BOOST_PP_CAT_I ## par
 #
-# if BOOST_PP_CONFIG_MSVC()
+# if _MSC_BUILD
 #    define BOOST_PP_CAT_I(a, b) a ## b
 # else
 #    define BOOST_PP_CAT_I(a, b) BOOST_PP_CAT_II(~, a ## b)
