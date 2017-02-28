@@ -663,17 +663,9 @@ LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double
 
 #define SEQ (a)(b)(c)
 
-#define LAST_A(x) LAST_B
-#define LAST_B(x) LAST_C
-#define LAST_C(x) LAST_D
-#define LAST_D(x) LAST_E
-#define LAST_E(x) LAST_F
-#define LAST_F(x) LAST_G
-#define LAST_G(x) LAST_H
-
 #define ANDI_CAT(x) x
-// #define ANDI1(x) ANDI_CAT( LIBFLATARRAY_SIZE_0 SEQ )
-#define ANDI1(x) LAST_A SEQ
+#define ANDI1(x) LIBFLATARRAY_ELEM(3, x (1))
+// #define ANDI1(x) LAST_A SEQ
 #define ANDI0(x) ANDIM1(x)
 #define ANDIM1(x) LIBFLATARRAY_DEREF_ ## x
 // #define ANDI1(x) BOOST_PP_SEQ_SIZE((double)(memberA))
