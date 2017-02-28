@@ -60,8 +60,6 @@
         CELL_TYPE,                                                      \
         CELL_MEMBERS)                                                   \
                                                                         \
-    }                                                                   \
-                                                                        \
     template<>                                                          \
     class number_of_members<CELL_TYPE>                                  \
     {                                                                   \
