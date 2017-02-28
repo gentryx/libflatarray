@@ -114,9 +114,7 @@ public:
 };
 
 LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double)(memberB))((double)(memberC)))
-
-
-/*LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
+LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellDefault1DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
@@ -133,8 +131,8 @@ public:
     {}
 
     template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& /* accessor *///)
-    /*   {
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& /* accessor */)
+    {
         report->push_back(DIM_X);
         report->push_back(DIM_Y);
         report->push_back(DIM_Z);
@@ -724,7 +722,7 @@ ADD_TEST(TestSelectSizesCustomUniform)
     actual.clear();
     expected.clear();
 }
-*/
+
 int main(int /* argc*/, char** /* argv */)
 {
     return 0;
