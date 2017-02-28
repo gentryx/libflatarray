@@ -58,7 +58,7 @@
 // elem.hpp
 # define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I(i, seq)
 #
-# if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+# ifdef _MSC_BUILD
 #    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((LIBFLATARRAY_ELEM_ ## i seq))
 #    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
 #    define BOOST_PP_SEQ_ELEM_III(x, _) x BOOST_PP_EMPTY()
