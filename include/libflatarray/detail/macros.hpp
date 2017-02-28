@@ -24,9 +24,7 @@
     LIBFLATARRAY_IF_SHORTER(MEMBER, 3, A, B)
 
 #define LIBFLATARRAY_ARRAY_ARITY(MEMBER)                                \
-    LIBFLATARRAY_ELEM(                                                  \
-        1,                \
-        MEMBER)
+    LIBFLATARRAY_ELEM(2, MEMBER (1) )
 
 #define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
     namespace detail {                                                  \
