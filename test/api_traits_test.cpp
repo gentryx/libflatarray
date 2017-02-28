@@ -672,7 +672,7 @@ LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double
 #define ANDI3(x) ANDI4(x)
 #define ANDI4(x) #x
 #pragma message( "andi42")
-#pragma message( ANDI_CAT( ANDI2(ANDI1(x)) ) )
+#pragma message( ANDIM1( ANDI_CAT( ANDI2(ANDI1(x)) ) ) )
 #pragma message( "andi4711")
 
 /*LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
