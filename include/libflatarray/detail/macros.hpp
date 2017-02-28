@@ -28,8 +28,6 @@
         LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
         MEMBER)
 
-
-
 #define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
     namespace detail {                                                  \
     namespace flat_array {                                              \
@@ -39,7 +37,6 @@
     public:                                                             \
         static const std::size_t OFFSET =                               \
             offset<CELL_TYPE, r + 0>::OFFSET +                          \
-            sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                      \
             sizeof(LIBFLATARRAY_ELEM(0, MEMBER)) *                      \
             LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
                 MEMBER,                                                 \
