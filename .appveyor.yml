@@ -19,3 +19,4 @@ build_script:
   - cmake "-G%GENERATOR%" -H. -B_builds
   - cmake --build _builds --config "%CONFIG%"
   - cmake --build _builds --config "%CONFIG%" --target tests
+  - cmake --build _builds --config "%CONFIG%" --target check
