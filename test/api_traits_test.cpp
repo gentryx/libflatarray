@@ -114,6 +114,12 @@ public:
 };
 
 LIBFLATARRAY_REGISTER_SOA(CellDefaultSizes,          ((double)(memberA))((double)(memberB))((double)(memberC)))
+
+
+#define ANDI1 LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(((double)(memberA))))
+#define ANDI2(x) #x
+#pragma message( ANDI2(ANDI1) )
+
 /*LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizesUniform, ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellDefault1DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
