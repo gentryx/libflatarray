@@ -65,13 +65,6 @@
 
 
 // cat.hpp
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_I(a, b)
-# else
-#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_OO((a, b))
-#    define BOOST_PP_CAT_OO(par) BOOST_PP_CAT_I ## par
-# endif
-#
 # if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #    define BOOST_PP_CAT_I(a, b) a ## b
 # else
@@ -80,12 +73,6 @@
 # endif
 
 // elem.hpp
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
-#    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I(i, seq)
-# else
-#    define BOOST_PP_SEQ_ELEM(i, seq) BOOST_PP_SEQ_ELEM_I((i, seq))
-# endif
-#
 # if BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
 #    define BOOST_PP_SEQ_ELEM_I(i, seq) BOOST_PP_SEQ_ELEM_II((LIBFLATARRAY_ELEM_ ## i seq))
 #    define BOOST_PP_SEQ_ELEM_II(res) BOOST_PP_SEQ_ELEM_IV(BOOST_PP_SEQ_ELEM_III res)
