@@ -131,7 +131,7 @@ public:
     {}
 
     template<typename CELL, long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& /* accessor */)
+    void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& /* accessor *///)
     /*   {
         report->push_back(DIM_X);
         report->push_back(DIM_Y);
