@@ -5,7 +5,7 @@ shallow_clone: true
 matrix:
   fast_finish: true
 
-image: Visual Studio 2015
+os: Visual Studio 2015
 
 environment:
   matrix:
