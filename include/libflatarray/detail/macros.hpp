@@ -25,7 +25,7 @@
 
 #define LIBFLATARRAY_ARRAY_ARITY(MEMBER)                                \
     LIBFLATARRAY_ELEM(                                                  \
-        LIBFLATARRAY_SIZE(LIBFLATARRAY_DEQUEUE(MEMBER)),                \
+        1,                \
         MEMBER)
 
 #define LIBFLATARRAY_DEFINE_FIELD_OFFSET(r, CELL_TYPE, MEMBER)          \
