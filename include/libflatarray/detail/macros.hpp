@@ -41,7 +41,7 @@
             LIBFLATARRAY_ARRAY_CONDITIONAL(                             \
                 MEMBER,                                                 \
                 1,                                                      \
-                4711);                      \
+                LIBFLATARRAY_ARRAY_ARITY(MEMBER));                      \
     };                                                                  \
     }                                                                   \
     }
