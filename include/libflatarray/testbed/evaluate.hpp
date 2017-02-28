@@ -56,7 +56,7 @@ public:
         epoch.wHour = 0;
         epoch.wMinute = 0;
         epoch.wSecond = 1;
-        epoch.wMillisecond = 0;
+        epoch.wMilliseconds = 0;
         FILETIME epochFileTime;
         SystemTimeToFileTime(&epoch, &epochFileTime);
 
