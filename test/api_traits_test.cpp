@@ -122,7 +122,7 @@ LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes,        ((double)(memberA))((double
 LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,           ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform,    ((double)(memberA))((double)(memberB))((double)(memberC)))
 
-/*class TestFunctor
+class TestFunctor
 {
 public:
     explicit TestFunctor(std::vector<long> *report) :
@@ -721,7 +721,7 @@ ADD_TEST(TestSelectSizesCustomUniform)
     actual.clear();
     expected.clear();
 }
-*/
+
 int main(int argc, char **argv)
 {
     return 0;
