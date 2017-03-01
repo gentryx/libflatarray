@@ -855,7 +855,6 @@
         soa >> cell;                                                    \
     }
 
-
 #define LIBFLATARRAY_CUSTOM_SIZES(X_SIZES, Y_SIZES, Z_SIZES)            \
     typedef void has_sizes;                                             \
                                                                         \
