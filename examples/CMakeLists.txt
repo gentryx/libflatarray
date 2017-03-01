@@ -1,6 +1,6 @@
 find_package(OpenMP)
 
-if(MSVC)
+if(NOT MSVC)
   add_subdirectory(jacobi)
   add_subdirectory(gauss)
 endif()
