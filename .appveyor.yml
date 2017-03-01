@@ -19,6 +19,5 @@ build_script:
   - cmake "-G%GENERATOR%" -H. -B_builds
   - cmake --build _builds --config "%CONFIG%"
   - cmake --build _builds --config "%CONFIG%" --target tests
-  - dir
-  - dir _builds\test
-  - _builds\test\Debug\api_traits_test.exe
+
+#  - _builds\test\Debug\api_traits_test.exe
