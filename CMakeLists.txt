@@ -141,6 +141,12 @@ if(NOT MSVC)
   endif()
 endif()
 
+if(WIN32)
+  set(libflatarray_LIBS "ws2_32")
+else()
+  set(libflatarray_LIBS "")
+endif()
+
 set(libflatarray_FLAGS "${libflatarray_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
 
 get_directory_property(lfa_has_parent PARENT_DIRECTORY)
@@ -196,12 +202,14 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake"
   "
 set(libflatarray_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}\" \"${CMAKE_CURRENT_LIST_DIR}/include\")
 set(libflatarray_FLAGS \"${libflatarray_FLAGS}\")
+set(libflatarray_LIBS \"${libflatarray_LIBS}\")
 ")
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}/${PACKAGE_NAME}Config.cmake"
   "
 set(libflatarray_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../../include\")
 set(libflatarray_FLAGS \"${libflatarray_FLAGS}\")
+set(libflatarray_LIBS \"${libflatarray_LIBS}\")
 ")
 
 set(ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME})

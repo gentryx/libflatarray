@@ -1,4 +1,5 @@
 add_executable(jacobi main.cpp update_c99.c)
+target_link_libraries(jacobi ${libflatarray_LIBS})
 
 if(OPENMP_FOUND)
   if(CMAKE_VERSION VERSION_GREATER 2.8.11)
