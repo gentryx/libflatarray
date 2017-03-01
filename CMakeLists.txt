@@ -152,6 +152,7 @@ set(libflatarray_FLAGS "${libflatarray_FLAGS} ${LFA_ADDITIONAL_COMPILE_FLAGS}")
 get_directory_property(lfa_has_parent PARENT_DIRECTORY)
 if(lfa_has_parent)
   set(libflatarray_FLAGS "${libflatarray_FLAGS}" PARENT_SCOPE)
+  set(libflatarray_LIBS "${libflatarray_LIBS}" PARENT_SCOPE)
 endif()
 
 # We need to back up previously set compiler flags so we can restore
