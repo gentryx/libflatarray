@@ -7,6 +7,13 @@
 
 #include <libflatarray/preprocessor.hpp>
 
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
 // Don't warn about these functions being stripped from an executable
 // as they're not being used, that's actually expected behavior.
 #ifdef _MSC_BUILD
@@ -67,13 +74,13 @@ ADD_TEST(TestForEach)
 
 ADD_TEST(TestDequeue)
 {
-    BOOST_TEST(LIBFLATARRAY_SIZE(LIST_D) == 4);
+    BOOST_TEST(int(LIBFLATARRAY_SIZE(LIST_D)) == 4);
     BOOST_TEST(LIBFLATARRAY_ELEM(0, LIST_D) == 20);
     BOOST_TEST(LIBFLATARRAY_ELEM(1, LIST_D) == 30);
     BOOST_TEST(LIBFLATARRAY_ELEM(2, LIST_D) == 40);
     BOOST_TEST(LIBFLATARRAY_ELEM(3, LIST_D) == 50);
 
-    BOOST_TEST(LIBFLATARRAY_SIZE(LIST_E) == 0);
+    BOOST_TEST(int(LIBFLATARRAY_SIZE(LIST_E)) == 0);
 }
 
 ADD_TEST(TestIfShorter)
