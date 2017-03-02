@@ -45,6 +45,9 @@
     template<typename CELL_TYPE, long R>                                \
     friend class LibFlatArray::detail::flat_array::offset;
 
+
+
+#ifdef _MSC_BUILD
 /**
  * This macros registers a type with LibFlatArray so that it can be
  * used with soa_grid, soa_array and friends. It will instantiate all
@@ -52,7 +55,27 @@
  * adds utilities so that user code can also discover properties of
  * the SoA layout.
  */
-#define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)              \
+#  define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)    \
+    __pragma( warning( push ) )                                 \
+    __pragma( warning( disable : 4514 ) )                       \
+    LIBFLATARRAY_REGISTER_SOA_MAIN(CELL_TYPE, CELL_MEMBERS)     \
+    __pragma( warning( pop ) )                                  \
+
+#else
+
+/**
+ * This macros registers a type with LibFlatArray so that it can be
+ * used with soa_grid, soa_array and friends. It will instantiate all
+ * templates required for the "Struct of Arrays" (SoA) storage and
+ * adds utilities so that user code can also discover properties of
+ * the SoA layout.
+ */
+#  define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)    \
+    LIBFLATARRAY_REGISTER_SOA_MAIN(CELL_TYPE, CELL_MEMBERS)     \
+
+#endif
+
+#define LIBFLATARRAY_REGISTER_SOA_MAIN(CELL_TYPE, CELL_MEMBERS)         \
     namespace LibFlatArray {                                            \
                                                                         \
     LIBFLATARRAY_FOR_EACH(                                              \
