@@ -7,12 +7,18 @@
 
 #include <libflatarray/aligned_allocator.hpp>
 
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
 #pragma warning( push )
 #pragma warning( disable : 4514 )
-#pragma warning( disable : 4710 )
 #endif
 
 #include <vector>
