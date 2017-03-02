@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -7,6 +7,13 @@
 
 #ifndef FLAT_ARRAY_DETAIL_SIMPLE_STREAK_HPP
 #define FLAT_ARRAY_DETAIL_SIMPLE_STREAK_HPP
+
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
 
 namespace LibFlatArray {
 
@@ -38,5 +45,9 @@ namespace flat_array {
 }
 
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #endif

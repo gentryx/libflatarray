@@ -5,6 +5,13 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
@@ -133,7 +140,6 @@ LIBFLATARRAY_REGISTER_SOA(CellDefault2DSizes,        ((double)(memberA))((double
 LIBFLATARRAY_REGISTER_SOA(CellDefault3DSizes,        ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellCustomSizes,           ((double)(memberA))((double)(memberB))((double)(memberC)))
 LIBFLATARRAY_REGISTER_SOA(CellCustomSizesUniform,    ((double)(memberA))((double)(memberB))((double)(memberC)))
-
 
 class TestFunctor
 {
