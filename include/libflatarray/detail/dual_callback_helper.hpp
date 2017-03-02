@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -92,6 +92,12 @@ template<typename GRID_TYPE, typename FUNCTOR>
 class const_dual_callback_helper_symmetric
 {
 public:
+
+#ifdef LIBFLATARRAY_WITH_CPP14
+    inline const_dual_callback_helper_symmetric(const const_dual_callback_helper_symmetric& other) = default;
+    inline const_dual_callback_helper_symmetric(const_dual_callback_helper_symmetric&& other) = default;
+#endif
+
     const_dual_callback_helper_symmetric(GRID_TYPE *other_grid, const FUNCTOR& functor) :
         other_grid(other_grid),
         functor(functor)

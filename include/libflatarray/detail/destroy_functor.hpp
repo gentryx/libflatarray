@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ public:
     {
         for (std::size_t z = 0; z < dim_z; ++z) {
             for (std::size_t y = 0; y < dim_y; ++y) {
-                accessor.index() = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(0, y, z);
+                accessor.index() = long(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(0, y, z));
 
                 for (std::size_t x = 0; x < dim_x; ++x) {
                     accessor.destroy_members();

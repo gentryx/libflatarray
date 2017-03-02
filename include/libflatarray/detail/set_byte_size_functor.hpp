@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,7 +36,7 @@ public:
     {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
-    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
+    void operator()(const soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& /* accessor */) const
     {
         *byte_size = aggregated_member_size<CELL>::VALUE * DIM_X * DIM_Y * DIM_Z;
         *extent_x = DIM_X;

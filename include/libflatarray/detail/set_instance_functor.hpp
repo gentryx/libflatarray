@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ public:
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
-        accessor.index() = soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(x, y, z);
+        accessor.index() = long(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>::gen_index(x, y, z));
         const CELL *cursor = source;
 
         for (std::size_t i = 0; i < count; ++i) {

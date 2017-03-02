@@ -170,7 +170,7 @@ public:
             throw std::out_of_range("insufficient capacity for assignment (other soa_array too large)");
         }
 
-        at(offset).load(accessor.data(), num, accessor.index(), OTHER_SIZE);
+        at(offset).load(accessor.data(), num, std::size_t(accessor.index()), std::size_t(OTHER_SIZE));
         elements = new_elements;
     }
 

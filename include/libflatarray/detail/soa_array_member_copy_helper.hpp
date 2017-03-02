@@ -63,11 +63,11 @@ public:
             __device__
             inline
             void operator()(
-                const MEMBER *source,
-                MEMBER *data,
-                const std::size_t count,
-                const std::size_t offset,
-                const std::size_t stride)
+                MEMBER* /* target */,
+                const MEMBER* /* data */,
+                const std::size_t /* count */,
+                const std::size_t /* offset */,
+                const std::size_t /* stride */)
             {}
         };
 
@@ -101,11 +101,11 @@ public:
             __device__
             inline
             void operator()(
-                MEMBER *target,
-                const MEMBER *data,
-                const std::size_t count,
-                const std::size_t offset,
-                const std::size_t stride)
+                MEMBER* /* target */,
+                const MEMBER* /* data */,
+                const std::size_t /* count */,
+                const std::size_t /* offset */,
+                const std::size_t /* stride */)
             {}
         };
     };
@@ -192,7 +192,7 @@ public:
                         __host__
                         __device__
                         inline
-                        void operator()(const CELL& cell, MEMBER *data)
+                        void operator()(const CELL& /* cell */, MEMBER* /* data */)
                         {}
                     };
 
@@ -217,7 +217,7 @@ public:
                         __host__
                         __device__
                         inline
-                        void operator()(CELL& cell, const MEMBER *data)
+                        void operator()(CELL& /* cell */, const MEMBER* /* data */)
                         {}
                     };
                 };
