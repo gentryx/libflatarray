@@ -9,7 +9,19 @@
 #ifndef FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_1_HPP
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_SCALAR_DOUBLE_1_HPP
 
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
 
