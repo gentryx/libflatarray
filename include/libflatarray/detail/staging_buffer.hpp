@@ -36,7 +36,7 @@ public:
         data_pointer = const_cast<CELL*>(new_data);
     }
 
-    void save(CELL *new_data) const
+    void save(CELL* /* new_data */) const
     {
         // intentionally left blank
     }
@@ -90,7 +90,7 @@ public:
         return delegate.data();
     }
 
-    void prep(CELL *new_data)
+    void prep(CELL* /* new_data */)
     {
         // intentionally left blank
     }

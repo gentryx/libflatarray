@@ -124,6 +124,17 @@
                                                                         \
         inline                                                          \
         __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const std::size_t x, const std::size_t y, const std::size_t z) \
+        {                                                               \
+            return                                                      \
+                static_cast<long>(z) * DIM_X * DIM_Y +                  \
+                static_cast<long>(y) * DIM_X +                          \
+                static_cast<long>(x);                                   \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
         soa_accessor(char *my_data, const long my_index) :              \
             my_data(my_data),                                           \
             my_index(my_index)                                          \
@@ -373,6 +384,17 @@
             return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
         }                                                               \
                                                                         \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const std::size_t x, const std::size_t y, const std::size_t z) \
+        {                                                               \
+            return                                                      \
+                static_cast<long>(z) * DIM_X * DIM_Y +                  \
+                static_cast<long>(y) * DIM_X +                          \
+                static_cast<long>(x);                                   \
+        }                                                               \
+                                                                        \
         __host__ __device__                                             \
         const_soa_accessor(const char *my_data, long my_index) :        \
             my_data(my_data),                                           \
@@ -506,6 +528,17 @@
         long gen_index(const long x, const long y, const long z)        \
         {                                                               \
             return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const std::size_t x, const std::size_t y, const std::size_t z) \
+        {                                                               \
+            return                                                      \
+                static_cast<long>(z) * DIM_X * DIM_Y +                  \
+                static_cast<long>(y) * DIM_X +                          \
+                static_cast<long>(x);                                   \
         }                                                               \
                                                                         \
         inline                                                          \
@@ -746,6 +779,17 @@
         long gen_index(const long x, const long y, const long z)        \
         {                                                               \
             return z * DIM_X * DIM_Y + y * DIM_X + x;                   \
+        }                                                               \
+                                                                        \
+        inline                                                          \
+        __host__ __device__                                             \
+        static                                                          \
+        long gen_index(const std::size_t x, const std::size_t y, const std::size_t z) \
+        {                                                               \
+            return                                                      \
+                static_cast<long>(z) * DIM_X * DIM_Y +                  \
+                static_cast<long>(y) * DIM_X +                          \
+                static_cast<long>(x);                                   \
         }                                                               \
                                                                         \
         inline                                                          \

@@ -145,7 +145,7 @@ public:
             throw std::out_of_range("capacity exceeded");
         }
 #endif
-        (*this)[elements] = cell;
+        (*this)[static_cast<std::ptrdiff_t>(elements)] = cell;
         ++elements;
 
         return *this;
