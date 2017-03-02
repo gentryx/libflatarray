@@ -45,12 +45,12 @@
             lfa_local_scalar;                                           \
                                                                         \
         COUNTER_TYPE remainder = (X) %                                  \
-            TYPENAME(lfa_local_short_vec::ARITY);                       \
+            COUNTER_TYPE(lfa_local_short_vec::ARITY);                   \
         COUNTER_TYPE next_stop = remainder ?                            \
-            (X) + TYPENAME(lfa_local_short_vec::ARITY) - remainder :    \
+            (X) + COUNTER_TYPE(lfa_local_short_vec::ARITY) - remainder : \
             (X);                                                        \
         COUNTER_TYPE last_stop = (END_X) -                              \
-            (END_X) % TYPENAME(lfa_local_short_vec::ARITY);             \
+            (END_X) % COUNTER_TYPE(lfa_local_short_vec::ARITY);         \
                                                                         \
         FUNCTION<lfa_local_scalar   >(X, next_stop, __VA_ARGS__);       \
         FUNCTION<lfa_local_short_vec>(X, last_stop, __VA_ARGS__);       \
