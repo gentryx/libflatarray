@@ -361,6 +361,12 @@ public:
                          accessor1.index() < indexEnd;
                          accessor1 += 1, accessor2 += 1) {
 
+// Don't warn about comma in array subscript because we're using it to
+// bind template parameters -- which is fine.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4709 )
+#endif
                         accessor2.temp() =
                             accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
                             accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
@@ -369,6 +375,10 @@ public:
                             accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
                             accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
                             accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
                     }
                 }
             }
@@ -482,6 +492,12 @@ public:
                     accessor1.index() = indexStart;
                     accessor2.index() = indexStart;
 
+// Don't warn about comma in array subscript because we're using it to
+// bind template parameters -- which is fine.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4709 )
+#endif
                     accessor2.temp() =
                         accessor1[coord< 0,  0, -1>()].temp() * WEIGHT_S +
                         accessor1[coord< 0, -1,  0>()].temp() * WEIGHT_T +
@@ -490,6 +506,10 @@ public:
                         accessor1[coord< 1,  0,  0>()].temp() * WEIGHT_E +
                         accessor1[coord< 0,  1,  0>()].temp() * WEIGHT_B +
                         accessor1[coord< 0,  0,  1>()].temp() * WEIGHT_N;
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
                     accessor1.index() += 1;
                     accessor2.index() += 1;

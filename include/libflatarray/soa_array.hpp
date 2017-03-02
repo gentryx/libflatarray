@@ -131,9 +131,23 @@ public:
 
     inline
     __host__ __device__
+    soa_accessor<value_type, SIZE, 1, 1, 0> at(const std::size_t index)
+    {
+        return (*this)[static_cast<std::ptrdiff_t>(index)];
+    }
+
+    inline
+    __host__ __device__
     const_soa_accessor<value_type, SIZE, 1, 1, 0> at(const int index) const
     {
         return (*this)[index];
+    }
+
+    inline
+    __host__ __device__
+    const_soa_accessor<value_type, SIZE, 1, 1, 0> at(const std::size_t index) const
+    {
+        return (*this)[static_cast<std::ptrdiff_t>(index)];
     }
 
     inline

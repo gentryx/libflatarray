@@ -68,7 +68,7 @@ class estimate_optimum_short_vec_type
 public:
     static const std::size_t ARITY = ilp_to_arity<CARGO, UNROLL_FACTOR>::ARITY;
 
-    static const int STREAMING_FLAG =
+    static const long STREAMING_FLAG =
         ACCESSOR::DIM_PROD * sizeof(typename ACCESSOR::element_type) / LAST_LEVEL_CACHE_SIZE_ESTIMATE;
 
     typedef typename detail::flat_array::streaming_short_vec_switch<CARGO, ARITY, STREAMING_FLAG>::VALUE VALUE;
