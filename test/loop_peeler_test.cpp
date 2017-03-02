@@ -83,13 +83,13 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
         });
 
     for (int i = 0; i < 5; ++i) {
-        BOOST_TEST(0 == foo[i]);
+        BOOST_TEST_EQ(0.0, foo[i]);
     }
     for (int i = 5; i < 43; ++i) {
-        BOOST_TEST(1 == foo[i]);
+        BOOST_TEST_EQ(1.0, foo[i]);
     }
     for (int i = 43; i < 64; ++i) {
-        BOOST_TEST(0 == foo[i]);
+        BOOST_TEST_EQ(0.0, foo[i]);
     }
 }
 
@@ -97,7 +97,7 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
 #endif
 #endif
 
-int main(int argc, char **argv)
+int main(int /* argc */, char** /* argv */)
 {
     return 0;
 }
