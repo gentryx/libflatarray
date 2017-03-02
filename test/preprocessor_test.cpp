@@ -24,6 +24,10 @@
 #include <iostream>
 #include <vector>
 
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 #include "test.hpp"
 
 #define LIST_A
