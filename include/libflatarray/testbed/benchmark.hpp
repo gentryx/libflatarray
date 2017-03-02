@@ -13,13 +13,14 @@
 #ifdef _MSC_BUILD
 #pragma warning( push )
 #pragma warning( disable : 4514 )
+#pragma warning( disable : 4668 )
 #pragma warning( disable : 4820 )
 #endif
 
 #include <vector>
 
 #ifdef _WIN32
-#include <Windows.h>
+#include <windows.h>
 #else
 #include <sys/time.h>
 #endif

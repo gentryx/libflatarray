@@ -41,7 +41,7 @@ ADD_TEST(TestLoopPeelerFunctionality)
     typedef LibFlatArray::short_vec<double, 8> short_vec_type;
     LIBFLATARRAY_LOOP_PEELER(short_vec_type, int, x, 113, scaler, &foo[0], 2.5);
 
-    for (int i = 0; i < 123; ++i) {
+    for (std::size_t i = 0; i < 123; ++i) {
         double expected = 1000 + i;
         if ((i >= 3) && (i < 113)) {
             expected *= 2.5;
@@ -62,7 +62,7 @@ ADD_TEST(TestLoopPeelerInteroperabilityWithStreamingShortVecs)
     typedef LibFlatArray::streaming_short_vec<double, 8> short_vec_type;
     LIBFLATARRAY_LOOP_PEELER(short_vec_type, int, x, 1113, scaler, &foo[0], 2.5);
 
-    for (int i = 0; i < 1234; ++i) {
+    for (std::size_t i = 0; i < 1234; ++i) {
         double expected = 1000 + i;
         if ((i >= 13) && (i < 1113)) {
             expected *= 2.5;
@@ -78,8 +78,8 @@ ADD_TEST(TestLoopPeelerInteroperabilityWithStreamingShortVecs)
 
 ADD_TEST(TestCpp14StyleLoopPeeler)
 {
-    int i = 5;
-    int end = 43;
+    unsigned i = 5;
+    unsigned end = 43;
     std::vector<double, LibFlatArray::aligned_allocator<double, 64> > foo(64, 0);
 
 // Actually MSVC is wrong here to assume we're not referencing
@@ -90,7 +90,7 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
 #pragma warning( disable : 4100 )
 #endif
 
-    LibFlatArray::loop_peeler<LibFlatArray::short_vec<double, 8> >(&i, end, [&foo](auto my_float, int *i, int end) {
+    LibFlatArray::loop_peeler<LibFlatArray::short_vec<double, 8> >(&i, end, [&foo](auto my_float, unsigned *i, unsigned end) {
             typedef decltype(my_float) FLOAT;
             for (; *i < end; *i += FLOAT::ARITY) {
                 &foo[*i] << FLOAT(1.0);
