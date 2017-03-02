@@ -336,42 +336,42 @@ public:
 #pragma warning( pop )
 #endif
 
-// #include <libflatarray/detail/short_vec_avx512_double_8.hpp>
-// #include <libflatarray/detail/short_vec_avx512_double_16.hpp>
-// #include <libflatarray/detail/short_vec_avx512_double_32.hpp>
+#include <libflatarray/detail/short_vec_avx512_double_8.hpp>
+#include <libflatarray/detail/short_vec_avx512_double_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_double_32.hpp>
 
-// #include <libflatarray/detail/short_vec_avx512_float_16.hpp>
-// #include <libflatarray/detail/short_vec_avx512_float_32.hpp>
+#include <libflatarray/detail/short_vec_avx512_float_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_float_32.hpp>
 
-// #include <libflatarray/detail/short_vec_avx_double_4.hpp>
-// #include <libflatarray/detail/short_vec_avx_double_8.hpp>
-// #include <libflatarray/detail/short_vec_avx_double_16.hpp>
-// #include <libflatarray/detail/short_vec_avx_double_32.hpp>
+#include <libflatarray/detail/short_vec_avx_double_4.hpp>
+#include <libflatarray/detail/short_vec_avx_double_8.hpp>
+#include <libflatarray/detail/short_vec_avx_double_16.hpp>
+#include <libflatarray/detail/short_vec_avx_double_32.hpp>
 
-// #include <libflatarray/detail/short_vec_avx_float_8.hpp>
-// #include <libflatarray/detail/short_vec_avx_float_16.hpp>
-// #include <libflatarray/detail/short_vec_avx_float_32.hpp>
+#include <libflatarray/detail/short_vec_avx_float_8.hpp>
+#include <libflatarray/detail/short_vec_avx_float_16.hpp>
+#include <libflatarray/detail/short_vec_avx_float_32.hpp>
 
-// #include <libflatarray/detail/short_vec_scalar_double_1.hpp>
-// #include <libflatarray/detail/short_vec_scalar_double_2.hpp>
-// #include <libflatarray/detail/short_vec_scalar_double_4.hpp>
-// #include <libflatarray/detail/short_vec_scalar_double_8.hpp>
-// #include <libflatarray/detail/short_vec_scalar_double_16.hpp>
-// #include <libflatarray/detail/short_vec_scalar_double_32.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_1.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_16.hpp>
+#include <libflatarray/detail/short_vec_scalar_double_32.hpp>
 
-// #include <libflatarray/detail/short_vec_scalar_float_1.hpp>
-// #include <libflatarray/detail/short_vec_scalar_float_2.hpp>
-// #include <libflatarray/detail/short_vec_scalar_float_4.hpp>
-// #include <libflatarray/detail/short_vec_scalar_float_8.hpp>
-// #include <libflatarray/detail/short_vec_scalar_float_16.hpp>
-// #include <libflatarray/detail/short_vec_scalar_float_32.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_1.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_16.hpp>
+#include <libflatarray/detail/short_vec_scalar_float_32.hpp>
 
-// #include <libflatarray/detail/short_vec_scalar_int_1.hpp>
-// #include <libflatarray/detail/short_vec_scalar_int_2.hpp>
-// #include <libflatarray/detail/short_vec_scalar_int_4.hpp>
-// #include <libflatarray/detail/short_vec_scalar_int_8.hpp>
-// #include <libflatarray/detail/short_vec_scalar_int_16.hpp>
-// #include <libflatarray/detail/short_vec_scalar_int_32.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_1.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_2.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_4.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_8.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_16.hpp>
+#include <libflatarray/detail/short_vec_scalar_int_32.hpp>
 
 // #include <libflatarray/detail/short_vec_sse_int_4.hpp>
 // #include <libflatarray/detail/short_vec_sse_int_8.hpp>
