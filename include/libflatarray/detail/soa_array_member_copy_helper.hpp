@@ -63,8 +63,8 @@ public:
             __device__
             inline
             void operator()(
-                MEMBER* /* target */,
-                const MEMBER* /* data */,
+                const MEMBER* /* source */,
+                MEMBER* /* data */,
                 const std::size_t /* count */,
                 const std::size_t /* offset */,
                 const std::size_t /* stride */)

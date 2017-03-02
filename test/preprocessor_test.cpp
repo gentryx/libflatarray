@@ -1,12 +1,20 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <iostream>
 #include <libflatarray/preprocessor.hpp>
+
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
+#include <iostream>
 #include <vector>
 
 #include "test.hpp"
@@ -19,6 +27,13 @@
 #define LIST_E LIBFLATARRAY_DEQUEUE(LIST_C)
 
 #define LAMBDA(INDEX, STANDARD_ARG, ITERATOR) vec[ITERATOR] = (INDEX + STANDARD_ARG + ITERATOR);
+
+// Don't warn about the conditional expressions being constant, that's
+// intentional here:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4127 )
+#endif
 
 ADD_TEST(TestElem)
 {
@@ -110,7 +125,11 @@ ADD_TEST(TestIfShorter)
     BOOST_TEST(c4);
 }
 
-int main(int argc, char **argv)
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
+int main(int /* argc */, char** /* argv */)
 {
     return 0;
 }

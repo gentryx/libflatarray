@@ -10,6 +10,13 @@
 #include <libflatarray/testbed/cpu_benchmark.hpp>
 #include <libflatarray/testbed/evaluate.hpp>
 
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
@@ -387,8 +394,8 @@ public:
         using std::max;
         maxT = max(16, maxT);
 
-        soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
-        soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
+        soa_grid<JacobiCell> gridOld(std::size_t(dim_x), std::size_t(dim_y), std::size_t(dim_z));
+        soa_grid<JacobiCell> gridNew(std::size_t(dim_x), std::size_t(dim_y), std::size_t(dim_z));
 
         for (long z = 0; z < dim_z; ++z) {
             for (long y = 0; y < dim_y; ++y) {
