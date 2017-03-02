@@ -27,6 +27,13 @@ inline bool any(const streaming_short_vec<CARGO, ARITY>& vec)
     return vec.any();
 }
 
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 /**
  * Wraps functionality of short_vec, but replaces all stores by
  * streaming (i.e. non-temporal) stores. Downside: all store addresses
@@ -79,6 +86,10 @@ void operator<<(double *data, const streaming_short_vec<double, 8>& vec)
 {
     vec.store_nt(data);
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 }
 
