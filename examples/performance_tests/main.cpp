@@ -408,7 +408,11 @@ public:
 
         double tStart = time();
 
-        UpdateFunctor functor(long(dim_x), long(dim_y), long(dim_z));
+        UpdateFunctor functor(
+            static_cast<long>(dim_x),
+            static_cast<long>(dim_y),
+            static_cast<long>(dim_z));
+
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
             using std::swap;
