@@ -35,6 +35,13 @@ namespace LibFlatArray {
 template<typename CARGO, std::size_t ARITY>
 class short_vec;
 
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #ifdef __ICC
 // disabling this warning as implicit type conversion is exactly our goal here:
 #pragma warning push
@@ -446,6 +453,10 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 }
 
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #endif
 

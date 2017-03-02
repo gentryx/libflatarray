@@ -38,6 +38,13 @@ class short_vec;
 #pragma warning (disable: 2304)
 #endif
 
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 template<>
 class short_vec<float, 2> : public short_vec_base<float, 2>
 {
@@ -292,5 +299,9 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 }
 
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #endif
