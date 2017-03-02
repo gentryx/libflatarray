@@ -9,6 +9,14 @@
 #define FLAT_ARRAY_DETAIL_SHORT_VEC_HELPERS_HPP
 
 #include <libflatarray/config.h>
+
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cassert>
 
 // uintptr_t is only available through C++11
@@ -21,6 +29,10 @@
 
 #ifdef __SSE4_1__
 #include <smmintrin.h>
+#endif
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
 #endif
 
 /**

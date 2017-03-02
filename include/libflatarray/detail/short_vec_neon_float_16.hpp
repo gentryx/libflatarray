@@ -11,13 +11,24 @@
 
 #if LIBFLATARRAY_WIDEST_VECTOR_ISA == LIBFLATARRAY_ARM_NEON
 
-#include <arm_neon.h>
 #include <libflatarray/config.h>
 #include <libflatarray/detail/short_vec_helpers.hpp>
-#include <iostream>
+
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
+#include <arm_neon.h>
 
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
+#endif
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
 #endif
 
 namespace LibFlatArray {

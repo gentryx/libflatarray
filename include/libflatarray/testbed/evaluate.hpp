@@ -9,12 +9,24 @@
 #define FLAT_ARRAY_TESTBED_EVALUATE_HPP
 
 #include <libflatarray/testbed/benchmark.hpp>
+
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <ctime>
 #include <iomanip>
 #ifdef _WIN32
 #include <windows.h>
 #else
 #include <unistd.h>
+#endif
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
 #endif
 
 namespace LibFlatArray {

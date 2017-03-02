@@ -17,8 +17,19 @@
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
 
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #ifdef LIBFLATARRAY_WITH_CPP14
 #include <initializer_list>
+#endif
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
 #endif
 
 namespace LibFlatArray {
