@@ -44,12 +44,13 @@
             sibling_short_vec_switch<SHORT_VEC_TYPE, 1>::VALUE          \
             lfa_local_scalar;                                           \
                                                                         \
-        COUNTER_TYPE remainder = (X) % (lfa_local_short_vec::ARITY);    \
+        COUNTER_TYPE remainder = (X) %                                  \
+            TYPENAME(lfa_local_short_vec::ARITY);                       \
         COUNTER_TYPE next_stop = remainder ?                            \
-            (X) + (lfa_local_short_vec::ARITY) - remainder :            \
+            (X) + TYPENAME(lfa_local_short_vec::ARITY) - remainder :    \
             (X);                                                        \
         COUNTER_TYPE last_stop = (END_X) -                              \
-            (END_X) % (lfa_local_short_vec::ARITY);                     \
+            (END_X) % TYPENAME(lfa_local_short_vec::ARITY);             \
                                                                         \
         FUNCTION<lfa_local_scalar   >(X, next_stop, __VA_ARGS__);       \
         FUNCTION<lfa_local_short_vec>(X, last_stop, __VA_ARGS__);       \
