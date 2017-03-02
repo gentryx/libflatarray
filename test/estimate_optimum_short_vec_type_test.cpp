@@ -12,7 +12,7 @@
 #pragma warning( disable : 4710 )
 #endif
 
-// #include <libflatarray/estimate_optimum_short_vec_type.hpp>
+#include <libflatarray/estimate_optimum_short_vec_type.hpp>
 
 #include "test.hpp"
 
