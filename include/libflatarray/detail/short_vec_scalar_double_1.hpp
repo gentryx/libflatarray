@@ -18,16 +18,16 @@
 
 #include <cmath>
 
+#ifdef LIBFLATARRAY_WITH_CPP14
+#include <initializer_list>
+#endif
+
 #ifdef _MSC_BUILD
 #pragma warning( pop )
 #endif
 
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
-
-#ifdef LIBFLATARRAY_WITH_CPP14
-#include <initializer_list>
-#endif
 
 namespace LibFlatArray {
 
