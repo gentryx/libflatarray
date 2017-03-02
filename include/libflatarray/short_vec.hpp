@@ -373,28 +373,28 @@ public:
 #include <libflatarray/detail/short_vec_scalar_int_16.hpp>
 #include <libflatarray/detail/short_vec_scalar_int_32.hpp>
 
-// #include <libflatarray/detail/short_vec_sse_int_4.hpp>
-// #include <libflatarray/detail/short_vec_sse_int_8.hpp>
-// #include <libflatarray/detail/short_vec_sse_int_16.hpp>
-// #include <libflatarray/detail/short_vec_sse_int_32.hpp>
+#include <libflatarray/detail/short_vec_sse_int_4.hpp>
+#include <libflatarray/detail/short_vec_sse_int_8.hpp>
+#include <libflatarray/detail/short_vec_sse_int_16.hpp>
+#include <libflatarray/detail/short_vec_sse_int_32.hpp>
 
-// #include <libflatarray/detail/short_vec_avx_int_8.hpp>
-// #include <libflatarray/detail/short_vec_avx_int_16.hpp>
-// #include <libflatarray/detail/short_vec_avx_int_32.hpp>
+#include <libflatarray/detail/short_vec_avx_int_8.hpp>
+#include <libflatarray/detail/short_vec_avx_int_16.hpp>
+#include <libflatarray/detail/short_vec_avx_int_32.hpp>
 
-// #include <libflatarray/detail/short_vec_avx512_int_16.hpp>
-// #include <libflatarray/detail/short_vec_avx512_int_32.hpp>
+#include <libflatarray/detail/short_vec_avx512_int_16.hpp>
+#include <libflatarray/detail/short_vec_avx512_int_32.hpp>
 
-// #include <libflatarray/detail/short_vec_sse_double_2.hpp>
-// #include <libflatarray/detail/short_vec_sse_double_4.hpp>
-// #include <libflatarray/detail/short_vec_sse_double_8.hpp>
-// #include <libflatarray/detail/short_vec_sse_double_16.hpp>
-// #include <libflatarray/detail/short_vec_sse_double_32.hpp>
+#include <libflatarray/detail/short_vec_sse_double_2.hpp>
+#include <libflatarray/detail/short_vec_sse_double_4.hpp>
+#include <libflatarray/detail/short_vec_sse_double_8.hpp>
+#include <libflatarray/detail/short_vec_sse_double_16.hpp>
+#include <libflatarray/detail/short_vec_sse_double_32.hpp>
 
-// #include <libflatarray/detail/short_vec_sse_float_4.hpp>
-// #include <libflatarray/detail/short_vec_sse_float_8.hpp>
-// #include <libflatarray/detail/short_vec_sse_float_16.hpp>
-// #include <libflatarray/detail/short_vec_sse_float_32.hpp>
+#include <libflatarray/detail/short_vec_sse_float_4.hpp>
+#include <libflatarray/detail/short_vec_sse_float_8.hpp>
+#include <libflatarray/detail/short_vec_sse_float_16.hpp>
+#include <libflatarray/detail/short_vec_sse_float_32.hpp>
 
 // #include <libflatarray/detail/short_vec_qpx_double_4.hpp>
 // #include <libflatarray/detail/short_vec_qpx_double_8.hpp>
