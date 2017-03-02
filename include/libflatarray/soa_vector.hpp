@@ -144,7 +144,7 @@ public:
     {
         if (count == grid.extent_x()) {
             // fixme: make this configurable
-            reserve(count * 1.2);
+            reserve(static_cast<std::size_t>(count * 1.2));
         }
         set(count, element);
         ++count;

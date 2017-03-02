@@ -37,6 +37,19 @@ public:
         count(count)
     {}
 
+    get_instance_functor(
+        CELL *target,
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
+        std::size_t count) :
+        target(target),
+        x(static_cast<long>(x)),
+        y(static_cast<long>(y)),
+        z(static_cast<long>(z)),
+        count(static_cast<long>(count))
+    {}
+
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
@@ -97,8 +110,20 @@ public:
         y(y),
         z(z),
         count(count)
-    {
-    }
+    {}
+
+    get_instance_functor(
+        CELL *target,
+        std::size_t x,
+        std::size_t y,
+        std::size_t z,
+        std::size_t count) :
+        target(target),
+        x(static_cast<long>(x)),
+        y(static_cast<long>(y)),
+        z(static_cast<long>(z)),
+        count(static_cast<long>(count))
+    {}
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
