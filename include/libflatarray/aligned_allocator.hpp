@@ -9,7 +9,18 @@
 #ifndef FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 #define FLAT_ARRAY_ALIGNED_ALLOCATOR_HPP
 
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <memory>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 namespace LibFlatArray {
 

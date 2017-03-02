@@ -1,9 +1,27 @@
+/**
+ * Copyright 2014-2017 Andreas Schäfer
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #ifndef TEST_H
 #define TEST_H
+
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
 
 #include <cmath>
 #include <iostream>
 #include <sstream>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #ifndef BOOST_TEST
 // Microsoft Visual Studio doesn't define __PRETTY_FUNCTION__:
