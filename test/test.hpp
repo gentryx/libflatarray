@@ -13,6 +13,7 @@
 #ifdef _MSC_BUILD
 #pragma warning( push )
 #pragma warning( disable : 4514 )
+#pragma warning( disable : 4710 )
 #endif
 
 #include <cmath>
