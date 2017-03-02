@@ -1,9 +1,16 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
+
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
 
 #include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/loop_peeler.hpp>
@@ -40,7 +47,7 @@ ADD_TEST(TestLoopPeelerFunctionality)
             expected *= 2.5;
         }
 
-        BOOST_TEST(expected == foo[i]);
+        BOOST_TEST_EQ(expected, foo[i]);
     }
 }
 
@@ -61,7 +68,7 @@ ADD_TEST(TestLoopPeelerInteroperabilityWithStreamingShortVecs)
             expected *= 2.5;
         }
 
-        BOOST_TEST(expected == foo[i]);
+        BOOST_TEST_EQ(expected, foo[i]);
     }
 }
 
@@ -75,6 +82,14 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
     int end = 43;
     std::vector<double, LibFlatArray::aligned_allocator<double, 64> > foo(64, 0);
 
+// Actually MSVC is wrong here to assume we're not referencing
+// my_float in the following lamda. We're just not referencing its
+// value, just the type:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4100 )
+#endif
+
     LibFlatArray::loop_peeler<LibFlatArray::short_vec<double, 8> >(&i, end, [&foo](auto my_float, int *i, int end) {
             typedef decltype(my_float) FLOAT;
             for (; *i < end; *i += FLOAT::ARITY) {
@@ -82,14 +97,19 @@ ADD_TEST(TestCpp14StyleLoopPeeler)
             }
         });
 
-    for (int i = 0; i < 5; ++i) {
-        BOOST_TEST_EQ(0.0, foo[i]);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
+
+    for (std::size_t c = 0; c < 5; ++c) {
+        BOOST_TEST_EQ(0.0, foo[c]);
     }
-    for (int i = 5; i < 43; ++i) {
-        BOOST_TEST_EQ(1.0, foo[i]);
+    for (std::size_t c = 5; c < 43; ++c) {
+        BOOST_TEST_EQ(1.0, foo[c]);
     }
-    for (int i = 43; i < 64; ++i) {
-        BOOST_TEST_EQ(0.0, foo[i]);
+    for (std::size_t c = 43; c < 64; ++c) {
+        BOOST_TEST_EQ(0.0, foo[c]);
     }
 }
 
