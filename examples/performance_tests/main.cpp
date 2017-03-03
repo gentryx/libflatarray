@@ -404,8 +404,14 @@ public:
         using std::max;
         maxT = max(16, maxT);
 
-        soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
-        soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
+        soa_grid<JacobiCell> gridOld(
+            static_cast<std::size_t>(dim_x),
+            static_cast<std::size_t>(dim_y),
+            static_cast<std::size_t>(dim_z));
+        soa_grid<JacobiCell> gridNew(
+            static_cast<std::size_t>(dim_x),
+            static_cast<std::size_t>(dim_y),
+            static_cast<std::size_t>(dim_z));
 
         for (std::size_t z = 0; z < std::size_t(dim_z); ++z) {
             for (std::size_t y = 0; y < std::size_t(dim_y); ++y) {
