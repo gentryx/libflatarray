@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Andreas Schäfer
+ * Copyright 2014-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -397,19 +397,19 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        std::size_t dim_x = dim[0];
-        std::size_t dim_y = dim[1];
-        std::size_t dim_z = dim[2];
-        int maxT = 200000000 / dim_x / dim_y / dim_z;
+        long dim_x = dim[0];
+        long dim_y = dim[1];
+        long dim_z = dim[2];
+        int maxT = static_cast<int>(200000000 / dim_x / dim_y / dim_z);
         using std::max;
         maxT = max(16, maxT);
 
         soa_grid<JacobiCell> gridOld(dim_x, dim_y, dim_z);
         soa_grid<JacobiCell> gridNew(dim_x, dim_y, dim_z);
 
-        for (std::size_t z = 0; z < dim_z; ++z) {
-            for (std::size_t y = 0; y < dim_y; ++y) {
-                for (std::size_t x = 0; x < dim_x; ++x) {
+        for (std::size_t z = 0; z < std::size_t(dim_z); ++z) {
+            for (std::size_t y = 0; y < std::size_t(dim_y); ++y) {
+                for (std::size_t x = 0; x < std::size_t(dim_x); ++x) {
                     gridOld.set(x, y, z, JacobiCell(x + y + z));
                     gridNew.set(x, y, z, JacobiCell(x + y + z));
                 }
@@ -750,6 +750,12 @@ public:
             SHORT_VEC factorB = WEIGHT_B;
             SHORT_VEC factorN = WEIGHT_N;
 
+// Don't warn about comma in array subscript because we're using it to
+// bind template parameters -- which is fine.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4709 )
+#endif
             for (; x < end_x; x += SHORT_VEC::ARITY) {
                 using LibFlatArray::coord;
                 buf =  SHORT_VEC(&accessor_old[coord< 0,  0, -1>()].temp()) * factorS;
@@ -765,12 +771,15 @@ public:
                 accessor_old += SHORT_VEC::ARITY;
             }
 
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
         }
 
     private:
-        std::size_t dim_x;
-        std::size_t dim_y;
-        std::size_t dim_z;
+        long dim_x;
+        long dim_y;
+        long dim_z;
     };
 
     std::string species()
@@ -780,7 +789,6 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        long dim_x = dim[0];
         long dim_y = dim[1];
         long dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
@@ -801,7 +809,11 @@ public:
 
         double tStart = time();
 
-        UpdateFunctor functor(dim_x, dim_y, dim_z);
+        UpdateFunctor functor(
+            static_cast<long>(dim_x),
+            static_cast<long>(dim_y),
+            static_cast<long>(dim_z));
+
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
             using std::swap;

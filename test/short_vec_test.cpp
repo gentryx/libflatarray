@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2016 Andreas Schäfer
+ * Copyright 2013-2017 Andreas Schäfer
  * Copyright 2015 Di Xiao
  * Copyright 2015 Kurt Kanzenbach
  *
@@ -9,14 +9,33 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/aligned_allocator.hpp>
+#include <libflatarray/macros.hpp>
+#include <libflatarray/short_vec.hpp>
+
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <libflatarray/macros.hpp>
-#include <libflatarray/short_vec.hpp>
 #include <stdexcept>
 #include <vector>
 #include <cstring>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #include "test.hpp"
 
@@ -963,16 +982,17 @@ void testImplementationInt()
         }
         ShortVec v1 = 5;
         v1.store_aligned(&array[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
 
-        for (std::size_t i = 0; i < ARITY; ++i) {
-            expected[i] = i;
+        for (int i = 0; i < int(ARITY); ++i) {
+            expected[i] = static_cast<CARGO>(i);
         }
+
         ShortVec v2 = &expected[0];
         v2.store_aligned(&array[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -982,14 +1002,16 @@ void testImplementationInt()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (std::size_t i = 0; i < ARITY; ++i) {
-            array[i]    = i;
-            expected[i] = 0;
+        for (int i = 0; i < int(ARITY); ++i) {
+            array[i]    = static_cast<CARGO>(i);
+            expected[i] = static_cast<CARGO>(0);
         }
+
         ShortVec v1;
         v1.load_aligned(&array[0]);
         v1.store(&expected[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }

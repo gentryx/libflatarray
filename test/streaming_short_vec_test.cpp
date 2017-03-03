@@ -1,5 +1,5 @@
 /**
- * Copyright 2013-2016 Andreas Schäfer
+ * Copyright 2013-2017 Andreas Schäfer
  * Copyright 2015 Di Xiao
  * Copyright 2015 Kurt Kanzenbach
  *
@@ -9,14 +9,33 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/aligned_allocator.hpp>
+#include <libflatarray/macros.hpp>
+#include <libflatarray/streaming_short_vec.hpp>
+
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4710 )
+#endif
+
+// Don't warn about these functions being stripped from an executable
+// as they're not being used, that's actually expected behavior.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <libflatarray/macros.hpp>
-#include <libflatarray/streaming_short_vec.hpp>
 #include <stdexcept>
 #include <vector>
 #include <cstring>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #include "test.hpp"
 
