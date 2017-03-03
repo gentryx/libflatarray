@@ -125,7 +125,7 @@ inline std::size_t count_mask(const typename short_vec<T, ARITY>::mask_type& mas
     v.blend(mask, short_vec<T, ARITY>(T(1)));
     std::size_t sum = 0;
 
-    for (std::size_t i = 0; i < ARITY; ++i) {
+    for (int i = 0; i < static_cast<int>(ARITY); ++i) {
         sum += static_cast<std::size_t>(get(v, i));
     }
 

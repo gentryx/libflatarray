@@ -27,6 +27,12 @@
 
 namespace LibFlatArray {
 
+// padding is fine:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4820 )
+#endif
+
 /**
  * soa_array is a container with "Struct of Arrays"-style memory
  * layout, but "Array of Structs" (AoS) user interface. This allows
@@ -286,6 +292,11 @@ private:
         elements = other.size();
     }
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
 template<typename value_type, int size>
 void swap(soa_array<value_type, size>& a, soa_array<value_type, size>& b)

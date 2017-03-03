@@ -12,7 +12,7 @@
 // and LibFlatArray source.  Also disable overly eager sign conversion
 // and overflow warnings:
 #ifdef _MSC_BUILD
-#pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
+#pragma warning( disable : 4244 4305 4307 4365 4456 4514 4710 4800 )
 #endif
 
 // Don't warn about these functions being stripped from an executable
@@ -136,6 +136,12 @@ public:
 std::size_t DestructionCounterClass::countConstruct = 0;
 std::size_t DestructionCounterClass::countDestruct = 0;
 
+// padding is fine:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4820 )
+#endif
+
 class CellWithNonTrivialMembers
 {
 public:
@@ -145,6 +151,11 @@ public:
     MapType maps[4];
     DestructionCounterClass destructCounter;
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
 LIBFLATARRAY_REGISTER_SOA(
     CellWithNonTrivialMembers,
@@ -664,7 +675,7 @@ ADD_TEST(TestLoadFromSoAAccessor)
 
 }
 
-int main(int argc, char **argv)
+int main(int /* argc */, char** /* argv */)
 {
     return 0;
 }

@@ -43,7 +43,7 @@
 // intentional here:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4127 )
+#pragma warning( disable : 4127 4353 )
 #endif
 
 ADD_TEST(TestElem)

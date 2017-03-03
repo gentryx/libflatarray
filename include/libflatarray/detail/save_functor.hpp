@@ -42,7 +42,7 @@ public:
                 i->origin[0],
                 i->origin[1],
                 i->origin[2]);
-            accessor.save(target, i->length(), offset, count);
+            accessor.save(target, i->length(), offset, static_cast<std::size_t>(count));
 
             offset += i->length();
         }
