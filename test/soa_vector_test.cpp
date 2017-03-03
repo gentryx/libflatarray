@@ -1,11 +1,19 @@
 /**
- * Copyright 2016 Andreas Schäfer
+ * Copyright 2016-2017 Andreas Schäfer
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
 #include <libflatarray/flat_array.hpp>
+
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source.  Also disable overly eager sign conversion
+// and overflow warnings:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4244 4305 4307 4365 4456 4514 4710 4800 )
+#endif
 
 #include "test.hpp"
 

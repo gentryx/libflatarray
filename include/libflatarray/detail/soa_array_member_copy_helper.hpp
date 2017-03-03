@@ -50,7 +50,18 @@ public:
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
 
                 for (std::size_t i = 0; i < count; ++i) {
+// Overflow is fine on 32-bit systems as these won't instantiate such
+// large arrays anyway:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4307 )
+#endif
+
                     data[SIZE * (INDEX - 1) + i] = source[stride * (INDEX - 1) + offset + i];
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
                 }
             }
         };
@@ -88,7 +99,18 @@ public:
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
 
                 for (std::size_t i = 0; i < count; ++i) {
+// Overflow is fine on 32-bit systems as these won't instantiate such
+// large arrays anyway:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4307 )
+#endif
+
                     target[stride * (INDEX - 1) + offset + i] = data[SIZE * (INDEX - 1) + i];
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
                 }
             }
         };
@@ -181,7 +203,18 @@ public:
                         void operator()(const CELL& cell, MEMBER *data)
                         {
                             copy_in<INDEX - 1>()(cell, data);
+// Overflow is fine on 32-bit systems as these won't instantiate such
+// large arrays anyway:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4307 )
+#endif
+
                             data[SIZE * (INDEX - 1)] = (cell.*MEMBER_POINTER)[INDEX - 1];
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
                         }
                     };
 
