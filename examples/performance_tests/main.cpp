@@ -789,6 +789,7 @@ public:
 
     double performance(std::vector<int> dim)
     {
+        long dim_x = dim[0];
         long dim_y = dim[1];
         long dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
