@@ -14,9 +14,10 @@
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
-// and LibFlatArray source:
+// and LibFlatArray source.  Also disable overly eager sign conversion
+// and overflow warnings:
 #ifdef _MSC_BUILD
-#pragma warning( disable : 4710 )
+#pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
 
 // Don't warn about these functions being stripped from an executable

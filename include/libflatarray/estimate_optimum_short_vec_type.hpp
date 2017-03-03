@@ -68,8 +68,18 @@ class estimate_optimum_short_vec_type
 public:
     static const std::size_t ARITY = ilp_to_arity<CARGO, UNROLL_FACTOR>::ARITY;
 
+// Overflow is fine here, it's an artifact of 32-bit builds:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4307 )
+#endif
+
     static const long STREAMING_FLAG =
         ACCESSOR::DIM_PROD * sizeof(typename ACCESSOR::element_type) / LAST_LEVEL_CACHE_SIZE_ESTIMATE;
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
     typedef typename detail::flat_array::streaming_short_vec_switch<CARGO, ARITY, STREAMING_FLAG>::VALUE VALUE;
 };

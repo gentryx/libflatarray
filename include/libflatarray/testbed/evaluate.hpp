@@ -78,7 +78,7 @@ public:
         epochULargeInteger.LowPart = epochFileTime.dwLowDateTime;
         epochULargeInteger.HighPart = epochFileTime.dwHighDateTime;
 
-        time_t secondsSinceEpoch = systemTime.QuadPart - epochULargeInteger.QuadPart;
+        time_t secondsSinceEpoch = static_cast<time_t>(systemTime.QuadPart - epochULargeInteger.QuadPart);
 #else
         timeval t;
         gettimeofday(&t, 0);
@@ -98,7 +98,7 @@ public:
         std::string device = benchmark.device();
 
         int hostname_length = 2048;
-        std::string hostname(hostname_length, ' ');
+        std::string hostname(static_cast<std::size_t>(hostname_length), ' ');
         gethostname(&hostname[0], hostname_length);
         // cuts string at first 0 byte, required as gethostname returns 0-terminated strings
         hostname = std::string(hostname.c_str());
