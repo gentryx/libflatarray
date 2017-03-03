@@ -12,9 +12,10 @@
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
-// and LibFlatArray source:
+// and LibFlatArray source. Also disable overly eager sign conversion
+// and overflow warnings:
 #ifdef _MSC_BUILD
-#pragma warning( disable : 4710 )
+#pragma warning( disable : 4305 4307 4365 4710 )
 #endif
 
 // disable certain warnings from system headers when compiling with
@@ -717,7 +718,7 @@ public:
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static) firstprivate(accessorOld, accessorNew)
 #endif
-            for (std::size_t z = 1; z < (dim_z - 1); ++z) {
+            for (int z = 1; z < (dim_z - 1); ++z) {
                 for (std::size_t y = 1; y < (dim_y - 1); ++y) {
                     std::size_t x = 1;
                     std::size_t end_x = dim_x - 1;
@@ -729,7 +730,7 @@ public:
                         end_x,
                         update_line,
                         y,
-                        z,
+                        static_cast<std::size_t>(z),
                         accessor_old,
                         accessor_new);
                 }
