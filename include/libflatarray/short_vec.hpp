@@ -126,7 +126,7 @@ inline std::size_t count_mask(const typename short_vec<T, ARITY>::mask_type& mas
     std::size_t sum = 0;
 
     for (std::size_t i = 0; i < ARITY; ++i) {
-        sum += get(v, i);
+        sum += static_cast<std::size_t>(get(v, i));
     }
 
     return sum;

@@ -88,6 +88,13 @@ private:
     FUNCTOR& functor;
 };
 
+// Hardwire this warning to off as MSVC would otherwise complain about
+// an assignment operator missing -- which is clearly there:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4626 )
+#endif
+
 template<typename GRID_TYPE, typename FUNCTOR>
 class const_dual_callback_helper_symmetric
 {
@@ -115,6 +122,10 @@ private:
     GRID_TYPE *other_grid;
     const FUNCTOR& functor;
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 }
 
