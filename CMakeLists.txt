@@ -26,6 +26,11 @@ if(SUPPORTS_WARN_NO_WSIGN)
   set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} -Wno-sign-conversion")
 endif()
 
+check_cxx_compiler_flag("/wd4365" SUPPORTS_WARN_DISABLE_4365)
+if(SUPPORTS_WARN_DISABLE_4365)
+  set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} /wd4365")
+endif()
+
 check_cxx_compiler_flag("-Wnon-virtual-dtor" SUPPORTS_WARN_NON_VIRTUAL_DTOR)
 if(SUPPORTS_WARN_NON_WSIGN)
   set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} -Wnon-virtual-dtor")
