@@ -5,7 +5,6 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-
 #ifdef _MSC_BUILD
 #  define _USE_MATH_DEFINES
 #endif
