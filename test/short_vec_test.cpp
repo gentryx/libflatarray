@@ -1159,7 +1159,7 @@ ADD_TEST(TestImplementationStrategyFloat)
     // 4x:
 #ifdef __SSE__
 #  define EXPECTED_TYPE short_vec_strategy::sse
-#elif __ARM_NEON__
+#elif defined __ARM_NEON__
 #  define EXPECTED_TYPE short_vec_strategy::neon
 #else
 #  define EXPECTED_TYPE short_vec_strategy::scalar
