@@ -57,7 +57,7 @@
  */
 #  define LIBFLATARRAY_REGISTER_SOA(CELL_TYPE, CELL_MEMBERS)    \
     __pragma( warning( push ) )                                 \
-    __pragma( warning( disable : 4307 4514 4626 ) )             \
+    __pragma( warning( disable : 4307 4514 ) )                  \
     LIBFLATARRAY_REGISTER_SOA_MAIN(CELL_TYPE, CELL_MEMBERS)     \
     __pragma( warning( pop ) )                                  \
 
