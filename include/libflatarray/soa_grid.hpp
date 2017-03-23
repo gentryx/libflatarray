@@ -309,7 +309,7 @@ public:
                      iter,
                      iter + 1,
                      const_cast<char_staging_buffer_type&>(raw_staging_buffer).data(),
-                     static_cast<long>(count)));
+                     count));
 
         raw_staging_buffer.save(target);
     }
