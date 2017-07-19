@@ -87,7 +87,7 @@ public:
 #endif
 
     inline
-    short_vec!(const sqrt_reference<float, 32>& other);
+    short_vec(const sqrt_reference<float, 32>& other);
 
     inline
     bool any() const
