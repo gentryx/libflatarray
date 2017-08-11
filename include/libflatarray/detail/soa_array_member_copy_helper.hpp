@@ -12,7 +12,7 @@
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4514 )
+#pragma warning( disable : 4496 4514 )
 #endif
 
 #include <algorithm>
