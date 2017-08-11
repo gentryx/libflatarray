@@ -33,6 +33,12 @@
 
 #include "test.hpp"
 
+// padding is fine:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4820 )
+#endif
+
 class HeatedGameOfLifeCell
 {
 public:
@@ -57,6 +63,10 @@ public:
     double temperature;
     bool alive;
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 LIBFLATARRAY_REGISTER_SOA(
     HeatedGameOfLifeCell,
@@ -354,6 +364,12 @@ public:
 
 std::size_t DestructionCounterClass::count = 0;
 
+// padding is fine:
+#ifdef _MSC_BUILD
+ß#pragma warning( push )
+#pragma warning( disable : 4820 )
+#endif
+
 class CellWithNonTrivialMembers
 {
 public:
@@ -363,6 +379,10 @@ public:
     MapType maps[4];
     DestructionCounterClass destructCounter;
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 LIBFLATARRAY_REGISTER_SOA(
     CellWithNonTrivialMembers,
@@ -889,9 +909,9 @@ ADD_TEST(TestCopyArrayOut)
     BOOST_TEST(store1[ 0] == 47.11);
     BOOST_TEST(store1[ 1] == 1.234);
     BOOST_TEST(store1[ 2] == 666.1);
-    BOOST_TEST(store0[24] == true);
-    BOOST_TEST(store0[25] == false);
-    BOOST_TEST(store0[26] == true);
+    BOOST_TEST(static_cast<bool>(store0[24]) == true);
+    BOOST_TEST(static_cast<bool>(store0[25]) == false);
+    BOOST_TEST(static_cast<bool>(store0[26]) == true);
 
     grid.set(3, 2, 1, HeatedGameOfLifeCell(2.345, false));
     grid.set(4, 2, 1, HeatedGameOfLifeCell(987.6, true));
@@ -1289,7 +1309,7 @@ ADD_TEST(TestDefaultSizesFor1D2D3D)
 
 }
 
-int main(int argc, char **argv)
+int main(int /* argc */, char ** /* argv */)
 {
     return 0;
 }
