@@ -6,7 +6,16 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4996 )
+#endif
+
 #include <libflatarray/flat_array.hpp>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
