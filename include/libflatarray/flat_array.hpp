@@ -9,6 +9,11 @@
 #ifndef FLAT_ARRAY_FLAT_ARRAY_HPP
 #define FLAT_ARRAY_FLAT_ARRAY_HPP
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4996 )
+#endif
+
 #include <libflatarray/detail/macros.hpp>
 #include <libflatarray/detail/offset.hpp>
 #include <libflatarray/aligned_allocator.hpp>
@@ -32,5 +37,10 @@
 #include <libflatarray/soa_array.hpp>
 #include <libflatarray/soa_grid.hpp>
 #include <libflatarray/soa_vector.hpp>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
 #endif
