@@ -2,7 +2,16 @@
 #include <omp.h>
 #endif
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <math.h>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 /**
  * Computes a 2D gaussian filter with a 5x5 stencil accross the YZ-plane.

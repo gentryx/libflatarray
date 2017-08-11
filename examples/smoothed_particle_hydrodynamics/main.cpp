@@ -1,4 +1,14 @@
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 #include <iostream>
 #include <silo.h>
 #include <stdlib.h>

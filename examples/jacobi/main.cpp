@@ -5,7 +5,17 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 #include <iostream>
 #include <sstream>
 #include <stdexcept>

@@ -8,7 +8,18 @@
 #ifdef _MSC_BUILD
 #  define _USE_MATH_DEFINES
 #endif
+
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <cmath>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 #include <iostream>
 #include <sstream>
 #include <stdexcept>

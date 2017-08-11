@@ -1,5 +1,15 @@
 #include <assert.h>
+
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
+
 #include <math.h>
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #include "kernels.h"
 
