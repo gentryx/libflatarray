@@ -925,13 +925,31 @@ ADD_TEST(TestCopyArrayOut)
 
 ADD_TEST(TestNumberOfMembers)
 {
+// Don't warn about const expressions not being flagged as such: we
+// don't have a suitable macro for such comparisons.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4127 )
+#endif
     BOOST_TEST(number_of_members<HeatedGameOfLifeCell>::VALUE == 2);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 }
 
 ADD_TEST(TestAggregatedMemberSize)
 {
+// Don't warn about const expressions not being flagged as such: we
+// don't have a suitable macro for such comparisons.
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4127 )
+#endif
     BOOST_TEST(sizeof(HeatedGameOfLifeCell) == 16);
     BOOST_TEST(aggregated_member_size<HeatedGameOfLifeCell>::VALUE == 9);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 }
 
 ADD_TEST(TestAccessMember)
