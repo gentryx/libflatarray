@@ -209,9 +209,7 @@ public:
 #pragma warning( push )
 #pragma warning( disable : 4307 )
 #endif
-
                             data[SIZE * (INDEX - 1)] = (cell.*MEMBER_POINTER)[INDEX - 1];
-
 #ifdef _MSC_BUILD
 #pragma warning( pop )
 #endif
@@ -238,8 +236,17 @@ public:
                         inline
                         void operator()(CELL& cell, const MEMBER *data)
                         {
+// Overflow is fine on 32-bit systems as these won't instantiate such
+// large arrays anyway:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4307 )
+#endif
                             copy_out<INDEX - 1>()(cell, data);
                             (cell.*MEMBER_POINTER)[INDEX - 1] = data[SIZE * (INDEX - 1)];
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
                         }
                     };
 
