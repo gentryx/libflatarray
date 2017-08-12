@@ -919,8 +919,8 @@ ADD_TEST(TestCopyArrayOut)
 
     BOOST_TEST(store1[ 0] == 2.345);
     BOOST_TEST(store1[ 1] == 987.6);
-    BOOST_TEST(store0[16] == false);
-    BOOST_TEST(store0[17] == true);
+    BOOST_TEST(static_cast<bool>(store0[16]) == false);
+    BOOST_TEST(static_cast<bool>(store0[17]) == true);
 }
 
 ADD_TEST(TestNumberOfMembers)
