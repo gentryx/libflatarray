@@ -366,7 +366,7 @@ std::size_t DestructionCounterClass::count = 0;
 
 // padding is fine:
 #ifdef _MSC_BUILD
-ß#pragma warning( push )
+#pragma warning( push )
 #pragma warning( disable : 4820 )
 #endif
 
