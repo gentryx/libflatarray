@@ -127,7 +127,7 @@ if(NOT MSVC)
   if(WITH_CPP14)
     # At the moment, CUDA doesn't support C++14, so we limt ourselves to
     # C++11 and hope for the best.
-    IF(WITH_CUDA OR WITH_FORCED_CPP11)
+    IF(WITH_FORCED_CPP11)
       set(libflatarray_FLAGS "-std=c++11")
     else()
       set(libflatarray_FLAGS "-std=c++14")
