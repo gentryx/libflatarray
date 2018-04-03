@@ -1,5 +1,6 @@
 /**
  * Copyright 2016 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -66,9 +67,19 @@ ADD_TEST(initialization)
 {
     int value = 4711;
     cuda_array<int> device_array(3, value);
+    cudaError_t error = cudaGetLastError();
+    if (error != cudaSuccess) {
+        std::cerr << "ERROR: " << cudaGetErrorString(error) << "\n";
+        throw std::runtime_error("CUDA error");
+    }
 
     std::vector<int> host_vec(3);
     device_array.save(&host_vec[0]);
+    error = cudaGetLastError();
+    if (error != cudaSuccess) {
+        std::cerr << "ERROR: " << cudaGetErrorString(error) << "\n";
+        throw std::runtime_error("CUDA error");
+    }
 
     BOOST_TEST(host_vec[0] == 4711);
     BOOST_TEST(host_vec[1] == 4711);
