@@ -1,5 +1,6 @@
 /**
  * Copyright 2016-2017 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +10,8 @@
 #define FLAT_ARRAY_CUDA_ARRAY_HPP
 
 #include <libflatarray/cuda_allocator.hpp>
+#include <libflatarray/detail/generate_cuda_launch_config.hpp>
+#include <libflatarray/detail/init_kernel.hpp>
 
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
@@ -61,9 +64,10 @@ public:
         my_capacity(size),
         data_pointer(LibFlatArray::cuda_allocator<ELEMENT_TYPE>().allocate(size))
     {
-        for (std::size_t i = 0; i < size; ++i) {
-            cudaMemcpy(data_pointer + i, &defaultValue, sizeof(ELEMENT_TYPE), cudaMemcpyHostToDevice);
-        }
+        dim3 grid_dim;
+        dim3 block_dim;
+        detail::flat_array::generate_launch_config()(&grid_dim, &block_dim, size, 1, 1);
+        detail::flat_array::init_kernel<<<grid_dim, block_dim>>>(defaultValue, data_pointer, size);
     }
 
     inline cuda_array(const cuda_array& array) :
