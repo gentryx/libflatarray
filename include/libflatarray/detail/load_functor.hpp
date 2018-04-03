@@ -1,6 +1,6 @@
 /**
  * Copyright 2014-2016 Andreas Schäfer
- * Copyright 2017 Google
+ * Copyright 2017-2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,6 +8,8 @@
 
 #ifndef FLAT_ARRAY_DETAIL_LOAD_FUNCTOR_HPP
 #define FLAT_ARRAY_DETAIL_LOAD_FUNCTOR_HPP
+
+#include <libflatarray/config.h>
 
 namespace LibFlatArray {
 
