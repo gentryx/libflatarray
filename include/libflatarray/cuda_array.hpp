@@ -66,7 +66,7 @@ public:
     {
         dim3 grid_dim;
         dim3 block_dim;
-        detail::flat_array::generate_launch_config()(&grid_dim, &block_dim, size, 1, 1);
+        detail::flat_array::generate_cuda_launch_config()(&grid_dim, &block_dim, size, 1, 1);
         detail::flat_array::init_kernel<<<grid_dim, block_dim>>>(defaultValue, data_pointer, size);
     }
 

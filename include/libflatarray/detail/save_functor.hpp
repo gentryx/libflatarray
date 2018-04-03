@@ -1,5 +1,6 @@
 /**
  * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -105,7 +106,7 @@ public:
         for (ITERATOR i = start; i != end; ++i) {
             dim3 grid_dim;
             dim3 block_dim;
-            generate_launch_config()(&grid_dim, &block_dim, i->length(), 1, 1);
+            generate_cuda_launch_config()(&grid_dim, &block_dim, i->length(), 1, 1);
 
             save_kernel<CELL, DIM_X, DIM_Y, DIM_Z, INDEX><<<grid_dim, block_dim>>>(
                 accessor.data(),

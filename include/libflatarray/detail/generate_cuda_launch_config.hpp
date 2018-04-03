@@ -1,5 +1,6 @@
 /**
  * Copyright 2016 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,7 +24,7 @@ namespace flat_array {
  * Returns a somewhat sensible decomposition of the grid into thread
  * blocks for launching CUDA kernels.
  */
-class generate_launch_config
+class generate_cuda_launch_config
 {
 public:
     void operator()(dim3 *grid_dim, dim3 *block_dim, int x, int y, int z)
