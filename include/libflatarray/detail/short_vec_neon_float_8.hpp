@@ -50,7 +50,7 @@ public:
     inline
     short_vec(const float data = 0) :
         val{vdupq_n_f32(data),
-            (vdupq_n_f32(data)}
+            vdupq_n_f32(data)}
     {}
 
     inline
