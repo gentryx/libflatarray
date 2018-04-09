@@ -13,12 +13,14 @@
 #pragma warning( disable : 4514 )
 #endif
 
+#include <iostream>
 #include <sstream>
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
 #endif
 
+namespace LibFlatArray {}
 // #include <libflatarray/flat_array.hpp>
 // #include <libflatarray/short_vec.hpp>
 // #include <libflatarray/testbed/cpu_benchmark.hpp>
