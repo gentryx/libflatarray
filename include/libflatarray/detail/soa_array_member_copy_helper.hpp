@@ -26,6 +26,11 @@ namespace LibFlatArray {
 
 namespace detail {
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 template<long SIZE>
 class soa_array_member_copy_helper
 {
@@ -48,14 +53,7 @@ public:
                 const std::size_t offset,
                 const std::size_t stride)
             {
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4710 )
-#endif
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
 
                 for (std::size_t i = 0; i < count; ++i) {
 // Overflow is fine on 32-bit systems as these won't instantiate such
@@ -104,14 +102,7 @@ public:
                 const std::size_t offset,
                 const std::size_t stride)
             {
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4710 )
-#endif
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
 
                 for (std::size_t i = 0; i < count; ++i) {
 // Overflow is fine on 32-bit systems as these won't instantiate such
@@ -281,6 +272,10 @@ public:
     };
 };
 
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 }
 
