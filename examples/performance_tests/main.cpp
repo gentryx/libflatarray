@@ -22,7 +22,7 @@
 // #include <libflatarray/flat_array.hpp>
 // #include <libflatarray/short_vec.hpp>
 // #include <libflatarray/testbed/cpu_benchmark.hpp>
-#include <libflatarray/testbed/evaluate.hpp>
+// #include <libflatarray/testbed/evaluate.hpp>
 
 // // globally disable some warnings with MSVC, that are issued not for a
 // // specific header, but rather for the interaction of system headers
@@ -2463,8 +2463,8 @@ int main(int argc, char **argv)
     int cudaDevice;
     s >> cudaDevice;
 
-    evaluate eval(name, revision);
-    eval.print_header();
+    // evaluate eval(name, revision);
+    // eval.print_header();
 
 //     std::vector<std::vector<int> > sizes;
 //     for (int d = 32; d <= 544; d += 4) {
