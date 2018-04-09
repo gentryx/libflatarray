@@ -27,34 +27,34 @@ namespace LibFlatArray {}
 // #include <libflatarray/testbed/cpu_benchmark.hpp>
 // #include <libflatarray/testbed/evaluate.hpp>
 
-// // globally disable some warnings with MSVC, that are issued not for a
-// // specific header, but rather for the interaction of system headers
-// // and LibFlatArray source. Also disable overly eager sign conversion
-// // and overflow warnings:
-// #ifdef _MSC_BUILD
-// #pragma warning( disable : 4244 4305 4307 4365 4456 4514 4710 )
-// #endif
+// globally disable some warnings with MSVC, that are issued not for a
+// specific header, but rather for the interaction of system headers
+// and LibFlatArray source. Also disable overly eager sign conversion
+// and overflow warnings:
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4244 4305 4307 4365 4456 4514 4710 )
+#endif
 
-// // disable certain warnings from system headers when compiling with
-// // Microsoft Visual Studio:
-// #ifdef _MSC_BUILD
-// #pragma warning( push )
-// #pragma warning( disable : 4514 )
-// #endif
+// disable certain warnings from system headers when compiling with
+// Microsoft Visual Studio:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4514 )
+#endif
 
-// #include <iostream>
-// #include <list>
-// #ifdef __SSE__
-// #include <xmmintrin.h>
-// #endif
+#include <iostream>
+#include <list>
+#ifdef __SSE__
+#include <xmmintrin.h>
+#endif
 
-// #ifdef __AVX__
-// #include <immintrin.h>
-// #endif
+#ifdef __AVX__
+#include <immintrin.h>
+#endif
 
-// #ifdef _MSC_BUILD
-// #pragma warning( pop )
-// #endif
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #define WEIGHT_S 0.11
 #define WEIGHT_T 0.12
