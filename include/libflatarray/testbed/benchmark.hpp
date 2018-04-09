@@ -46,18 +46,18 @@ public:
     static
     inline double time()
     {
-#ifdef _WIN32
-        LARGE_INTEGER time;
-        LARGE_INTEGER freq;
-        QueryPerformanceCounter(&time);
-        QueryPerformanceFrequency(&freq);
-        return 1.0 * time.QuadPart / freq.QuadPart;
-#else
-        timeval t;
-        gettimeofday(&t, 0);
-        return t.tv_sec + t.tv_usec * 1.0e-6;
-#endif
-
+// #ifdef _WIN32
+//         LARGE_INTEGER time;
+//         LARGE_INTEGER freq;
+//         QueryPerformanceCounter(&time);
+//         QueryPerformanceFrequency(&freq);
+//         return 1.0 * time.QuadPart / freq.QuadPart;
+// #else
+//         timeval t;
+//         gettimeofday(&t, 0);
+//         return t.tv_sec + t.tv_usec * 1.0e-6;
+// #endif
+        return 0;
     }
 
 };
