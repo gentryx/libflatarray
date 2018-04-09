@@ -2466,15 +2466,15 @@ int main(int argc, char **argv)
     int cudaDevice;
     s >> cudaDevice;
 
-    // evaluate eval(name, revision);
-    // eval.print_header();
+    evaluate eval(name, revision);
+    eval.print_header();
 
-//     std::vector<std::vector<int> > sizes;
-//     for (int d = 32; d <= 544; d += 4) {
-//         std::vector<int> dim(3, d);
+    std::vector<std::vector<int> > sizes;
+    for (int d = 32; d <= 544; d += 4) {
+        std::vector<int> dim(3, d);
 
-//         sizes.push_back(dim);
-//     }
+        sizes.push_back(dim);
+    }
 
 //     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
 //         eval(JacobiD3Q7Vanilla(), *i);
