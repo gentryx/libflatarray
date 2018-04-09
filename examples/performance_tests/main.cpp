@@ -450,8 +450,16 @@ public:
 
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
+// inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4711 )
+#endif
             using std::swap;
             swap(gridOld, gridNew);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
         }
 
         double tEnd = time();
@@ -842,8 +850,16 @@ public:
 
         for (int t = 0; t < maxT; ++t) {
             gridOld.callback(&gridNew, functor);
+// inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4711 )
+#endif
             using std::swap;
             swap(gridOld, gridNew);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
         }
 
         double tEnd = time();
@@ -874,182 +890,182 @@ private:
     }
 };
 
-// class Particle
-// {
-// public:
-//     explicit inline Particle(
-//         const float posX = 0,
-//         const float posY = 0,
-//         const float posZ = 0,
-//         const float velX = 0,
-//         const float velY = 0,
-//         const float velZ = 0,
-//         const float charge = 0) :
-//         posX(posX),
-//         posY(posY),
-//         posZ(posZ),
-//         velX(velX),
-//         velY(velY),
-//         velZ(velZ),
-//         charge(charge)
-//     {}
+class Particle
+{
+public:
+    explicit inline Particle(
+        const float posX = 0,
+        const float posY = 0,
+        const float posZ = 0,
+        const float velX = 0,
+        const float velY = 0,
+        const float velZ = 0,
+        const float charge = 0) :
+        posX(posX),
+        posY(posY),
+        posZ(posZ),
+        velX(velX),
+        velY(velY),
+        velZ(velZ),
+        charge(charge)
+    {}
 
-//     float posX;
-//     float posY;
-//     float posZ;
-//     float velX;
-//     float velY;
-//     float velZ;
-//     float charge;
-// };
+    float posX;
+    float posY;
+    float posZ;
+    float velX;
+    float velY;
+    float velZ;
+    float charge;
+};
 
-// LIBFLATARRAY_REGISTER_SOA(Particle,
-//                           ((float)(posX))
-//                           ((float)(posY))
-//                           ((float)(posZ))
-//                           ((float)(velX))
-//                           ((float)(velY))
-//                           ((float)(velZ))
-//                           ((float)(charge)))
+LIBFLATARRAY_REGISTER_SOA(Particle,
+                          ((float)(posX))
+                          ((float)(posY))
+                          ((float)(posZ))
+                          ((float)(velX))
+                          ((float)(velY))
+                          ((float)(velZ))
+                          ((float)(charge)))
 
-// class ArrayParticle
-// {
-// public:
-//     inline
-//     explicit ArrayParticle(
-//         const float posX = 0,
-//         const float posY = 0,
-//         const float posZ = 0,
-//         const float velX = 0,
-//         const float velY = 0,
-//         const float velZ = 0,
-//         const float charge = 0) :
-//         charge(charge)
-//     {
-//         pos[0] = posX;
-//         pos[1] = posY;
-//         pos[2] = posZ;
-//         vel[0] = velX;
-//         vel[1] = velY;
-//         vel[2] = velZ;
-//     }
+class ArrayParticle
+{
+public:
+    inline
+    explicit ArrayParticle(
+        const float posX = 0,
+        const float posY = 0,
+        const float posZ = 0,
+        const float velX = 0,
+        const float velY = 0,
+        const float velZ = 0,
+        const float charge = 0) :
+        charge(charge)
+    {
+        pos[0] = posX;
+        pos[1] = posY;
+        pos[2] = posZ;
+        vel[0] = velX;
+        vel[1] = velY;
+        vel[2] = velZ;
+    }
 
-//     float pos[3];
-//     float vel[3];
-//     float charge;
-// };
+    float pos[3];
+    float vel[3];
+    float charge;
+};
 
-// LIBFLATARRAY_REGISTER_SOA(ArrayParticle,
-//                           ((float)(pos)(3))
-//                           ((float)(vel)(3))
-//                           ((float)(charge)))
+LIBFLATARRAY_REGISTER_SOA(ArrayParticle,
+                          ((float)(pos)(3))
+                          ((float)(vel)(3))
+                          ((float)(charge)))
 
-// class NBody : public cpu_benchmark
-// {
-// public:
-//     std::string family()
-//     {
-//         return "NBody";
-//     }
+class NBody : public cpu_benchmark
+{
+public:
+    std::string family()
+    {
+        return "NBody";
+    }
 
-//     std::string unit()
-//     {
-//         return "GFLOPS";
-//     }
+    std::string unit()
+    {
+        return "GFLOPS";
+    }
 
-//     double gflops(double numParticles, double repeats, double tStart, double tEnd)
-//     {
-//         double flops = repeats * numParticles * (9 + numParticles * (3 + 6 + 5 + 3 + 3));
-//         double gflops = flops / (tEnd - tStart) * 1e-9;
-//         return gflops;
-//     }
-// };
+    double gflops(double numParticles, double repeats, double tStart, double tEnd)
+    {
+        double flops = repeats * numParticles * (9 + numParticles * (3 + 6 + 5 + 3 + 3));
+        double gflops = flops / (tEnd - tStart) * 1e-9;
+        return gflops;
+    }
+};
 
-// class NBodyVanilla : public NBody
-// {
-// public:
-//     std::string species()
-//     {
-//         return "vanilla";
-//     }
+class NBodyVanilla : public NBody
+{
+public:
+    std::string species()
+    {
+        return "vanilla";
+    }
 
-//     double performance(std::vector<int> dim)
-//     {
-//         int numParticles = dim[0];
-//         int repeats = dim[1];
+    double performance(std::vector<int> dim)
+    {
+        int numParticles = dim[0];
+        int repeats = dim[1];
 
-//         std::vector<Particle> particlesA;
-//         std::vector<Particle> particlesB;
-//         particlesA.reserve(numParticles);
-//         particlesB.reserve(numParticles);
+        std::vector<Particle> particlesA;
+        std::vector<Particle> particlesB;
+        particlesA.reserve(numParticles);
+        particlesB.reserve(numParticles);
 
-//         for (int i = 0; i < numParticles; ++i) {
-//             Particle p(
-//                 i, i * i, sin(i),
-//                 i % 11, i % 13, i % 19,
-//                 10 + cos(2 * i));
+        for (int i = 0; i < numParticles; ++i) {
+            Particle p(
+                i, i * i, sin(i),
+                i % 11, i % 13, i % 19,
+                10 + cos(2 * i));
 
-//             particlesA.push_back(p);
-//             particlesB.push_back(p);
-//         }
+            particlesA.push_back(p);
+            particlesB.push_back(p);
+        }
 
-//         double tStart = time();
+        double tStart = time();
 
-//         for (int t = 0; t < repeats; ++t) {
-//             for (int i = 0; i < numParticles; ++i) {
-//                 float posX = particlesA[i].posX;
-//                 float posY = particlesA[i].posY;
-//                 float posZ = particlesA[i].posZ;
+        for (int t = 0; t < repeats; ++t) {
+            for (int i = 0; i < numParticles; ++i) {
+                float posX = particlesA[i].posX;
+                float posY = particlesA[i].posY;
+                float posZ = particlesA[i].posZ;
 
-//                 float velX = particlesA[i].velX;
-//                 float velY = particlesA[i].velY;
-//                 float velZ = particlesA[i].velZ;
+                float velX = particlesA[i].velX;
+                float velY = particlesA[i].velY;
+                float velZ = particlesA[i].velZ;
 
-//                 float charge = particlesA[i].charge;
+                float charge = particlesA[i].charge;
 
-//                 float accelerationX = 0;
-//                 float accelerationY = 0;
-//                 float accelerationZ = 0;
+                float accelerationX = 0;
+                float accelerationY = 0;
+                float accelerationZ = 0;
 
-//                 for (int j = 0; j < numParticles; ++j) {
-//                     float deltaX = posX - particlesA[j].posX;
-//                     float deltaY = posY - particlesA[j].posY;
-//                     float deltaZ = posZ - particlesA[j].posZ;
-//                     float distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
-//                     float factor = charge * particlesA[j].charge * DELTA_T / distance2 / sqrt(distance2);
-//                     float forceX = deltaX * factor;
-//                     float forceY = deltaY * factor;
-//                     float forceZ = deltaZ * factor;
+                for (int j = 0; j < numParticles; ++j) {
+                    float deltaX = posX - particlesA[j].posX;
+                    float deltaY = posY - particlesA[j].posY;
+                    float deltaZ = posZ - particlesA[j].posZ;
+                    float distance2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ + SOFTENING;
+                    float factor = charge * particlesA[j].charge * DELTA_T / distance2 / sqrt(distance2);
+                    float forceX = deltaX * factor;
+                    float forceY = deltaY * factor;
+                    float forceZ = deltaZ * factor;
 
-//                     accelerationX += forceX;
-//                     accelerationY += forceY;
-//                     accelerationZ += forceZ;
-//                 }
+                    accelerationX += forceX;
+                    accelerationY += forceY;
+                    accelerationZ += forceZ;
+                }
 
-//                 particlesB[i].posX = posX + velX * DELTA_T;
-//                 particlesB[i].posY = posY + velY * DELTA_T;
-//                 particlesB[i].posZ = posZ + velZ * DELTA_T;
+                particlesB[i].posX = posX + velX * DELTA_T;
+                particlesB[i].posY = posY + velY * DELTA_T;
+                particlesB[i].posZ = posZ + velZ * DELTA_T;
 
-//                 particlesB[i].velX = velX + accelerationX;
-//                 particlesB[i].velY = velY + accelerationY;
-//                 particlesB[i].velZ = velZ + accelerationZ;
+                particlesB[i].velX = velX + accelerationX;
+                particlesB[i].velY = velY + accelerationY;
+                particlesB[i].velZ = velZ + accelerationZ;
 
-//                 particlesB[i].charge = charge;
-//             }
+                particlesB[i].charge = charge;
+            }
 
-//             using std::swap;
-//             swap(particlesA, particlesB);
-//         }
+            using std::swap;
+            swap(particlesA, particlesB);
+        }
 
-//         double tEnd = time();
+        double tEnd = time();
 
-//         if (particlesA[0].posX == 0.12345) {
-//             std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
-//         }
+        if (particlesA[0].posX == 0.12345) {
+            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        }
 
-//         return gflops(numParticles, repeats, tStart, tEnd);
-//     }
-// };
+        return gflops(numParticles, repeats, tStart, tEnd);
+    }
+};
 
 // #ifdef __AVX__
 
@@ -2503,18 +2519,18 @@ int main(int argc, char **argv)
 
     sizes.clear();
 
-//     for (int n = 128; n <= 8192; n *= 2) {
-//         std::vector<int> dim(3);
-//         dim[0] = n;
-//         dim[1] = std::size_t(4) * 512 * 1024 * 1024 / n / n;
-//         dim[2] = 0;
+    for (int n = 128; n <= 8192; n *= 2) {
+        std::vector<int> dim(3);
+        dim[0] = n;
+        dim[1] = std::size_t(4) * 512 * 1024 * 1024 / n / n;
+        dim[2] = 0;
 
-//         sizes.push_back(dim);
-//     }
+        sizes.push_back(dim);
+    }
 
-//     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
-//         eval(NBodyVanilla(), *i);
-//     }
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(NBodyVanilla(), *i);
+    }
 
 // #ifdef __AVX__
 //     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
