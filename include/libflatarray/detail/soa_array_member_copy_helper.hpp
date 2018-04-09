@@ -1,6 +1,6 @@
 /**
  * Copyright 2015-2017 Andreas Schäfer
- * Copyright 2017 Google
+ * Copyright 2017-2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -48,7 +48,14 @@ public:
                 const std::size_t offset,
                 const std::size_t stride)
             {
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
                 copy_array_in<INDEX - 1, DUMMY>()(source, data, count, offset, stride);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
                 for (std::size_t i = 0; i < count; ++i) {
 // Overflow is fine on 32-bit systems as these won't instantiate such
@@ -97,7 +104,14 @@ public:
                 const std::size_t offset,
                 const std::size_t stride)
             {
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
                 copy_array_out<INDEX - 1, DUMMY>()(target, data, count, offset, stride);
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
                 for (std::size_t i = 0; i < count; ++i) {
 // Overflow is fine on 32-bit systems as these won't instantiate such
