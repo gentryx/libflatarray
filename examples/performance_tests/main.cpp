@@ -32,7 +32,7 @@ namespace LibFlatArray {}
 // and LibFlatArray source. Also disable overly eager sign conversion
 // and overflow warnings:
 #ifdef _MSC_BUILD
-#pragma warning( disable : 4244 4305 4307 4365 4456 4514 4710 )
+#pragma warning( disable : 4244 4305 4307 4365 4456 4514 )
 #endif
 
 // disable certain warnings from system headers when compiling with
