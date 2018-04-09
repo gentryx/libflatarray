@@ -6,10 +6,10 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <libflatarray/flat_array.hpp>
+// #include <libflatarray/flat_array.hpp>
 // #include <libflatarray/short_vec.hpp>
 // #include <libflatarray/testbed/cpu_benchmark.hpp>
-// #include <libflatarray/testbed/evaluate.hpp>
+#include <libflatarray/testbed/evaluate.hpp>
 
 // // globally disable some warnings with MSVC, that are issued not for a
 // // specific header, but rather for the interaction of system headers
