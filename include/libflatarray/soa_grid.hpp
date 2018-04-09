@@ -477,11 +477,21 @@ private:
     }
 };
 
+// inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4711 )
+#endif
+
 template<typename value_type>
 void swap(soa_grid<value_type>& a, soa_grid<value_type>& b)
 {
     a.swap(b);
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
