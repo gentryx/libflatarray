@@ -51,6 +51,18 @@
         , SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__)
 #endif
 
+#ifdef _MSC_BUILD
+/**
+ * Same as LIBFLATARRAY_LOOP_PEELER(), but for use in templates
+ */
+#define LIBFLATARRAY_LOOP_PEELER_TEMPLATE(SHORT_VEC_TYPE, COUNTER_TYPE, \
+                                          X, END_X, FUNCTION, ...)      \
+    __pragma( warning( push ) )                                         \
+    __pragma( warning( disable : 4710 4711 ) )                          \
+    LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
+        typename, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__) \
+    __pragma( warning( pop ) )
+#else
 /**
  * Same as LIBFLATARRAY_LOOP_PEELER(), but for use in templates
  */
@@ -58,6 +70,7 @@
                                           X, END_X, FUNCTION, ...)      \
     LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
         typename, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__)
+#endif
 
 #define LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                        \
     TYPENAME, SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, ...)    \
