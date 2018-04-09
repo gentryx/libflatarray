@@ -1,5 +1,6 @@
 /**
  * Copyright 2014-2016 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,20 @@
 #include <libflatarray/detail/generic_destruct.hpp>
 #include <libflatarray/detail/soa_array_member_copy_helper.hpp>
 #include <libflatarray/preprocessor.hpp>
+
+#ifdef __CUDACC__
+#  define LIBFLATARRAY_INLINE inline
+#else
+#  ifdef _MSC_BUILD
+#    define LIBFLATARRAY_INLINE __forceinline
+#  else
+#    ifdef __GNUC__
+#      define LIBFLATARRAY_INLINE inline __attribute__ ((__always_inline__))
+#    else
+#      define LIBFLATARRAY_INLINE inline
+#    endif
+#  endif
+#endif
 
 #define LIBFLATARRAY_INDEX(X, Y, Z, DIM_X, DIM_Y, DIM_Z, INDEX) \
     (INDEX + Z * (DIM_X * DIM_Y) + Y * DIM_X + X)

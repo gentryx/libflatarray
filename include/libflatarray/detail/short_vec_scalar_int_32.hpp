@@ -1,6 +1,7 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
  * Copyright 2016-2017 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,7 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
+#include <libflatarray/detail/macros.hpp>
 
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
@@ -606,7 +608,7 @@ public:
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_nt(int *data) const
     {
         store(data);
@@ -690,7 +692,7 @@ private:
     int val[32];
 };
 
-inline
+LIBFLATARRAY_INLINE
 void operator<<(int *data, const short_vec<int, 32>& vec)
 {
     vec.store(data);
@@ -700,7 +702,7 @@ void operator<<(int *data, const short_vec<int, 32>& vec)
 #pragma warning pop
 #endif
 
-inline
+LIBFLATARRAY_INLINE
 short_vec<int, 32> sqrt(const short_vec<int, 32>& vec)
 {
     return vec.sqrt();
