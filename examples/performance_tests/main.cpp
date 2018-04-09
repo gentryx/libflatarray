@@ -741,6 +741,12 @@ public:
                     std::size_t x = 1;
                     std::size_t end_x = dim_x - 1;
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
                     LIBFLATARRAY_LOOP_PEELER_TEMPLATE(
                         my_short_vec,
                         std::size_t,
@@ -751,6 +757,11 @@ public:
                         static_cast<std::size_t>(z),
                         accessor_old,
                         accessor_new);
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
                 }
             }
         }
@@ -903,6 +914,12 @@ public:
     float charge;
 };
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 LIBFLATARRAY_REGISTER_SOA(Particle,
                           ((float)(posX))
                           ((float)(posY))
@@ -911,6 +928,11 @@ LIBFLATARRAY_REGISTER_SOA(Particle,
                           ((float)(velY))
                           ((float)(velZ))
                           ((float)(charge)))
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
 class ArrayParticle
 {
@@ -2354,6 +2376,12 @@ public:
         counter(counter)
     {}
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
     template<typename ACCESSOR>
     void operator()(ACCESSOR& particle) {
         for (int t = 0; t < repeats; ++t) {
@@ -2363,6 +2391,10 @@ public:
             LIBFLATARRAY_LOOP_PEELER(Float, long, i.index(), n, update, i);
         }
     }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
     template<typename Float, typename ACCESSOR>
     void update(long& /* unused_counter */, long end, ACCESSOR& i)
