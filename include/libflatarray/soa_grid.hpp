@@ -39,6 +39,12 @@
 
 namespace LibFlatArray {
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 /**
  * soa_grid is a 1D - 3D container with "Struct of Arrays"-style
  * memory layout but "Array of Structs"-style user interface. Another
@@ -476,6 +482,10 @@ void swap(soa_grid<value_type>& a, soa_grid<value_type>& b)
 {
     a.swap(b);
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 }
 

@@ -33,6 +33,12 @@
 
 namespace LibFlatArray {
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 class evaluate
 {
 public:
@@ -131,6 +137,10 @@ private:
     std::string name;
     std::string revision;
 };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 }
 

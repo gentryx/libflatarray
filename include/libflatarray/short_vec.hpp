@@ -103,6 +103,12 @@ inline bool get(unsigned char mask, const int i)
 #pragma warning( pop )
 #endif
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 template<typename SHORT_VEC1, typename SHORT_VEC2>
 inline
 SHORT_VEC1 blend(const SHORT_VEC1& v1, const SHORT_VEC2& v2, const typename SHORT_VEC1::mask_type& mask)
@@ -111,6 +117,10 @@ SHORT_VEC1 blend(const SHORT_VEC1& v1, const SHORT_VEC2& v2, const typename SHOR
     ret.blend(mask, v2);
     return ret;
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 // fixme: this is slow
 // fixme: replace by horizontal sum, get rid of get() alltoggether
