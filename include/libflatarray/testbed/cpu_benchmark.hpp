@@ -90,12 +90,12 @@ private:
     {
         std::vector<std::string> ret;
 
-        // std::stringstream buf(line);
-        // std::string item;
+        std::stringstream buf(line);
+        std::string item;
 
-        // while (std::getline(buf, item, delimiter)) {
-        //     ret.push_back(trim(item));
-        // }
+        while (std::getline(buf, item, delimiter)) {
+            ret.push_back(trim(item));
+        }
 
         return ret;
     }
