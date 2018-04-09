@@ -2477,7 +2477,7 @@ int main(int argc, char **argv)
     }
 
     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
-        // eval(JacobiD3Q7Vanilla(), *i);
+        eval(JacobiD3Q7Vanilla(), *i);
     }
 
 // #ifdef __SSE__

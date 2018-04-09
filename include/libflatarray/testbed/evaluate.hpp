@@ -55,9 +55,9 @@ public:
     template<class BENCHMARK>
     void operator()(BENCHMARK benchmark, std::vector<int> dim, bool output = true)
     {
-        if (benchmark.family().find(name, 0) == std::string::npos) {
-            return;
-        }
+        // if (benchmark.family().find(name, 0) == std::string::npos) {
+        //     return;
+        // }
 
 // #ifdef _WIN32
 //         // this charade is based on https://msdn.microsoft.com/en-us/library/windows/desktop/ms724928(v=vs.85).aspx
