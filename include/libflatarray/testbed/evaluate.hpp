@@ -15,7 +15,7 @@
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4514 4668 4820 )
+#pragma warning( disable : 4514 4668 4710 4820 )
 #endif
 
 #include <ctime>
