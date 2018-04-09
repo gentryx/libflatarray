@@ -37,55 +37,53 @@ public:
 
     std::string device()
     {
-        return "";
-        // std::ifstream file("/proc/cpuinfo");
-        // const std::size_t bufferSize = 1 << 12;
-        // char buffer[bufferSize];
+        std::ifstream file("/proc/cpuinfo");
+        const std::size_t bufferSize = 1 << 12;
+        char buffer[bufferSize];
 
-        // while (file.getline(&buffer[0], bufferSize)) {
-        //     std::vector<std::string> tokens = tokenize(buffer, ':');
-        //     std::vector<std::string> fields = tokenize(tokens[0], '\t');
+        while (file.getline(&buffer[0], bufferSize)) {
+            std::vector<std::string> tokens = tokenize(buffer, ':');
+            std::vector<std::string> fields = tokenize(tokens[0], '\t');
 
-        //     if ((fields.size() == 1) && (fields[0] == "cpu")) {
-        //         return tokens[1];
-        //     }
+            if ((fields.size() == 1) && (fields[0] == "cpu")) {
+                return tokens[1];
+            }
 
-        //     if ((fields.size() == 1) && (fields[0] == "model name")) {
-        //         tokens = tokenize(tokens[1], ' ');
-        //         std::string buf = join(tokens, " ");
-        //         if (buf[buf.size() - 1] == 0) {
-        //             buf.resize(buf.size() - 1);
-        //         }
+            if ((fields.size() == 1) && (fields[0] == "model name")) {
+                tokens = tokenize(tokens[1], ' ');
+                std::string buf = join(tokens, " ");
+                if (buf[buf.size() - 1] == 0) {
+                    buf.resize(buf.size() - 1);
+                }
 
-        //         return buf;
-        //     }
-        // }
+                return buf;
+            }
+        }
 
-        // throw std::runtime_error("could not parse /proc/cpuinfo");
+        throw std::runtime_error("could not parse /proc/cpuinfo");
     }
 
 private:
     static std::string trim(const std::string& string)
     {
-        return "";
-        // if (string.size() == 0) {
-        //     return string;
-        // }
+        if (string.size() == 0) {
+            return string;
+        }
 
-        // std::size_t start = 0;
-        // while ((string[start] == ' ') && (start < string.size())) {
-        //     start += 1;
-        // }
+        std::size_t start = 0;
+        while ((string[start] == ' ') && (start < string.size())) {
+            start += 1;
+        }
 
-        // std::size_t end = string.size() - 1;
-        // while ((string[end] == ' ') && (end > 1)) {
-        //     end -= 1;
-        // }
-        // if ((string[end] != ' ') && (end < string.size())) {
-        //     end += 1;
-        // }
+        std::size_t end = string.size() - 1;
+        while ((string[end] == ' ') && (end > 1)) {
+            end -= 1;
+        }
+        if ((string[end] != ' ') && (end < string.size())) {
+            end += 1;
+        }
 
-        // return std::string(string, start, end - start);
+        return std::string(string, start, end - start);
     }
 
     static std::vector<std::string> tokenize(const std::string& line, char delimiter = ';')
