@@ -28,7 +28,7 @@
 #define LIBFLATARRAY_LOOP_PEELER(SHORT_VEC_TYPE, COUNTER_TYPE,          \
                                  X, END_X, FUNCTION, ...)               \
     __pragma( warning( push ) )                                         \
-    __pragma( warning( disable : 4711 ) )                               \
+    __pragma( warning( disable : 4710 4711 ) )                          \
     LIBFLATARRAY_LOOP_PEELER_IMPLEMENTATION(                            \
         , SHORT_VEC_TYPE, COUNTER_TYPE, X, END_X, FUNCTION, __VA_ARGS__) \
     __pragma( warning( pop ) )
