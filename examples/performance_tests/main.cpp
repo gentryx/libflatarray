@@ -22,8 +22,8 @@ namespace LibFlatArray {}
 #pragma warning( pop )
 #endif
 
-// #include <libflatarray/flat_array.hpp>
-// #include <libflatarray/short_vec.hpp>
+#include <libflatarray/flat_array.hpp>
+#include <libflatarray/short_vec.hpp>
 #include <libflatarray/testbed/cpu_benchmark.hpp>
 #include <libflatarray/testbed/evaluate.hpp>
 
