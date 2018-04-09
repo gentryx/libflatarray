@@ -50,7 +50,7 @@
 // #define DELTA_T 0.001
 // #define SOFTENING 0.1
 
-// using namespace LibFlatArray;
+using namespace LibFlatArray;
 
 // class JacobiD3Q7 : public cpu_benchmark
 // {
