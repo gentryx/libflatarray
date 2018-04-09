@@ -727,6 +727,12 @@ public:
             dim_z(dim_z)
         {}
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
         template<typename accessor_type1, typename accessor_type2>
         void operator()(accessor_type1& accessor_old,
                         accessor_type2& accessor_new) const
@@ -741,12 +747,6 @@ public:
                     std::size_t x = 1;
                     std::size_t end_x = dim_x - 1;
 
-// not inlining is ok:
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4710 )
-#endif
-
                     LIBFLATARRAY_LOOP_PEELER_TEMPLATE(
                         my_short_vec,
                         std::size_t,
@@ -757,11 +757,6 @@ public:
                         static_cast<std::size_t>(z),
                         accessor_old,
                         accessor_new);
-
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
-
                 }
             }
         }
@@ -811,6 +806,11 @@ public:
 #pragma warning( pop )
 #endif
         }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
+
 
     private:
         long dim_x;
