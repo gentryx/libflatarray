@@ -1836,611 +1836,611 @@ public:
     }
 };
 
-// class ParticleMover : public cpu_benchmark
-// {
-// public:
-//     std::string family()
-//     {
-//         return "ParticleMover";
-//     }
-
-//     std::string unit()
-//     {
-//         return "s";
-//     }
-// };
-
-// class ParticleMoverVanilla : public ParticleMover
-// {
-// public:
-//     std::string species()
-//     {
-//         return "vanilla";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         double boundary = 0.5 + dim[1] * 0.01;
-//         int repeats = dim[2];
-
-//         std::list<Particle> left;
-//         std::list<Particle> right;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     left.push_back(Particle(1.0 * x / gridDim,
-//                                             1.0 * y / gridDim,
-//                                             1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         double tStart = time();
-
-//         for (int t = 0; t < repeats; ++t) {
-//             std::list<Particle>::iterator leftStart = left.begin();
-//             std::list<Particle>::iterator rightStart = right.begin();
-
-//             for (std::list<Particle>::iterator i = leftStart; i != left.end();) {
-//                 if (i->posX >= boundary) {
-//                     std::list<Particle>::iterator here = i;
-//                     ++i;
-//                     right.splice(rightStart, left, here);
-//                 } else {
-//                     ++i;
-//                 }
-//             }
-
-//             leftStart = left.begin();
-//             for (std::list<Particle>::iterator i = rightStart; i != right.end();) {
-//                 if (i->posX < boundary) {
-//                     std::list<Particle>::iterator here = i;
-//                     ++i;
-//                     left.splice(leftStart, right, here);
-//                 } else {
-//                     ++i;
-//                 }
-//             }
-
-//             boundary = 1.0 - boundary;
-//         }
-
-//         double tEnd = time();
-//         // std::cout << "size left: " << left.size() << "\n"
-//         //           << "size right: " << right.size() << "\n";
-//         return tEnd - tStart;
-//     }
-
-// };
-
-// class ParticleMoverPepper : public ParticleMover
-// {
-// public:
-//     std::string species()
-//     {
-//         return "pepper";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         double boundary = 0.5 + dim[1] * 0.01;
-//         int repeats = dim[2];
-
-//         std::vector<Particle> left;
-//         std::vector<Particle> right;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     left.push_back(Particle(1.0 * x / gridDim,
-//                                             1.0 * y / gridDim,
-//                                             1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         double tStart = time();
-//         std::vector<Particle> newLeft;
-//         std::vector<Particle> newRight;
-
-//         for (int t = 0; t < repeats; ++t) {
-//             newLeft.clear();
-//             newRight.clear();
-
-//             for (std::vector<Particle>::iterator i = left.begin(); i != left.end(); ++i) {
-//                 if (i->posX >= boundary) {
-//                     newRight.push_back(*i);
-//                 } else {
-//                     newLeft.push_back(*i);
-//                 }
-//             }
-
-//             for (std::vector<Particle>::iterator i = right.begin(); i != right.end(); ++i) {
-//                 if (i->posX >= boundary) {
-//                     newRight.push_back(*i);
-//                 } else {
-//                     newLeft.push_back(*i);
-//                 }
-//             }
-
-//             swap(left, newLeft);
-//             swap(right, newRight);
-
-//             boundary = 1.0 - boundary;
-//         }
-
-//         double tEnd = time();
-//         // std::cout << "size left: " << left.size() << "\n"
-//         //           << "size right: " << right.size() << "\n";
-//         return tEnd - tStart;
-//     }
-
-// };
-
-// class ParticleMoverGold : public ParticleMover
-// {
-// public:
-//     std::string species()
-//     {
-//         return "gold";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         float boundary = 0.5 + dim[1] * 0.01;
-//         short_vec<float, 8> boundaryVec = boundary;
-//         int repeats = dim[2];
-
-//         soa_array<Particle, (8192+16)> left;
-//         soa_array<Particle, (8192+16)> right;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     left.push_back(Particle(1.0 * x / gridDim,
-//                                             1.0 * y / gridDim,
-//                                             1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         double tStart = time();
-//         soa_array<Particle, (8192+16)> newLeft;
-//         soa_array<Particle, (8192+16)> newRight;
-
-//         for (int t = 0; t < repeats; ++t) {
-//             newLeft.clear();
-//             newRight.clear();
-
-//             for (std::size_t i = 0; i < left.size(); i += 8) {
-//                 if (any(short_vec<float, 8>(&left[i].posX()) >= boundaryVec)) {
-//                     for (std::size_t j = i; j < (i + 8); ++j) {
-//                         if (left[j].posX() >= boundary) {
-//                             newRight.push_back(Particle(left[j]));
-//                         } else {
-//                             newLeft.push_back(Particle(left[j]));
-//                         }
-//                     }
-//                     // newRight[newRight.size()].load(left.data(), 1, i, (8192+16));
-//                     // ++newRight.elements;
-//                 } else {
-//                     // for (int j = i; j < (i + 8); ++j) {
-//                     //     newLeft.push_back(Particle(left[j]));
-//                     // }
-//                     newLeft.load(left[i], 8);
-//                 }
-//             }
-
-//             for (std::size_t i = 0; i < right.size(); i += 8) {
-//                 if (any(short_vec<float, 8>(&right[i].posX()) < boundaryVec)) {
-//                     for (std::size_t j = i; j < (i + 8); ++j) {
-//                         if (right[j].posX() < boundary) {
-//                             newLeft.push_back(Particle(right[j]));
-//                         } else {
-//                             newRight.push_back(Particle(right[j]));
-//                         }
-//                     }
-//                     // newRight[newRight.size()].load(right.data(), 1, i, (8192+16));
-//                     // ++newRight.elements;
-//                 } else {
-//                     // for (int j = i; j < (i + 8); ++j) {
-//                     //     newRight.push_back(Particle(right[j]));
-//                     // }
-//                     newRight.load(right[i], 8);
-//                 }
-//             }
-
-//             swap(left, newLeft);
-//             swap(right, newRight);
-
-//             boundary = 1.0 - boundary;
-//         }
-
-//         double tEnd = time();
-//         // std::cout << "size left: " << left.size() << "\n"
-//         //           << "size right: " << right.size() << "\n";
-//         return tEnd - tStart;
-//     }
-
-// };
-
-// class ParticleInteractor : public cpu_benchmark
-// {
-// public:
-//     std::string family()
-//     {
-//         return "ParticleInteractor";
-//     }
-
-//     std::string unit()
-//     {
-//         return "s";
-//     }
-// };
-
-// class ParticleInteractorVanilla : public ParticleInteractor
-// {
-// public:
-//     std::string species()
-//     {
-//         return "vanilla";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         float radius = dim[1] * 0.01;
-//         float radius2 = radius * radius;
-//         int repeats = dim[2];
-
-//         std::list<Particle> particles;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     particles.push_back(Particle(1.0 * x / gridDim,
-//                                                  1.0 * y / gridDim,
-//                                                  1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         std::vector<std::list<Particle*> > neighbors(particles.size());
-//         double tStart = time();
-
-//         for (int t = 0; t < repeats; ++t) {
-//             int counter = 0;
-
-//             for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
-//                 neighbors[counter].clear();
-
-//                 for (std::list<Particle>::iterator j = particles.begin(); j != particles.end(); ++j) {
-//                     float deltaX = i->posX - j->posX;
-//                     float deltaY = i->posY - j->posY;
-//                     float deltaZ = i->posZ - j->posZ;
-//                     float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                     if (dist2 < radius2) {
-//                         neighbors[counter].push_back(&*j);
-//                         i->velX += j->velX;
-//                     }
-//                 }
-//                 ++counter;
-//             }
-
-//             counter = 0;
-
-//             for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
-//                 for (std::list<Particle*>::iterator j = neighbors[counter].begin(); j != neighbors[counter].end(); ++j) {
-//                     i->velY += (*j)->velY;
-//                 }
-//                 ++counter;
-//             }
-
-//             counter = 0;
-
-//             for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
-//                 for (std::list<Particle*>::iterator j = neighbors[counter].begin(); j != neighbors[counter].end(); ++j) {
-//                     i->velZ += (*j)->velZ;
-//                 }
-//                 ++counter;
-//             }
-
-//         }
-
-//         double tEnd = time();
-//         return tEnd - tStart;
-//     }
-
-// };
-
-// class ParticleInteractorGold : public ParticleInteractor
-// {
-// public:
-//     std::string species()
-//     {
-//         return "gold";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         float radius = dim[1] * 0.01;
-//         short_vec<float, 8> radius2 = radius * radius;
-//         int repeats = dim[2];
-
-//         soa_array<Particle, (8192+16)> particles;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     particles.push_back(Particle(1.0 * x / gridDim,
-//                                                  1.0 * y / gridDim,
-//                                                  1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         double tStart = time();
-
-//         for (int t = 0; t < repeats; ++t) {
-//             for (std::size_t i = 0; i != particles.size(); ++i) {
-//                 float posX = particles[i].posX();
-//                 float posY = particles[i].posY();
-//                 float posZ = particles[i].posZ();
-
-//                 for (std::size_t j = 0; j != particles.size(); j += 8) {
-//                     short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
-//                     short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
-//                     short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
-//                     short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                     if (any(dist2 < radius2)) {
-//                         for (std::size_t k = j; k < (j + 8); ++k) {
-//                             float deltaX = particles[k].posX() - posX;
-//                             float deltaY = particles[k].posY() - posY;
-//                             float deltaZ = particles[k].posZ() - posZ;
-//                             float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                             if (dist2 < (radius * radius)) {
-//                                 particles[k].velX() += particles[i].velX();
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-
-//             for (std::size_t i = 0; i != particles.size(); ++i) {
-//                 float posX = particles[i].posX();
-//                 float posY = particles[i].posY();
-//                 float posZ = particles[i].posZ();
-
-//                 for (std::size_t j = 0; j != particles.size(); j += 8) {
-//                     short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
-//                     short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
-//                     short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
-//                     short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                     if (any(dist2 < radius2)) {
-//                         for (std::size_t k = j; k < (j + 8); ++k) {
-//                             float deltaX = particles[k].posX() - posX;
-//                             float deltaY = particles[k].posY() - posY;
-//                             float deltaZ = particles[k].posZ() - posZ;
-//                             float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                             if (dist2 < (radius * radius)) {
-//                                 particles[k].velY() += particles[i].velY();
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-
-//             for (std::size_t i = 0; i != particles.size(); ++i) {
-//                 float posX = particles[i].posX();
-//                 float posY = particles[i].posY();
-//                 float posZ = particles[i].posZ();
-
-//                 for (std::size_t j = 0; j != particles.size(); j += 8) {
-//                     short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
-//                     short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
-//                     short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
-//                     short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                     if (any(dist2 < radius2)) {
-//                         for (std::size_t k = j; k < (j + 8); ++k) {
-//                             float deltaX = particles[k].posX() - posX;
-//                             float deltaY = particles[k].posY() - posY;
-//                             float deltaZ = particles[k].posZ() - posZ;
-//                             float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-
-//                             if (dist2 < (radius * radius)) {
-//                                 particles[k].velZ() += particles[i].velZ();
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-
-//         }
-
-//         double tEnd = time();
-//         return tEnd - tStart;
-//     }
-
-// };
-
-// class ConditionalAny : public cpu_benchmark
-// {
-// public:
-//     std::string family()
-//     {
-//         return "ConditionalAny";
-//     }
-
-//     std::string unit()
-//     {
-//         return "s";
-//     }
-// };
-
-// class ConditionalAnyVanilla : public ConditionalAny
-// {
-// public:
-//     std::string species()
-//     {
-//         return "vanilla";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         float radius = dim[1] * 0.01;
-//         float radius2 = radius * radius;
-//         int repeats = dim[2];
-
-//         std::vector<Particle> particles;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     particles.push_back(Particle(1.0 * x / gridDim,
-//                                                  1.0 * y / gridDim,
-//                                                  1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         int counter = 0;
-
-//         double tStart = time();
-
-//         for (int t = 0; t < repeats; ++t) {
-//             for (std::vector<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
-//                 for (std::vector<Particle>::iterator j = particles.begin(); j != particles.end(); ++j) {
-//                     float delta_x = i->posX - j->posX;
-//                     float delta_y = i->posY - j->posY;
-//                     float delta_z = i->posZ - j->posZ;
-//                     float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
-//                     if (distance2 < radius2) {
-//                         ++counter;
-//                     }
-//                 }
-//             }
-//         }
-
-//         double tEnd = time();
-
-//         if (counter == 4711) {
-//             std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
-//         }
-
-//         return tEnd - tStart;
-
-//     }
-// };
-
-// class ConditionalUpdater
-// {
-// public:
-//     ConditionalUpdater(int repeats, long n, float radius2, int *counter) :
-//         repeats(repeats),
-//         n(n),
-//         radius2(radius2),
-//         counter(counter)
-//     {}
-
-//     template<typename ACCESSOR>
-//     void operator()(ACCESSOR& particle) {
-//         for (int t = 0; t < repeats; ++t) {
-//             typedef short_vec<float, 16> Float;
-
-//             ACCESSOR i = particle;
-//             LIBFLATARRAY_LOOP_PEELER(Float, long, i.index(), n, update, i);
-//         }
-//     }
-
-//     template<typename Float, typename ACCESSOR>
-//     void update(long& /* unused_counter */, long end, ACCESSOR& i)
-//     {
-//         Float sum = 0.0f;
-
-//         for (; i.index() < end; i += Float::ARITY) {
-//             for (ACCESSOR j(i.data(), 0); j.index() < n; ++j) {
-//                 Float delta_x = Float(&i.posX()) - j.posX();
-//                 Float delta_y = Float(&i.posY()) - j.posY();
-//                 Float delta_z = Float(&i.posZ()) - j.posZ();
-//                 Float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
-
-//                 typename Float::mask_type mask = (distance2 < radius2);
-//                 if (any(mask)) {
-//                     sum += blend(Float(0.0f), 1.0f, mask);
-//                 }
-//             }
-//         }
-//         float foo[Float::ARITY];
-//         foo << sum;
-//         for (std::size_t j = 0; j < Float::ARITY; ++j) {
-//             *counter += int(foo[j]);
-//         }
-//     }
-
-// private:
-//     int repeats;
-//     long n;
-//     float radius2;
-//     int *counter;
-// };
-
-
-// class ConditionalAnyGold : public ConditionalAny
-// {
-// public:
-//     std::string species()
-//     {
-//         return "gold";
-//     }
-
-//     double performance(std::vector<int> dim)
-//     {
-//         int gridDim = dim[0];
-//         float radius = dim[1] * 0.01;
-//         float radius2 = radius * radius;
-//         int repeats = dim[2];
-
-//         soa_vector<Particle> particles;
-
-//         for (int z = 0; z < gridDim; ++z) {
-//             for (int y = 0; y < gridDim; ++y) {
-//                 for (int x = 0; x < gridDim; ++x) {
-//                     particles.push_back(Particle(1.0 * x / gridDim,
-//                                                  1.0 * y / gridDim,
-//                                                  1.0 * z / gridDim));
-//                 }
-//             }
-//         }
-
-//         int counter = 0;
-//         std::size_t n = particles.size();
-
-//         double tStart = time();
-
-//         particles.callback(ConditionalUpdater(repeats, n, radius2, &counter));
-
-//         double tEnd = time();
-
-//         if (counter == 4711) {
-//             std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
-//         }
-
-//         return tEnd - tStart;
-
-//     }
-// };
+class ParticleMover : public cpu_benchmark
+{
+public:
+    std::string family()
+    {
+        return "ParticleMover";
+    }
+
+    std::string unit()
+    {
+        return "s";
+    }
+};
+
+class ParticleMoverVanilla : public ParticleMover
+{
+public:
+    std::string species()
+    {
+        return "vanilla";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        double boundary = 0.5 + dim[1] * 0.01;
+        int repeats = dim[2];
+
+        std::list<Particle> left;
+        std::list<Particle> right;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    left.push_back(Particle(1.0 * x / gridDim,
+                                            1.0 * y / gridDim,
+                                            1.0 * z / gridDim));
+                }
+            }
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            std::list<Particle>::iterator leftStart = left.begin();
+            std::list<Particle>::iterator rightStart = right.begin();
+
+            for (std::list<Particle>::iterator i = leftStart; i != left.end();) {
+                if (i->posX >= boundary) {
+                    std::list<Particle>::iterator here = i;
+                    ++i;
+                    right.splice(rightStart, left, here);
+                } else {
+                    ++i;
+                }
+            }
+
+            leftStart = left.begin();
+            for (std::list<Particle>::iterator i = rightStart; i != right.end();) {
+                if (i->posX < boundary) {
+                    std::list<Particle>::iterator here = i;
+                    ++i;
+                    left.splice(leftStart, right, here);
+                } else {
+                    ++i;
+                }
+            }
+
+            boundary = 1.0 - boundary;
+        }
+
+        double tEnd = time();
+        // std::cout << "size left: " << left.size() << "\n"
+        //           << "size right: " << right.size() << "\n";
+        return tEnd - tStart;
+    }
+
+};
+
+class ParticleMoverPepper : public ParticleMover
+{
+public:
+    std::string species()
+    {
+        return "pepper";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        double boundary = 0.5 + dim[1] * 0.01;
+        int repeats = dim[2];
+
+        std::vector<Particle> left;
+        std::vector<Particle> right;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    left.push_back(Particle(1.0 * x / gridDim,
+                                            1.0 * y / gridDim,
+                                            1.0 * z / gridDim));
+                }
+            }
+        }
+
+        double tStart = time();
+        std::vector<Particle> newLeft;
+        std::vector<Particle> newRight;
+
+        for (int t = 0; t < repeats; ++t) {
+            newLeft.clear();
+            newRight.clear();
+
+            for (std::vector<Particle>::iterator i = left.begin(); i != left.end(); ++i) {
+                if (i->posX >= boundary) {
+                    newRight.push_back(*i);
+                } else {
+                    newLeft.push_back(*i);
+                }
+            }
+
+            for (std::vector<Particle>::iterator i = right.begin(); i != right.end(); ++i) {
+                if (i->posX >= boundary) {
+                    newRight.push_back(*i);
+                } else {
+                    newLeft.push_back(*i);
+                }
+            }
+
+            swap(left, newLeft);
+            swap(right, newRight);
+
+            boundary = 1.0 - boundary;
+        }
+
+        double tEnd = time();
+        // std::cout << "size left: " << left.size() << "\n"
+        //           << "size right: " << right.size() << "\n";
+        return tEnd - tStart;
+    }
+
+};
+
+class ParticleMoverGold : public ParticleMover
+{
+public:
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float boundary = 0.5 + dim[1] * 0.01;
+        short_vec<float, 8> boundaryVec = boundary;
+        int repeats = dim[2];
+
+        soa_array<Particle, (8192+16)> left;
+        soa_array<Particle, (8192+16)> right;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    left.push_back(Particle(1.0 * x / gridDim,
+                                            1.0 * y / gridDim,
+                                            1.0 * z / gridDim));
+                }
+            }
+        }
+
+        double tStart = time();
+        soa_array<Particle, (8192+16)> newLeft;
+        soa_array<Particle, (8192+16)> newRight;
+
+        for (int t = 0; t < repeats; ++t) {
+            newLeft.clear();
+            newRight.clear();
+
+            for (std::size_t i = 0; i < left.size(); i += 8) {
+                if (any(short_vec<float, 8>(&left[i].posX()) >= boundaryVec)) {
+                    for (std::size_t j = i; j < (i + 8); ++j) {
+                        if (left[j].posX() >= boundary) {
+                            newRight.push_back(Particle(left[j]));
+                        } else {
+                            newLeft.push_back(Particle(left[j]));
+                        }
+                    }
+                    // newRight[newRight.size()].load(left.data(), 1, i, (8192+16));
+                    // ++newRight.elements;
+                } else {
+                    // for (int j = i; j < (i + 8); ++j) {
+                    //     newLeft.push_back(Particle(left[j]));
+                    // }
+                    newLeft.load(left[i], 8);
+                }
+            }
+
+            for (std::size_t i = 0; i < right.size(); i += 8) {
+                if (any(short_vec<float, 8>(&right[i].posX()) < boundaryVec)) {
+                    for (std::size_t j = i; j < (i + 8); ++j) {
+                        if (right[j].posX() < boundary) {
+                            newLeft.push_back(Particle(right[j]));
+                        } else {
+                            newRight.push_back(Particle(right[j]));
+                        }
+                    }
+                    // newRight[newRight.size()].load(right.data(), 1, i, (8192+16));
+                    // ++newRight.elements;
+                } else {
+                    // for (int j = i; j < (i + 8); ++j) {
+                    //     newRight.push_back(Particle(right[j]));
+                    // }
+                    newRight.load(right[i], 8);
+                }
+            }
+
+            swap(left, newLeft);
+            swap(right, newRight);
+
+            boundary = 1.0 - boundary;
+        }
+
+        double tEnd = time();
+        // std::cout << "size left: " << left.size() << "\n"
+        //           << "size right: " << right.size() << "\n";
+        return tEnd - tStart;
+    }
+
+};
+
+class ParticleInteractor : public cpu_benchmark
+{
+public:
+    std::string family()
+    {
+        return "ParticleInteractor";
+    }
+
+    std::string unit()
+    {
+        return "s";
+    }
+};
+
+class ParticleInteractorVanilla : public ParticleInteractor
+{
+public:
+    std::string species()
+    {
+        return "vanilla";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        float radius2 = radius * radius;
+        int repeats = dim[2];
+
+        std::list<Particle> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        std::vector<std::list<Particle*> > neighbors(particles.size());
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            int counter = 0;
+
+            for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
+                neighbors[counter].clear();
+
+                for (std::list<Particle>::iterator j = particles.begin(); j != particles.end(); ++j) {
+                    float deltaX = i->posX - j->posX;
+                    float deltaY = i->posY - j->posY;
+                    float deltaZ = i->posZ - j->posZ;
+                    float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                    if (dist2 < radius2) {
+                        neighbors[counter].push_back(&*j);
+                        i->velX += j->velX;
+                    }
+                }
+                ++counter;
+            }
+
+            counter = 0;
+
+            for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
+                for (std::list<Particle*>::iterator j = neighbors[counter].begin(); j != neighbors[counter].end(); ++j) {
+                    i->velY += (*j)->velY;
+                }
+                ++counter;
+            }
+
+            counter = 0;
+
+            for (std::list<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
+                for (std::list<Particle*>::iterator j = neighbors[counter].begin(); j != neighbors[counter].end(); ++j) {
+                    i->velZ += (*j)->velZ;
+                }
+                ++counter;
+            }
+
+        }
+
+        double tEnd = time();
+        return tEnd - tStart;
+    }
+
+};
+
+class ParticleInteractorGold : public ParticleInteractor
+{
+public:
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        short_vec<float, 8> radius2 = radius * radius;
+        int repeats = dim[2];
+
+        soa_array<Particle, (8192+16)> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            for (std::size_t i = 0; i != particles.size(); ++i) {
+                float posX = particles[i].posX();
+                float posY = particles[i].posY();
+                float posZ = particles[i].posZ();
+
+                for (std::size_t j = 0; j != particles.size(); j += 8) {
+                    short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
+                    short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
+                    short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
+                    short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                    if (any(dist2 < radius2)) {
+                        for (std::size_t k = j; k < (j + 8); ++k) {
+                            float deltaX = particles[k].posX() - posX;
+                            float deltaY = particles[k].posY() - posY;
+                            float deltaZ = particles[k].posZ() - posZ;
+                            float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                            if (dist2 < (radius * radius)) {
+                                particles[k].velX() += particles[i].velX();
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (std::size_t i = 0; i != particles.size(); ++i) {
+                float posX = particles[i].posX();
+                float posY = particles[i].posY();
+                float posZ = particles[i].posZ();
+
+                for (std::size_t j = 0; j != particles.size(); j += 8) {
+                    short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
+                    short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
+                    short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
+                    short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                    if (any(dist2 < radius2)) {
+                        for (std::size_t k = j; k < (j + 8); ++k) {
+                            float deltaX = particles[k].posX() - posX;
+                            float deltaY = particles[k].posY() - posY;
+                            float deltaZ = particles[k].posZ() - posZ;
+                            float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                            if (dist2 < (radius * radius)) {
+                                particles[k].velY() += particles[i].velY();
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (std::size_t i = 0; i != particles.size(); ++i) {
+                float posX = particles[i].posX();
+                float posY = particles[i].posY();
+                float posZ = particles[i].posZ();
+
+                for (std::size_t j = 0; j != particles.size(); j += 8) {
+                    short_vec<float, 8> deltaX = short_vec<float, 8>(&particles[j].posX()) - posX;
+                    short_vec<float, 8> deltaY = short_vec<float, 8>(&particles[j].posY()) - posY;
+                    short_vec<float, 8> deltaZ = short_vec<float, 8>(&particles[j].posZ()) - posZ;
+                    short_vec<float, 8> dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                    if (any(dist2 < radius2)) {
+                        for (std::size_t k = j; k < (j + 8); ++k) {
+                            float deltaX = particles[k].posX() - posX;
+                            float deltaY = particles[k].posY() - posY;
+                            float deltaZ = particles[k].posZ() - posZ;
+                            float dist2 = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+                            if (dist2 < (radius * radius)) {
+                                particles[k].velZ() += particles[i].velZ();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        double tEnd = time();
+        return tEnd - tStart;
+    }
+
+};
+
+class ConditionalAny : public cpu_benchmark
+{
+public:
+    std::string family()
+    {
+        return "ConditionalAny";
+    }
+
+    std::string unit()
+    {
+        return "s";
+    }
+};
+
+class ConditionalAnyVanilla : public ConditionalAny
+{
+public:
+    std::string species()
+    {
+        return "vanilla";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        float radius2 = radius * radius;
+        int repeats = dim[2];
+
+        std::vector<Particle> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        int counter = 0;
+
+        double tStart = time();
+
+        for (int t = 0; t < repeats; ++t) {
+            for (std::vector<Particle>::iterator i = particles.begin(); i != particles.end(); ++i) {
+                for (std::vector<Particle>::iterator j = particles.begin(); j != particles.end(); ++j) {
+                    float delta_x = i->posX - j->posX;
+                    float delta_y = i->posY - j->posY;
+                    float delta_z = i->posZ - j->posZ;
+                    float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
+                    if (distance2 < radius2) {
+                        ++counter;
+                    }
+                }
+            }
+        }
+
+        double tEnd = time();
+
+        if (counter == 4711) {
+            std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
+        }
+
+        return tEnd - tStart;
+
+    }
+};
+
+class ConditionalUpdater
+{
+public:
+    ConditionalUpdater(int repeats, long n, float radius2, int *counter) :
+        repeats(repeats),
+        n(n),
+        radius2(radius2),
+        counter(counter)
+    {}
+
+    template<typename ACCESSOR>
+    void operator()(ACCESSOR& particle) {
+        for (int t = 0; t < repeats; ++t) {
+            typedef short_vec<float, 16> Float;
+
+            ACCESSOR i = particle;
+            LIBFLATARRAY_LOOP_PEELER(Float, long, i.index(), n, update, i);
+        }
+    }
+
+    template<typename Float, typename ACCESSOR>
+    void update(long& /* unused_counter */, long end, ACCESSOR& i)
+    {
+        Float sum = 0.0f;
+
+        for (; i.index() < end; i += Float::ARITY) {
+            for (ACCESSOR j(i.data(), 0); j.index() < n; ++j) {
+                Float delta_x = Float(&i.posX()) - j.posX();
+                Float delta_y = Float(&i.posY()) - j.posY();
+                Float delta_z = Float(&i.posZ()) - j.posZ();
+                Float distance2 = delta_x * delta_x + delta_y * delta_y + delta_z * delta_z;
+
+                typename Float::mask_type mask = (distance2 < radius2);
+                if (any(mask)) {
+                    sum += blend(Float(0.0f), 1.0f, mask);
+                }
+            }
+        }
+        float foo[Float::ARITY];
+        foo << sum;
+        for (std::size_t j = 0; j < Float::ARITY; ++j) {
+            *counter += int(foo[j]);
+        }
+    }
+
+private:
+    int repeats;
+    long n;
+    float radius2;
+    int *counter;
+};
+
+
+class ConditionalAnyGold : public ConditionalAny
+{
+public:
+    std::string species()
+    {
+        return "gold";
+    }
+
+    double performance(std::vector<int> dim)
+    {
+        int gridDim = dim[0];
+        float radius = dim[1] * 0.01;
+        float radius2 = radius * radius;
+        int repeats = dim[2];
+
+        soa_vector<Particle> particles;
+
+        for (int z = 0; z < gridDim; ++z) {
+            for (int y = 0; y < gridDim; ++y) {
+                for (int x = 0; x < gridDim; ++x) {
+                    particles.push_back(Particle(1.0 * x / gridDim,
+                                                 1.0 * y / gridDim,
+                                                 1.0 * z / gridDim));
+                }
+            }
+        }
+
+        int counter = 0;
+        std::size_t n = particles.size();
+
+        double tStart = time();
+
+        particles.callback(ConditionalUpdater(repeats, n, radius2, &counter));
+
+        double tEnd = time();
+
+        if (counter == 4711) {
+            std::cout << "this is really only here to prevent the compiler from optimizing away any code: " << counter << "\n";
+        }
+
+        return tEnd - tStart;
+
+    }
+};
 
 int main(int argc, char **argv)
 {
@@ -2549,52 +2549,52 @@ int main(int argc, char **argv)
     sizes[0].push_back(20);
     sizes[0].push_back(10);
     sizes[0].push_back(100000);
-//     eval(ParticleMoverVanilla(),  sizes[0]);
-//     eval(ParticleMoverPepper(),   sizes[0]);
-//     eval(ParticleMoverGold(),     sizes[0]);
-//     sizes[0][1] = 50;
-//     eval(ParticleMoverVanilla(),  sizes[0]);
-//     eval(ParticleMoverPepper(),   sizes[0]);
-//     eval(ParticleMoverGold(),     sizes[0]);
-//     sizes[0][1] = 90;
-//     eval(ParticleMoverVanilla(),  sizes[0]);
-//     eval(ParticleMoverPepper(),   sizes[0]);
-//     eval(ParticleMoverGold(),     sizes[0]);
+    eval(ParticleMoverVanilla(),  sizes[0]);
+    eval(ParticleMoverPepper(),   sizes[0]);
+    eval(ParticleMoverGold(),     sizes[0]);
+    sizes[0][1] = 50;
+    eval(ParticleMoverVanilla(),  sizes[0]);
+    eval(ParticleMoverPepper(),   sizes[0]);
+    eval(ParticleMoverGold(),     sizes[0]);
+    sizes[0][1] = 90;
+    eval(ParticleMoverVanilla(),  sizes[0]);
+    eval(ParticleMoverPepper(),   sizes[0]);
+    eval(ParticleMoverGold(),     sizes[0]);
 
-//     sizes[0].clear();
-//     sizes[0].push_back(20);
-//     sizes[0].push_back(10);
-//     sizes[0].push_back(10);
-//     eval(ParticleInteractorVanilla(), sizes[0]);
-//     eval(ParticleInteractorGold(),    sizes[0]);
-//     sizes[0][1] = 20;
-//     eval(ParticleInteractorVanilla(), sizes[0]);
-//     eval(ParticleInteractorGold(),    sizes[0]);
+    sizes[0].clear();
+    sizes[0].push_back(20);
+    sizes[0].push_back(10);
+    sizes[0].push_back(10);
+    eval(ParticleInteractorVanilla(), sizes[0]);
+    eval(ParticleInteractorGold(),    sizes[0]);
+    sizes[0][1] = 20;
+    eval(ParticleInteractorVanilla(), sizes[0]);
+    eval(ParticleInteractorGold(),    sizes[0]);
 
-//     sizes.clear();
+    sizes.clear();
 
-//     sizes.push_back(std::vector<int>());
-//     sizes.back().push_back(20);
-//     sizes.back().push_back( 4);
-//     sizes.back().push_back(70);
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back( 4);
+    sizes.back().push_back(70);
 
-//     sizes.push_back(std::vector<int>());
-//     sizes.back().push_back(20);
-//     sizes.back().push_back(16);
-//     sizes.back().push_back(70);
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back(16);
+    sizes.back().push_back(70);
 
-//     sizes.push_back(std::vector<int>());
-//     sizes.back().push_back(20);
-//     sizes.back().push_back(64);
-//     sizes.back().push_back(70);
+    sizes.push_back(std::vector<int>());
+    sizes.back().push_back(20);
+    sizes.back().push_back(64);
+    sizes.back().push_back(70);
 
-//     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
-//         eval(ConditionalAnyVanilla(), *i);
-//     }
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(ConditionalAnyVanilla(), *i);
+    }
 
-//     for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
-//         eval(ConditionalAnyGold(), *i);
-//     }
+    for (std::vector<std::vector<int> >::iterator i = sizes.begin(); i != sizes.end(); ++i) {
+        eval(ConditionalAnyGold(), *i);
+    }
 
     return 0;
 }
