@@ -252,6 +252,12 @@ short_vec<float, 1> sqrt(const short_vec<float, 1>& vec)
     return vec.sqrt();
 }
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
 template<typename _CharT, typename _Traits>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
@@ -261,6 +267,9 @@ operator<<(std::basic_ostream<_CharT, _Traits>& __os,
     return __os;
 }
 
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 }
 
 #ifdef _MSC_BUILD
