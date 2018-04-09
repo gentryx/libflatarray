@@ -102,17 +102,16 @@ private:
 
     static std::string join(const std::vector<std::string>& tokens, const std::string& delimiter)
     {
-        return "";
-        // std::stringstream buf;
+        std::stringstream buf;
 
-        // for (std::vector<std::string>::const_iterator i = tokens.begin(); i != tokens.end(); ++i) {
-        //     if (i != tokens.begin()) {
-        //         buf << delimiter;
-        //     }
-        //     buf << *i;
-        // }
+        for (std::vector<std::string>::const_iterator i = tokens.begin(); i != tokens.end(); ++i) {
+            if (i != tokens.begin()) {
+                buf << delimiter;
+            }
+            buf << *i;
+        }
 
-        // return buf.str();
+        return buf.str();
     }
 };
 
