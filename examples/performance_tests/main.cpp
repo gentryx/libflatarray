@@ -103,46 +103,47 @@ public:
 
     double performance(std::vector<int> dim)
     {
-        int dim_x = dim[0];
-        int dim_y = dim[1];
-        int dim_z = dim[2];
-        int maxT = 200000000 / dim_x / dim_y / dim_z;
-        using std::max;
-        maxT = max(16, maxT);
+        // int dim_x = dim[0];
+        // int dim_y = dim[1];
+        // int dim_z = dim[2];
+        // int maxT = 200000000 / dim_x / dim_y / dim_z;
+        // using std::max;
+        // maxT = max(16, maxT);
 
-        int offsetZ = dim_x * dim_y;
-        std::size_t gridVolume = std::size_t(dim_x * dim_y * dim_z);
-        std::vector<double> compressedGrid(2 * gridVolume);
-        double *gridOld = &compressedGrid[0];
-        double *gridNew = &compressedGrid[gridVolume];
+        // int offsetZ = dim_x * dim_y;
+        // std::size_t gridVolume = std::size_t(dim_x * dim_y * dim_z);
+        // std::vector<double> compressedGrid(2 * gridVolume);
+        // double *gridOld = &compressedGrid[0];
+        // double *gridNew = &compressedGrid[gridVolume];
 
-        for (int z = 0; z < dim_z; ++z) {
-            for (int y = 0; y < dim_y; ++y) {
-                for (int x = 0; x < dim_x; ++x) {
-                    gridOld[z * offsetZ + y * dim_y + x] = x + y + z;
-                    gridNew[z * offsetZ + y * dim_y + x] = x + y + z;
-                }
-            }
-        }
+        // for (int z = 0; z < dim_z; ++z) {
+        //     for (int y = 0; y < dim_y; ++y) {
+        //         for (int x = 0; x < dim_x; ++x) {
+        //             gridOld[z * offsetZ + y * dim_y + x] = x + y + z;
+        //             gridNew[z * offsetZ + y * dim_y + x] = x + y + z;
+        //         }
+        //     }
+        // }
 
-        double tStart = time();
+        // double tStart = time();
 
-        for (int t = 0; t < maxT; ++t) {
-            for (int z = 1; z < (dim_z - 1); ++z) {
-                for (int y = 1; y < (dim_y - 1); ++y) {
-                    updateLine(gridOld, gridNew, 1, y, z, dim_x - 1, dim_x, offsetZ);
-                }
-            }
-        }
+        // for (int t = 0; t < maxT; ++t) {
+        //     for (int z = 1; z < (dim_z - 1); ++z) {
+        //         for (int y = 1; y < (dim_y - 1); ++y) {
+        //             updateLine(gridOld, gridNew, 1, y, z, dim_x - 1, dim_x, offsetZ);
+        //         }
+        //     }
+        // }
 
-        double tEnd = time();
+        // double tEnd = time();
 
-        if (gridOld[1 * offsetZ + 1 * dim_y + 1] ==
-            gridNew[1 * offsetZ + 1 * dim_y + 1]) {
-            std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
-        }
+        // if (gridOld[1 * offsetZ + 1 * dim_y + 1] ==
+        //     gridNew[1 * offsetZ + 1 * dim_y + 1]) {
+        //     std::cout << "this is a debug statement to prevent the compiler from optimizing away the update routine\n";
+        // }
 
-        return glups(dim, maxT, tEnd - tStart);
+        // return glups(dim, maxT, tEnd - tStart);
+        return 0;
     }
 
 private:
