@@ -55,6 +55,11 @@ public:
      * might allocate excessive amounts of memory.
      */
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
     /**
      * Means that the code will be used with 1D grids only -- makes
      * sense mostly for use with unstructured grids.
@@ -118,6 +123,10 @@ public:
         LIBFLATARRAY_CUSTOM_SIZES_3D_UNIFORM(
             (32)(64)(128)(136)(192)(200)(256)(264)(512)(520)(1032))
     };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
     /**
      * This lets the user choose relevant grid sizes himself. Please
@@ -212,6 +221,11 @@ public:
         }
     };
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
+
     template<typename CELL>
     class select_sizes<CELL, typename CELL::API::has_sizes>
     {
@@ -250,6 +264,10 @@ public:
                 dim_z);
         }
     };
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
     /**
      * select_asymmetric_dual_callback:

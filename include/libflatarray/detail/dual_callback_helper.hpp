@@ -92,7 +92,7 @@ private:
 // an assignment operator missing -- which is clearly there:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4626 )
+#pragma warning( disable : 4626 4710 )
 #endif
 
 template<typename GRID_TYPE, typename FUNCTOR>
