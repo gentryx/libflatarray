@@ -578,12 +578,7 @@ public:
         ptr[offsets[15]] = val[15];
     }
 
-    // not inlining is ok:
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4710 )
-#endif
-    inline
+    LIBFLATARRAY_INLINE
     void blend(const mask_type& mask, const short_vec<double, 16>& other)
     {
         if (mask & (1 << 0)) {
@@ -635,9 +630,6 @@ public:
             val[15] = other.val[15];
         }
     }
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
 
 private:
     double val[16];
