@@ -93,6 +93,18 @@ public:
     }
 
 
+#ifdef _MSC_BUILD
+// lazy (read: bad, inexact) test for equality. we can't use stict
+// equality (operator==()), as vector units may yield
+// non-IEEE-compliannt results. Single-precision accuracy (i.e. ~20
+// bits for the mantissa or 6 digits) shall be suffice for functional
+// testing.
+#  define TEST_REAL(A, B)                                       \
+    __pragma( warning( push ) )                                 \
+    __pragma( warning( disable : 4710 ) )                       \
+    TEST_REAL_ACCURACY(A, B, 0.000001)                          \
+    __pragma( warning( pop ) )
+#else
 // lazy (read: bad, inexact) test for equality. we can't use stict
 // equality (operator==()), as vector units may yield
 // non-IEEE-compliannt results. Single-precision accuracy (i.e. ~20
@@ -100,5 +112,6 @@ public:
 // testing.
 #  define TEST_REAL(A, B)                       \
     TEST_REAL_ACCURACY(A, B, 0.000001)
+#endif
 
 #endif
