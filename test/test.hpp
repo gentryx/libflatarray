@@ -1,6 +1,6 @@
 /**
  * Copyright 2014-2017 Andreas Schäfer
- * Copyright 2017 Google
+ * Copyright 2017-2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,6 +23,8 @@
 #ifdef _MSC_BUILD
 #pragma warning( pop )
 #endif
+
+#include <libflatarray/detail/macros.hpp>
 
 #ifndef BOOST_TEST
 // Microsoft Visual Studio doesn't define __PRETTY_FUNCTION__:
@@ -49,17 +51,7 @@ class Runner
 public:
     Runner()
     {
-        // inlining is ok:
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4711 )
-#endif
-
         TEST()();
-
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
     }
 };
 
@@ -67,6 +59,7 @@ public:
     class TEST_NAME                             \
     {                                           \
     public:                                     \
+        LIBFLATARRAY_INLINE                     \
         void operator()();                      \
                                                 \
     private:                                    \
@@ -75,6 +68,7 @@ public:
                                                 \
     Runner<TEST_NAME> TEST_NAME::runner;        \
                                                 \
+    LIBFLATARRAY_INLINE                         \
     void TEST_NAME::operator()()                \
 
 
