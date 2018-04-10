@@ -432,6 +432,10 @@ void testImplementationReal()
 
     // test comparison
     {
+        // test any() member
+        ShortVec test1(0.0);
+        BOOST_TEST_EQ(0, test1.any());
+
         for (std::size_t test_value = 0; test_value <= ARITY; ++test_value) {
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY);
             std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY);
@@ -445,6 +449,14 @@ void testImplementationReal()
             ShortVec v2(&array2[0]);
             typename ShortVec::mask_type res;
 
+            // test any() member
+            if (test_value < ARITY) {
+                std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY, 0);
+                array[test_value] = 0.1234;
+                ShortVec test2(&array[0]);
+                BOOST_TEST(0 != test2.any());
+            }
+
             // test operator<()
             res = (v1 < v2);
 
@@ -455,6 +467,9 @@ void testImplementationReal()
                     BOOST_TEST(get(res, i) == 0);
                 }
             }
+
+            // test count_mask()
+            BOOST_TEST_EQ((count_mask<CARGO, ARITY>(res)), test_value);
 
             // test reduction to bool:
             bool actual = any(res);
@@ -571,6 +586,46 @@ void testImplementationReal()
             CARGO actual = get(v2, i);
             CARGO expected = 10.0 / (i + 0.123);
             TEST_REAL_ACCURACY(expected, actual, 0.001);
+        }
+    }
+
+    // test blend with mask
+    {
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array1(ARITY * 10);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > array2(ARITY * 10);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual(ARITY * 10);
+
+        for (std::size_t i = 0; i < (ARITY * 10); ++i) {
+            array1[i] = i;
+            array2[i] = i / ARITY * (ARITY - 4) + ARITY;
+        }
+
+        for (std::size_t i = 0; i < (ARITY * 10); i += ARITY) {
+            ShortVec a(&array1[i]);
+            ShortVec b(&array2[i]);
+
+            typename ShortVec::mask_type mask = a < b;
+            ShortVec res = 1;
+            res.blend(mask, ShortVec(-1));
+            &actual[i] << res;
+        }
+
+        for (std::size_t i = 0; i < (ARITY * 10); ++i) {
+            float expected = (array1[i] < array2[i]) ? -1 : 1;
+            BOOST_TEST_EQ(expected, actual[i]);
+        }
+
+        for (std::size_t i = 0; i < (ARITY * 10); i += ARITY) {
+            ShortVec a(&array1[i]);
+            ShortVec b(&array2[i]);
+
+            typename ShortVec::mask_type mask = a < b;
+            &actual[i] << blend(ShortVec(1), ShortVec(-1), mask);
+        }
+
+        for (std::size_t i = 0; i < (ARITY * 10); ++i) {
+            float expected = (array1[i] < array2[i]) ? -1 : 1;
+            BOOST_TEST_EQ(expected, actual[i]);
         }
     }
 }
@@ -814,8 +869,8 @@ void testImplementationInt()
     // test gather
     {
         CARGO array[ARITY * 10];
-        std::vector<int, aligned_allocator<int, 64> > indices(ARITY);
-        CARGO actual[ARITY];
+        std::vector<int,   aligned_allocator<int,   64> > indices(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> >  actual(ARITY);
         CARGO expected[ARITY];
         std::memset(array, '\0', sizeof(CARGO) * ARITY * 10);
 
@@ -832,7 +887,7 @@ void testImplementationInt()
 
         ShortVec vec;
         vec.gather(array, &indices[0]);
-        actual << vec;
+        actual.data() << vec;
 
         for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual[i], expected[i]);
@@ -842,8 +897,8 @@ void testImplementationInt()
 #ifdef LIBFLATARRAY_WITH_CPP14
     // test gather via initializer_list
     {
-        CARGO actual1[ARITY];
-        CARGO actual2[ARITY];
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual1(ARITY);
+        std::vector<CARGO, aligned_allocator<CARGO, 64> > actual2(ARITY);
         CARGO expected[ARITY];
         for (std::size_t i = 0; i < ARITY; ++i) {
             expected[i] = (i * 10) + 5;
@@ -859,8 +914,9 @@ void testImplementationInt()
                  85, 95, 105, 115, 125, 135, 145, 155,
                  165, 175, 185, 195, 205, 215, 225, 235,
                  245, 255, 265, 275, 285, 295, 305, 315 };
-        actual1 << vec1;
-        actual2 << vec2;
+        actual1.data() << vec1;
+        actual2.data() << vec2;
+
         for (std::size_t i = 0; i < ARITY; ++i) {
             BOOST_TEST_EQ(actual1[i], expected[i]);
             BOOST_TEST_EQ(actual2[i], expected[i]);
