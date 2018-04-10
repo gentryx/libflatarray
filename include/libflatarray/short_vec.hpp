@@ -17,6 +17,7 @@
 #endif
 
 #include <cstdlib>
+#include <sstream>
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
@@ -332,19 +333,6 @@ public:
 #    endif
 #  endif
 
-#endif
-
-// disable certain warnings from system headers when compiling with
-// Microsoft Visual Studio:
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4514 )
-#endif
-
-#include <sstream>
-
-#ifdef _MSC_BUILD
-#pragma warning( pop )
 #endif
 
 // Dirty workaround for using GCC 6.4.0 with CUDA related to GCC
