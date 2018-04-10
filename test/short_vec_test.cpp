@@ -77,14 +77,14 @@ void testImplementationReal()
         BOOST_TEST(0 == vec2[i]);
     }
 
-    // // tests vector load/store:
-    // for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
-    //     ShortVec v = &vec1[i];
-    //     &vec2[i] << v;
-    // }
-    // for (std::size_t i = 0; i < numElements; ++i) {
-    //     TEST_REAL((i + 0.1), vec2[i]);
-    // }
+    // tests vector load/store:
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        &vec2[i] << v;
+    }
+    for (std::size_t i = 0; i < numElements; ++i) {
+        TEST_REAL((i + 0.1), vec2[i]);
+    }
 
     // // tests scalar load, vector add:
     // ShortVec w = vec1[0];
