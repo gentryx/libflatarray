@@ -49,9 +49,12 @@ public:
     streaming_short_vec(const CARGO val = 0) : short_vec<CARGO, ARITY>(val)
     {}
 
-    template<typename INIT_TYPE>
     inline
-    streaming_short_vec(const INIT_TYPE& val) : short_vec<CARGO, ARITY>(val)
+    streaming_short_vec(const CARGO *data) : short_vec<CARGO, ARITY>(data)
+    {}
+
+    inline
+    streaming_short_vec(short_vec<CARGO, ARITY>&& val) : short_vec<CARGO, ARITY>(std::move(val))
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
