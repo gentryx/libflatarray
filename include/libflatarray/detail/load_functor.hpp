@@ -38,6 +38,11 @@ public:
         count(count)
     {}
 
+#ifdef LIBFLATARRAY_WITH_CPP14
+    inline load_functor(const load_functor& other) = default;
+    inline load_functor(load_functor&& other) = default;
+#endif
+
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
@@ -64,6 +69,7 @@ private:
     const char *source;
     std::size_t count;
 };
+
 
 #ifdef LIBFLATARRAY_WITH_CUDA
 #ifdef __CUDACC__

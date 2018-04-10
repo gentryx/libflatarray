@@ -126,7 +126,7 @@ public:
         return !(*this == other);
     }
 
-    bool operator==(const aligned_allocator& other) const
+    bool operator==(const aligned_allocator& /* other*/) const
     {
         return true;
     }

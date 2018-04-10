@@ -33,6 +33,11 @@ public:
         count(count)
     {}
 
+#ifdef LIBFLATARRAY_WITH_CPP14
+    inline save_functor(const save_functor& other) = default;
+    inline save_functor(save_functor&& other) = default;
+#endif
+
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
     {
