@@ -1,5 +1,6 @@
 /**
  * Copyright 2014-2017 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
+#include <libflatarray/detail/macros.hpp>
 
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
@@ -59,7 +61,7 @@ public:
         std::basic_ostream<_CharT, _Traits>& __os,
         const short_vec<float, 32>& vec);
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const float data = 0) :
         val{data,
             data,
@@ -95,13 +97,13 @@ public:
             data}
     {}
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const float *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(
         const float val1,
         const float val2,
@@ -170,7 +172,7 @@ public:
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const std::initializer_list<float>& il)
     {
         const float *ptr = static_cast<const float *>(&(*il.begin()));
@@ -178,7 +180,7 @@ public:
     }
 #endif
 
-    inline
+    LIBFLATARRAY_INLINE
     bool any() const
     {
         return
@@ -216,13 +218,13 @@ public:
             val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     float operator[](const int i) const
     {
         return val[i];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator-=(const short_vec<float, 32>& other)
     {
         val[ 0] -= other.val[ 0];
@@ -259,7 +261,7 @@ public:
         val[31] -= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<float, 32> operator-(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
@@ -297,7 +299,7 @@ public:
             val[31] - other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator+=(const short_vec<float, 32>& other)
     {
         val[ 0] += other.val[ 0];
@@ -334,7 +336,7 @@ public:
         val[31] += other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<float, 32> operator+(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
@@ -372,7 +374,7 @@ public:
             val[31] + other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator*=(const short_vec<float, 32>& other)
     {
         val[ 0] *= other.val[ 0];
@@ -409,7 +411,7 @@ public:
         val[31] *= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<float, 32> operator*(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
@@ -447,7 +449,7 @@ public:
             val[31] * other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator/=(const short_vec<float, 32>& other)
     {
         val[ 0] /= other.val[ 0];
@@ -484,7 +486,7 @@ public:
         val[31] /= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<float, 32> operator/(const short_vec<float, 32>& other) const
     {
         return short_vec<float, 32>(
@@ -523,7 +525,7 @@ public:
     }
 
 #define LFA_SHORTVEC_COMPARE_HELPER(V1, V2, OP) ((V1) OP (V2))
-    inline
+    LIBFLATARRAY_INLINE
     mask_type operator<(const short_vec<float, 32>& other) const
     {
         return
@@ -561,7 +563,7 @@ public:
                       (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <) << 31));
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     mask_type operator<=(const short_vec<float, 32>& other) const
     {
         return
@@ -599,7 +601,7 @@ public:
                       (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], <=) << 31));
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     mask_type operator==(const short_vec<float, 32>& other) const
     {
         return
@@ -637,7 +639,7 @@ public:
                       (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], ==) << 31));
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     mask_type operator>(const short_vec<float, 32>& other) const
     {
         return
@@ -675,7 +677,7 @@ public:
                       (LFA_SHORTVEC_COMPARE_HELPER(val[31], other.val[31], >) << 31));
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     mask_type operator>=(const short_vec<float, 32>& other) const
     {
         return
@@ -714,6 +716,11 @@ public:
     }
 #undef LFA_SHORTVEC_COMPARE_HELPER
 
+    // not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
     inline
     short_vec<float, 32> sqrt() const
     {
@@ -751,8 +758,11 @@ public:
             std::sqrt(val[30]),
             std::sqrt(val[31]));
     }
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
-    inline
+    LIBFLATARRAY_INLINE
     void load(const float *data)
     {
         val[ 0] = data[ 0];
@@ -789,13 +799,13 @@ public:
         val[31] = data[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void load_aligned(const float *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store(float *data) const
     {
         *(data +  0) = val[ 0];
@@ -832,19 +842,19 @@ public:
         *(data + 31) = val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_aligned(float *data) const
     {
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_nt(float *data) const
     {
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void gather(const float *ptr, const int *offsets)
     {
         val[ 0] = ptr[offsets[ 0]];
@@ -881,7 +891,7 @@ public:
         val[31] = ptr[offsets[31]];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void scatter(float *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = val[ 0];
@@ -918,6 +928,11 @@ public:
         ptr[offsets[31]] = val[31];
     }
 
+    // not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
     inline
     void blend(const mask_type& mask, const short_vec<float, 32>& other)
     {
@@ -1018,12 +1033,15 @@ public:
             val[31] = other.val[31];
         }
     }
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 private:
     float val[32];
 };
 
-inline
+LIBFLATARRAY_INLINE
 void operator<<(float *data, const short_vec<float, 32>& vec)
 {
     vec.store(data);
@@ -1033,7 +1051,7 @@ void operator<<(float *data, const short_vec<float, 32>& vec)
 #pragma warning pop
 #endif
 
-inline
+LIBFLATARRAY_INLINE
 short_vec<float, 32> sqrt(const short_vec<float, 32>& vec)
 {
     return vec.sqrt();

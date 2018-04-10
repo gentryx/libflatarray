@@ -1,6 +1,7 @@
 /**
  * Copyright 2015 Kurt Kanzenbach
  * Copyright 2016-2017 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,6 +17,7 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/short_vec_base.hpp>
+#include <libflatarray/detail/macros.hpp>
 
 // disable certain warnings from system headers when compiling with
 // Microsoft Visual Studio:
@@ -63,7 +65,7 @@ public:
         std::basic_ostream<_CharT, _Traits>& __os,
         const short_vec<int, 8>& vec);
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const int data = 0) :
         val{data,
             data,
@@ -75,13 +77,13 @@ public:
             data}
     {}
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const int *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(
         const int val1,
         const int val2,
@@ -102,7 +104,7 @@ public:
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const std::initializer_list<int>& il)
     {
         const int *ptr = static_cast<const int *>(&(*il.begin()));
@@ -110,7 +112,7 @@ public:
     }
 #endif
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator-=(const short_vec<int, 8>& other)
     {
         val[ 0] -= other.val[ 0];
@@ -123,7 +125,7 @@ public:
         val[ 7] -= other.val[ 7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 8> operator-(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
@@ -137,7 +139,7 @@ public:
             val[ 7] - other.val[ 7]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator+=(const short_vec<int, 8>& other)
     {
         val[ 0] += other.val[ 0];
@@ -150,7 +152,7 @@ public:
         val[ 7] += other.val[ 7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 8> operator+(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
@@ -164,7 +166,7 @@ public:
             val[ 7] + other.val[ 7]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator*=(const short_vec<int, 8>& other)
     {
         val[ 0] *= other.val[ 0];
@@ -177,7 +179,7 @@ public:
         val[ 7] *= other.val[ 7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 8> operator*(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
@@ -191,7 +193,7 @@ public:
             val[ 7] * other.val[ 7]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator/=(const short_vec<int, 8>& other)
     {
         val[ 0] /= other.val[ 0];
@@ -204,7 +206,7 @@ public:
         val[ 7] /= other.val[ 7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 8> operator/(const short_vec<int, 8>& other) const
     {
         return short_vec<int, 8>(
@@ -218,6 +220,11 @@ public:
             val[ 7] / other.val[ 7]);
     }
 
+    // not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
     inline
     short_vec<int, 8> sqrt() const
     {
@@ -231,8 +238,11 @@ public:
             static_cast<int>(std::sqrt(val[ 6])),
             static_cast<int>(std::sqrt(val[ 7])));
     }
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
-    inline
+    LIBFLATARRAY_INLINE
     void load(const int *data)
     {
         val[ 0] = data[0];
@@ -245,13 +255,13 @@ public:
         val[ 7] = data[7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void load_aligned(const int *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store(int *data) const
     {
         *(data +  0) = val[ 0];
@@ -264,19 +274,19 @@ public:
         *(data +  7) = val[ 7];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_aligned(int *data) const
     {
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_nt(int *data) const
     {
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void gather(const int *ptr, const int *offsets)
     {
         val[ 0] = ptr[offsets[0]];
@@ -289,7 +299,7 @@ public:
         val[ 7] = ptr[offsets[7]];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void scatter(int *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = val[ 0];
@@ -306,7 +316,7 @@ private:
     int val[8];
 };
 
-inline
+LIBFLATARRAY_INLINE
 void operator<<(int *data, const short_vec<int, 8>& vec)
 {
     vec.store(data);
@@ -316,7 +326,7 @@ void operator<<(int *data, const short_vec<int, 8>& vec)
 #pragma warning pop
 #endif
 
-inline
+LIBFLATARRAY_INLINE
 short_vec<int, 8> sqrt(const short_vec<int, 8>& vec)
 {
     return vec.sqrt();
