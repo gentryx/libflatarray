@@ -368,7 +368,7 @@ std::size_t DestructionCounterClass::count = 0;
 // padding is fine:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4714 4820 )
+#pragma warning( disable : 4820 )
 #endif
 
 class CellWithNonTrivialMembers
@@ -1332,3 +1332,7 @@ int main(int /* argc */, char ** /* argv */)
 {
     return 0;
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( disable : 4714 )
+#endif
