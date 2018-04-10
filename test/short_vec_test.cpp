@@ -51,13 +51,13 @@ void testImplementationReal()
     typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
     std::size_t numElements = ShortVec::ARITY * 5;
 
-    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
-    std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
+    // std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
+    // std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
 
-    // init vec1:
-    for (std::size_t i = 0; i < numElements; ++i) {
-        vec1[i] = i + 0.1;
-    }
+    // // init vec1:
+    // for (std::size_t i = 0; i < numElements; ++i) {
+    //     vec1[i] = i + 0.1;
+    // }
 
     // test size:
     {
