@@ -61,41 +61,41 @@ void testImplementationReal()
 
     // test size:
     {
-        // ShortVec v;
-        // BOOST_TEST_EQ(ARITY, v.size());
+        ShortVec v;
+        BOOST_TEST_EQ(ARITY, v.size());
     }
 
-//     // test default c-tor:
-//     for (std::size_t i = 0; i < numElements; ++i) {
-//         BOOST_TEST(4711 == vec2[i]);
-//     }
-//     for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
-//         ShortVec v;
-//         &vec2[i] << v;
-//     }
-//     for (std::size_t i = 0; i < numElements; ++i) {
-//         BOOST_TEST(0 == vec2[i]);
-//     }
+    // test default c-tor:
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST(4711 == vec2[i]);
+    }
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v;
+        &vec2[i] << v;
+    }
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST(0 == vec2[i]);
+    }
 
-//     // tests vector load/store:
-//     for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
-//         ShortVec v = &vec1[i];
-//         &vec2[i] << v;
-//     }
-//     for (std::size_t i = 0; i < numElements; ++i) {
-//         TEST_REAL((i + 0.1), vec2[i]);
-//     }
+    // tests vector load/store:
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        &vec2[i] << v;
+    }
+    for (std::size_t i = 0; i < numElements; ++i) {
+        TEST_REAL((i + 0.1), vec2[i]);
+    }
 
-//     // tests scalar load, vector add:
-//     ShortVec w = vec1[0];
+    // tests scalar load, vector add:
+    ShortVec w = vec1[0];
 
-//     for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
-//         ShortVec v = &vec1[i];
-//         &vec2[i] << (v + w);
-//     }
-//     for (std::size_t i = 0; i < numElements; ++i) {
-//         TEST_REAL((i + 0.2), vec2[i]);
-//     }
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        &vec2[i] << (v + w);
+    }
+    for (std::size_t i = 0; i < numElements; ++i) {
+        TEST_REAL((i + 0.2), vec2[i]);
+    }
 
 //     // test +
 //     for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
