@@ -10,6 +10,7 @@
 
 #include <libflatarray/config.h>
 #include <libflatarray/aligned_allocator.hpp>
+#include <libflatarray/macros.hpp>
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
@@ -19,7 +20,6 @@
 #pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
 
-#include <libflatarray/macros.hpp>
 #include <libflatarray/short_vec.hpp>
 
 // Don't warn about these functions being stripped from an executable
