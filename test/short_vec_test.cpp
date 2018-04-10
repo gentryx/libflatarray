@@ -8,10 +8,10 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-// #include <libflatarray/config.h>
-// #include <libflatarray/aligned_allocator.hpp>
-// #include <libflatarray/macros.hpp>
-// #include <libflatarray/short_vec.hpp>
+#include <libflatarray/config.h>
+#include <libflatarray/aligned_allocator.hpp>
+#include <libflatarray/macros.hpp>
+#include <libflatarray/short_vec.hpp>
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
@@ -1019,8 +1019,8 @@ namespace LibFlatArray {
 //     }
 // }
 
-// ADD_TEST(TestBasic)
-// {
+ADD_TEST(TestBasic)
+{
 //     testImplementationReal<double, 1>();
 //     testImplementationReal<double, 2>();
 //     testImplementationReal<double, 4>();
@@ -1041,7 +1041,7 @@ namespace LibFlatArray {
 //     testImplementationInt<int, 8>();
 //     testImplementationInt<int, 16>();
 //     testImplementationInt<int, 32>();
-// }
+}
 
 // template<typename STRATEGY>
 // inline
