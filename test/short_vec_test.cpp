@@ -1017,7 +1017,7 @@ namespace LibFlatArray {
 //             BOOST_TEST_EQ(array[i], expected[i]);
 //         }
 //     }
-// }
+}
 
 ADD_TEST(TestBasic)
 {
@@ -1300,7 +1300,7 @@ ADD_TEST(TestBasic)
 // #undef EXPECTED_TYPE
 // }
 
-}
+// }
 
 int main(int /* argc */, char** /* argv */)
 {
