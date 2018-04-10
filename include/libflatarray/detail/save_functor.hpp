@@ -36,6 +36,8 @@ public:
 #ifdef LIBFLATARRAY_WITH_CPP14
     inline save_functor(const save_functor& other) = default;
     inline save_functor(save_functor&& other) = default;
+    inline save_functor& operator=(const save_functor&) = default;
+    inline save_functor& operator=(save_functor&&) = default;
 #endif
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
