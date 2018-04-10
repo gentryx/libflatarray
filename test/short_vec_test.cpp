@@ -1043,6 +1043,7 @@ ADD_TEST(TestBasic)
 }
 
 template<typename STRATEGY>
+inline
 void checkForStrategy(STRATEGY, STRATEGY)
 {}
 

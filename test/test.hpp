@@ -49,7 +49,17 @@ class Runner
 public:
     Runner()
     {
+        // inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4711 )
+#endif
+
         TEST()();
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
     }
 };
 
