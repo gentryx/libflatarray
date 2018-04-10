@@ -8,6 +8,8 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <libflatarray/aligned_allocator.hpp>
+
 // #include <libflatarray/config.h>
 // #include <libflatarray/macros.hpp>
 // #include <libflatarray/short_vec.hpp>
@@ -20,8 +22,6 @@
 #pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
 
-#include <libflatarray/aligned_allocator.hpp>
-
 // Don't warn about these functions being stripped from an executable
 // as they're not being used, that's actually expected behavior.
 #ifdef _MSC_BUILD
@@ -33,8 +33,8 @@
 // #include <iostream>
 // #include <sstream>
 // #include <stdexcept>
-#include <vector>
 #include <cstring>
+#include <vector>
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
