@@ -224,8 +224,8 @@ short_vec<int, 2> sqrt(const short_vec<int, 2>& vec)
 #pragma warning( disable : 4710 4711 )
 #endif
 
-inline
 template<typename _CharT, typename _Traits>
+inline
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os,
            const short_vec<int, 2>& vec)
