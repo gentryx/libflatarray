@@ -11,6 +11,8 @@
 #include <libflatarray/config.h>
 #include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/macros.hpp>
+#include <libflatarray/short_vec.hpp>
+
 
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
@@ -20,8 +22,6 @@
 #pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
 
-#include <libflatarray/short_vec.hpp>
-
 // Don't warn about these functions being stripped from an executable
 // as they're not being used, that's actually expected behavior.
 #ifdef _MSC_BUILD
@@ -29,10 +29,10 @@
 #pragma warning( disable : 4514 )
 #endif
 
-// #include <cmath>
-// #include <iostream>
-// #include <sstream>
-// #include <stdexcept>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <cstring>
 #include <vector>
 
@@ -87,16 +87,16 @@ void testImplementationReal()
         TEST_REAL((i + 0.1), vec2[i]);
     }
 
-    // // tests scalar load, vector add:
-    // ShortVec w = vec1[0];
+    // tests scalar load, vector add:
+    ShortVec w = vec1[0];
 
-    // for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
-    //     ShortVec v = &vec1[i];
-    //     &vec2[i] << (v + w);
-    // }
-    // for (std::size_t i = 0; i < numElements; ++i) {
-    //     TEST_REAL((i + 0.2), vec2[i]);
-    // }
+    for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
+        ShortVec v = &vec1[i];
+        &vec2[i] << (v + w);
+    }
+    for (std::size_t i = 0; i < numElements; ++i) {
+        TEST_REAL((i + 0.2), vec2[i]);
+    }
 
 //     // test +
 //     for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
