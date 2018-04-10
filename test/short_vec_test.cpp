@@ -8,6 +8,9 @@
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <libflatarray/config.h>
+#include <libflatarray/aligned_allocator.hpp>
+
 // globally disable some warnings with MSVC, that are issued not for a
 // specific header, but rather for the interaction of system headers
 // and LibFlatArray source.  Also disable overly eager sign conversion
@@ -16,8 +19,6 @@
 #pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
 
-#include <libflatarray/config.h>
-#include <libflatarray/aligned_allocator.hpp>
 #include <libflatarray/macros.hpp>
 #include <libflatarray/short_vec.hpp>
 
