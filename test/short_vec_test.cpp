@@ -39,9 +39,9 @@
 // #pragma warning( pop )
 // #endif
 
-// #include "test.hpp"
+#include "test.hpp"
 
-namespace LibFlatArray {
+// namespace LibFlatArray {
 
 #define SHORT_VEC_TEMPLATE short_vec
 
@@ -1017,7 +1017,7 @@ namespace LibFlatArray {
 //             BOOST_TEST_EQ(array[i], expected[i]);
 //         }
 //     }
-}
+// }
 
 ADD_TEST(TestBasic)
 {
