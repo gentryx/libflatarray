@@ -16,7 +16,16 @@ namespace LibFlatArray {}
 #endif
 
 #include <iostream>
+#include <list>
 #include <sstream>
+
+#ifdef __SSE__
+#include <xmmintrin.h>
+#endif
+
+#ifdef __AVX__
+#include <immintrin.h>
+#endif
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
@@ -33,27 +42,6 @@ namespace LibFlatArray {}
 // and overflow warnings:
 #ifdef _MSC_BUILD
 #pragma warning( disable : 4244 4305 4307 4365 4456 4514 )
-#endif
-
-// disable certain warnings from system headers when compiling with
-// Microsoft Visual Studio:
-#ifdef _MSC_BUILD
-#pragma warning( push )
-#pragma warning( disable : 4514 )
-#endif
-
-#include <iostream>
-#include <list>
-#ifdef __SSE__
-#include <xmmintrin.h>
-#endif
-
-#ifdef __AVX__
-#include <immintrin.h>
-#endif
-
-#ifdef _MSC_BUILD
-#pragma warning( pop )
 #endif
 
 #define WEIGHT_S 0.11
