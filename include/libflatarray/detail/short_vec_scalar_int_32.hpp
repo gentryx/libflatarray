@@ -65,7 +65,7 @@ public:
         std::basic_ostream<_CharT, _Traits>& __os,
         const short_vec<int, 32>& vec);
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const int data = 0) :
         val{data,
             data,
@@ -101,13 +101,13 @@ public:
             data}
     {}
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const int *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(
         const int val1,
         const int val2,
@@ -176,7 +176,7 @@ public:
     {}
 
 #ifdef LIBFLATARRAY_WITH_CPP14
-    inline
+    LIBFLATARRAY_INLINE
     short_vec(const std::initializer_list<int>& il)
     {
         const int *ptr = static_cast<const int *>(&(*il.begin()));
@@ -184,7 +184,7 @@ public:
     }
 #endif
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator-=(const short_vec<int, 32>& other)
     {
         val[ 0] -= other.val[ 0];
@@ -221,7 +221,7 @@ public:
         val[31] -= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 32> operator-(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
@@ -259,7 +259,7 @@ public:
             val[31] - other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator+=(const short_vec<int, 32>& other)
     {
         val[ 0] += other.val[ 0];
@@ -296,7 +296,7 @@ public:
         val[31] += other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 32> operator+(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
@@ -334,7 +334,7 @@ public:
             val[31] + other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator*=(const short_vec<int, 32>& other)
     {
         val[ 0] *= other.val[ 0];
@@ -371,7 +371,7 @@ public:
         val[31] *= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 32> operator*(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
@@ -409,7 +409,7 @@ public:
             val[31] * other.val[31]);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void operator/=(const short_vec<int, 32>& other)
     {
         val[ 0] /= other.val[ 0];
@@ -446,7 +446,7 @@ public:
         val[31] /= other.val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     short_vec<int, 32> operator/(const short_vec<int, 32>& other) const
     {
         return short_vec<int, 32>(
@@ -484,6 +484,11 @@ public:
             val[31] / other.val[31]);
     }
 
+// not inlining is ok:
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 )
+#endif
     inline
     short_vec<int, 32> sqrt() const
     {
@@ -521,8 +526,11 @@ public:
             static_cast<int>(std::sqrt(val[30])),
             static_cast<int>(std::sqrt(val[31])));
     }
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
-    inline
+    LIBFLATARRAY_INLINE
     void load(const int *data)
     {
         val[ 0] = data[ 0];
@@ -559,13 +567,13 @@ public:
         val[31] = data[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void load_aligned(const int *data)
     {
         load(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store(int *data) const
     {
         *(data +  0) = val[ 0];
@@ -602,7 +610,7 @@ public:
         *(data + 31) = val[31];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void store_aligned(int *data) const
     {
         store(data);
@@ -614,7 +622,7 @@ public:
         store(data);
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void gather(const int *ptr, const int *offsets)
     {
         val[ 0] = ptr[offsets[ 0]];
@@ -651,7 +659,7 @@ public:
         val[31] = ptr[offsets[31]];
     }
 
-    inline
+    LIBFLATARRAY_INLINE
     void scatter(int *ptr, const int *offsets) const
     {
         ptr[offsets[0]] = val[ 0];
