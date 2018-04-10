@@ -43,7 +43,7 @@
 
 namespace LibFlatArray {
 
-#define SHORT_VEC_TEMPLATE short_vec
+#define SHORT_VEC_TEMPLATE streaming_short_vec
 
 template<typename CARGO, std::size_t ARITY>
 void testImplementationReal()
