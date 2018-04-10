@@ -1,5 +1,6 @@
 /**
  * Copyright 2016 Andreas Schäfer
+ * Copyright 2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -81,8 +82,9 @@ public:
 #pragma warning pop
 #endif
 
+template<typename CARGO, int ARITY>
 inline
-void operator<<(double *data, const streaming_short_vec<double, 8>& vec)
+void operator<<(double *data, const streaming_short_vec<CARGO, ARITY>& vec)
 {
     vec.store_nt(data);
 }
