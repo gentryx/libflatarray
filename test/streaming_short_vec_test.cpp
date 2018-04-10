@@ -2,7 +2,7 @@
  * Copyright 2013-2017 Andreas Schäfer
  * Copyright 2015 Di Xiao
  * Copyright 2015 Kurt Kanzenbach
- * Copyright 2017 Google
+ * Copyright 2017-2018 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -29,11 +29,11 @@
 #endif
 
 #include <cmath>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
-#include <cstring>
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
@@ -239,7 +239,7 @@ void testImplementationReal()
         TEST_REAL_ACCURACY((i + 0.2) / std::sqrt(double(i + 0.1)), vec2[i], 0.0035);
     }
 
-    // test "sqrt() /" with shortvec
+    // test "sqrt() /" with short_vec
     for (std::size_t i = 0; i < numElements; ++i) {
         vec1[i] = (i + 2) * (i + 2) * (i + 2) * (i + 2);
         vec2[i] = (i + 2);
@@ -926,16 +926,17 @@ void testImplementationInt()
         }
         ShortVec v1 = 5;
         v1.store_aligned(&array[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
 
-        for (std::size_t i = 0; i < ARITY; ++i) {
-            expected[i] = i;
+        for (int i = 0; i < int(ARITY); ++i) {
+            expected[i] = static_cast<CARGO>(i);
         }
+
         ShortVec v2 = &expected[0];
         v2.store_aligned(&array[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -945,14 +946,16 @@ void testImplementationInt()
         std::vector<CARGO, aligned_allocator<CARGO, 64> > array(ARITY);
         std::vector<CARGO, aligned_allocator<CARGO, 64> > expected(ARITY);
 
-        for (std::size_t i = 0; i < ARITY; ++i) {
-            array[i]    = i;
-            expected[i] = 0;
+        for (int i = 0; i < int(ARITY); ++i) {
+            array[i]    = static_cast<CARGO>(i);
+            expected[i] = static_cast<CARGO>(0);
         }
+
         ShortVec v1;
         v1.load_aligned(&array[0]);
         v1.store(&expected[0]);
-        for (std::size_t i = 0; i < ARITY; ++i) {
+
+        for (int i = 0; i < int(ARITY); ++i) {
             BOOST_TEST_EQ(array[i], expected[i]);
         }
     }
@@ -983,6 +986,7 @@ ADD_TEST(TestBasic)
 }
 
 template<typename STRATEGY>
+inline
 void checkForStrategy(STRATEGY, STRATEGY)
 {}
 
@@ -1240,11 +1244,7 @@ ADD_TEST(TestImplementationStrategyInt)
 
 }
 
-int main(int /* argc */, char ** /* argv */)
+int main(int /* argc */, char** /* argv */)
 {
     return 0;
 }
-
-#ifdef _MSC_BUILD
-#pragma warning( disable : 4710 )
-#endif

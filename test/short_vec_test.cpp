@@ -30,10 +30,10 @@
 #endif
 
 #include <cmath>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <cstring>
 #include <vector>
 
 #ifdef _MSC_BUILD
