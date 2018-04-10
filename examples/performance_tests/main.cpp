@@ -131,7 +131,6 @@ public:
         }
 
         return glups(dim, maxT, tEnd - tStart);
-        return 0;
     }
 
 private:
