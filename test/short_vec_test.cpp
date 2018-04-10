@@ -65,10 +65,10 @@ void testImplementationReal()
         BOOST_TEST_EQ(ARITY, v.size());
     }
 
-    // // test default c-tor:
-    // for (std::size_t i = 0; i < numElements; ++i) {
-    //     BOOST_TEST(4711 == vec2[i]);
-    // }
+    // test default c-tor:
+    for (std::size_t i = 0; i < numElements; ++i) {
+        BOOST_TEST(4711 == vec2[i]);
+    }
     // for (std::size_t i = 0; i < (numElements - ShortVec::ARITY + 1); i += ShortVec::ARITY) {
     //     ShortVec v;
     //     &vec2[i] << v;
