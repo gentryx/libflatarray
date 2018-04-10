@@ -9,7 +9,6 @@
  */
 
 // #include <libflatarray/config.h>
-// #include <libflatarray/aligned_allocator.hpp>
 // #include <libflatarray/macros.hpp>
 // #include <libflatarray/short_vec.hpp>
 
@@ -20,6 +19,8 @@
 #ifdef _MSC_BUILD
 #pragma warning( disable : 4244 4305 4307 4365 4456 4710 4800 )
 #endif
+
+#include <libflatarray/aligned_allocator.hpp>
 
 // Don't warn about these functions being stripped from an executable
 // as they're not being used, that's actually expected behavior.
@@ -48,8 +49,9 @@ namespace LibFlatArray {
 template<typename CARGO, std::size_t ARITY>
 void testImplementationReal()
 {
-    typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
-    std::size_t numElements = ShortVec::ARITY * 5;
+    std::size_t numElements = 4;
+    // typedef SHORT_VEC_TEMPLATE<CARGO, ARITY> ShortVec;
+    // std::size_t numElements = ShortVec::ARITY * 5;
 
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec1(numElements);
     std::vector<CARGO, aligned_allocator<CARGO, 64> > vec2(numElements, 4711);
