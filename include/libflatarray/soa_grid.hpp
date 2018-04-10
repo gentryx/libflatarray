@@ -18,6 +18,7 @@
 #include <libflatarray/detail/dual_callback_helper.hpp>
 #include <libflatarray/detail/get_instance_functor.hpp>
 #include <libflatarray/detail/load_functor.hpp>
+#include <libflatarray/detail/macros.hpp>
 #include <libflatarray/detail/save_functor.hpp>
 #include <libflatarray/detail/set_byte_size_functor.hpp>
 #include <libflatarray/detail/set_instance_functor.hpp>
@@ -182,6 +183,7 @@ public:
         dual_callback(other_grid, functor, value());
     }
 
+    LIBFLATARRAY_INLINE
     void set(std::size_t x, std::size_t y, std::size_t z, const value_type& cell)
     {
         cell_staging_buffer.resize(1);
@@ -208,6 +210,7 @@ public:
                      count));
     }
 
+    LIBFLATARRAY_INLINE
     value_type get(std::size_t x, std::size_t y, std::size_t z) const
     {
         value_type cell;

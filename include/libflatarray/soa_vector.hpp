@@ -64,7 +64,7 @@ public:
      * using at() or operator[] to avoid mismatched expectations here:
      * we can't yield references to a T here.
      */
-    inline
+    LIBFLATARRAY_INLINE
     __host__ __device__
     void set(std::size_t index, const T& element)
     {
@@ -76,7 +76,7 @@ public:
      * here to avoid confusion with the API: we can't return
      * references from an SoA container.
      */
-    inline
+    LIBFLATARRAY_INLINE
     __host__ __device__
     T get(std::size_t index) const
     {
