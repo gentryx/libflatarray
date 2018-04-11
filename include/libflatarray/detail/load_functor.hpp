@@ -17,6 +17,11 @@ namespace detail {
 
 namespace flat_array {
 
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4626 5027 )
+#endif
+
 /**
  * The purpose of this functor is to load a row of cells which are
  * already prepackaged (in SoA form) in a raw data segment (i.e. all
@@ -37,13 +42,6 @@ public:
         source(source),
         count(count)
     {}
-
-#ifdef LIBFLATARRAY_WITH_CPP14
-    inline load_functor(const load_functor& other) = default;
-    inline load_functor(load_functor&& other) = default;
-    inline load_functor& operator=(const load_functor&) = default;
-    inline load_functor& operator=(load_functor&&) = default;
-#endif
 
     template<long DIM_X, long DIM_Y, long DIM_Z, long INDEX>
     void operator()(soa_accessor<CELL, DIM_X, DIM_Y, DIM_Z, INDEX>& accessor) const
@@ -72,6 +70,9 @@ private:
     std::size_t count;
 };
 
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #ifdef LIBFLATARRAY_WITH_CUDA
 #ifdef __CUDACC__
