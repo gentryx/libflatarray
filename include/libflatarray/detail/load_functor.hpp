@@ -19,7 +19,7 @@ namespace flat_array {
 
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4626 5027 )
+#pragma warning( disable : 4626 4710 5027 )
 #endif
 
 /**
