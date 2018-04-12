@@ -270,6 +270,8 @@ public:
      * (makes sense if you need to do some sorts of reductions or run
      * a multi-grid code).
      *
+     * The default is to assume no asymmetric callback.
+     *
      * WARNING: if soa_accessor is instantiated for n sizes, then
      * has_asymmetric_dual_callback will increase this to n * n.
      */
