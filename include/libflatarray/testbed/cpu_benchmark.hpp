@@ -12,7 +12,7 @@
 #include <libflatarray/testbed/benchmark.hpp>
 
 // disable certain warnings from system headers when compiling with
-// Microsoft Visual Studio:
+// Microsoft Visual Studio. Also disable them for this class.
 #ifdef _MSC_BUILD
 #pragma warning( push )
 #pragma warning( disable : 4514 4710 )
@@ -20,10 +20,6 @@
 
 #include <fstream>
 #include <iostream>
-
-#ifdef _MSC_BUILD
-#pragma warning( pop )
-#endif
 
 namespace LibFlatArray {
 
@@ -115,7 +111,10 @@ private:
     }
 };
 
-
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #endif
