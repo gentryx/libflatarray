@@ -13,7 +13,7 @@
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4514 4668 4710 4820 )
+#pragma warning( disable : 4514 4548 4668 4711 4820 4996  )
 #endif
 
 #include <vector>
