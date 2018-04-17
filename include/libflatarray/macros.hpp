@@ -15,6 +15,21 @@
 #include <libflatarray/detail/offset.hpp>
 #include <libflatarray/detail/sibling_short_vec_switch.hpp>
 
+#ifdef _MSC_BUILD
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_PRE       \
+    __pragma( warning( push ) )                                 \
+    __pragma( warning( disable : 4626 5027 ) )
+#else
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_PRE
+#endif
+
+#ifdef _MSC_BUILD
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_POST      \
+    __pragma( warning( pop ) )
+#else
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_POST
+#endif
+
 /**
  * This macro is convenient when you need to return instances of the
  * soa_accessor from your own functions.
