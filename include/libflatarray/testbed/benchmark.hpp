@@ -16,6 +16,7 @@
 #pragma warning( disable : 4514 4548 4668 4711 4820 4996  )
 #endif
 
+#include <string>
 #include <vector>
 
 #ifdef _WIN32
