@@ -18,7 +18,7 @@
 #ifdef _MSC_BUILD
 #  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_PRE       \
     __pragma( warning( push ) )                                 \
-    __pragma( warning( disable : 4626 5027 ) )
+    __pragma( warning( disable : 4514 4548 4626 4710 4711 4820 4996 5027 ) )
 #else
 #  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_PRE
 #endif
