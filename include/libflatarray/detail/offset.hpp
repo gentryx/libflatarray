@@ -13,13 +13,18 @@
 // Microsoft Visual Studio:
 #ifdef _MSC_BUILD
 #pragma warning( push )
-#pragma warning( disable : 4514 4710 )
+#pragma warning( disable : 4514 4548 4626 4710 4711 4820 4996 5027 )
 #endif
 
 #include <stdexcept>
 
 #ifdef _MSC_BUILD
 #pragma warning( pop )
+#endif
+
+#ifdef _MSC_BUILD
+#pragma warning( push )
+#pragma warning( disable : 4710 4711 )
 #endif
 
 namespace LibFlatArray {
@@ -49,5 +54,9 @@ public:
 }
 
 }
+
+#ifdef _MSC_BUILD
+#pragma warning( pop )
+#endif
 
 #endif
