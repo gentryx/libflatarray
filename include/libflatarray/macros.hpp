@@ -30,6 +30,13 @@
 #  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_POST
 #endif
 
+#ifdef _MSC_BUILD
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_EOF       \
+    __pragma( warning( disable : 4710 ) )
+#else
+#  define LIBFLATARRAY_DISABLE_SYSTEM_HEADER_WARNINGS_EOF
+#endif
+
 /**
  * This macro is convenient when you need to return instances of the
  * soa_accessor from your own functions.
