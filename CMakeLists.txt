@@ -120,9 +120,14 @@ lfa_add_config_option(WITH_CPP14 "Enable C++ 14 features of LibFlatArray" ${SUPP
 lfa_add_config_option(WITH_FORCED_CPP11 "Some C++11-compatible compilers support sufficient features of C++14 to allow LibFlatArray to enable C++14 mode. Use this setting in conjunction with WITH_CPP14" false true)
 lfa_add_config_option(WITH_INCREASED_PRECISION "Some architectures (*cough*ARM*cough*) yield poor accuracy when using fast estimates. This option enforces mitigates that flaw at the expense of a few extra cycles." false true)
 lfa_add_config_option(WITH_SILO "Enable code examples that require LLNL's Silo library." ${Silo_FOUND} true)
+lfa_add_config_option(WITH_AVX_FORCED_OFF "Explicitly disable AVX via compiler flags. Currently only useful for weirdly set up nodes on Travis. " false false)
 
 if(WITH_CUDA AND NOT CUDA_FOUND)
   message(FATAL_ERROR "WITH_CUDA selected, but could not find the NVIDIA CUDA toolkit.")
+endif()
+
+if(WITH_AVX_FORCED_OFF)
+  set(LFA_ADDITIONAL_COMPILE_FLAGS "${LFA_ADDITIONAL_COMPILE_FLAGS} -mno-avx")
 endif()
 
 if(NOT MSVC)
