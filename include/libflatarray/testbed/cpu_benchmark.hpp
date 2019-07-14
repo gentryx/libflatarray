@@ -79,7 +79,11 @@ private:
     static std::string parse_likwid_topology()
     {
         std::string read_buffer(100000, ' ');
+#ifdef _WIN32
+        FILE *file = _popen("likwid-topologfy -O", "r");
+#else
         FILE *file = popen("likwid-topologfy -O", "r");
+#endif
         if (file == NULL) {
             throw std::runtime_error("failed to get output from likwid-topology");
         }
