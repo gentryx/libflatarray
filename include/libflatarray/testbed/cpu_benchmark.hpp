@@ -34,12 +34,17 @@ public:
 
     std::string device()
     {
-        std::string model = parse_proc_cpu();
-        if (model.find("Intel(R) Xeon(R) CPU @") != std::string::npos) {
-            return parse_likwid_topology();
-        }
+        try {
+            std::string model = parse_proc_cpu();
+            // this nondescript model name is found on GCP, maybe elsewhere too:
+            if (model.find("Intel(R) Xeon(R) CPU @") == std::string::npos) {
+                return model;
+            }
 
-        return model;
+            return parse_likwid_topology();
+        } catch (const std::runtime_error&) {
+            return "unknown CPU";
+        }
     }
 
 private:
@@ -74,9 +79,9 @@ private:
     static std::string parse_likwid_topology()
     {
         std::string read_buffer(100000, ' ');
-        FILE *file = popen("likwid-topology -O", "r");
+        FILE *file = popen("likwid-topologfy -O", "r");
         if (file == NULL) {
-            throw std::runtime_error("failed to run likwid-topology");
+            throw std::runtime_error("failed to get output from likwid-topology");
         }
 
         std::string cpu_type;
@@ -92,6 +97,10 @@ private:
                     cpu_name = *(++i);
                 }
             }
+        }
+
+        if (cpu_type.empty() || cpu_name.empty()) {
+            throw std::runtime_error("failed to parse likwid-topology");
         }
         std::vector<std::string> tokens = tokenize(cpu_name, '@');
         return cpu_type + " @ " + tokens[1];
