@@ -335,31 +335,6 @@ public:
 
 #endif
 
-// Dirty workaround for using GCC 6.4.0 with CUDA related to GCC
-// changing the data type in the signatured of intrinsic function, but
-// not updating the built-in functions as well. Without this,
-// compilation would fail with a lots of error messages a la
-//
-// avx512vlintrin.h(11169): error: argument of type "void *" is incompatible with parameter of type "int *"
-//
-#if defined(__GNUC__) && defined(__CUDACC__)
-#  if ((__GNUC__ == 6) && (__GNUC_MINOR__ == 4))
-#    define _AVX512BWINTRIN_H_INCLUDED
-#    define _AVX512CDINTRIN_H_INCLUDED
-#    define _AVX512DQINTRIN_H_INCLUDED
-#    define _AVX512ERINTRIN_H_INCLUDED
-#    define _AVX512FINTRIN_H_INCLUDED
-#    define _AVX512IFMAINTRIN_H_INCLUDED
-#    define _AVX512IFMAVLINTRIN_H_INCLUDED
-#    define _AVX512PFINTRIN_H_INCLUDED
-#    define _AVX512VBMIINTRIN_H_INCLUDED
-#    define _AVX512VBMIVLINTRIN_H_INCLUDED
-#    define _AVX512VLBWINTRIN_H_INCLUDED
-#    define _AVX512VLDQINTRIN_H_INCLUDED
-#    define _AVX512VLINTRIN_H_INCLUDED
-#  endif
-#endif
-
 #include <libflatarray/detail/short_vec_avx512_double_8.hpp>
 #include <libflatarray/detail/short_vec_avx512_double_16.hpp>
 #include <libflatarray/detail/short_vec_avx512_double_32.hpp>
