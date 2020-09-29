@@ -303,7 +303,9 @@ public:
 #    ifdef __MIC__
 #      define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_MIC
 #    else
-#      ifdef __AVX512F__
+// This ugly conditional is required for Travis CI, where some VMs
+// define __AVX512F__ despite running an ancient GCC 5.
+#      if defined( __AVX512F__) && (!defined(__GNUCC__) || (__GNUCC__ >= 7))
 #        define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX512F
 #      else
 #        ifdef __AVX2__
