@@ -307,10 +307,10 @@ public:
 // define __AVX512F__ despite running an ancient GCC 5.
 #pragma message "Travis CI test A"
 #pragma message "Travis CI test B: " __AVX512F__ " blah"
-#pragma message "Travis CI test C: " __GNUCC__ " blah"
+#pragma message "Travis CI test C: " __GNUC__ " blah"
 #define XSTR(x) STR(x)
 #define STR(x) #x
-#ifdef(__GNUCC__)
+#ifdef(__GNUC__)
 #pragma message ("Travis CI test D1: " XSTR(__GNUC__) " blah")
 #endif
 #pragma message ("Travis CI test D2: " XSTR(__GNUC__) " blah")
