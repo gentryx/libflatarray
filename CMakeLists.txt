@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 include(CheckCXXCompilerFlag)
+include(CheckLanguage)
 
 if (CMAKE_VERSION VERSION_GREATER 2.7)
   cmake_policy(SET CMP0012 NEW)
+endif()
+
+if (CMAKE_VERSION VERSION_GREATER 3.17)
+  cmake_policy(SET CMP0104 NEW)
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
@@ -41,9 +46,33 @@ if(SUPPORTS_MARCH_NATIVE AND NOT APPLE)
   set(DEFAULT_FLAGS "${DEFAULT_FLAGS} -march=native")
 endif()
 
-find_package(CUDA)
+if(CMAKE_VERSION VERSION_LESS 3.10)
+  find_package(CUDA QUIET)
+  if(NOT DEFINED CUDA_FOUND)
+    set(CUDA_FOUND false)
+  endif()
+else()
+  check_language(CUDA)
+
+  if(CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+    set(CUDA_FOUND true)
+  else()
+    set(CUDA_FOUND false)
+  endif()
+endif()
+
+function(lfa_cuda_add_executable)
+  if(CMAKE_VERSION VERSION_LESS 3.10)
+    cuda_add_executable(${ARGV})
+  else()
+    add_executable(${ARGV})
+    set_property(TARGET ${ARGV0} PROPERTY CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES})
+  endif()
+endfunction()
+
 # Force the selection of the NVCC host compiler to circumvent the
-# studid FindCUDA CMake module from resolving symlinks (*wink* ccache
+# stupid FindCUDA CMake module from resolving symlinks (*wink* ccache
 # *wink*).
 if(CUDA_FOUND)
   get_filename_component(exe_name "${CUDA_HOST_COMPILER}" NAME)
@@ -255,7 +284,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(WITH_CUDA)
-  if (${CUDA_VERSION} VERSION_LESS 8.0)
+  if (CUDA_VERSION VERSION_LESS 8.0)
     set(CUDA_NVCC_FLAGS "--gpu-architecture=compute_20")
   else()
     set(CUDA_NVCC_FLAGS "--gpu-architecture=compute_35")
