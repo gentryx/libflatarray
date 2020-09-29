@@ -309,7 +309,9 @@ public:
 #      if defined( __AVX512F__) && (!defined(__GNUCC__) || (__GNUCC__ >= 7))
 #pragma message "Travis CI test B: " __AVX512F__ " blah"
 #pragma message "Travis CI test C: " __GNUCC__ " blah"
-#pragma message "Travis CI test C: " __blah__ " blah"
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "Travis CI test C: " XSTR(__GNUCC__) " blah"
 #        define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX512F
 #      else
 #        ifdef __AVX2__
