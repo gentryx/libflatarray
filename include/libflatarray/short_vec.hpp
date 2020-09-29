@@ -310,7 +310,7 @@ public:
 #pragma message "Travis CI test C: " __GNUC__ " blah"
 #define XSTR(x) STR(x)
 #define STR(x) #x
-#ifdef(__GNUC__)
+#ifdef __GNUC__
 #pragma message ("Travis CI test D1: " XSTR(__GNUC__) " blah")
 #endif
 #pragma message ("Travis CI test D2: " XSTR(__GNUC__) " blah")
