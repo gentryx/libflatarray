@@ -299,7 +299,7 @@ public:
 
 // This ugly conditional is required for Travis CI, where some VMs
 // define __AVX512F__ despite running an ancient GCC 5.
-#if defined( __AVX512F__) && (!defined(__GNUC__) || (__GNUC__ >= 7))
+#if defined( __AVX512F__) && (!defined(__GNUC__) || (__GNUC__ >= 7)) && (!defined(__clang__) || (__clang_major__ >= 4))
 #  define LFA_AVX512_HELPER
 #endif
 
