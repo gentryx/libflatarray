@@ -297,25 +297,20 @@ public:
 #    define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_ARM_NEON
 #  endif
 
+// This ugly conditional is required for Travis CI, where some VMs
+// define __AVX512F__ despite running an ancient GCC 5.
+#if defined( __AVX512F__) && (!defined(__GNUC__) || (__GNUC__ >= 7))
+#  define LFA_AVX512_HELPER
+#endif
+
+
 #  ifndef LIBFLATARRAY_WIDEST_VECTOR_ISA
 // Only the case of the IBM PC is complicated. No thanks to you,
 // history!
 #    ifdef __MIC__
 #      define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_MIC
 #    else
-// This ugly conditional is required for Travis CI, where some VMs
-// define __AVX512F__ despite running an ancient GCC 5.
-#pragma message "Travis CI test A"
-#pragma message "Travis CI test B: " __AVX512F__ " blah"
-#pragma message "Travis CI test C: " __GNUC__ " blah"
-#define XSTR(x) STR(x)
-#define STR(x) #x
-#ifdef __GNUC__
-#pragma message ("Travis CI test D1: " XSTR(__GNUC__) " blah")
-#endif
-#pragma message ("Travis CI test D2: " XSTR(__GNUC__) " blah")
-#pragma message ("Travis CI test E: " XSTR(__AVX512F__) " blah")
-#      if defined( __AVX512F__) && (!defined(__GNUC__) || (__GNUC__ >= 7))
+#      ifdef LFA_AVX512_HELPER
 #        define LIBFLATARRAY_WIDEST_VECTOR_ISA LIBFLATARRAY_AVX512F
 #      else
 #        ifdef __AVX2__

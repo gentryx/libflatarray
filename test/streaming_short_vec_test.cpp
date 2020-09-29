@@ -1087,7 +1087,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #endif
 #ifdef __SSE__
 #  ifdef __AVX__
-#    ifdef __AVX512F__
+#    ifdef LFA_AVX512_HELPER
 #      define EXPECTED_TYPE short_vec_strategy::avx512f
 #    else
 #      define EXPECTED_TYPE short_vec_strategy::avx
@@ -1109,7 +1109,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
 #ifdef __AVX__
-#  ifdef __AVX512F__
+#  ifdef LFA_AVX512_HELPER
 #    define EXPECTED_TYPE short_vec_strategy::avx512f
 #  else
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -1131,7 +1131,7 @@ ADD_TEST(TestImplementationStrategyDouble)
 #ifdef __VECTOR4DOUBLE___
 #  define EXPECTED_TYPE short_vec_strategy::qpx
 #endif
-#ifdef __AVX512F__
+#ifdef LFA_AVX512_HELPER
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX__
@@ -1193,7 +1193,7 @@ ADD_TEST(TestImplementationStrategyFloat)
 #endif
 #ifdef __SSE__
 #  ifdef __AVX__
-#    ifdef __AVX512F__
+#    ifdef LFA_AVX512_HELPER
 #      define EXPECTED_TYPE short_vec_strategy::avx512f
 #    else
 #      define EXPECTED_TYPE short_vec_strategy::avx
@@ -1216,7 +1216,7 @@ ADD_TEST(TestImplementationStrategyFloat)
 #  define EXPECTED_TYPE short_vec_strategy::neon
 #endif
 #ifdef __AVX__
-#  ifdef __AVX512F__
+#  ifdef LFA_AVX512_HELPER
 #    define EXPECTED_TYPE short_vec_strategy::avx512f
 #  else
 #    define EXPECTED_TYPE short_vec_strategy::avx
@@ -1264,7 +1264,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #undef EXPECTED_TYPE
 
     // 16x:
-#ifdef __AVX512F__
+#ifdef LFA_AVX512_HELPER
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX2__
@@ -1281,7 +1281,7 @@ ADD_TEST(TestImplementationStrategyInt)
 #undef EXPECTED_TYPE
 
     // 32x:
-#ifdef __AVX512F__
+#ifdef LFA_AVX512_HELPER
 #  define EXPECTED_TYPE short_vec_strategy::avx512f
 #else
 #  ifdef __AVX2__
