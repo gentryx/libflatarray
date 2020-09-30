@@ -14,7 +14,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.6
-      env: CXX_COMPILER=g++-4.6 C_COMPILER=gcc-4.6 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-4.6 C_COMPILER=gcc-4.6 FORCE_AVX_OFF=true
     - name: gcc-4.7
       compiler: gcc
       dist: xenial
@@ -109,7 +109,7 @@ jobs:
             - llvm-toolchain-precise-4.0
           packages:
             - clang-4.0
-      env: CXX_COMPILER=clang++-4.0 C_COMPILER=clang-4.0 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-4.0 C_COMPILER=clang-4.0 FORCE_AVX_OFF=true
     - name: clang-5.0
       compiler: clang
       dist: xenial
