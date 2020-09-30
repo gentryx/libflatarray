@@ -169,7 +169,7 @@ jobs:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test, llvm-toolchain-xenial-7
           packages:
             - clang-7
       env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7 FORCE_AVX_OFF=false
