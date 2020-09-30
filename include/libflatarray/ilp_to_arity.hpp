@@ -43,7 +43,7 @@ public:
     // Only the case of the IBM PC is complicated. No thanks to you,
     // history!
 #  if !defined(__CUDA_ARCH__) && !defined(__ARM_NEON__) && !defined(__MIC__)
-#    ifdef __AVX512F__
+#    ifdef LFA_AVX512_HELPER
     static const int BIT_WIDTH = 512;
 #    else
 #      ifdef __AVX__

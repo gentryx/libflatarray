@@ -64,7 +64,7 @@ ADD_TEST(TestArity)
 
     // Only the case of the IBM PC is complicated. No thanks to you,
     // history!
-#  ifdef __AVX512F__
+#  ifdef LFA_AVX512_HELPER
     static const int expected_arity_for_double = 16;
     static const int expected_arity_for_float  = 32;
 #  else
