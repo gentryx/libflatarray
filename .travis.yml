@@ -8,7 +8,7 @@ jobs:
     - name: macOS
       os: osx
       osx_image: xcode12u
-      env: CXX_COMPILER=clang++ C_COMPILER=clang FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++ C_COMPILER=clang
       before_script:
         - mkdir build
         - cd build
@@ -43,7 +43,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.7
-      env: CXX_COMPILER=g++-4.7 C_COMPILER=gcc-4.7 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-4.7 C_COMPILER=gcc-4.7
     - name: gcc-4.8
       compiler: gcc
       dist: xenial
@@ -53,7 +53,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
-      env: CXX_COMPILER=g++-4.8 C_COMPILER=gcc-4.8 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-4.8 C_COMPILER=gcc-4.8
     - name: gcc-4.9
       compiler: gcc
       dist: xenial
@@ -63,7 +63,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
-      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9
     - name: gcc-5.5
       compiler: gcc
       dist: xenial
@@ -73,7 +73,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5
     - name: gcc-6.4
       compiler: gcc
       dist: bionic
@@ -83,7 +83,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-      env: CXX_COMPILER=g++-6 C_COMPILER=gcc-6 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-6 C_COMPILER=gcc-6
     - name: gcc-7.4
       compiler: gcc
       dist: bionic
@@ -91,7 +91,7 @@ jobs:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-      env: CXX_COMPILER=g++ C_COMPILER=gcc FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++ C_COMPILER=gcc
     - name: gcc-8.4
       compiler: gcc
       dist: bionic
@@ -101,7 +101,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-8
-      env: CXX_COMPILER=g++-8 C_COMPILER=gcc-8 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-8 C_COMPILER=gcc-8
     - name: gcc-9.3
       compiler: gcc
       dist: bionic
@@ -111,7 +111,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-9
-      env: CXX_COMPILER=g++-9 C_COMPILER=gcc-9 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-9 C_COMPILER=gcc-9
     - &gcc10
       name: gcc-10.1
       compiler: gcc
@@ -122,7 +122,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-10
-      env: CXX_COMPILER=g++-10 C_COMPILER=gcc-10 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=g++-10 C_COMPILER=gcc-10
     - <<: *gcc10
       arch: arm64
     - <<: *gcc10
@@ -173,7 +173,7 @@ jobs:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: CXX_COMPILER=clang++-3.8 C_COMPILER=clang-3.8 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-3.8 C_COMPILER=clang-3.8
     - name: clang-4.0
       compiler: clang
       dist: xenial
@@ -195,7 +195,7 @@ jobs:
             - llvm-toolchain-precise-5.0
           packages:
             - clang-5.0
-      env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0
     - name: clang-6.0
       compiler: clang
       dist: xenial
@@ -206,7 +206,7 @@ jobs:
             - llvm-toolchain-precise-6.0
           packages:
             - clang-6.0
-      env: CXX_COMPILER=clang++-6.0 C_COMPILER=clang-6.0 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-6.0 C_COMPILER=clang-6.0
     - name: clang-7.0
       compiler: clang
       dist: xenial
@@ -217,7 +217,7 @@ jobs:
             - llvm-toolchain-xenial-7
           packages:
             - clang-7
-      env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7
     - name: clang-8.0
       compiler: clang
       dist: bionic
@@ -227,7 +227,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - clang-8
-      env: CXX_COMPILER=clang++-8 C_COMPILER=clang-8 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-8 C_COMPILER=clang-8
     - name: clang-9.0
       compiler: clang
       dist: bionic
@@ -237,7 +237,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - clang-9
-      env: CXX_COMPILER=clang++-9 C_COMPILER=clang-9 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-9 C_COMPILER=clang-9
     - &clang10
       name: clang-10.0
       compiler: clang
@@ -250,7 +250,7 @@ jobs:
               key_url: https://apt.llvm.org/llvm-snapshot.gpg.key
           packages:
             - clang-10
-      env: CXX_COMPILER=clang++-10 C_COMPILER=clang-10 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-10 C_COMPILER=clang-10
     - <<: *clang10
       arch: arm64
     - <<: *clang10
@@ -268,5 +268,4 @@ script:
     - make
     - make check
 
-# fixme: prune all false entries
 env: FORCE_AVX_OFF=false
