@@ -303,7 +303,6 @@ public:
 #  define LFA_AVX512_HELPER
 #endif
 
-
 #  ifndef LIBFLATARRAY_WIDEST_VECTOR_ISA
 // Only the case of the IBM PC is complicated. No thanks to you,
 // history!
@@ -341,6 +340,10 @@ public:
 #  endif
 
 #endif
+
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message ("Travis CI test C: " XSTR(LIBFLATARRAY_WIDEST_VECTOR_ISA) " blah")
 
 #include <libflatarray/detail/short_vec_avx512_double_8.hpp>
 #include <libflatarray/detail/short_vec_avx512_double_16.hpp>
