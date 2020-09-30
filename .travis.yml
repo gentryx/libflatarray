@@ -4,7 +4,7 @@ sudo: false
 cache:
   apt: true
 
-matrix:
+jobs:
   include:
     - compiler: gcc-4.6
       dist: xenial
@@ -49,12 +49,13 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-      env: CXX_COMPILER=clang++-7.0 C_COMPILER=clang-7.0 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++ C_COMPILER=clang FORCE_AVX_OFF=false
 
 before_script:
     - mkdir build
     - cd build
     - echo $CXX_COMPILER
+    - ls -l /usr/local/clang-7.0.0/bin
     - $CXX_COMPILER -v
     - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
