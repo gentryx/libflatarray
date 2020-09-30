@@ -3,6 +3,18 @@ language: cpp
 cache:
   apt: true
 
+before_script:
+    - mkdir build
+    - cd build
+    - $CXX_COMPILER -v
+    - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
+
+script:
+    - cmake --build .
+    - cmake --build . -- check
+
+env: FORCE_AVX_OFF=false
+
 jobs:
   include:
     - name: macOS
@@ -13,7 +25,6 @@ jobs:
         - mkdir build
         - cd build
         - $CXX_COMPILER -v
-        - cmake --version
         - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
     - name: Windows
@@ -21,7 +32,6 @@ jobs:
       before_script:
         - mkdir build
         - cd build
-        - cmake --version
         - cmake -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
     - name: gcc-4.6
@@ -257,15 +267,3 @@ jobs:
       arch: ppc64le
     - <<: *clang10
       arch: s390x
-
-before_script:
-    - mkdir build
-    - cd build
-    - $CXX_COMPILER -v
-    - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
-
-script:
-    - make
-    - make check
-
-env: FORCE_AVX_OFF=false
