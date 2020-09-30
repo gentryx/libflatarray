@@ -3,6 +3,12 @@ language: cpp
 cache:
   apt: true
 
+arch:
+  - amd64
+  - ppc64le
+  - s390x
+  - arm64
+
 jobs:
   include:
     - name: gcc-4.6
