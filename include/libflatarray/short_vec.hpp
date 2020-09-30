@@ -341,10 +341,6 @@ public:
 
 #endif
 
-#define XSTR(x) STR(x)
-#define STR(x) #x
-#pragma message ("Travis CI test C: " XSTR(LIBFLATARRAY_WIDEST_VECTOR_ISA) " blah")
-
 #include <libflatarray/detail/short_vec_avx512_double_8.hpp>
 #include <libflatarray/detail/short_vec_avx512_double_16.hpp>
 #include <libflatarray/detail/short_vec_avx512_double_32.hpp>
