@@ -19,23 +19,19 @@ jobs:
   allow_failures:
     # fixme: remove this once the Windows branch is merged
     os: windows
+
   include:
     - name: macOS
       os: osx
       osx_image: xcode12u
       env: CXX_COMPILER=clang++ C_COMPILER=clang
-      before_script:
-        - mkdir build
-        - cd build
-        - $CXX_COMPILER -v
-        - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
     - name: Windows
       os: windows
       before_script:
         - mkdir build
         - cd build
-        - cmake -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
+        - cmake ..
 
     - name: gcc-4.6
       compiler: gcc
