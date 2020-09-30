@@ -239,6 +239,18 @@ jobs:
     - <<: *clang10
       arch: s390x
 
+    - name: macOS
+      os: osx
+      osx_image: xcode12u
+      env: CXX_COMPILER=clang++ C_COMPILER=clang FORCE_AVX_OFF=false
+
+    - name: Windows
+      os: windows
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
+
 before_script:
     - mkdir build
     - cd build
