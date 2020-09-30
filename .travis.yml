@@ -21,6 +21,7 @@ jobs:
       before_script:
         - mkdir build
         - cd build
+        - cmake --version
         - cmake -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
     - name: gcc-4.6
