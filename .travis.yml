@@ -38,7 +38,7 @@ matrix:
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
-      env: CXX_COMPILER=clang++-3.7 C_COMPILER=clang-3.7 FORCE_AVX_OFF=false
+      env: CXX_COMPILER=clang++-3.7 C_COMPILER=clang-3.7 FORCE_AVX_OFF=true
 
 before_script:
     - mkdir build
