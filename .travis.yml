@@ -171,7 +171,7 @@ jobs:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - clang-8
+            - clang-7
       env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7 FORCE_AVX_OFF=false
     - name: clang-8.x
       compiler: clang
