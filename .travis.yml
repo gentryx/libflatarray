@@ -17,6 +17,7 @@ env: FORCE_AVX_OFF=false
 
 jobs:
   allow_failures:
+    # fixme: remove this once the Windows branch is merged
     os: windows
   include:
     - name: macOS
