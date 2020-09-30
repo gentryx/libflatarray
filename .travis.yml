@@ -55,7 +55,7 @@ jobs:
           packages:
             - g++-5
       env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5 FORCE_AVX_OFF=false
-    - name: gcc-8.x
+    - name: gcc-8.4
       compiler: gcc
       dist: bionic
       addons:
@@ -65,7 +65,7 @@ jobs:
           packages:
             - g++-8
       env: CXX_COMPILER=g++-8 C_COMPILER=gcc-8 FORCE_AVX_OFF=false
-    - name: gcc-9.x
+    - name: gcc-9.3
       compiler: gcc
       dist: bionic
       addons:
@@ -75,7 +75,7 @@ jobs:
           packages:
             - g++-9
       env: CXX_COMPILER=g++-9 C_COMPILER=gcc-9 FORCE_AVX_OFF=false
-    - name: gcc-10.x
+    - name: gcc-10.1
       compiler: gcc
       dist: bionic
       addons:
@@ -174,7 +174,7 @@ jobs:
           packages:
             - clang-7
       env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7 FORCE_AVX_OFF=false
-    - name: clang-8.x
+    - name: clang-8.0
       compiler: clang
       dist: bionic
       addons:
@@ -184,7 +184,7 @@ jobs:
           packages:
             - clang-8
       env: CXX_COMPILER=clang++-8 C_COMPILER=clang-8 FORCE_AVX_OFF=false
-    - name: clang-9.x
+    - name: clang-9.0
       compiler: clang
       dist: bionic
       addons:
@@ -194,7 +194,7 @@ jobs:
           packages:
             - clang-9
       env: CXX_COMPILER=clang++-9 C_COMPILER=clang-9 FORCE_AVX_OFF=false
-    - name: clang-10.x
+    - name: clang-10.0
       compiler: clang
       dist: bionic
       addons:
