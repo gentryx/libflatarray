@@ -3,12 +3,6 @@ language: cpp
 cache:
   apt: true
 
-arch:
-  - amd64
-  - ppc64le
-  - s390x
-  - arm64
-
 jobs:
   include:
     - name: gcc-4.6
@@ -99,7 +93,8 @@ jobs:
           packages:
             - g++-9
       env: CXX_COMPILER=g++-9 C_COMPILER=gcc-9 FORCE_AVX_OFF=false
-    - name: gcc-10.1
+    - &gcc10
+      name: gcc-10.1
       compiler: gcc
       dist: bionic
       addons:
@@ -109,6 +104,12 @@ jobs:
           packages:
             - g++-10
       env: CXX_COMPILER=g++-10 C_COMPILER=gcc-10 FORCE_AVX_OFF=false
+    - <<: *gcc10
+      arch: arm64
+    - <<: *gcc10
+      arch: ppc64le
+    - <<: *gcc10
+      arch: s390x
 
     - name: clang-3.5
       compiler: clang
@@ -218,7 +219,8 @@ jobs:
           packages:
             - clang-9
       env: CXX_COMPILER=clang++-9 C_COMPILER=clang-9 FORCE_AVX_OFF=false
-    - name: clang-10.0
+    - &clang10
+      name: clang-10.0
       compiler: clang
       dist: bionic
       addons:
@@ -230,7 +232,12 @@ jobs:
           packages:
             - clang-10
       env: CXX_COMPILER=clang++-10 C_COMPILER=clang-10 FORCE_AVX_OFF=false
-
+    - <<: *clang10
+      arch: arm64
+    - <<: *clang10
+      arch: ppc64le
+    - <<: *clang10
+      arch: s390x
 
 before_script:
     - mkdir build
