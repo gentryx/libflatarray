@@ -55,6 +55,37 @@ jobs:
           packages:
             - g++-5
       env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5 FORCE_AVX_OFF=false
+    - name: gcc-8.x
+      compiler: gcc
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env: CXX_COMPILER=g++-8 C_COMPILER=gcc-8 FORCE_AVX_OFF=false
+    - name: gcc-9.x
+      compiler: gcc
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+      env: CXX_COMPILER=g++-9 C_COMPILER=gcc-9 FORCE_AVX_OFF=false
+    - name: gcc-10.x
+      compiler: gcc
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-10
+      env: CXX_COMPILER=g++-10 C_COMPILER=gcc-10 FORCE_AVX_OFF=false
+
     - name: clang-3.5
       compiler: clang
       dist: xenial
@@ -139,7 +170,42 @@ jobs:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-      env: CXX_COMPILER=clang++ C_COMPILER=clang-7 FORCE_AVX_OFF=false
+          packages:
+            - clang-8
+      env: CXX_COMPILER=clang++-7 C_COMPILER=clang-7 FORCE_AVX_OFF=false
+    - name: clang-8.x
+      compiler: clang
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-8
+      env: CXX_COMPILER=clang++-8 C_COMPILER=clang-8 FORCE_AVX_OFF=false
+    - name: clang-9.x
+      compiler: clang
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-9
+      env: CXX_COMPILER=clang++-9 C_COMPILER=clang-9 FORCE_AVX_OFF=false
+    - name: clang-10.x
+      compiler: clang
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main
+              key_url: https://apt.llvm.org/llvm-snapshot.gpg.key
+          packages:
+            - clang-10
+      env: CXX_COMPILER=clang++-10 C_COMPILER=clang-10 FORCE_AVX_OFF=false
+
 
 before_script:
     - mkdir build
