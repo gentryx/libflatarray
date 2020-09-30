@@ -16,6 +16,8 @@ script:
 env: FORCE_AVX_OFF=false
 
 jobs:
+  allow_failures:
+    os: windows
   include:
     - name: macOS
       os: osx
