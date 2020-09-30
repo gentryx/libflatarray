@@ -55,6 +55,14 @@ jobs:
           packages:
             - g++-5
       env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5 FORCE_AVX_OFF=false
+    - name: gcc-7.4.0
+      compiler: gcc
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+      env: CXX_COMPILER=g++ C_COMPILER=gcc FORCE_AVX_OFF=false
     - name: gcc-8.4
       compiler: gcc
       dist: bionic
