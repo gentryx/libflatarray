@@ -1,12 +1,12 @@
 language: cpp
-sudo: false
 
 cache:
   apt: true
 
 jobs:
   include:
-    - compiler: gcc-4.6
+    - name: gcc-4.6
+      compiler: gcc
       dist: xenial
       addons:
         apt:
@@ -14,8 +14,29 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.6
-      env: CXX_COMPILER=g++-4.6 C_COMPILER=gcc-4.6 FORCE_AVX_OFF=true
-    - compiler: gcc-4.9
+      env: CXX_COMPILER=g++-4.6 C_COMPILER=gcc-4.6 FORCE_AVX_OFF=false
+    - name: gcc-4.7
+      compiler: gcc
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.7
+      env: CXX_COMPILER=g++-4.7 C_COMPILER=gcc-4.7 FORCE_AVX_OFF=false
+    - name: gcc-4.8
+      compiler: gcc
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
+      env: CXX_COMPILER=g++-4.8 C_COMPILER=gcc-4.8 FORCE_AVX_OFF=false
+    - name: gcc-4.9
+      compiler: gcc
       dist: xenial
       addons:
         apt:
@@ -24,7 +45,8 @@ jobs:
           packages:
             - g++-4.9
       env: CXX_COMPILER=g++-4.9 C_COMPILER=gcc-4.9 FORCE_AVX_OFF=false
-    - compiler: gcc-5.5
+    - name: gcc-5.5
+      compiler: gcc
       dist: xenial
       addons:
         apt:
@@ -33,7 +55,30 @@ jobs:
           packages:
             - g++-5
       env: CXX_COMPILER=g++-5 C_COMPILER=gcc-5 FORCE_AVX_OFF=false
-    - compiler: clang
+    - name: clang-3.5
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.5
+          packages:
+            - clang-3.5
+      env: CXX_COMPILER=clang++-3.5 C_COMPILER=clang-3.5 FORCE_AVX_OFF=true
+    - name: clang-3.6
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env: CXX_COMPILER=clang++-3.6 C_COMPILER=clang-3.6 FORCE_AVX_OFF=true
+    - name: clang-3.7
+      compiler: clang
       dist: xenial
       addons:
         apt:
@@ -43,19 +88,62 @@ jobs:
           packages:
             - clang-3.7
       env: CXX_COMPILER=clang++-3.7 C_COMPILER=clang-3.7 FORCE_AVX_OFF=true
-    - compiler: clang
+    - name: clang-3.8
+      compiler: clang
       dist: xenial
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-      env: CXX_COMPILER=clang++ C_COMPILER=clang FORCE_AVX_OFF=false
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: CXX_COMPILER=clang++-3.8 C_COMPILER=clang-3.8 FORCE_AVX_OFF=false
+    - name: clang-4.0
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-4.0
+          packages:
+            - clang-4.0
+      env: CXX_COMPILER=clang++-4.0 C_COMPILER=clang-4.0 FORCE_AVX_OFF=false
+    - name: clang-5.0
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-5.0
+          packages:
+            - clang-5.0
+      env: CXX_COMPILER=clang++-5.0 C_COMPILER=clang-5.0 FORCE_AVX_OFF=false
+    - name: clang-6.0
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-6.0
+          packages:
+            - clang-6.0
+      env: CXX_COMPILER=clang++-6.0 C_COMPILER=clang-6.0 FORCE_AVX_OFF=false
+    - name: clang-7.0
+      compiler: clang
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+      env: CXX_COMPILER=clang++ C_COMPILER=clang-7 FORCE_AVX_OFF=false
 
 before_script:
     - mkdir build
     - cd build
-    - echo $CXX_COMPILER
-    - ls -l /usr/local/clang-7.0.0/bin
     - $CXX_COMPILER -v
     - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
