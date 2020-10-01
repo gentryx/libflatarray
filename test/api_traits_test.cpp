@@ -351,7 +351,6 @@ ADD_TEST(TestSelectSizesDefault2DUniform)
     expected.push_back(64);
     expected.push_back(1);
     expected.push_back(0);
-    std::cout << "actual: " << actual[0] << ", " << actual[1] << ", " << actual[2] << ", " << actual[3] <<  ". " << actual.size() << "\n";
     BOOST_TEST(actual == expected);
     actual.clear();
     expected.clear();
