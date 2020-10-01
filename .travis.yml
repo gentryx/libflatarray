@@ -11,7 +11,7 @@ before_script:
 
 script:
     - cmake --build .
-    - cmake --build . -- check
+    - cmake --build . --target check
 
 env: FORCE_AVX_OFF=false
 
