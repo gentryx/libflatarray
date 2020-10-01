@@ -28,6 +28,10 @@ jobs:
         - mkdir build
         - cd build
         - cmake ..
+      # FIXME: remove this once the Windows branch is merged.
+      # Currently the tests don't run on Travis with Windows. Whyever.
+      script:
+        - cmake --build .
 
     - name: gcc-4.6
       compiler: gcc
