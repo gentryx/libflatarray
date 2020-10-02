@@ -2,16 +2,17 @@ language: cpp
 
 cache:
   apt: true
+  ccache: true
 
 before_script:
-    - mkdir build
-    - cd build
-    - $CXX_COMPILER -v
-    - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
+  - mkdir build
+  - cd build
+  - $CXX_COMPILER -v
+  - cmake -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DCMAKE_C_COMPILER=$C_COMPILER -DWITH_AVX_FORCED_OFF=$FORCE_AVX_OFF ..
 
 script:
-    - cmake --build .
-    - cmake --build . --target check
+  - cmake --build .
+  - cmake --build . --target check
 
 env: FORCE_AVX_OFF=false
 
