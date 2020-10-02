@@ -4,6 +4,8 @@ cache:
   apt: true
   ccache: true
 
+env: FORCE_AVX_OFF=false
+
 before_script:
   - mkdir build
   - cd build
@@ -13,8 +15,6 @@ before_script:
 script:
   - cmake --build .
   - cmake --build . --target check
-
-env: FORCE_AVX_OFF=false
 
 jobs:
   include:
