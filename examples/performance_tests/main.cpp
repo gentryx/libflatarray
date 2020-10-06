@@ -2574,14 +2574,16 @@ int main(int argc, char **argv)
     sizes[0].push_back(20);
     sizes[0].push_back(10);
     sizes[0].push_back(100000);
+    if (!quickMode) {
+        eval(ParticleMoverVanilla(),  sizes[0]);
+        eval(ParticleMoverPepper(),   sizes[0]);
+        eval(ParticleMoverGold(),     sizes[0]);
+    }
+    sizes[0][1] = 50;
     eval(ParticleMoverVanilla(),  sizes[0]);
     eval(ParticleMoverPepper(),   sizes[0]);
     eval(ParticleMoverGold(),     sizes[0]);
     if (!quickMode) {
-        sizes[0][1] = 50;
-        eval(ParticleMoverVanilla(),  sizes[0]);
-        eval(ParticleMoverPepper(),   sizes[0]);
-        eval(ParticleMoverGold(),     sizes[0]);
         sizes[0][1] = 90;
         eval(ParticleMoverVanilla(),  sizes[0]);
         eval(ParticleMoverPepper(),   sizes[0]);
