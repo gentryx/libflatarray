@@ -168,7 +168,7 @@ public:
         int dim_z = dim[2];
         int maxT = 200000000 / dim_x / dim_y / dim_z;
         using std::max;
-        maxT = max(16, maxT);
+        maxT = max(64, maxT);
 
         int offsetZ = dim_x * dim_y;
         int gridVolume = dim_x * dim_y * dim_z;
@@ -985,7 +985,7 @@ public:
     double performance(std::vector<int> dim)
     {
         int numParticles = dim[0];
-        int repeats = dim[1];
+        int repeats = dim[1] / 10;
 
         std::vector<Particle> particlesA;
         std::vector<Particle> particlesB;
@@ -1384,7 +1384,7 @@ public:
         using namespace LibFlatArray;
 
         int numParticles = dim[0];
-        int repeats = dim[1];
+        int repeats = dim[1] / 10;
 
         soa_array<Particle, 8192> particlesA;
         soa_array<Particle, 8192> particlesB;
@@ -2463,21 +2463,22 @@ public:
 
 int main(int argc, char **argv)
 {
-    if ((argc < 3) || (argc == 4) || (argc > 5)) {
-        std::cerr << "usage: " << argv[0] << " [-n,--name SUBSTRING] REVISION CUDA_DEVICE \n"
-                  << "  - optional: only run tests whose name contains a SUBSTRING,\n"
+    if ((argc < 3) || (argc > 4)) {
+        std::cerr << "usage: " << argv[0] << " [-q,--quick] REVISION CUDA_DEVICE \n"
+                  << "  - optional: don't run all tests,\n"
                   << "  - REVISION is purely for output reasons,\n"
                   << "  - CUDA_DEVICE causes CUDA tests to run on the device with the given ID.\n";
         return 1;
     }
     std::string name = "";
     int argumentIndex = 1;
-    if (argc == 5) {
-        if ((std::string(argv[1]) == "-n") ||
-            (std::string(argv[1]) == "--name")) {
-            name = std::string(argv[2]);
+    bool quickMode = false;
+    if (argc == 4) {
+        if ((std::string(argv[1]) == "-q") ||
+            (std::string(argv[1]) == "--quick")) {
+            quickMode = true;
         }
-        argumentIndex = 3;
+        argumentIndex = 2;
     }
     std::string revision = argv[argumentIndex + 0];
 
@@ -2492,7 +2493,9 @@ int main(int argc, char **argv)
     std::vector<std::vector<int> > sizes;
     for (int d = 32; d <= 544; d += 4) {
         std::vector<int> dim(3, d);
-
+        if (quickMode && (d != 508)) {
+            continue;
+        }
         sizes.push_back(dim);
     }
 
@@ -2521,11 +2524,14 @@ int main(int argc, char **argv)
     }
 
     sizes.clear();
-
     for (int n = 128; n <= 8192; n *= 2) {
+        if (quickMode && (n != 1024)) {
+            continue;
+        }
+
         std::vector<int> dim(3);
         dim[0] = n;
-        dim[1] = std::size_t(4) * 512 * 1024 * 1024 / n / n;
+        dim[1] = std::size_t(40) * 512 * 1024 * 1024 / n / n;
         dim[2] = 0;
 
         sizes.push_back(dim);
@@ -2571,14 +2577,16 @@ int main(int argc, char **argv)
     eval(ParticleMoverVanilla(),  sizes[0]);
     eval(ParticleMoverPepper(),   sizes[0]);
     eval(ParticleMoverGold(),     sizes[0]);
-    sizes[0][1] = 50;
-    eval(ParticleMoverVanilla(),  sizes[0]);
-    eval(ParticleMoverPepper(),   sizes[0]);
-    eval(ParticleMoverGold(),     sizes[0]);
-    sizes[0][1] = 90;
-    eval(ParticleMoverVanilla(),  sizes[0]);
-    eval(ParticleMoverPepper(),   sizes[0]);
-    eval(ParticleMoverGold(),     sizes[0]);
+    if (!quickMode) {
+        sizes[0][1] = 50;
+        eval(ParticleMoverVanilla(),  sizes[0]);
+        eval(ParticleMoverPepper(),   sizes[0]);
+        eval(ParticleMoverGold(),     sizes[0]);
+        sizes[0][1] = 90;
+        eval(ParticleMoverVanilla(),  sizes[0]);
+        eval(ParticleMoverPepper(),   sizes[0]);
+        eval(ParticleMoverGold(),     sizes[0]);
+    }
 
     sizes[0].clear();
     sizes[0].push_back(20);
@@ -2586,21 +2594,25 @@ int main(int argc, char **argv)
     sizes[0].push_back(10);
     eval(ParticleInteractorVanilla(), sizes[0]);
     eval(ParticleInteractorGold(),    sizes[0]);
-    sizes[0][1] = 20;
-    eval(ParticleInteractorVanilla(), sizes[0]);
-    eval(ParticleInteractorGold(),    sizes[0]);
+    if (!quickMode) {
+        sizes[0][1] = 20;
+        eval(ParticleInteractorVanilla(), sizes[0]);
+        eval(ParticleInteractorGold(),    sizes[0]);
+    }
 
     sizes.clear();
 
-    sizes.push_back(std::vector<int>());
-    sizes.back().push_back(20);
-    sizes.back().push_back( 4);
-    sizes.back().push_back(70);
+    if (!quickMode) {
+        sizes.push_back(std::vector<int>());
+        sizes.back().push_back(20);
+        sizes.back().push_back( 4);
+        sizes.back().push_back(70);
 
-    sizes.push_back(std::vector<int>());
-    sizes.back().push_back(20);
-    sizes.back().push_back(16);
-    sizes.back().push_back(70);
+        sizes.push_back(std::vector<int>());
+        sizes.back().push_back(20);
+        sizes.back().push_back(16);
+        sizes.back().push_back(70);
+    }
 
     sizes.push_back(std::vector<int>());
     sizes.back().push_back(20);
