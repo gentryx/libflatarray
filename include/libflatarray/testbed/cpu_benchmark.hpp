@@ -1,6 +1,6 @@
 /**
  * Copyright 2014-2017 Andreas Schäfer
- * Copyright 2018 Google
+ * Copyright 2018-2020 Google
  *
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -35,13 +35,13 @@ public:
     std::string device()
     {
         try {
-            std::string model = parse_proc_cpu();
-            // this nondescript model name is found on GCP, maybe elsewhere too:
-            if (model.find("Intel(R) Xeon(R) CPU @") == std::string::npos) {
-                return model;
+            try {
+                // likwid-topology gives us the best data
+                return parse_likwid_topology();
+            } catch (const std::runtime_error&) {
+                // ...otherwise we'll fall back to /proc/cpuinfo
+                return parse_proc_cpu();
             }
-
-            return parse_likwid_topology();
         } catch (const std::runtime_error&) {
             return "unknown CPU";
         }
@@ -106,8 +106,8 @@ private:
         if (cpu_type.empty() || cpu_name.empty()) {
             throw std::runtime_error("failed to parse likwid-topology");
         }
-        std::vector<std::string> tokens = tokenize(cpu_name, '@');
-        return cpu_type + " @ " + tokens[1];
+        std::string ret = cpu_type + ", " + cpu_name;
+        return ret;
     }
 
     static std::string trim(const std::string& string)
